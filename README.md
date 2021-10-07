@@ -9,4 +9,4 @@ runs on a BBC B with sideways ram upgrade, BBC B+ 64K, BBC B+ 128K, BBC Master 1
 
 note: this video is of an older build but the game play is the same
 
-[![game play video]img-screenshot.png](https://www.youtube.com/watch?v=CsHSW4qdZ9U)
+[![img-screenshot](https://user-images.githubusercontent.com/87623090/136460719-7151cdd3-741a-4b1a-9a53-1be546448695.png)](https://www.youtube.com/watch?v=CsHSW4qdZ9U)
