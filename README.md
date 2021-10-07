@@ -7,3 +7,4 @@ includes 2 utilities written in c for converting the font and image files in .ra
 
 runs on a BBC B with sideways ram upgrade, BBC B+ 64K, BBC B+ 128K, BBC Master 128K, BBC Master Compact
 
+[![game play](https://img.youtube.com/vi/CsHSW4qdZ9U/0.jpg)](https://www.youtube.com/watch?v=CsHSW4qdZ9U)
