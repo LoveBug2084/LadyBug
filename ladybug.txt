@@ -1,0 +1,599 @@
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+ program notes and todo's
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+ this file is very out of date and a lot is missing because i keep forgetting to update it
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-08-03 
+
+	added basic ladybug death animation
+	
+	fixed a bug that leaves the pause message on screen if you ESC back to the main menu while paused
+		just moved the jsr drawPlayfieldLower into the mainMenu code instead of before it (silly mistake)
+
+	all enemy sprite sets completed
+	
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-30
+
+	main screen done including keyboard redefinition
+	
+	added quit game by holding esc for 3 seconds, takes you back to the main menu
+
+	renamed enemy sprite sets to 1-8 to match the level number
+	
+	enemy sprite sets 1-5 completeted
+
+	**** idea ***** secret diamond bonus screen
+		play 5 rounds without losing a life and only collecting blue objects, on round 6 the vegetable is replaced with a diamond
+		collecting it takes you to the diamond bonus garden and awards you 1,000,000 points
+
+	work on diamond bonus almost complete, had to add new drawing function drawExtraTile and new tile file img-extra.bin, moved diamond tiles into extra
+	can now move all extra graphics over to extra file like flowers , box around letters in name entry etc anything that doesnt need to be a map tile
+	
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-25
+
+	added some animation to name registration
+	
+	added basic place holder for drawMainScreen
+	
+	added pause function
+	
+	fixed minor bug in pause function erasing the high score value (wrong string length)
+	
+	
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-24
+
+	finished nameReg name registration function
+
+	moved calls to drawVegetableCenter drawVegetableScore drawObjectScore to after call to redrawSprites to give them higher priority on screen
+		also they are now called on both 1/2 of a frame so they dont flicker
+
+	added skulls in ladybugs path during special bonus display
+
+	added animation routine for use with the bonus screen and can also be used with the ladybug walk on entry
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-23
+
+	special/extra bonus graphics and text complete, no ladybug animation yet
+	
+	fixed an issue in eraseSprite not checking return status of spriteToScreen to check if address is valid
+
+	altered number of shields to 6 for special bonus
+	
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+2021-07-21
+
+		fixed bug, when player collects object while enemys are frozen during vegetable music the object time overrides the vegetable time so the enemys unfreeze
+			fixed by first checking remaining enemy time and only if its < object time do we set it
+
+		added code to copy score to high score if beaten (no name entry yet)
+		
+		points display for collectable objects done
+		
+		vegetable bonus score display done
+		
+		special and extra letter detection done
+		
+		special bonus gives bonus score and shield, also calls the special bonus animation screen (currently blank) and then starts a new level
+
+		extra bonus gives extra life and calls the extra life animation screen (currently blank) and then starts a new level
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+2021-07-20
+
+	many attempts at eraseSprite with background restore and scrapped including the partial erase row and column idea
+		finally ive returned to using the full sprite erase again and redraw 1 tile behind sprite
+
+	created a new mapTileBlankObj in the object sprites and added erasure of skull and heart objects on screen using this new object
+	
+	added extra test to 1 char extra to the right when ladybug moving left to redraw object tile correctly
+		there is still a minor issue that an object tile to the right behind a wall can get 1 pixel chopped off but im not bothered
+
+	added letter detection and score but no other function yet
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+2021-07-19
+
+	added storage for direction to spritesErase list
+
+	drawSprite xy to screen calculation code removed and placed into a function called spriteToScreen, jsr spriteToScreen put in its place
+		this function can now be used for the erase sprite address calculations
+
+	save.bat and restore.bat fixed
+	
+	project directorys restructured to reduce wasted space which has reduced the new backup directory from 2.8GB to 16.4MB
+	
+	added soundPlaySilence which shuts down all software sound channels and also silences all 4 psg channels
+	added jsr soundPlaySilence just before lda #sfxEndLevel so that things like timer bleep or enemy warning sounds dont carry over to
+		the level intro screen
+		
+	removed test for levelEnd from updateEnemyTimerSound as its no longer needed as all sounds are now shut down at end of level
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-18
+
+	altered enemySpawn to check that there currently isnt an enemy in the box before spawning another
+
+	backup/restore script went crazy and make a corrupted mess, spent hours fixing things
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-17
+
+	removed psgSilence from ladybug.asm and psgSilence psgWrite from loader.asm
+
+	added skull detection to kill ladybug
+	
+	added ladybugEnemyRange to kill ladybug on contact with enemy within range
+	
+	ladybug death animation missing
+	
+	added game over but needs work
+
+		BUG! it could be possible if two bugs die on skulls to have 2 bugs in the center box at the same time, need to check this is true and correct it
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+2021-07-16
+
+	added ladybugEntryEnable flag and entry animation
+
+	drawPlayfieldLower - moved the lives drawing into a function drawPlayfieldLowerLives
+		drawPlayfieldLowerLives to be called when player dies and lives are updated
+
+
+2021-07-15
+
+	added an extra software sound channel making a total of 6 to allow sound conflicts to be fixed
+		re-arranged the sound data tables on a few sounds to work with the new channels
+		
+	added sideways ram support to loader, limited ram usage to 12K to allow compatibility with unexpanded bbc b+ 64K
+		added extra check on bank 128 ram for integra-b which can fake the b+ model number of 2 but actually doesnt have ram at bank 128
+		so if the test fails it'll use the regular swr bank check function
+		
+	added check to end of level so that if music is already playing (vegetable bonus) it'll wait until its complete before playing the end of
+		level sound effect and ending the level
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-14
+
+	added addScoreVegetable to shift veg score over and add to score
+	added enemysActive variable
+	added enemySpawn, enemyRelease code
+	vegetableActive now enabled once all enemys released, deactivated if enemy respawns (dies on skull)
+	enemy release warning now only sounds when there is pending enemys
+	also only 1 enemy at a time is drawn in the center box
+
+
+	thoughts on redrawSprites
+	
+	if ladybug moves its always 1 pixel per frame
+	if enemys move they can be 1 or 2 pixels per frame
+	
+	vertical movement is 1 pixel resolution
+	horizontal movement is ...
+	
+	
+	
+	currently things in this order
+
+		jsr waitVsyncUpper		; wait for vsync interrupt for upper area
+		jsr redrawSprites			; erase and redraw sprites in upper area
+		jsr updateLadybug			; update ladybug direction, handle turnstiles and objects
+		jsr moveSprites				; move all sprites
+
+		jsr waitVsyncLower			; wait for vsync interrupt for lower area
+		jsr redrawSprites			; erase and redraw sprites in lower area
+
+		redraw
+
+	
+	
+	
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-13
+
+	rewrote parts of redrawSprites, wrote a new eraseSprite to draw up to 9 background tiles instead of just black box
+		works but is too slow and also theres black borders around passing sprites
+		
+			a better idea would be to draw black on the sprite edge ie if the sprite is moving right erase a column of pixels on the left side,
+			going up erase a row of pixels on the bottom then follow this by drawing single tile of a dot, object or turnstile before drawing the actual sprite
+
+
+	drawChr altered to allow more than a single 256 byte page for more characters which will be needed to display the user defined key controls
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-12
+
+	added table of scan codes, added optionsKeys to store user to redefine keys, altered keyboardScan to use optionKeys
+
+	added blanking to checkForObjectsHeart
+	
+	added unblanking to updatePauseTimers for when pauseLadybug decrements to 0
+
+	made sure that updateLadybug preserves the spriteBlanking bit
+
+	altered the way that sprites are blanked, originally it was done by setting the sprite Y to &ff but now
+		ive removed that. now setting bit 7 (spriteBlanking) will blank the sprite and also disable sprite movement calculations
+
+	added difficulty variable for 0=easy 1=normal 2=hard 3=hardest
+		this variable is used as the starting index into the new 7 byte enemy speed table. works fine
+
+	enemys were too overpowered and just buzz around ladybug making it difficult to escape
+		so I adjusted the percentage tables to make them a lot more random
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-11
+
+	created img-object-points.png .raw in with the 100 300 800 x1 x2 x3 x5 in the same color as the letters
+		this means that while collecting the letter color cycle needs to also freeze
+
+	created 8 enemy sprites sets in different colors for testing, eventually will replace them with the correct sprites
+	
+	added code to choose one set for each level 1 to 8 and after that each sprite is random and also changes when it returns home after death
+	
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-10
+
+	created a new loader program that transfers data to sideways ram and then calls oscli with /LadyBug\n
+		moved all data tables over to the loader and tested ok
+		
+	drawLevelIntro added processing of skull, bonus, objects colors into the waiting loop so that things are animated
+		still need to add the skulls, letters and hearts to the intro screen
+
+	added skull shield message/good luck message to intro screen
+	added sound processing to intro screen (slight bug sometimes a previous sound like timer tick etc will play in the intro screen)
+	added skull shield decrement in level advance
+	added flag for end of level, new code checkLevelEnd handles the dot count check, end of level flag, pausing ladybug/enemy,
+		playing end of level sound effect, advancing the level and signalling to game main loop when to start the new level
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-09
+
+	memory getting tight
+	
+	rewrote the drawString to take color byte adn screen address following the call to save some space
+	modded drawPlayfieldLower to use new drawText to draw highscore name, added &ff terminator to highscore name
+	
+	work started on drawLevelIntro, now displays level nn + vegetable sprite (incorrectly) + vegetable score + vegetable name (centered)
+	new table created for indexing vegetable tables and screen position, &ff terminator added to vegetable names for use with printText
+
+	updateObjectTimer recoded to use tables freeing up some space
+	hearts now give correct score for color
+
+object points
+
+	blue    = 100 x multiplier
+	yellow	= 300 x multiplier
+	red			= 800 x multiplier
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-08
+
+	added code to make the special and extra letters flash
+
+	added score multiplier code, now when hearts are cyan and collected the multiplier increases
+	
+	added new addScoreMultiply which adds the bcd score multiplied by the multiplier (done by adding multiple times using multiplier loop counter)
+		it seems fast enough and not to cause any issues
+
+
+	split .drawString into 2 parts now .drawString and .drawText
+	
+		drawString still functions as before ie   jsr drawString followed by equs "somestring", &ff
+		which in turn sets drawTextAddr to point to the string before calling drawText
+		
+		now drawText is available for printing text strings from any location but requires setting drawTextAddr first
+		will be useful for printing the vegetable name table
+
+--------		
+
+	added the game start variable initialization
+	added the round start variable initialization
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+2021-07-07
+
+	just rewritten drawPlayfieldUpper to display bonus letters from bonusBits flags in correct colors
+	working fine, added test code to heart collect to set all these bits to random to check colors
+
+----------
+
+	added test in ladybug skull collision to check if invulnerable, also changed invulnerable skulls to red to match ladybug color
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+note
+
+	bonusBits, bonusBits + 1 assignments
+	
+		bonusBits	+ 1		7 not used
+										6 s
+										5 p
+										4 e
+										3 c
+										2 i
+										1 a
+										0 l
+										
+		bonusBits				7 e
+										6 x
+										5 t
+										4 r
+										3 a
+										2 x2
+										1 x3
+										0 x5
+										
+
+
+
+	when writing the level intro screen add calls to drawPlayfieldUpper so that after a bonus screen the letters and multiplier are updated
+	and to drawPlayfieldLower so that lives are updated if a bonus life was awarded
+
+	intro screen consists of playfieldUpper, playfieldLower complete
+	playfieldMiddle has enemy timer and the rest filled with blank tile
+	text and objects are then printed onto bitmap
+
+	for extra bonus screen draw some flowers and text that explains extra live awarded, animate ladybug driving around flowers and then
+	drive down to the bottom left before disapeering, add 1 to lives and trigger extra life sound to be playing in the level intro screen
+
+	for special bonus screen draw text that explains that ladybug is invulnerable to skulls for 5 rounds
+	draw an animation of ladybug driving over the skull being followed by an enemy who then dies on the skull
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ sprite memory usage
+
+	 ladybug always stored in full 5*3=15 @ 70 bytes = 1050 bytes
+	 8 bug types, 3 frames animation, 2 directions left up = 8*3*2=54 sprites @ 70 bytes = 3360 bytes
+
+	 from this we generate 4 bug types, 3 frames animation, 3 more sprites (left shifted, left mirrored, left shifted mirrored)
+	 thats 4*3*3=45 sprites @ 70 bytes = 2520 bytes
+	 total ram needed = 1050+3360+2520 = 6930 bytes
+
+	u0	u1	u2	original
+	l0	l1	l2	original
+	ls0	ls1	ls2	generated
+	r0	r1	r2	generated
+	rs0	rs1	rs2	generated
+
+
+	generating sprites and index table
+
+	u0			store index
+	u1			stote index
+	u2			store index
+	l0			store index
+	l1			store index
+	l2			store index
+
+	l0 > ls0		store buffer index
+	l1 > ls1		store buffer index
+	l2 > ls2		store buffer index
+
+	l0 > r0		store buffer index
+	l1 > r1		store buffer index
+	l2 > r2		store buffer index
+
+	l0 > rs0		store buffer index
+	l1 > rs1		store buffer index
+	l2 > rs2		store buffer index
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ hearts and letters
+
+	 3 letters and 3 hearts every level
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ skulls
+
+	 level 01		2 skulls
+	 level 02-04		3 skulls
+	 level 05-09		4 skulls
+	 level 10-17		5 skulls
+	 level 18-99		6 skulls
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ enemy speed
+
+	 level 01-06 enemy speed 1.00
+	 level 07-11 enemy speed 1.25
+	 level 12-17 enemy speed 1.50
+	 level 18-99 enemy speed 1.75
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ when a letter is collected
+	
+	 play letter sound
+	 player movement, enemy movement, enemy timer paused
+	 after 30 frames (arcade) or 25 frames (bbc) enable all movement
+	
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ when a vegetable is collected
+	
+	 play vegetable sound
+	 vegetable and ladybug vanish
+	 vegetable value displayed
+	 ladybug and enemys movement paused for 33 frames (arcade) or 27.5 frames (bbc)
+	 play vegetable music
+	 ladybug placed back on the screen and allowed to move
+	 after 276 frames (arcade) or 230 frames (bbc) enable enemy movement
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ bug release timer speed
+
+	 level 1	8 frames (bbc)
+	 level 2-4	5 frames (bbc)
+	 level 5-99	3 frames (bbc)
+	
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ tile numbers, bits 76 special function
+
+	 00 = tile 0-63 (not solid, player and enemy can pass through)
+	 01 = tile 64-127 (not solid, player and enemy can pass through)
+	 10 = tile 0-63 (solid to enemy, cannot pass)
+	 11 = tile 0-63 (solid to enemy and player, cannot pass)
+
+	basically non solid objects can use tile numbers anywhere in the range of 0-127
+	but solid objects are limited to tile numbers 0-63 so anything that needs to be a solid must be within the first 64 tiles
+
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ hmmm sprite background restore thoughts
+
+	 take x and y lowest 3 bits for index into this table 2,2,2,3,3,3,3,3 (number of tiles to restore)
+	
+	 need to think about this a little more
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ idea for special bonus
+
+	 after special bonus letters collected display special screen
+	
+	 inform player of 200,000 points bonus
+	
+	 and 5 rounds of skull invulnerability
+	
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+ important
+
+	 when its time to release an enemy wait until the enemy fraction = 0 before releasing
+
+	 at end of level pause timer, wait until all sounds have finished then play end of level tune
+	
+
+
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+ sound channels
+ -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+0 music						0 1 2 -							shut down channels 1 2 3 4 and silence psg channels 0 1 2
+
+0 musicVeg				0 1 - -							shut down channels 1 2 3 4 and silence psg channels 0 1 2
+
+1 timer						0 - - -							disbaled if 0 or 3
+2 enemy warning		- - 2 -							disabled if 0 (this cannot happen during 0 (music) as the timer is frozen)
+3 object					0	1	-	-							disabled if 0, if allowed then shut down channels 1 and 4
+3 skull						0	1	-	-							disabled if 0, if allowed then shut down channels 1 and 4
+4 turnstile				-	1	-	-							disabled if 0 or 3
+
+5 munch						-	-	-	3
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+	ladybug notes
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	skulls
+
+	level 01			2 skulls
+	level 02-04		3 skulls
+	level 05-09		4 skulls
+	level 10-17		5 skulls
+	level 18-99		6 skulls
+
+	3 letters and 3 hearts every level
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	enemy speed
+
+	level 01-06 enemy speed 1.00
+	level 07-11 enemy speed 1.25
+	level 12-17 enemy speed 1.50
+	level 18-99 enemy speed 1.75
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	when a letter is collected
+	
+	play letter sound
+	player movement, enemy movement, enemy timer paused
+	after 30 frames (60fps) enable all movement
+	
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	when a vegetable is collected
+	
+	play vegetable sound
+	vegetable and ladybug should vanish
+	vegetable value should be displayed
+	ladybug and enemys movement paused for 33 frames (60fps)
+	play vegetable music
+	ladybug placed back on the screen and allowed to move, enemy timer enabled
+	after 276 frames (60fps) enable enemy movement
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	tile bits 76 special function
+
+	00 = tile 0-63 (path)
+	01 = tile 64-127 (path)
+	10 = tile 0-63 (solid wall to enemy only)
+	11 = tile 0-63 (solid wall to enemy and player)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+;            enemy speed setting
+;            0     1     2     3
+
+; level 1    1.00  1.00  1.15  1.30
+; level 7    1.00  1.15  1.30  1.42
+; level 12   1.15  1.30  1.42  1.54
+; level 18   1.30  1.42  1.54  1.66
+
+;            enemy attack setting
+;            0     1     2     3     4     5     6     7     8     9
+
+; enemy 1    20%   25%   30%   35%   40%   45%   50%   55%   60%   65%
+; enemy 2    25%   30%   35%   40%   45%   50%   55%   60%   65%   70%
+; enemy 3    30%   35%   40%   45%   50%   55%   60%   65%   70%   75%
+; enemy 4    35%   40%   45%   50%   55%   60%   65%   70%   75%   80%
+
+
+
