@@ -4457,8 +4457,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .keyScanCodes
 
 	equb key0, key1, key2, key3, key4, key5, key6, key7, key8, key9, keyMinus, keyRaise, keyBackslash, keyLeft, keyRight
-	equb keyQ, keyW, keyE, keyR, keyT, keyY, keyU, keyI, keyO, keyP, keyAt, keySquareBracketOpen, keyUnderscore, keyUp, keyDown
-	equb keyA, keyS, keyD, keyF, keyG, keyH, keyJ, keyK, keyL, keySemicolon, keyColon, keySquareBracketClosed
+	equb keyQ, keyW, keyE, keyR, keyT, keyY, keyU, keyI, keyO, keyP, keyAt, keyBracketOpen, keyUnderscore, keyUp, keyDown
+	equb keyA, keyS, keyD, keyF, keyG, keyH, keyJ, keyK, keyL, keySemicolon, keyColon, keyBracketClosed
 	equb keyZ, keyX, keyC, keyV, keyB, keyN, keyM, keyComma, keyPeriod, keySlash
 
 .keyScanCodesEnd

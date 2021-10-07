@@ -83,7 +83,7 @@ keyI			= &25
 keyO			= &36
 keyP			= &37
 keyAt			= &47
-keySquareBracketOpen	= &38
+keyBracketOpen		= &38
 keyUnderscore		= &28
 keyUp			= &39
 keyDown			= &29
@@ -101,7 +101,7 @@ keyK			= &46
 keyL			= &56
 keySemicolon		= &57
 keyColon		= &48
-keySquareBracketClosed	= &58
+keyBracketClosed	= &58
 keyReturn		= &49
 
 keyShiftLock		= &50
@@ -125,7 +125,7 @@ keySpace		= &62
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-opcodeINX		= &e8			; 6502 opcode for inx instruction (used for self modifying code in sprite functions)
+opcodeINX		= &e8			; 6502 opcode for INX instruction (used for self modifying code in sprite functions)
 opcodeDEX		= &ca			; 6502 opcode for DEX instruction (used for self modifying code in sprite functions)
 opcodeBCC		= &90			; 6502 opcode for BCC instruction (used for self modifying code in sprite functions)
 opcodeBCS		= &b0			; 6502 opcode for BCS instruction (used for self modifying code in sprite functions)
@@ -335,8 +335,7 @@ osCli			= &fff7			; os function
 osWrch			= &ffee			; os function
 resetVector		= &fffc			; os reset vector
 bankSelect		= &fe30			; paged rom/ram bank select
-bankSelectCopy		= &f4			; bbc os stores current bank copy here
-
+bankSelectCopy		= &f4			; os stores current bank copy here
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; define program addresses
