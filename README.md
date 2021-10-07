@@ -8,4 +8,5 @@ includes 2 utilities written in c for converting the font and image files in .ra
 runs on a BBC B with sideways ram upgrade, BBC B+ 64K, BBC B+ 128K, BBC Master 128K, BBC Master Compact
 
 note: this video is of an older build but the game play is the same
-[![video]/img-screenshot.png](https://www.youtube.com/watch?v=CsHSW4qdZ9U)
+
+[![video]https://github.com/LoveBug2084/LadyBug/blob/main/img-screenshot.png](https://www.youtube.com/watch?v=CsHSW4qdZ9U)
