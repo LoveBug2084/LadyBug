@@ -9,4 +9,4 @@ runs on a BBC B with sideways ram upgrade, BBC B+ 64K, BBC B+ 128K, BBC Master 1
 
 note: this video is of an older build but the game play is the same
 
-[![video]https://github.com/LoveBug2084/LadyBug/blob/main/img-screenshot.png](https://www.youtube.com/watch?v=CsHSW4qdZ9U)
+[![game play video]https://raw.githubusercontent.com/LoveBug2084/LadyBug/main/img-screenshot.png](https://www.youtube.com/watch?v=CsHSW4qdZ9U)
