@@ -15,16 +15,15 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; initialise hardware and relocate main program to runtime address
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; note any jumps or tables within this code
-; must be corrected by adding the reloc offset
+; relocator - initialise hardware and relocate main game to runtime address
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
 	print " relocator.asm"
 	print "----------------------------------------------------"
 	print
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	align &100
 
@@ -105,12 +104,12 @@
 ; relocate program to runtime address
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	ldx #hi(bootstrap - progReloc)	; program page length
+	ldx #hi(bootstrap - progReloc)		; program page length
 	ldy #0
 
 .relocateProgram
 
-	lda progLoad, y			; copy from load page to relocation page
+	lda progLoad, y				; copy from load page to relocation page
 	sta progReloc, y
 
 	iny
@@ -122,7 +121,7 @@
 	dex					; until all pages copied
 	bne relocateProgram
 	
-	jmp main				; run the main program
+	jmp main				; run the main game
 
 
 
