@@ -9984,7 +9984,7 @@ include "soundtables.asm"
 include "relocator.asm"				; append relocation code
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; save main ladybug program, splash screen, instruction guide screen and basic boot
+; save main ladybug game and basic boot loader
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
