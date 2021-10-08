@@ -1,5 +1,5 @@
 # LadyBug
-LadyBug for the Acorn BBC Micro Computer
+LadyBug for the Acorn BBC Micro Computer range
 
 a remake of universals z80 based arcade game from 1981 in 100% 6502 assembly language compatible with the popular beebasm assembler
 
