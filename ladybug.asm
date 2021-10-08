@@ -209,16 +209,15 @@ objectModeYellow	= 2
 
 .bonusBits		skip 2			; special, extra, x2 x3 x5 (1 bit each)
 .bonusBitsTemp		skip 2			; storage for working on bonus bits
+
 .bonusSpecialActive	skip 1			; special bonus is active if != 0
 .bonusExtraActive	skip 1			; extra bonus is active if != 0
-
-
-bonusDiamondImg		= 18			; diamond image number
+.bonusDiamondActive	skip 1			; diamond bonus is active if != 0
 .bonusDiamondEnable	skip 1			; diamond bonus is enabled if != 0
-.bonusDiamondActive	skip 1			; diamond bonus screen active if != 0
+bonusDiamondImg		= 18			; diamond image number
 
 if debugDiamondOverride == false
-bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is active)
+bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
 else
 bonusDiamondLevel 	= debugDiamondOverride	; use debugDiamondOverride level if enabled
 endif
@@ -310,22 +309,20 @@ endif
 .moveSpritesSaveX	skip 1			; preserve register
 
 .moveSpritesSaveDirection
-			skip 1			; save place for direction
+			skip 1			; save original sprite direction while calculating new path direction in enemy aim logic
 
 .moveSpritesIndex	skip 1			; index of current sprite
 
-.moveSpritesSpeed	skip 2			; storage for sprite speed (ladybug or enemy)
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-spritesTotal		= 5			; total number of sprites in list
+spritesTotal		= 5			; total number of sprites in game (1 for ladybug and 4 for enemys)
 
-.spritesImg		skip spritesTotal
-.spritesDir		skip spritesTotal
+.spritesImg		skip spritesTotal	; sprite image, position and direction for drawing
 .spritesX		skip spritesTotal
 .spritesY		skip spritesTotal
+.spritesDir		skip spritesTotal
 
-.spritesErased		skip spritesTotal
+.spritesErased		skip spritesTotal	; sprite flag, position and direction for erasing
 .spritesEraseX		skip spritesTotal
 .spritesEraseY		skip spritesTotal
 .spritesEraseDir	skip spritesTotal
@@ -348,8 +345,6 @@ spritesAnimationSpeed	= 8			; number of vsyncs per animation frame (6.25Hz)
 .eraseSpriteSaveX	skip 1			; preserve register
 .eraseSpriteSaveY	skip 1			; preserve register
 
-.eraseSpriteJMP		skip 2			; address for erase function
-
 .eraseBlockBytes	skip 1			; byte count for full block erase
 
 .redrawSpritesCount	skip 1			; counter for sprite list length
@@ -362,14 +357,14 @@ spritesAnimationSpeed	= 8			; number of vsyncs per animation frame (6.25Hz)
 .redrawSpritesIndexLower			; index to current sprite in list for lower half
 			equb 0
 
-.updateLadybugSaveDir	skip 1			; preserve direction
+.updateLadybugSaveDir	skip 1			; preserve durrent ladybug direction while calculating new direction
 
 .updateObjectTimerSaveX	skip 1			; preserve register
 
 .drawMapTileSaveY	skip 1			; preserve register
 
 soundChannels		= 6			; number of software defined sound channels
-.soundAddrPtrs		skip 2 * soundChannels	; pointers to sound effect data
+.soundAddrPtrs		skip soundChannels * 2	; pointers to sound effect data
 .soundTimers		skip soundChannels	; timers for sound effect data (filled with 0 by skip)
 
 .playSoundAddr		skip 2			; storage for sound table address
@@ -381,12 +376,12 @@ soundChannels		= 6			; number of software defined sound channels
 .animateLadybugAddr	skip 2			; address pointer to ladybug animation tables
 .animateLadybugCounter	skip 1			; frame counter for ladybug animation
 
-.nameRegCursor		skip 1			; cursor position of letter selection
-.nameRegCursorOld	skip 1			; old cursor position of letter selection
-.nameRegCursorText	skip 1			; cursor position in player name text
+.nameRegCursor		skip 1			; high score name registration cursor position of selected letter
+.nameRegCursorOld	skip 1			; high score name registration cursor position of previous selected letter
+.nameRegCursorText	skip 1			; high score name registration cursor position in player name text
 
-.mainMenuCursor		skip 1			; cursor position on main screen
-.mainMenuCursorOld	skip 1			; old cursor position on main screen
+.mainMenuCursor		skip 1			; main menu cursor position
+.mainMenuCursorOld	skip 1			; main menu previous cursor position
 
 .keyboardScanFullSaveX	skip 1			; preserve register
 

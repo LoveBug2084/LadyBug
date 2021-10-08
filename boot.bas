@@ -50,9 +50,9 @@ PRINT CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug             
 PRINT CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
 PRINT TAB(13,3);CHR$(135);"Instructions"
 PRINT TAB(2,5);CHR$(133);"Guide";CHR$(129);"Lady Bug";CHR$(133);"through the maze"
-PRINT TAB(2,6);CHR$(133);"avoiding";CHR$(131);"enemies";CHR$(133);"and";CHR$(135);"deadly skulls"
+PRINT TAB(2,6);CHR$(133);"avoiding deadly";CHR$(131);"enemies";CHR$(133);"and";CHR$(135);"skulls"
 PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block"
-PRINT TAB(2,9);CHR$(132);"enemies and avoid enemy attacks"
+PRINT TAB(2,9);CHR$(132);"enemy attacks"
 PRINT TAB(2,11);CHR$(130);"Collecting";CHR$(134);"cyan hearts";CHR$(130);"multiplies"
 PRINT TAB(2,12);CHR$(130);"an items value by";CHR$(135);"x2 x3 x5"
 PRINT TAB(2,14);CHR$(129);"Collecting";CHR$(131);"yellow letters";CHR$(129);"to spell"

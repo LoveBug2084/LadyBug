@@ -13,15 +13,15 @@ screen ram     &47F0 - &7fff . 14352 bytes
 main ram       &0 - &47EF . 18416 bytes 
 ---------------------------------------------------- 
 used           &0 - &45FB . 17916 bytes 
-unused         128 bytes 
-free           628 bytes 
+unused         132 bytes 
+free           632 bytes 
 ---------------------------------------------------- 
 
 ---------------------------------------------------- 
 main ram details 
 ---------------------------------------------------- 
-variables      &0 - &CA . 203 bytes 
-free           &CB - &FF . 53 bytes 
+variables      &0 - &C6 . 199 bytes 
+free           &C7 - &FF . 57 bytes 
 ---------------------------------------------------- 
 used           &100 - &1D7 . 216 bytes 
 stack          &1D8 - &1FF . 40 bytes 
@@ -322,9 +322,9 @@ Saving file '$.Loader'
      001F
 .bonusExtraActive
      0020
-.bonusDiamondEnable
-     0021
 .bonusDiamondActive
+     0021
+.bonusDiamondEnable
      0022
 .scoreMultiplier
      0023
@@ -446,96 +446,92 @@ Saving file '$.Loader'
      0067
 .moveSpritesIndex
      0068
-.moveSpritesSpeed
-     0069
 .spritesImg
-     006B
-.spritesDir
-     0070
+     0069
 .spritesX
-     0075
+     006E
 .spritesY
-     007A
+     0073
+.spritesDir
+     0078
 .spritesErased
-     007F
+     007D
 .spritesEraseX
-     0084
+     0082
 .spritesEraseY
-     0089
+     0087
 .spritesEraseDir
-     008E
+     008C
 .spritesImgFrameCounter
-     0093   01
+     0091   01
 .spritesImgFrame
-     0094   00
+     0092   00
 .drawSpriteImg
-     0095
+     0093
 .drawSpriteX
-     0096
+     0094
 .drawSpriteY
-     0097
+     0095
 .drawSpriteSaveX
-     0098
+     0096
 .drawSpriteSaveY
-     0099
+     0097
 .drawSpriteScreenAddr
-     009A
+     0098
 .spriteToScreenSaveX
-     009C
+     009A
 .spriteToScreenSaveY
-     009D
+     009B
 .eraseSpriteSaveX
-     009E
+     009C
 .eraseSpriteSaveY
-     009F
-.eraseSpriteJMP
-     00A0
+     009D
 .eraseBlockBytes
-     00A2
+     009E
 .redrawSpritesCount
-     00A3
+     009F
 .redrawSpritesMax
-     00A4
+     00A0
 .redrawSpritesIndexUpper
-     00A5   00
+     00A1   00
 .redrawSpritesIndexLower
-     00A6   00
+     00A2   00
 .updateLadybugSaveDir
-     00A7
+     00A3
 .updateObjectTimerSaveX
-     00A8
+     00A4
 .drawMapTileSaveY
-     00A9
+     00A5
 .soundAddrPtrs
-     00AA
+     00A6
 .soundTimers
-     00B6
+     00B2
 .playSoundAddr
-     00BC
+     00B8
 .playSoundSaveA
-     00BE
+     00BA
 .playSoundSaveX
-     00BF
+     00BB
 .playSoundSaveY
-     00C0
+     00BC
 .animateLadybugActive
-     00C1
+     00BD
 .animateLadybugAddr
-     00C2
+     00BE
 .animateLadybugCounter
-     00C4
+     00C0
 .nameRegCursor
-     00C5
+     00C1
 .nameRegCursorOld
-     00C6
+     00C2
 .nameRegCursorText
-     00C7
+     00C3
 .mainMenuCursor
-     00C8
+     00C4
 .mainMenuCursorOld
-     00C9
+     00C5
 .keyboardScanFullSaveX
-     00CA
+     00C6
 .page0000End
 .cleanReset
      0100   A9 7F      LDA #&7F
@@ -649,7 +645,7 @@ Saving file '$.Loader'
      01BA   F0 01      BEQ &01BD
      01BC   60         RTS
 .updateObjectTimerMode
-     01BD   86 A8      STX &A8
+     01BD   86 A4      STX &A4
      01BF   A6 34      LDX &34
      01C1   E8         INX
      01C2   E0 03      CPX #&03
@@ -661,7 +657,7 @@ Saving file '$.Loader'
      01CD   8D 21 FE   STA &FE21
      01D0   BD AE 01   LDA &01AE,X
      01D3   85 33      STA &33
-     01D5   A6 A8      LDX &A8
+     01D5   A6 A4      LDX &A4
      01D7   60         RTS
 .page0100End
 .stack
@@ -938,14 +934,14 @@ Saving file '$.Loader'
      03E1   A2 04      LDX #&04
 .initSpritesLoop
      03E3   A9 0C      LDA #&0C
-     03E5   95 70      STA &70,X
+     03E5   95 78      STA &78,X
      03E7   A9 FF      LDA #&FF
-     03E9   95 7F      STA &7F,X
+     03E9   95 7D      STA &7D,X
      03EB   CA         DEX
      03EC   10 F5      BPL &03E3
      03EE   A9 00      LDA #&00
      03F0   85 3C      STA &3C
-     03F2   85 C1      STA &C1
+     03F2   85 BD      STA &BD
      03F4   60         RTS
 .drawScore
      03F5   A9 11      LDA #&11
@@ -1019,27 +1015,27 @@ Saving file '$.Loader'
      0466   07
      0467   07
 .eraseSprite
-     0468   86 9E      STX &9E
-     046A   84 9F      STY &9F
-     046C   B5 84      LDA &84,X
-     046E   85 96      STA &96
-     0470   B5 89      LDA &89,X
-     0472   85 97      STA &97
+     0468   86 9C      STX &9C
+     046A   84 9D      STY &9D
+     046C   B5 82      LDA &82,X
+     046E   85 94      STA &94
+     0470   B5 87      LDA &87,X
+     0472   85 95      STA &95
      0474   20 03 05   JSR &0503
      0477   90 54      BCC &04CD
 .eraseSpriteTile
-     0479   A6 9E      LDX &9E
-     047B   B5 8E      LDA &8E,X
+     0479   A6 9C      LDX &9C
+     047B   B5 8C      LDA &8C,X
      047D   29 04      AND #&04
      047F   D0 4C      BNE &04CD
-     0481   B5 8E      LDA &8E,X
+     0481   B5 8C      LDA &8C,X
      0483   29 03      AND #&03
      0485   A8         TAY
-     0486   B5 84      LDA &84,X
+     0486   B5 82      LDA &82,X
      0488   18         CLC
      0489   79 60 04   ADC &0460,Y
      048C   85 5C      STA &5C
-     048E   B5 89      LDA &89,X
+     048E   B5 87      LDA &87,X
      0490   18         CLC
      0491   79 64 04   ADC &0464,Y
      0494   85 5D      STA &5D
@@ -1059,7 +1055,7 @@ Saving file '$.Loader'
      04B2   6D C9 05   ADC &05C9
      04B5   8D C9 05   STA &05C9
 .eraseSpriteCheckLeft
-     04B8   B5 8E      LDA &8E,X
+     04B8   B5 8C      LDA &8C,X
      04BA   29 03      AND #&03
      04BC   C9 02      CMP #&02
      04BE   D0 12      BNE &04D2
@@ -1070,15 +1066,15 @@ Saving file '$.Loader'
      04C8   90 03      BCC &04CD
      04CA   20 A4 05   JSR &05A4
 .eraseSpriteExit
-     04CD   A4 9F      LDY &9F
-     04CF   A6 9E      LDX &9E
+     04CD   A4 9D      LDY &9D
+     04CF   A6 9C      LDX &9C
      04D1   60         RTS
 .eraseSpriteCheckUp
-     04D2   B5 8E      LDA &8E,X
+     04D2   B5 8C      LDA &8C,X
      04D4   29 03      AND #&03
      04D6   C9 00      CMP #&00
      04D8   D0 F3      BNE &04CD
-     04DA   B5 89      LDA &89,X
+     04DA   B5 87      LDA &87,X
      04DC   C9 A0      CMP #&A0
      04DE   B0 ED      BCS &04CD
      04E0   A0 17      LDY #&17
@@ -1102,18 +1098,18 @@ Saving file '$.Loader'
 .eraseBlockExit
      0508   60         RTS
 .eraseBlockAddr
-     0509   A5 97      LDA &97
+     0509   A5 95      LDA &95
      050B   29 07      AND #&07
-     050D   05 9A      ORA &9A
-     050F   85 9A      STA &9A
+     050D   05 98      ORA &98
+     050F   85 98      STA &98
      0511   8D 29 05   STA &0529
-     0514   A5 9B      LDA &9B
+     0514   A5 99      LDA &99
      0516   8D 2A 05   STA &052A
      0519   A9 46      LDA #&46
-     051B   85 A2      STA &A2
+     051B   85 9E      STA &9E
 .eraseBlockColumn
      051D   A0 0E      LDY #&0E
-     051F   A5 9A      LDA &9A
+     051F   A5 98      LDA &98
      0521   29 07      AND #&07
      0523   49 07      EOR #&07
      0525   AA         TAX
@@ -1121,7 +1117,7 @@ Saving file '$.Loader'
 .eraseBlockWrite
      0528   8D 00 FF   STA &FF00
      052B   38         SEC
-     052C   C6 A2      DEC &A2
+     052C   C6 9E      DEC &9E
      052E   F0 D8      BEQ &0508
      0530   EE 29 05   INC &0529
      0533   D0 03      BNE &0538
@@ -1142,19 +1138,19 @@ Saving file '$.Loader'
      0550   88         DEY
      0551   D0 D5      BNE &0528
      0553   18         CLC
-     0554   A5 9A      LDA &9A
+     0554   A5 98      LDA &98
      0556   69 08      ADC #&08
-     0558   85 9A      STA &9A
+     0558   85 98      STA &98
      055A   8D 29 05   STA &0529
-     055D   A5 9B      LDA &9B
+     055D   A5 99      LDA &99
      055F   69 00      ADC #&00
-     0561   85 9B      STA &9B
+     0561   85 99      STA &99
      0563   8D 2A 05   STA &052A
      0566   10 B5      BPL &051D
      0568   18         CLC
      0569   60         RTS
 .drawExtraTile
-     056A   84 A9      STY &A9
+     056A   84 A5      STY &A5
      056C   8D C5 05   STA &05C5
      056F   A8         TAY
      0570   B9 CA 38   LDA &38CA,Y
@@ -1165,7 +1161,7 @@ Saving file '$.Loader'
      057E   8D C3 05   STA &05C3
      0581   D0 3F      BNE &05C2
 .drawMapTile4Pixel
-     0583   84 A9      STY &A9
+     0583   84 A5      STY &A5
      0585   09 00      ORA #&00
      0587   10 02      BPL &058B
      0589   29 3F      AND #&3F
@@ -1181,7 +1177,7 @@ Saving file '$.Loader'
      059E   8D C3 05   STA &05C3
      05A1   4C C2 05   JMP &05C2
 .drawMapTile
-     05A4   84 A9      STY &A9
+     05A4   84 A5      STY &A5
      05A6   09 00      ORA #&00
      05A8   10 02      BPL &05AC
      05AA   29 3F      AND #&3F
@@ -1213,7 +1209,7 @@ Saving file '$.Loader'
      05D9   90 03      BCC &05DE
      05DB   EE C9 05   INC &05C9
 .drawMapTileExit
-     05DE   A4 A9      LDY &A9
+     05DE   A4 A5      LDY &A5
      05E0   60         RTS
 .drawObjectTile
      05E1   38         SEC
@@ -1354,7 +1350,7 @@ Saving file '$.Loader'
      06E0   85 1B      STA &1B
      06E2   85 1C      STA &1C
      06E4   85 18      STA &18
-     06E6   85 21      STA &21
+     06E6   85 22      STA &22
      06E8   20 19 11   JSR &1119
      06EB   20 FE 09   JSR &09FE
      06EE   20 DF 0A   JSR &0ADF
@@ -1494,10 +1490,10 @@ Saving file '$.Loader'
 .ladybugEntryAnimation
      0819   A5 18      LDA &18
      081B   F0 28      BEQ &0845
-     081D   A5 75      LDA &75
+     081D   A5 6E      LDA &6E
      081F   C9 08      CMP #&08
      0821   D0 0F      BNE &0832
-     0823   A5 7A      LDA &7A
+     0823   A5 73      LDA &73
      0825   C9 A8      CMP #&A8
      0827   D0 09      BNE &0832
      0829   A9 0A      LDA #&0A
@@ -1506,10 +1502,10 @@ Saving file '$.Loader'
      0830   85 37      STA &37
 .ladybugEntryAnimationNext
      0832   20 7B 21   JSR &217B
-     0835   A5 75      LDA &75
+     0835   A5 6E      LDA &6E
      0837   C9 58      CMP #&58
      0839   D0 0A      BNE &0845
-     083B   A5 7A      LDA &7A
+     083B   A5 73      LDA &73
      083D   C9 88      CMP #&88
      083F   D0 04      BNE &0845
      0841   A9 00      LDA #&00
@@ -1524,7 +1520,7 @@ Saving file '$.Loader'
      084E   A9 19      LDA #&19
      0850   85 36      STA &36
      0852   85 37      STA &37
-     0854   A5 B6      LDA &B6
+     0854   A5 B2      LDA &B2
      0856   D0 0C      BNE &0864
      0858   A9 FF      LDA #&FF
      085A   85 31      STA &31
@@ -1624,32 +1620,32 @@ Saving file '$.Loader'
      08E2   F0 03      BEQ &08E7
      08E4   4C D8 09   JMP &09D8
 .moveSpritesGetDirection
-     08E7   B5 70      LDA &70,X
+     08E7   B5 78      LDA &78,X
      08E9   29 0C      AND #&0C
      08EB   F0 03      BEQ &08F0
      08ED   4C D8 09   JMP &09D8
 .moveSpritesDirection
-     08F0   B4 70      LDY &70,X
+     08F0   B4 78      LDY &78,X
      08F2   18         CLC
-     08F3   B5 75      LDA &75,X
+     08F3   B5 6E      LDA &6E,X
      08F5   79 B2 08   ADC &08B2,Y
-     08F8   95 75      STA &75,X
+     08F8   95 6E      STA &6E,X
      08FA   85 5C      STA &5C
      08FC   18         CLC
-     08FD   B5 7A      LDA &7A,X
+     08FD   B5 73      LDA &73,X
      08FF   79 B6 08   ADC &08B6,Y
-     0902   95 7A      STA &7A,X
+     0902   95 73      STA &73,X
      0904   85 5D      STA &5D
      0906   E0 00      CPX #&00
      0908   D0 03      BNE &090D
      090A   4C D8 09   JMP &09D8
 .moveSpritesCollision
-     090D   A5 70      LDA &70
+     090D   A5 78      LDA &78
      090F   29 08      AND #&08
      0911   D0 23      BNE &0936
-     0913   B5 75      LDA &75,X
+     0913   B5 6E      LDA &6E,X
      0915   38         SEC
-     0916   E5 75      SBC &75
+     0916   E5 6E      SBC &6E
      0918   B0 05      BCS &091F
      091A   49 FF      EOR #&FF
      091C   18         CLC
@@ -1657,9 +1653,9 @@ Saving file '$.Loader'
 .moveSpritesCollisionX
      091F   C9 06      CMP #&06
      0921   B0 13      BCS &0936
-     0923   B5 7A      LDA &7A,X
+     0923   B5 73      LDA &73,X
      0925   38         SEC
-     0926   E5 7A      SBC &7A
+     0926   E5 73      SBC &73
      0928   B0 05      BCS &092F
      092A   49 FF      EOR #&FF
      092C   18         CLC
@@ -1669,13 +1665,13 @@ Saving file '$.Loader'
      0931   B0 03      BCS &0936
      0933   20 97 24   JSR &2497
 .moveSpritesCheckAlignmentX
-     0936   B5 75      LDA &75,X
+     0936   B5 6E      LDA &6E,X
      0938   29 0F      AND #&0F
      093A   C9 08      CMP #&08
      093C   F0 03      BEQ &0941
      093E   4C D8 09   JMP &09D8
 .moveSpritesCheckAlignmentY
-     0941   B5 7A      LDA &7A,X
+     0941   B5 73      LDA &73,X
      0943   29 0F      AND #&0F
      0945   C9 08      CMP #&08
      0947   F0 03      BEQ &094C
@@ -1703,8 +1699,8 @@ Saving file '$.Loader'
      0973   20 A3 22   JSR &22A3
      0976   C6 3C      DEC &3C
      0978   A9 08      LDA #&08
-     097A   15 70      ORA &70,X
-     097C   95 70      STA &70,X
+     097A   15 78      ORA &78,X
+     097C   95 78      STA &78,X
      097E   20 E7 1B   JSR &1BE7
      0981   4C D8 09   JMP &09D8
 .moveSpritesCheckValidJunction
@@ -1720,7 +1716,7 @@ Saving file '$.Loader'
      0992   CA         DEX
      0993   10 F5      BPL &098A
      0995   A6 68      LDX &68
-     0997   B4 70      LDY &70,X
+     0997   B4 78      LDY &78,X
      0999   24 65      BIT &65
      099B   10 2D      BPL &09CA
 .moveSpritesRandomOrAttack
@@ -1754,7 +1750,7 @@ Saving file '$.Loader'
      09D0   B1 5E      LDA (&5E),Y
      09D2   30 DA      BMI &09AE
      09D4   A5 67      LDA &67
-     09D6   95 70      STA &70,X
+     09D6   95 78      STA &78,X
 .moveSpritesNext
      09D8   E6 68      INC &68
      09DA   A5 68      LDA &68
@@ -1764,8 +1760,8 @@ Saving file '$.Loader'
 .moveSpritesExit
      09E3   60         RTS
 .moveSpritesCheckUpDown
-     09E4   B5 7A      LDA &7A,X
-     09E6   C5 7A      CMP &7A
+     09E4   B5 73      LDA &73,X
+     09E6   C5 73      CMP &73
      09E8   F0 06      BEQ &09F0
      09EA   A0 01      LDY #&01
      09EC   90 02      BCC &09F0
@@ -1773,8 +1769,8 @@ Saving file '$.Loader'
 .moveSpritesCheckUpDownExit
      09F0   60         RTS
 .moveSpritesCheckRightLeft
-     09F1   B5 75      LDA &75,X
-     09F3   C5 75      CMP &75
+     09F1   B5 6E      LDA &6E,X
+     09F3   C5 6E      CMP &6E
      09F5   F0 06      BEQ &09FD
      09F7   A0 03      LDY #&03
      09F9   90 02      BCC &09FD
@@ -1915,17 +1911,17 @@ Saving file '$.Loader'
      0ADF   AD 9C 44   LDA &449C
      0AE2   18         CLC
      0AE3   69 0A      ADC #&0A
-     0AE5   85 95      STA &95
+     0AE5   85 93      STA &93
      0AE7   A9 03      LDA #&03
-     0AE9   85 96      STA &96
+     0AE9   85 94      STA &94
      0AEB   A9 BC      LDA #&BC
-     0AED   85 97      STA &97
+     0AED   85 95      STA &95
      0AEF   20 04 0C   JSR &0C04
      0AF2   20 77 0B   JSR &0B77
      0AF5   A9 22      LDA #&22
-     0AF7   85 96      STA &96
+     0AF7   85 94      STA &94
      0AF9   A9 BE      LDA #&BE
-     0AFB   85 97      STA &97
+     0AFB   85 95      STA &95
      0AFD   20 E4 0B   JSR &0BE4
      0B00   20 EB 21   JSR &21EB
      0B03   0C
@@ -2019,9 +2015,9 @@ Saving file '$.Loader'
      0BB5   60         RTS
 .drawObjectScore
      0BB6   A5 29      LDA &29
-     0BB8   85 96      STA &96
+     0BB8   85 94      STA &94
      0BBA   A5 2A      LDA &2A
-     0BBC   85 97      STA &97
+     0BBC   85 95      STA &95
      0BBE   A5 28      LDA &28
      0BC0   D0 24      BNE &0BE6
      0BC2   60         RTS
@@ -2035,10 +2031,10 @@ Saving file '$.Loader'
      0BCD   60         RTS
 .drawVegetableCenterActive
      0BCE   A9 58      LDA #&58
-     0BD0   85 96      STA &96
+     0BD0   85 94      STA &94
      0BD2   A9 5A      LDA #&5A
-     0BD4   85 97      STA &97
-     0BD6   A5 21      LDA &21
+     0BD4   85 95      STA &95
+     0BD6   A5 22      LDA &22
      0BD8   F0 0A      BEQ &0BE4
      0BDA   A5 2B      LDA &2B
      0BDC   C9 06      CMP #&06
@@ -2048,9 +2044,9 @@ Saving file '$.Loader'
 .drawVegetable
      0BE4   A5 24      LDA &24
 .drawSprite10x10
-     0BE6   85 95      STA &95
-     0BE8   86 98      STX &98
-     0BEA   84 99      STY &99
+     0BE6   85 93      STA &93
+     0BE8   86 96      STX &96
+     0BEA   84 97      STY &97
      0BEC   A9 00      LDA #&00
      0BEE   8D 63 0C   STA &0C63
      0BF1   A9 0A      LDA #&0A
@@ -2062,8 +2058,8 @@ Saving file '$.Loader'
      0C00   85 54      STA &54
      0C02   10 38      BPL &0C3C
 .drawSprite
-     0C04   86 98      STX &98
-     0C06   84 99      STY &99
+     0C04   86 96      STX &96
+     0C06   84 97      STY &97
      0C08   A9 00      LDA #&00
      0C0A   8D 63 0C   STA &0C63
      0C0D   A9 0E      LDA #&0E
@@ -2075,8 +2071,8 @@ Saving file '$.Loader'
      0C1C   85 54      STA &54
      0C1E   D0 1C      BNE &0C3C
 .drawSpriteFlipped
-     0C20   86 98      STX &98
-     0C22   84 99      STY &99
+     0C20   86 96      STX &96
+     0C22   84 97      STY &97
      0C24   A9 0D      LDA #&0D
      0C26   8D 63 0C   STA &0C63
      0C29   A9 FF      LDA #&FF
@@ -2092,19 +2088,19 @@ Saving file '$.Loader'
      0C3F   B0 03      BCS &0C44
      0C41   4C B0 0C   JMP &0CB0
 .drawSpriteGetIdAddr
-     0C44   A5 95      LDA &95
+     0C44   A5 93      LDA &93
      0C46   A8         TAY
      0C47   B9 A6 44   LDA &44A6,Y
      0C4A   8D 65 0C   STA &0C65
      0C4D   B9 51 45   LDA &4551,Y
      0C50   8D 66 0C   STA &0C66
 .drawSpriteColumn
-     0C53   A5 97      LDA &97
+     0C53   A5 95      LDA &95
      0C55   29 07      AND #&07
      0C57   A8         TAY
-     0C58   A5 9A      LDA &9A
+     0C58   A5 98      LDA &98
      0C5A   8D 68 0C   STA &0C68
-     0C5D   A5 9B      LDA &9B
+     0C5D   A5 99      LDA &99
      0C5F   8D 69 0C   STA &0C69
 .drawSpriteColumnVinit
      0C62   A2 FF      LDX #&FF
@@ -2142,17 +2138,17 @@ Saving file '$.Loader'
      0C98   69 00      ADC #&00
      0C9A   8D 66 0C   STA &0C66
      0C9D   18         CLC
-     0C9E   A5 9A      LDA &9A
+     0C9E   A5 98      LDA &98
      0CA0   69 08      ADC #&08
-     0CA2   85 9A      STA &9A
+     0CA2   85 98      STA &98
      0CA4   90 AD      BCC &0C53
-     0CA6   E6 9B      INC &9B
+     0CA6   E6 99      INC &99
      0CA8   10 A9      BPL &0C53
 .drawSpriteDrawn
      0CAA   38         SEC
 .drawSpriteExit
-     0CAB   A6 98      LDX &98
-     0CAD   A4 99      LDY &99
+     0CAB   A6 96      LDX &96
+     0CAD   A4 97      LDY &97
      0CAF   60         RTS
 .drawSpriteNotDrawn
      0CB0   18         CLC
@@ -2260,17 +2256,17 @@ Saving file '$.Loader'
      0D89   F0 3D      BEQ &0DC8
      0D8B   C6 36      DEC &36
      0D8D   D0 39      BNE &0DC8
-     0D8F   A5 70      LDA &70
+     0D8F   A5 78      LDA &78
      0D91   29 F7      AND #&F7
-     0D93   85 70      STA &70
+     0D93   85 78      STA &78
      0D95   A9 00      LDA #&00
      0D97   85 28      STA &28
      0D99   A5 29      LDA &29
-     0D9B   85 96      STA &96
+     0D9B   85 94      STA &94
      0D9D   A5 2A      LDA &2A
      0D9F   38         SEC
      0DA0   E9 02      SBC #&02
-     0DA2   85 97      STA &97
+     0DA2   85 95      STA &95
      0DA4   20 03 05   JSR &0503
      0DA7   A5 27      LDA &27
      0DA9   F0 1D      BEQ &0DC8
@@ -2293,14 +2289,14 @@ Saving file '$.Loader'
 .updatePauseTimersExit
      0DCE   60         RTS
 .updateAnimationFrame
-     0DCF   C6 93      DEC &93
+     0DCF   C6 91      DEC &91
      0DD1   D0 0C      BNE &0DDF
      0DD3   A9 08      LDA #&08
-     0DD5   85 93      STA &93
-     0DD7   C6 94      DEC &94
+     0DD5   85 91      STA &91
+     0DD7   C6 92      DEC &92
      0DD9   10 04      BPL &0DDF
      0DDB   A9 03      LDA #&03
-     0DDD   85 94      STA &94
+     0DDD   85 92      STA &92
 .updateAnimationFrameExit
      0DDF   60         RTS
 .instructionsLetters
@@ -2439,7 +2435,7 @@ Saving file '$.Loader'
      0F3C   A5 41      LDA &41
      0F3E   60         RTS
 .instructionsLadybugAnimation
-     0F3F   A5 C1      LDA &C1
+     0F3F   A5 BD      LDA &BD
      0F41   D0 05      BNE &0F48
      0F43   A9 04      LDA #&04
      0F45   20 53 21   JSR &2153
@@ -2466,18 +2462,18 @@ Saving file '$.Loader'
      0F5D   90 2B      BCC &0F8A
      0F5F   29 04      AND #&04
      0F61   D0 0D      BNE &0F70
-     0F63   A5 70      LDA &70
+     0F63   A5 78      LDA &78
      0F65   29 F7      AND #&F7
-     0F67   85 70      STA &70
+     0F67   85 78      STA &78
      0F69   A9 00      LDA #&00
      0F6B   85 1A      STA &1A
      0F6D   4C 76 0F   JMP &0F76
 .ladybugDeathAnimationBlank
-     0F70   A5 70      LDA &70
+     0F70   A5 78      LDA &78
      0F72   09 08      ORA #&08
-     0F74   85 70      STA &70
+     0F74   85 78      STA &78
 .ladybugDeathAnimationCheckMusic
-     0F76   A5 B6      LDA &B6
+     0F76   A5 B2      LDA &B2
      0F78   D0 06      BNE &0F80
      0F7A   A9 FF      LDA #&FF
      0F7C   85 18      STA &18
@@ -2487,7 +2483,7 @@ Saving file '$.Loader'
      0F80   18         CLC
      0F81   60         RTS
 .ladybugDeathAnimationDrawAngelLower
-     0F82   A5 7A      LDA &7A
+     0F82   A5 73      LDA &73
      0F84   C9 55      CMP #&55
      0F86   B0 EE      BCS &0F76
      0F88   90 25      BCC &0FAF
@@ -2496,28 +2492,28 @@ Saving file '$.Loader'
      0F8C   C9 E6      CMP #&E6
      0F8E   D0 15      BNE &0FA5
      0F90   A9 08      LDA #&08
-     0F92   85 71      STA &71
-     0F94   85 72      STA &72
-     0F96   85 73      STA &73
-     0F98   85 74      STA &74
+     0F92   85 79      STA &79
+     0F94   85 7A      STA &7A
+     0F96   85 7B      STA &7B
+     0F98   85 7C      STA &7C
      0F9A   A9 58      LDA #&58
-     0F9C   85 96      STA &96
+     0F9C   85 94      STA &94
      0F9E   A9 58      LDA #&58
-     0FA0   85 97      STA &97
+     0FA0   85 95      STA &95
      0FA2   20 03 05   JSR &0503
 .ladybugDeathAnimationCheckUpperLower
      0FA5   A5 02      LDA &02
      0FA7   D0 D9      BNE &0F82
-     0FA9   A5 7A      LDA &7A
+     0FA9   A5 73      LDA &73
      0FAB   C9 55      CMP #&55
      0FAD   90 C7      BCC &0F76
 .ladybugDeathAnimationDrawAngelOk
-     0FAF   A5 75      LDA &75
+     0FAF   A5 6E      LDA &6E
      0FB1   85 5C      STA &5C
-     0FB3   85 96      STA &96
-     0FB5   A5 7A      LDA &7A
+     0FB3   85 94      STA &94
+     0FB5   A5 73      LDA &73
      0FB7   85 5D      STA &5D
-     0FB9   85 97      STA &97
+     0FB9   85 95      STA &95
      0FBB   20 A2 26   JSR &26A2
      0FBE   A0 00      LDY #&00
      0FC0   B1 5E      LDA (&5E),Y
@@ -2561,22 +2557,22 @@ Saving file '$.Loader'
      1014   B1 5E      LDA (&5E),Y
      1016   20 A4 05   JSR &05A4
      1019   AD A5 44   LDA &44A5
-     101C   85 95      STA &95
-     101E   A5 75      LDA &75
-     1020   85 96      STA &96
-     1022   A5 7A      LDA &7A
-     1024   85 97      STA &97
+     101C   85 93      STA &93
+     101E   A5 6E      LDA &6E
+     1020   85 94      STA &94
+     1022   A5 73      LDA &73
+     1024   85 95      STA &95
      1026   A5 36      LDA &36
      1028   29 04      AND #&04
      102A   D0 02      BNE &102E
-     102C   E6 95      INC &95
+     102C   E6 93      INC &93
 .ladybugDeathAnimationDrawAngelSprite
      102E   20 04 0C   JSR &0C04
      1031   A5 36      LDA &36
      1033   C9 BF      CMP #&BF
      1035   B0 34      BCS &106B
      1037   A6 1A      LDX &1A
-     1039   A5 75      LDA &75
+     1039   A5 6E      LDA &6E
      103B   18         CLC
      103C   7D 49 0F   ADC &0F49,X
      103F   C9 08      CMP #&08
@@ -2587,16 +2583,16 @@ Saving file '$.Loader'
      1047   90 02      BCC &104B
      1049   A9 A8      LDA #&A8
 .ladybugDeathAnimationLimitXstore
-     104B   85 75      STA &75
+     104B   85 6E      STA &6E
      104D   E8         INX
-     104E   A5 7A      LDA &7A
+     104E   A5 73      LDA &73
      1050   18         CLC
      1051   7D 49 0F   ADC &0F49,X
      1054   C9 08      CMP #&08
      1056   B0 02      BCS &105A
      1058   A9 08      LDA #&08
 .ladybugDeathAnimationLimitYstore
-     105A   85 7A      STA &7A
+     105A   85 73      STA &73
      105C   E8         INX
      105D   A5 00      LDA &00
      105F   29 07      AND #&07
@@ -2672,7 +2668,7 @@ Saving file '$.Loader'
      10D5   68
 .keyScanCodesEnd
 .keyboardScanFull
-     10D6   86 CA      STX &CA
+     10D6   86 C6      STX &C6
      10D8   A9 7F      LDA #&7F
      10DA   8D 43 FE   STA &FE43
      10DD   A9 03      LDA #&03
@@ -2686,14 +2682,14 @@ Saving file '$.Loader'
      10ED   10 F5      BPL &10E4
      10EF   A9 0B      LDA #&0B
      10F1   8D 40 FE   STA &FE40
-     10F4   A6 CA      LDX &CA
+     10F4   A6 C6      LDX &C6
      10F6   18         CLC
      10F7   60         RTS
 .keyboardScanFullPressed
      10F8   A9 0B      LDA #&0B
      10FA   8D 40 FE   STA &FE40
      10FD   8A         TXA
-     10FE   A6 CA      LDX &CA
+     10FE   A6 C6      LDX &C6
      1100   38         SEC
      1101   60         RTS
 .keyboardScanFullKey
@@ -2776,7 +2772,7 @@ Saving file '$.Loader'
      1178   85 23      STA &23
      117A   85 1F      STA &1F
      117C   85 20      STA &20
-     117E   85 22      STA &22
+     117E   85 21      STA &21
      1180   85 31      STA &31
      1182   85 35      STA &35
      1184   A9 FF      LDA #&FF
@@ -2807,8 +2803,8 @@ Saving file '$.Loader'
      11AD   A9 00      LDA #&00
      11AF   85 32      STA &32
      11B1   85 36      STA &36
-     11B3   85 C8      STA &C8
-     11B5   85 C9      STA &C9
+     11B3   85 C4      STA &C4
+     11B5   85 C5      STA &C5
 .mainMenuUpdateCursor
      11B7   20 D4 11   JSR &11D4
 .mainMenuWaitRelease
@@ -2822,14 +2818,14 @@ Saving file '$.Loader'
 .mainMenuExit
      11C9   60         RTS
 .mainMenuLadybugAnimation
-     11CA   A5 C1      LDA &C1
+     11CA   A5 BD      LDA &BD
      11CC   D0 05      BNE &11D3
      11CE   A9 03      LDA #&03
      11D0   20 53 21   JSR &2153
 .mainMenuLadybugAnimationExit
      11D3   60         RTS
 .mainMenuDrawCursor
-     11D4   A4 C9      LDY &C9
+     11D4   A4 C5      LDY &C5
      11D6   18         CLC
      11D7   B9 8C 39   LDA &398C,Y
      11DA   69 2A      ADC #&2A
@@ -2839,7 +2835,7 @@ Saving file '$.Loader'
      11E4   8D 85 06   STA &0685
      11E7   A9 20      LDA #&20
      11E9   20 18 06   JSR &0618
-     11EC   A4 C9      LDY &C9
+     11EC   A4 C5      LDY &C5
      11EE   18         CLC
      11EF   B9 8C 39   LDA &398C,Y
      11F2   69 AA      ADC #&AA
@@ -2851,7 +2847,7 @@ Saving file '$.Loader'
      1201   20 18 06   JSR &0618
      1204   A9 CC      LDA #&CC
      1206   85 4D      STA &4D
-     1208   A4 C8      LDY &C8
+     1208   A4 C4      LDY &C4
      120A   18         CLC
      120B   B9 8C 39   LDA &398C,Y
      120E   69 2A      ADC #&2A
@@ -2861,7 +2857,7 @@ Saving file '$.Loader'
      1218   8D 85 06   STA &0685
      121B   A9 3F      LDA #&3F
      121D   20 18 06   JSR &0618
-     1220   A4 C8      LDY &C8
+     1220   A4 C4      LDY &C4
      1222   18         CLC
      1223   B9 8C 39   LDA &398C,Y
      1226   69 AA      ADC #&AA
@@ -2871,8 +2867,8 @@ Saving file '$.Loader'
      1230   8D 85 06   STA &0685
      1233   A9 3E      LDA #&3E
      1235   20 18 06   JSR &0618
-     1238   A5 C8      LDA &C8
-     123A   85 C9      STA &C9
+     1238   A5 C4      LDA &C4
+     123A   85 C5      STA &C5
      123C   60         RTS
 .mainMenuFunctions
      123D   20 CA 11   JSR &11CA
@@ -2889,7 +2885,7 @@ Saving file '$.Loader'
      125E   20 F5 03   JSR &03F5
      1261   20 06 02   JSR &0206
      1264   20 4B 01   JSR &014B
-     1267   A5 C8      LDA &C8
+     1267   A5 C4      LDA &C4
      1269   C9 06      CMP #&06
      126B   D0 09      BNE &1276
      126D   A5 00      LDA &00
@@ -2911,9 +2907,9 @@ Saving file '$.Loader'
      1287   18         CLC
      1288   60         RTS
 .mainMenuProcessUp
-     1289   C6 C8      DEC &C8
+     1289   C6 C4      DEC &C4
      128B   30 0A      BMI &1297
-     128D   A5 C8      LDA &C8
+     128D   A5 C4      LDA &C4
      128F   C9 01      CMP #&01
      1291   D0 06      BNE &1299
      1293   A9 00      LDA #&00
@@ -2921,14 +2917,14 @@ Saving file '$.Loader'
 .mainMenuProcessUpNegative
      1297   A9 07      LDA #&07
 .mainMenuProcessUpExit
-     1299   85 C8      STA &C8
+     1299   85 C4      STA &C4
      129B   A9 06      LDA #&06
      129D   20 A3 22   JSR &22A3
      12A0   18         CLC
      12A1   60         RTS
 .mainMenuProcessDown
-     12A2   E6 C8      INC &C8
-     12A4   A5 C8      LDA &C8
+     12A2   E6 C4      INC &C4
+     12A4   A5 C4      LDA &C4
      12A6   C9 01      CMP #&01
      12A8   D0 04      BNE &12AE
      12AA   A9 02      LDA #&02
@@ -2938,13 +2934,13 @@ Saving file '$.Loader'
      12B0   D0 02      BNE &12B4
      12B2   A9 00      LDA #&00
 .mainMenuProcessDownExit
-     12B4   85 C8      STA &C8
+     12B4   85 C4      STA &C4
      12B6   A9 06      LDA #&06
      12B8   20 A3 22   JSR &22A3
      12BB   18         CLC
      12BC   60         RTS
 .mainMenuProcessStart
-     12BD   A6 C8      LDX &C8
+     12BD   A6 C4      LDX &C4
      12BF   F0 3D      BEQ &12FE
      12C1   E0 07      CPX #&07
      12C3   F0 3B      BEQ &1300
@@ -2960,7 +2956,7 @@ Saving file '$.Loader'
      12D5   20 6F 15   JSR &156F
      12D8   A9 05      LDA #&05
      12DA   20 A3 22   JSR &22A3
-     12DD   A5 C8      LDA &C8
+     12DD   A5 C4      LDA &C4
      12DF   C9 02      CMP #&02
      12E1   D0 05      BNE &12E8
      12E3   20 08 16   JSR &1608
@@ -3358,18 +3354,18 @@ Saving file '$.Loader'
      160B   A2 03      LDX #&03
 .mainMenuDrawEnemysLoop
      160D   BD 00 16   LDA &1600,X
-     1610   95 76      STA &76,X
+     1610   95 6F      STA &6F,X
      1612   BD 04 16   LDA &1604,X
-     1615   95 7B      STA &7B,X
+     1615   95 74      STA &74,X
      1617   A5 43      LDA &43
      1619   29 07      AND #&07
      161B   A8         TAY
      161C   B9 9D 44   LDA &449D,Y
-     161F   95 6C      STA &6C,X
+     161F   95 6A      STA &6A,X
      1621   A5 42      LDA &42
      1623   29 03      AND #&03
      1625   09 04      ORA #&04
-     1627   95 71      STA &71,X
+     1627   95 79      STA &79,X
      1629   E6 42      INC &42
      162B   E6 43      INC &43
      162D   CA         DEX
@@ -3514,9 +3510,9 @@ Saving file '$.Loader'
      17AD   88         DEY
      17AE   10 FA      BPL &17AA
      17B0   A9 00      LDA #&00
-     17B2   85 C5      STA &C5
-     17B4   85 C6      STA &C6
-     17B6   85 C7      STA &C7
+     17B2   85 C1      STA &C1
+     17B4   85 C2      STA &C2
+     17B6   85 C3      STA &C3
      17B8   A9 02      LDA #&02
      17BA   20 53 21   JSR &2153
      17BD   20 83 18   JSR &1883
@@ -3559,15 +3555,15 @@ Saving file '$.Loader'
      180B   60         RTS
 .nameRegProcessAdd32
      180C   18         CLC
-     180D   A5 C5      LDA &C5
+     180D   A5 C1      LDA &C1
      180F   69 20      ADC #&20
-     1811   85 C5      STA &C5
+     1811   85 C1      STA &C1
      1813   10 69      BPL &187E
 .nameRegProcessSub32
      1815   38         SEC
-     1816   A5 C5      LDA &C5
+     1816   A5 C1      LDA &C1
      1818   E9 20      SBC #&20
-     181A   85 C5      STA &C5
+     181A   85 C1      STA &C1
      181C   10 60      BPL &187E
 .nameRegProcess
 .nameRegProcessUp
@@ -3576,9 +3572,9 @@ Saving file '$.Loader'
      1822   A9 06      LDA #&06
      1824   20 A3 22   JSR &22A3
      1827   38         SEC
-     1828   A5 C5      LDA &C5
+     1828   A5 C1      LDA &C1
      182A   E9 08      SBC #&08
-     182C   85 C5      STA &C5
+     182C   85 C1      STA &C1
      182E   10 4E      BPL &187E
      1830   30 DA      BMI &180C
 .nameRegProcessDown
@@ -3587,9 +3583,9 @@ Saving file '$.Loader'
      1836   A9 06      LDA #&06
      1838   20 A3 22   JSR &22A3
      183B   18         CLC
-     183C   A5 C5      LDA &C5
+     183C   A5 C1      LDA &C1
      183E   69 08      ADC #&08
-     1840   85 C5      STA &C5
+     1840   85 C1      STA &C1
      1842   C9 20      CMP #&20
      1844   90 38      BCC &187E
      1846   B0 CD      BCS &1815
@@ -3599,9 +3595,9 @@ Saving file '$.Loader'
      184C   A9 06      LDA #&06
      184E   20 A3 22   JSR &22A3
      1851   38         SEC
-     1852   A5 C5      LDA &C5
+     1852   A5 C1      LDA &C1
      1854   E9 01      SBC #&01
-     1856   85 C5      STA &C5
+     1856   85 C1      STA &C1
      1858   10 24      BPL &187E
      185A   30 B0      BMI &180C
 .nameRegProcessRight
@@ -3610,16 +3606,16 @@ Saving file '$.Loader'
      1860   A9 06      LDA #&06
      1862   20 A3 22   JSR &22A3
      1865   18         CLC
-     1866   A5 C5      LDA &C5
+     1866   A5 C1      LDA &C1
      1868   69 01      ADC #&01
-     186A   85 C5      STA &C5
+     186A   85 C1      STA &C1
      186C   C9 20      CMP #&20
      186E   90 0E      BCC &187E
      1870   B0 A3      BCS &1815
 .nameRegProcessStart
      1872   46 41      LSR &41
      1874   90 08      BCC &187E
-     1876   A5 C5      LDA &C5
+     1876   A5 C1      LDA &C1
      1878   C9 1F      CMP #&1F
      187A   D0 13      BNE &188F
      187C   38         SEC
@@ -3636,10 +3632,10 @@ Saving file '$.Loader'
 .nameRegProcessDelete
      188F   C9 1E      CMP #&1E
      1891   D0 49      BNE &18DC
-     1893   A5 C7      LDA &C7
+     1893   A5 C3      LDA &C3
      1895   F0 E7      BEQ &187E
-     1897   C6 C7      DEC &C7
-     1899   A4 C7      LDY &C7
+     1897   C6 C3      DEC &C3
+     1899   A4 C3      LDY &C3
      189B   18         CLC
      189C   B9 BE 39   LDA &39BE,Y
      189F   69 42      ADC #&42
@@ -3649,7 +3645,7 @@ Saving file '$.Loader'
      18A9   8D 85 06   STA &0685
      18AC   A9 20      LDA #&20
      18AE   20 18 06   JSR &0618
-     18B1   A4 C7      LDY &C7
+     18B1   A4 C3      LDY &C3
      18B3   18         CLC
      18B4   B9 BE 39   LDA &39BE,Y
      18B7   69 42      ADC #&42
@@ -3661,17 +3657,17 @@ Saving file '$.Loader'
      18C6   85 4D      STA &4D
      18C8   A9 2D      LDA #&2D
      18CA   20 18 06   JSR &0618
-     18CD   A4 C7      LDY &C7
+     18CD   A4 C3      LDY &C3
      18CF   A9 20      LDA #&20
      18D1   99 BE 3E   STA &3EBE,Y
      18D4   A9 07      LDA #&07
      18D6   20 A3 22   JSR &22A3
      18D9   4C 7E 18   JMP &187E
 .nameRegProcessChr
-     18DC   A4 C7      LDY &C7
+     18DC   A4 C3      LDY &C3
      18DE   C0 0A      CPY #&0A
      18E0   F0 9C      BEQ &187E
-     18E2   A6 C5      LDX &C5
+     18E2   A6 C1      LDX &C1
      18E4   BD B4 16   LDA &16B4,X
      18E7   99 BE 3E   STA &3EBE,Y
      18EA   18         CLC
@@ -3683,7 +3679,7 @@ Saving file '$.Loader'
      18F8   8D 85 06   STA &0685
      18FB   A9 20      LDA #&20
      18FD   20 18 06   JSR &0618
-     1900   A4 C7      LDY &C7
+     1900   A4 C3      LDY &C3
      1902   18         CLC
      1903   B9 BE 39   LDA &39BE,Y
      1906   69 42      ADC #&42
@@ -3695,7 +3691,7 @@ Saving file '$.Loader'
      1915   85 4D      STA &4D
      1917   B9 BE 3E   LDA &3EBE,Y
      191A   20 18 06   JSR &0618
-     191D   E6 C7      INC &C7
+     191D   E6 C3      INC &C3
      191F   A9 05      LDA #&05
      1921   20 A3 22   JSR &22A3
      1924   4C 7E 18   JMP &187E
@@ -3776,14 +3772,14 @@ Saving file '$.Loader'
      19D8   A9 5D      LDA #&5D
      19DA   4C 6A 05   JMP &056A
 .nameRegCursorAddr
-     19DD   A5 C6      LDA &C6
+     19DD   A5 C2      LDA &C2
      19DF   29 38      AND #&38
      19E1   4A         LSR A
      19E2   4A         LSR A
      19E3   18         CLC
      19E4   69 0C      ADC #&0C
      19E6   A8         TAY
-     19E7   A5 C6      LDA &C6
+     19E7   A5 C2      LDA &C2
      19E9   29 07      AND #&07
      19EB   0A         ASL A
      19EC   18         CLC
@@ -3796,13 +3792,13 @@ Saving file '$.Loader'
      19FA   B9 A5 39   LDA &39A5,Y
      19FD   7D D5 39   ADC &39D5,X
      1A00   8D C9 05   STA &05C9
-     1A03   A5 C5      LDA &C5
-     1A05   85 C6      STA &C6
+     1A03   A5 C1      LDA &C1
+     1A05   85 C2      STA &C2
      1A07   60         RTS
 .checkBonus
      1A08   A5 18      LDA &18
      1A0A   D0 41      BNE &1A4D
-     1A0C   A5 22      LDA &22
+     1A0C   A5 21      LDA &21
      1A0E   D0 3F      BNE &1A4F
 .checkBonusSpecial
      1A10   A5 1F      LDA &1F
@@ -3813,7 +3809,7 @@ Saving file '$.Loader'
      1A1A   A9 25      LDA #&25
      1A1C   85 36      STA &36
      1A1E   85 37      STA &37
-     1A20   A5 B6      LDA &B6
+     1A20   A5 B2      LDA &B2
      1A22   D0 29      BNE &1A4D
      1A24   A9 FF      LDA #&FF
      1A26   85 1F      STA &1F
@@ -3829,7 +3825,7 @@ Saving file '$.Loader'
      1A3A   A9 25      LDA #&25
      1A3C   85 36      STA &36
      1A3E   85 37      STA &37
-     1A40   A5 B6      LDA &B6
+     1A40   A5 B2      LDA &B2
      1A42   D0 09      BNE &1A4D
      1A44   A9 FF      LDA #&FF
      1A46   85 20      STA &20
@@ -3839,7 +3835,7 @@ Saving file '$.Loader'
      1A4D   18         CLC
      1A4E   60         RTS
 .checkBonusDiamondActive
-     1A4F   A5 B6      LDA &B6
+     1A4F   A5 B2      LDA &B2
      1A51   D0 FA      BNE &1A4D
      1A53   20 80 22   JSR &2280
      1A56   20 09 1F   JSR &1F09
@@ -3946,11 +3942,11 @@ Saving file '$.Loader'
 .changeTimerTileDraw6
      1B16   4C A4 05   JMP &05A4
 .spriteToScreen
-     1B19   86 9C      STX &9C
-     1B1B   84 9D      STY &9D
+     1B19   86 9A      STX &9A
+     1B1B   84 9B      STY &9B
      1B1D   A9 00      LDA #&00
-     1B1F   85 9B      STA &9B
-     1B21   A5 96      LDA &96
+     1B1F   85 99      STA &99
+     1B21   A5 94      LDA &94
      1B23   C9 03      CMP #&03
      1B25   B0 03      BCS &1B2A
      1B27   4C 7A 1B   JMP &1B7A
@@ -3961,49 +3957,49 @@ Saving file '$.Loader'
 .spriteToScreenCalcX
      1B31   38         SEC
      1B32   E9 02      SBC #&02
-     1B34   85 96      STA &96
+     1B34   85 94      STA &94
      1B36   0A         ASL A
-     1B37   26 9B      ROL &9B
+     1B37   26 99      ROL &99
      1B39   18         CLC
-     1B3A   65 96      ADC &96
-     1B3C   85 9A      STA &9A
+     1B3A   65 94      ADC &94
+     1B3C   85 98      STA &98
      1B3E   90 02      BCC &1B42
-     1B40   E6 9B      INC &9B
+     1B40   E6 99      INC &99
 .spriteToScreenCheckOdd
      1B42   29 04      AND #&04
      1B44   F0 07      BEQ &1B4D
      1B46   18         CLC
-     1B47   A5 95      LDA &95
+     1B47   A5 93      LDA &93
      1B49   69 03      ADC #&03
-     1B4B   85 95      STA &95
+     1B4B   85 93      STA &93
 .spriteToScreenTruncateX
-     1B4D   A5 9A      LDA &9A
+     1B4D   A5 98      LDA &98
      1B4F   29 F8      AND #&F8
-     1B51   85 9A      STA &9A
-     1B53   A5 97      LDA &97
+     1B51   85 98      STA &98
+     1B53   A5 95      LDA &95
      1B55   C9 BF      CMP #&BF
      1B57   90 03      BCC &1B5C
      1B59   4C 7A 1B   JMP &1B7A
 .spriteToScreenCalcY
      1B5C   38         SEC
      1B5D   E9 03      SBC #&03
-     1B5F   85 97      STA &97
+     1B5F   85 95      STA &95
      1B61   4A         LSR A
      1B62   4A         LSR A
      1B63   4A         LSR A
      1B64   A8         TAY
      1B65   18         CLC
-     1B66   A5 9A      LDA &9A
+     1B66   A5 98      LDA &98
      1B68   79 8C 39   ADC &398C,Y
-     1B6B   85 9A      STA &9A
-     1B6D   A5 9B      LDA &9B
+     1B6B   85 98      STA &98
+     1B6D   A5 99      LDA &99
      1B6F   79 A5 39   ADC &39A5,Y
-     1B72   85 9B      STA &9B
+     1B72   85 99      STA &99
 .spriteToScreenValid
      1B74   38         SEC
 .spriteToScreenExit
-     1B75   A4 9D      LDY &9D
-     1B77   A6 9C      LDX &9C
+     1B75   A4 9B      LDY &9B
+     1B77   A6 9A      LDX &9A
      1B79   60         RTS
 .spriteToScreenNotValid
      1B7A   18         CLC
@@ -4049,7 +4045,7 @@ Saving file '$.Loader'
      1BAF   B0 30      BCS &1BE1
      1BB1   A2 04      LDX #&04
 .enemyReleaseLoop
-     1BB3   B5 70      LDA &70,X
+     1BB3   B5 78      LDA &78,X
      1BB5   29 0C      AND #&0C
      1BB7   C9 04      CMP #&04
      1BB9   F0 04      BEQ &1BBF
@@ -4067,7 +4063,7 @@ Saving file '$.Loader'
      1BCA   C5 3B      CMP &3B
      1BCC   D0 13      BNE &1BE1
      1BCE   A9 00      LDA #&00
-     1BD0   95 70      STA &70,X
+     1BD0   95 78      STA &78,X
      1BD2   E6 3C      INC &3C
      1BD4   A9 00      LDA #&00
      1BD6   85 3A      STA &3A
@@ -4084,7 +4080,7 @@ Saving file '$.Loader'
 .enemySpawn
      1BE7   A2 04      LDX #&04
 .enemySpawnCheckEmpty
-     1BE9   B5 70      LDA &70,X
+     1BE9   B5 78      LDA &78,X
      1BEB   29 0C      AND #&0C
      1BED   C9 04      CMP #&04
      1BEF   F0 47      BEQ &1C38
@@ -4092,7 +4088,7 @@ Saving file '$.Loader'
      1BF2   D0 F5      BNE &1BE9
      1BF4   A2 04      LDX #&04
 .enemySpawnFindInactive
-     1BF6   B5 70      LDA &70,X
+     1BF6   B5 78      LDA &78,X
      1BF8   29 08      AND #&08
      1BFA   D0 03      BNE &1BFF
      1BFC   CA         DEX
@@ -4102,7 +4098,7 @@ Saving file '$.Loader'
      1C01   C9 09      CMP #&09
      1C03   90 1D      BCC &1C22
      1C05   A9 FF      LDA #&FF
-     1C07   95 6B      STA &6B,X
+     1C07   95 69      STA &69,X
      1C09   86 40      STX &40
 .enemySpawnRandom
      1C0B   20 06 02   JSR &0206
@@ -4112,7 +4108,7 @@ Saving file '$.Loader'
      1C12   B9 9C 44   LDA &449C,Y
      1C15   A2 04      LDX #&04
 .enemySpawnCheckImage
-     1C17   D5 6B      CMP &6B,X
+     1C17   D5 69      CMP &69,X
      1C19   F0 F0      BEQ &1C0B
      1C1B   CA         DEX
      1C1C   D0 F9      BNE &1C17
@@ -4122,13 +4118,13 @@ Saving file '$.Loader'
      1C22   A8         TAY
      1C23   B9 9C 44   LDA &449C,Y
 .enemySpawnImage
-     1C26   95 6B      STA &6B,X
+     1C26   95 69      STA &69,X
      1C28   A9 58      LDA #&58
-     1C2A   95 75      STA &75,X
+     1C2A   95 6E      STA &6E,X
      1C2C   A9 58      LDA #&58
-     1C2E   95 7A      STA &7A,X
+     1C2E   95 73      STA &73,X
      1C30   A9 04      LDA #&04
-     1C32   95 70      STA &70,X
+     1C32   95 78      STA &78,X
      1C34   A9 00      LDA #&00
      1C36   85 25      STA &25
 .enemySpawnExit
@@ -4137,31 +4133,31 @@ Saving file '$.Loader'
      1C39   A9 00      LDA #&00
      1C3B   85 19      STA &19
      1C3D   AD 9C 44   LDA &449C
-     1C40   85 6B      STA &6B
+     1C40   85 69      STA &69
      1C42   A5 18      LDA &18
      1C44   D0 0D      BNE &1C53
      1C46   A9 04      LDA #&04
-     1C48   85 70      STA &70
+     1C48   85 78      STA &78
      1C4A   A9 58      LDA #&58
-     1C4C   85 75      STA &75
+     1C4C   85 6E      STA &6E
      1C4E   A9 88      LDA #&88
-     1C50   85 7A      STA &7A
+     1C50   85 73      STA &73
      1C52   60         RTS
 .ladybugSpawnEntry
      1C53   A9 00      LDA #&00
      1C55   4C 53 21   JMP &2153
 .redrawSprites
      1C58   A9 05      LDA #&05
-     1C5A   85 A3      STA &A3
+     1C5A   85 9F      STA &9F
      1C5C   A9 03      LDA #&03
-     1C5E   85 A4      STA &A4
+     1C5E   85 A0      STA &A0
      1C60   A5 02      LDA &02
      1C62   30 12      BMI &1C76
 .redrawSpritesLower
      1C64   A9 90      LDA #&90
      1C66   8D 8C 1C   STA &1C8C
      1C69   8D A3 1C   STA &1CA3
-     1C6C   A9 A6      LDA #&A6
+     1C6C   A9 A2      LDA #&A2
      1C6E   8D 87 1C   STA &1C87
      1C71   8D 10 1D   STA &1D10
      1C74   D0 10      BNE &1C86
@@ -4169,49 +4165,49 @@ Saving file '$.Loader'
      1C76   A9 B0      LDA #&B0
      1C78   8D 8C 1C   STA &1C8C
      1C7B   8D A3 1C   STA &1CA3
-     1C7E   A9 A5      LDA #&A5
+     1C7E   A9 A1      LDA #&A1
      1C80   8D 87 1C   STA &1C87
      1C83   8D 10 1D   STA &1D10
 .redrawSpritesErase
      1C86   A6 FF      LDX &FF
 .redrawSpritesEraseLoop
-     1C88   B5 89      LDA &89,X
+     1C88   B5 87      LDA &87,X
      1C8A   C9 55      CMP #&55
 .redrawSpritesEraseThreshold
      1C8C   D0 0B      BNE &1C99
-     1C8E   B5 7F      LDA &7F,X
+     1C8E   B5 7D      LDA &7D,X
      1C90   D0 07      BNE &1C99
 .redrawSpritesEraseSprite
      1C92   20 68 04   JSR &0468
      1C95   A9 FF      LDA #&FF
-     1C97   95 7F      STA &7F,X
+     1C97   95 7D      STA &7D,X
 .redrawSpritesDraw
-     1C99   B5 70      LDA &70,X
+     1C99   B5 78      LDA &78,X
      1C9B   29 08      AND #&08
      1C9D   D0 60      BNE &1CFF
-     1C9F   B5 7A      LDA &7A,X
+     1C9F   B5 73      LDA &73,X
      1CA1   C9 55      CMP #&55
 .redrawSpritesDrawThreshold
      1CA3   F0 5A      BEQ &1CFF
-     1CA5   B5 7F      LDA &7F,X
+     1CA5   B5 7D      LDA &7D,X
      1CA7   F0 E9      BEQ &1C92
-     1CA9   B5 75      LDA &75,X
-     1CAB   85 96      STA &96
-     1CAD   95 84      STA &84,X
-     1CAF   B5 7A      LDA &7A,X
-     1CB1   85 97      STA &97
-     1CB3   95 89      STA &89,X
-     1CB5   A5 94      LDA &94
+     1CA9   B5 6E      LDA &6E,X
+     1CAB   85 94      STA &94
+     1CAD   95 82      STA &82,X
+     1CAF   B5 73      LDA &73,X
+     1CB1   85 95      STA &95
+     1CB3   95 87      STA &87,X
+     1CB5   A5 92      LDA &92
      1CB7   C9 03      CMP #&03
      1CB9   D0 02      BNE &1CBD
      1CBB   A9 01      LDA #&01
 .redrawSpritesAnimation
      1CBD   18         CLC
-     1CBE   75 6B      ADC &6B,X
-     1CC0   85 95      STA &95
+     1CBE   75 69      ADC &69,X
+     1CC0   85 93      STA &93
 .redrawSpritesDirection
-     1CC2   B5 70      LDA &70,X
-     1CC4   95 8E      STA &8E,X
+     1CC2   B5 78      LDA &78,X
+     1CC4   95 8C      STA &8C,X
      1CC6   29 03      AND #&03
 .redrawSpritesDirectionUp
      1CC8   C9 00      CMP #&00
@@ -4220,17 +4216,17 @@ Saving file '$.Loader'
      1CCC   C9 02      CMP #&02
      1CCE   D0 09      BNE &1CD9
      1CD0   18         CLC
-     1CD1   A5 95      LDA &95
+     1CD1   A5 93      LDA &93
      1CD3   69 03      ADC #&03
-     1CD5   85 95      STA &95
+     1CD5   85 93      STA &93
      1CD7   D0 13      BNE &1CEC
 .redrawSpritesDirectionRight
      1CD9   C9 03      CMP #&03
      1CDB   D0 09      BNE &1CE6
      1CDD   18         CLC
-     1CDE   A5 95      LDA &95
+     1CDE   A5 93      LDA &93
      1CE0   69 09      ADC #&09
-     1CE2   85 95      STA &95
+     1CE2   85 93      STA &93
      1CE4   D0 06      BNE &1CEC
 .redrawSpritesDirectionDown
      1CE6   20 20 0C   JSR &0C20
@@ -4239,22 +4235,22 @@ Saving file '$.Loader'
      1CEC   20 04 0C   JSR &0C04
 .redrawSpritesGetEraseInfo
      1CEF   90 0E      BCC &1CFF
-     1CF1   B5 75      LDA &75,X
-     1CF3   95 84      STA &84,X
-     1CF5   B5 7A      LDA &7A,X
-     1CF7   95 89      STA &89,X
+     1CF1   B5 6E      LDA &6E,X
+     1CF3   95 82      STA &82,X
+     1CF5   B5 73      LDA &73,X
+     1CF7   95 87      STA &87,X
      1CF9   A9 00      LDA #&00
-     1CFB   95 7F      STA &7F,X
-     1CFD   C6 A4      DEC &A4
+     1CFB   95 7D      STA &7D,X
+     1CFD   C6 A0      DEC &A0
 .redrawSpritesNext
      1CFF   CA         DEX
      1D00   10 02      BPL &1D04
      1D02   A2 04      LDX #&04
 .redrawSpritesCheckDrawn
-     1D04   A5 A4      LDA &A4
+     1D04   A5 A0      LDA &A0
      1D06   F0 07      BEQ &1D0F
 .redrawSpritesCheckDone
-     1D08   C6 A3      DEC &A3
+     1D08   C6 9F      DEC &9F
      1D0A   F0 03      BEQ &1D0F
      1D0C   4C 88 1C   JMP &1C88
 .redrawSpritesExit
@@ -4277,9 +4273,9 @@ Saving file '$.Loader'
      1D32   A5 2B      LDA &2B
      1D34   20 09 06   JSR &0609
      1D37   A9 48      LDA #&48
-     1D39   85 96      STA &96
+     1D39   85 94      STA &94
      1D3B   A9 2A      LDA #&2A
-     1D3D   85 97      STA &97
+     1D3D   85 95      STA &95
      1D3F   20 E4 0B   JSR &0BE4
      1D42   20 EB 21   JSR &21EB
      1D45   3F
@@ -4606,7 +4602,7 @@ Saving file '$.Loader'
      1FF0   20 A3 22   JSR &22A3
      1FF3   4C 9F 20   JMP &209F
 .drawBonusScreenDiamond
-     1FF6   A5 22      LDA &22
+     1FF6   A5 21      LDA &21
      1FF8   D0 03      BNE &1FFD
      1FFA   4C C9 20   JMP &20C9
 .drawBonusScreenDiamondGraphics
@@ -4837,49 +4833,49 @@ Saving file '$.Loader'
      2154   0A         ASL A
      2155   A8         TAY
      2156   B9 3F 21   LDA &213F,Y
-     2159   85 C2      STA &C2
+     2159   85 BE      STA &BE
      215B   C8         INY
      215C   B9 3F 21   LDA &213F,Y
-     215F   85 C3      STA &C3
+     215F   85 BF      STA &BF
      2161   C8         INY
      2162   B9 3F 21   LDA &213F,Y
-     2165   85 75      STA &75
+     2165   85 6E      STA &6E
      2167   C8         INY
      2168   B9 3F 21   LDA &213F,Y
-     216B   85 7A      STA &7A
+     216B   85 73      STA &73
      216D   AD 9C 44   LDA &449C
-     2170   85 6B      STA &6B
+     2170   85 69      STA &69
      2172   A9 00      LDA #&00
-     2174   85 C4      STA &C4
+     2174   85 C0      STA &C0
      2176   A9 FF      LDA #&FF
-     2178   85 C1      STA &C1
+     2178   85 BD      STA &BD
      217A   60         RTS
 .animateLadybug
-     217B   A5 C1      LDA &C1
+     217B   A5 BD      LDA &BD
      217D   F0 1D      BEQ &219C
-     217F   A5 C4      LDA &C4
+     217F   A5 C0      LDA &C0
      2181   D0 1A      BNE &219D
      2183   A0 00      LDY #&00
-     2185   B1 C2      LDA (&C2),Y
+     2185   B1 BE      LDA (&BE),Y
      2187   F0 17      BEQ &21A0
-     2189   85 C4      STA &C4
+     2189   85 C0      STA &C0
      218B   A0 01      LDY #&01
-     218D   B1 C2      LDA (&C2),Y
-     218F   85 70      STA &70
+     218D   B1 BE      LDA (&BE),Y
+     218F   85 78      STA &78
      2191   18         CLC
-     2192   A5 C2      LDA &C2
+     2192   A5 BE      LDA &BE
      2194   69 02      ADC #&02
-     2196   85 C2      STA &C2
+     2196   85 BE      STA &BE
      2198   90 02      BCC &219C
-     219A   E6 C3      INC &C3
+     219A   E6 BF      INC &BF
 .animateLadybugExit
      219C   60         RTS
 .animateLadybugNextFrame
-     219D   C6 C4      DEC &C4
+     219D   C6 C0      DEC &C0
      219F   60         RTS
 .animateLadybugEnd
      21A0   A9 00      LDA #&00
-     21A2   85 C1      STA &C1
+     21A2   85 BD      STA &BD
      21A4   60         RTS
 .updateBonusColor
      21A5   A5 00      LDA &00
@@ -4979,33 +4975,33 @@ Saving file '$.Loader'
      2243   A0 05      LDY #&05
      2245   A2 0A      LDX #&0A
 .processSoundLoop
-     2247   B9 B6 00   LDA &00B6,Y
+     2247   B9 B2 00   LDA &00B2,Y
      224A   F0 2E      BEQ &227A
      224C   38         SEC
      224D   E9 01      SBC #&01
-     224F   99 B6 00   STA &00B6,Y
+     224F   99 B2 00   STA &00B2,Y
      2252   D0 26      BNE &227A
 .processSoundGetData
-     2254   A1 AA      LDA (&AA,X)
+     2254   A1 A6      LDA (&A6,X)
      2256   29 C0      AND #&C0
      2258   C9 40      CMP #&40
      225A   F0 11      BEQ &226D
      225C   A5 06      LDA &06
      225E   F0 05      BEQ &2265
-     2260   A1 AA      LDA (&AA,X)
+     2260   A1 A6      LDA (&A6,X)
      2262   20 39 01   JSR &0139
 .processSoundNextByte
-     2265   F6 AA      INC &AA,X
+     2265   F6 A6      INC &A6,X
      2267   D0 EB      BNE &2254
-     2269   F6 AB      INC &AB,X
+     2269   F6 A7      INC &A7,X
      226B   D0 E7      BNE &2254
 .processSoundGetTimer
-     226D   A1 AA      LDA (&AA,X)
+     226D   A1 A6      LDA (&A6,X)
      226F   29 3F      AND #&3F
-     2271   99 B6 00   STA &00B6,Y
-     2274   F6 AA      INC &AA,X
+     2271   99 B2 00   STA &00B2,Y
+     2274   F6 A6      INC &A6,X
      2276   D0 02      BNE &227A
-     2278   F6 AB      INC &AB,X
+     2278   F6 A7      INC &A7,X
 .processSoundNext
      227A   CA         DEX
      227B   CA         DEX
@@ -5015,12 +5011,12 @@ Saving file '$.Loader'
      227F   60         RTS
 .playSoundSilence
      2280   A9 00      LDA #&00
-     2282   85 B6      STA &B6
-     2284   85 B7      STA &B7
-     2286   85 B8      STA &B8
-     2288   85 B9      STA &B9
-     228A   85 BA      STA &BA
-     228C   85 BB      STA &BB
+     2282   85 B2      STA &B2
+     2284   85 B3      STA &B3
+     2286   85 B4      STA &B4
+     2288   85 B5      STA &B5
+     228A   85 B6      STA &B6
+     228C   85 B7      STA &B7
      228E   A9 9F      LDA #&9F
 .playSoundSilenceLoop
      2290   48         PHA
@@ -5038,29 +5034,29 @@ Saving file '$.Loader'
      22A0   18         CLC
      22A1   69 01      ADC #&01
 .playSound
-     22A3   85 BE      STA &BE
-     22A5   86 BF      STX &BF
-     22A7   84 C0      STY &C0
-     22A9   A5 BE      LDA &BE
+     22A3   85 BA      STA &BA
+     22A5   86 BB      STX &BB
+     22A7   84 BC      STY &BC
+     22A9   A5 BA      LDA &BA
      22AB   0A         ASL A
      22AC   A8         TAY
      22AD   B9 C9 3E   LDA &3EC9,Y
-     22B0   85 BC      STA &BC
+     22B0   85 B8      STA &B8
      22B2   C8         INY
      22B3   B9 C9 3E   LDA &3EC9,Y
-     22B6   85 BD      STA &BD
+     22B6   85 B9      STA &B9
      22B8   A0 00      LDY #&00
-     22BA   B1 BC      LDA (&BC),Y
+     22BA   B1 B8      LDA (&B8),Y
      22BC   A8         TAY
      22BD   0A         ASL A
      22BE   AA         TAX
      22BF   C0 00      CPY #&00
      22C1   D0 1C      BNE &22DF
-     22C3   84 B6      STY &B6
-     22C5   84 B7      STY &B7
-     22C7   84 B8      STY &B8
-     22C9   84 B9      STY &B9
-     22CB   84 BA      STY &BA
+     22C3   84 B2      STY &B2
+     22C5   84 B3      STY &B3
+     22C7   84 B4      STY &B4
+     22C9   84 B5      STY &B5
+     22CB   84 B6      STY &B6
      22CD   A9 9F      LDA #&9F
      22CF   20 39 01   JSR &0139
      22D2   A9 BF      LDA #&BF
@@ -5069,16 +5065,16 @@ Saving file '$.Loader'
      22D9   20 39 01   JSR &0139
      22DC   4C 0B 23   JMP &230B
 .playSoundLowPriority
-     22DF   A5 B6      LDA &B6
+     22DF   A5 B2      LDA &B2
      22E1   F0 08      BEQ &22EB
-     22E3   A5 BE      LDA &BE
+     22E3   A5 BA      LDA &BA
      22E5   C9 06      CMP #&06
      22E7   F0 22      BEQ &230B
      22E9   D0 32      BNE &231D
 .playSoundCheckChannel3
-     22EB   A5 B9      LDA &B9
+     22EB   A5 B5      LDA &B5
      22ED   F0 12      BEQ &2301
-     22EF   A5 BE      LDA &BE
+     22EF   A5 BA      LDA &BA
      22F1   C9 05      CMP #&05
      22F3   F0 28      BEQ &231D
      22F5   C9 02      CMP #&02
@@ -5088,29 +5084,29 @@ Saving file '$.Loader'
      22FD   C9 04      CMP #&04
      22FF   F0 1C      BEQ &231D
 .playSoundCheckObjectSkull
-     2301   A5 BE      LDA &BE
+     2301   A5 BA      LDA &BA
      2303   C9 07      CMP #&07
      2305   F0 1B      BEQ &2322
      2307   C9 09      CMP #&09
      2309   F0 17      BEQ &2322
 .playSoundNow
      230B   18         CLC
-     230C   A5 BC      LDA &BC
+     230C   A5 B8      LDA &B8
      230E   69 01      ADC #&01
-     2310   95 AA      STA &AA,X
-     2312   A5 BD      LDA &BD
+     2310   95 A6      STA &A6,X
+     2312   A5 B9      LDA &B9
      2314   69 00      ADC #&00
-     2316   95 AB      STA &AB,X
+     2316   95 A7      STA &A7,X
      2318   A9 01      LDA #&01
-     231A   99 B6 00   STA &00B6,Y
+     231A   99 B2 00   STA &00B2,Y
 .playSoundExit
-     231D   A4 C0      LDY &C0
-     231F   A6 BF      LDX &BF
+     231D   A4 BC      LDY &BC
+     231F   A6 BB      LDX &BB
      2321   60         RTS
 .playSoundDisable14
      2322   A9 00      LDA #&00
-     2324   85 B7      STA &B7
-     2326   85 BA      STA &BA
+     2324   85 B3      STA &B3
+     2326   85 B6      STA &B6
      2328   F0 E1      BEQ &230B
 .bonusBitsMultiplierFlags
      232A   FB
@@ -5123,23 +5119,23 @@ Saving file '$.Loader'
 .checkForObjects
      2330   A5 25      LDA &25
      2332   F0 49      BEQ &237D
-     2334   A5 75      LDA &75
+     2334   A5 6E      LDA &6E
      2336   C9 58      CMP #&58
      2338   D0 43      BNE &237D
-     233A   A5 7A      LDA &7A
+     233A   A5 73      LDA &73
      233C   C9 58      CMP #&58
      233E   D0 3D      BNE &237D
      2340   A9 00      LDA #&00
      2342   85 25      STA &25
-     2344   A5 21      LDA &21
+     2344   A5 22      LDA &22
      2346   F0 1A      BEQ &2362
      2348   A5 2B      LDA &2B
      234A   C9 06      CMP #&06
      234C   90 14      BCC &2362
      234E   A9 FF      LDA #&FF
-     2350   85 22      STA &22
+     2350   85 21      STA &21
      2352   A9 00      LDA #&00
-     2354   85 21      STA &21
+     2354   85 22      STA &22
      2356   A9 25      LDA #&25
      2358   85 36      STA &36
      235A   85 37      STA &37
@@ -5149,9 +5145,9 @@ Saving file '$.Loader'
 .checkForObjectsVegetableScore
      2362   A9 FF      LDA #&FF
      2364   85 27      STA &27
-     2366   A5 70      LDA &70
+     2366   A5 78      LDA &78
      2368   09 08      ORA #&08
-     236A   85 70      STA &70
+     236A   85 78      STA &78
      236C   A9 0C      LDA #&0C
      236E   20 A3 22   JSR &22A3
      2371   A9 0F      LDA #&0F
@@ -5221,13 +5217,13 @@ Saving file '$.Loader'
      23EB   E0 00      CPX #&00
      23ED   F0 04      BEQ &23F3
      23EF   A9 00      LDA #&00
-     23F1   85 21      STA &21
+     23F1   85 22      STA &22
 .checkForObjectsHeartRestoreX
      23F3   A6 46      LDX &46
      23F5   20 7B 24   JSR &247B
-     23F8   A5 70      LDA &70
+     23F8   A5 78      LDA &78
      23FA   09 08      ORA #&08
-     23FC   85 70      STA &70
+     23FC   85 78      STA &78
      23FE   A9 07      LDA #&07
      2400   20 A3 22   JSR &22A3
      2403   A9 10      LDA #&10
@@ -5251,7 +5247,7 @@ Saving file '$.Loader'
      241F   85 1C      STA &1C
      2421   20 6E 0A   JSR &0A6E
      2424   A9 00      LDA #&00
-     2426   85 21      STA &21
+     2426   85 22      STA &22
      2428   4C 3E 24   JMP &243E
 .checkForObjectLetterYellow
      242B   E0 02      CPX #&02
@@ -5261,7 +5257,7 @@ Saving file '$.Loader'
      2433   25 1B      AND &1B
      2435   85 1B      STA &1B
      2437   A9 00      LDA #&00
-     2439   85 21      STA &21
+     2439   85 22      STA &22
      243B   20 6E 0A   JSR &0A6E
 .checkForObjectLetterErase
      243E   A9 00      LDA #&00
@@ -5272,9 +5268,9 @@ Saving file '$.Loader'
      2449   20 1E 02   JSR &021E
      244C   A6 46      LDX &46
      244E   20 7B 24   JSR &247B
-     2451   A5 70      LDA &70
+     2451   A5 78      LDA &78
      2453   09 08      ORA #&08
-     2455   85 70      STA &70
+     2455   85 78      STA &78
      2457   A9 07      LDA #&07
      2459   20 A3 22   JSR &22A3
      245C   A9 10      LDA #&10
@@ -5307,11 +5303,11 @@ Saving file '$.Loader'
      2479   DF
      247A   EF
 .displayobjectScore
-     247B   A5 75      LDA &75
+     247B   A5 6E      LDA &6E
      247D   29 F0      AND #&F0
      247F   09 08      ORA #&08
      2481   85 29      STA &29
-     2483   A5 7A      LDA &7A
+     2483   A5 73      LDA &73
      2485   29 F0      AND #&F0
      2487   09 0A      ORA #&0A
      2489   85 2A      STA &2A
@@ -5325,12 +5321,12 @@ Saving file '$.Loader'
      2496   60         RTS
 .ladybugKill
      2497   A9 08      LDA #&08
-     2499   05 70      ORA &70
-     249B   85 70      STA &70
+     2499   05 78      ORA &78
+     249B   85 78      STA &78
      249D   A9 FF      LDA #&FF
      249F   85 19      STA &19
      24A1   A9 00      LDA #&00
-     24A3   85 21      STA &21
+     24A3   85 22      STA &22
      24A5   85 25      STA &25
      24A7   F8         SED
      24A8   38         SEC
@@ -5349,9 +5345,9 @@ Saving file '$.Loader'
      24BE   D0 22      BNE &24E2
      24C0   A5 18      LDA &18
      24C2   D0 1E      BNE &24E2
-     24C4   A5 70      LDA &70
+     24C4   A5 78      LDA &78
      24C6   09 04      ORA #&04
-     24C8   85 70      STA &70
+     24C8   85 78      STA &78
 .updateLadybugUp
      24CA   A2 00      LDX #&00
      24CC   46 41      LSR &41
@@ -5371,19 +5367,19 @@ Saving file '$.Loader'
 .updateLadybugExit
      24E2   60         RTS
 .updateLadybugMove
-     24E3   A5 75      LDA &75
+     24E3   A5 6E      LDA &6E
      24E5   85 5C      STA &5C
-     24E7   A5 7A      LDA &7A
+     24E7   A5 73      LDA &73
      24E9   85 5D      STA &5D
      24EB   20 A2 26   JSR &26A2
      24EE   20 30 23   JSR &2330
 .updateLadybugGrid
-     24F1   A5 75      LDA &75
+     24F1   A5 6E      LDA &6E
      24F3   85 5C      STA &5C
      24F5   29 0F      AND #&0F
      24F7   C9 08      CMP #&08
      24F9   D0 33      BNE &252E
-     24FB   A5 7A      LDA &7A
+     24FB   A5 73      LDA &73
      24FD   85 5D      STA &5D
      24FF   29 0F      AND #&0F
      2501   C9 08      CMP #&08
@@ -5417,7 +5413,7 @@ Saving file '$.Loader'
      2532   E0 01      CPX #&01
      2534   F0 1B      BEQ &2551
 .updateLadybugMoveCheckY
-     2536   A5 7A      LDA &7A
+     2536   A5 73      LDA &73
      2538   29 0F      AND #&0F
      253A   C9 08      CMP #&08
      253C   F0 08      BEQ &2546
@@ -5427,14 +5423,14 @@ Saving file '$.Loader'
      2542   90 02      BCC &2546
      2544   A2 00      LDX #&00
 .updateLadybugMoveExit
-     2546   A5 70      LDA &70
+     2546   A5 78      LDA &78
      2548   29 08      AND #&08
-     254A   86 70      STX &70
-     254C   05 70      ORA &70
-     254E   85 70      STA &70
+     254A   86 78      STX &78
+     254C   05 78      ORA &78
+     254E   85 78      STA &78
      2550   60         RTS
 .updateLadybugMoveCheckX
-     2551   A5 75      LDA &75
+     2551   A5 6E      LDA &6E
      2553   29 0F      AND #&0F
      2555   C9 08      CMP #&08
      2557   F0 ED      BEQ &2546
@@ -5479,18 +5475,18 @@ Saving file '$.Loader'
      2581   00
      2582   00
 .updateLadybugTurnstilePush
-     2583   84 A7      STY &A7
+     2583   84 A3      STY &A3
      2585   8A         TXA
      2586   29 03      AND #&03
      2588   0A         ASL A
      2589   0A         ASL A
-     258A   05 A7      ORA &A7
+     258A   05 A3      ORA &A3
      258C   A8         TAY
-     258D   A5 75      LDA &75
+     258D   A5 6E      LDA &6E
      258F   18         CLC
      2590   79 63 25   ADC &2563,Y
      2593   85 5C      STA &5C
-     2595   A5 7A      LDA &7A
+     2595   A5 73      LDA &73
      2597   18         CLC
      2598   79 73 25   ADC &2573,Y
      259B   85 5D      STA &5D
