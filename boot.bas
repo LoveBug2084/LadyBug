@@ -19,7 +19,7 @@ REM the Free Software Foundation,
 REM either version 3 of the
 REM License, or (at your option)
 REM any later version.
-REM
+REM ---------------------------
 REM This program is distributed
 REM in the hope that it will be
 REM useful, but WITHOUT ANY
@@ -31,7 +31,6 @@ REM See the GNU General Public
 REM License for more details.
 REM https://www.gnu.org/licenses/
 REM ---------------------------
-REM
 PROClogo
 PROCexpand
 K%=INKEY(200)
