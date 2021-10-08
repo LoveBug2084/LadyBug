@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 	}
 
 	// check for duplicate file names
-	if(strcmp(argv[1], argv[2]) == 0)
+	if(strcmp(argv[1], argv[4]) == 0)
 	{
 		fprintf(stderr, "**** issue **** duplicate file names\n");
 		exit(EXIT_FAILURE);
