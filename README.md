@@ -1,14 +1,12 @@
-# LadyBug
-LadyBug for the Acorn BBC Micro Computer range
-
-A remake of Universals Z80 based arcade game from 1981 written in 100% 6502 assembly language to be assembled with the popular BeebAsm assembler https://github.com/stardot/beebasm
+# Lady Bug
+A remake of Universals Z80 based arcade game from 1981 written in 6502 assembly language for the Acorn BBC Micro Computer range, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler
 
 Supported models:\
-BBC B with sideways ram upgrade (uses 1 bank of sideways ram)\
-BBC B+ 64K/128K (uses the 12K workspace ram, no sideways ram needed)\
-BBC Master 128K/Master Compact (uses 1 bank of sideways ram)
+BBC B with sideways ram upgrade ( uses 12K of sideways ram )\
+BBC B+ 64K/128K ( uses 12K of workspace ram, no sideways ram required )\
+BBC Master 128K/Master Compact ( uses 12K of sideways ram )
 
-I've included two utilities fontmaker and pixels written in c (source code and compiled .exe's) for converting the gimp/photoshop font and tile image files from .raw format to .bin format for inclusion as raw bytes into the game code
+I've included two utilities fontmaker and pixels written in c (source code and compiled .exe's) for converting the gimp/photoshop font and tile image files from .raw to .bin format for inclusion into the game code
 
 **Note: video and screenshots from various builds during development\
 Game play is identical to the current build**\
