@@ -1,1 +1,0 @@
-@start /b beebem.lnk "%CD%\ladybug.ssd"

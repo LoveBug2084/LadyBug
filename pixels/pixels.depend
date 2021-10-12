@@ -1,6 +1,0 @@
-# depslib dependency file v1.0
-1627855752 source:c:\users\galaxip\desktop\drive data\projects\bbc\ladybug\game\pixels\main.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-
