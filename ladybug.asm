@@ -117,34 +117,6 @@ debugBonus		= false
 						; for game playfield sprite y, upper y=0 to 91, lower y=92 to 183
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; default game options the player can change from the main screen
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-defaultEnemySpeed	= 1			; enemy speed 0-3, 0=slower 1=normal 2=faster 3=fastest
-defaultEnemyAttack	= 4			; enemy attack 0-9, 0=more random 4=normal 9=more attack
-defaultLadybugLives	= 3			; number of starting lives 1-9
-defaultSound		= 1			; sound enable 0-1, 0=mute, 1=sound
-defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=high
-
-.optionEnemySpeed	equb defaultEnemySpeed
-.optionEnemyAttack	equb defaultEnemyAttack
-.optionLadybugLives	equb defaultLadybugLives
-.optionSound		equb defaultSound
-.optionTimerVolume	equb defaultTimerVolume
-
-.optionKeys
-			equb keyX		; default key for right
-			equb keyZ		; default key for left
-			equb keySlash		; default key for down
-			equb keyColon		; default key for up
-
-.optionKeysAscii
-
-			equs "XZ/:"		; default ascii text for keys used in main menu display
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; game constants, variables and flags
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -198,7 +170,7 @@ objectModeYellow	= 2
 .escCounter		equb 0			; escape key counter (times how long esc is pressed)
 
 .score			skip 3			; player score (BCD) last digit always 0 and not stored
-.highScore		equb &00,&10,&00	; initial high score 10000 (BCD) last digit always 0 and not stored
+.highScore		skip 3			; high score (BCD) last digit always 0 and not stored
 
 .lives			equb defaultLadybugLives; number of lives
 
@@ -400,6 +372,64 @@ soundChannels		= 6			; number of software defined sound channels
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org page0100
+
+
+
+.gameSettings					; storage for game options, keys, highscore and name
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; default game options the player can change from the main screen
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+defaultEnemySpeed	= 1			; enemy speed 0-3, 0=slower 1=normal 2=faster 3=fastest
+defaultEnemyAttack	= 4			; enemy attack 0-9, 0=more random 4=normal 9=more attack
+defaultLadybugLives	= 3			; number of starting lives 1-9
+defaultSound		= 1			; sound enable 0-1, 0=mute, 1=sound
+defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=high
+
+.optionEnemySpeed	equb defaultEnemySpeed
+.optionEnemyAttack	equb defaultEnemyAttack
+.optionLadybugLives	equb defaultLadybugLives
+.optionSound		equb defaultSound
+.optionTimerVolume	equb defaultTimerVolume
+
+.optionKeys
+			equb keyX		; default key for right
+			equb keyZ		; default key for left
+			equb keySlash		; default key for down
+			equb keyColon		; default key for up
+
+.optionKeysAscii
+
+			equs "XZ/:"		; default ascii text for keys used in main menu display
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; storage for high score copy and high score name
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.highScoreBackup
+
+	skip 3					; copy of high score goes here
+
+.highScoreName
+
+	equs "LOVEBUG.ML", &ff			; set default high score name
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.gameSettingsEnd
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; validation code for the game settings and high score data
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.validationCode
+
+	skip 1
 
 
 
@@ -617,37 +647,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; screenClear					fill entire screen with black (pixelCol0)
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			destroyed
-;			X			destroyed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.screenClear
-
-	lda #hi(screenAddr)			; set start page of screen
-	sta screenClearLoop + 2
-
-	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
-
-	lda #pixelCol0				; fill screen with black
-
-.screenClearLoop
-
-	sta addr16, x				; fill page with data
-	inx
-	bne screenClearLoop
-	
-	inc screenClearLoop + 2			; next page
-	bpl screenClearLoop			; repeat until page=&80 (end of screen ram)
-
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updateObjectTimer				update object timer (25Hz), change object mode and palette color
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
@@ -735,6 +734,37 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	org irqVector
 
 	equw irqInterrupt			; set bbc os irq1v interrupt vector to our irqInterrupt function
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; screenClear					fill entire screen with black (pixelCol0)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			destroyed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.screenClear
+
+	lda #hi(screenAddr)			; set start page of screen
+	sta screenClearLoop + 2
+
+	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
+
+	lda #pixelCol0				; fill screen with black
+
+.screenClearLoop
+
+	sta addr16, x				; fill page with data
+	inx
+	bne screenClearLoop
+	
+	inc screenClearLoop + 2			; next page
+	bpl screenClearLoop			; repeat until page=&80 (end of screen ram)
+
+	rts					; return
 
 
 
@@ -2084,6 +2114,13 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameIntroScreen
+
+	lda highScore				; backup high score for saving to disk
+	sta highScoreBackup
+	lda highScore + 1
+	sta highScoreBackup + 1
+	lda highScore + 2
+	sta highScoreBackup + 2
 
 	jsr drawPlayfieldLower			; display lower playfield
 
@@ -3734,6 +3771,31 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; generateValidation				generate a validation code for the game settings + highscore + name
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.generateValidation
+
+	ldx #0					; zero the validation code
+	stx validationCode
+	
+.generateValidationLoop
+
+	lda gameSettings, x			; calculate validation code (validationCode += byte eor &69)
+	eor #&69
+	clc
+	adc validationCode
+	sta validationCode
+	
+	inx
+	cpx #gameSettingsEnd - gameSettings
+	bne generateValidationLoop
+	
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawHexMini					draw A as 2 digits of hexadecimal mini chr tiles (can be used for bcd numbers too)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			A			value to display as hex
@@ -4745,6 +4807,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr mainMenuDrawCursor			; draw updated cursor
 
+	jsr generateValidation			; update the validation code
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4775,7 +4839,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuExit
 
-	rts					; return
+	jsr generateValidation			; update the validation code
+
+	sec					; return with carry set (start a new game)
+	rts
 
 
 
@@ -9901,16 +9968,6 @@ assert mapTileObject < 115			; more than 128 tiles
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; storage for high score name registration
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.highScoreName
-
-	equs "LOVEBUG.ML", &ff			; set default high score name
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; game sound effects and music tables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -9979,11 +10036,15 @@ include "soundtables.asm"
 include "relocator.asm"				; append relocation code
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; save main ladybug game and basic boot loader
+; save main ladybug game, basic boot loader and config files
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
 	putbasic "boot.bas", "$.Boot"
+	include "config.asm"
 	print
 	print
 	print
+
+
+
