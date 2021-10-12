@@ -52,13 +52,19 @@ END
 
 DEF PROCerror
 FOR Z%=0 TO 27:Z%?&100=Z%?&7BE4:NEXT Z%
+OSCLI("FX 19")
 PRINT TAB(0,10);SPC(40);
-PRINT TAB(0,11);SPC(40);
-PRINT TAB(0,12);"  Unable to save HIGH SCORE / SETTINGS  ";
-PRINT TAB(0,13);SPC(40);
-PRINT TAB(25,15);"  ";
+OSCLI("FX 19")
+PRINT TAB(0,11);"        Disk is write protected!        ";
+OSCLI("FX 19")
+PRINT TAB(0,12);SPC(40);
+OSCLI("FX 19")
+PRINT TAB(0,13);"  Unable to save High Score / Settings  ";
+OSCLI("FX 19")
 PRINT TAB(0,14);SPC(40);
-K%=INKEY(300)
+OSCLI("FX 19")
+PRINT TAB(25,15);"  ";
+K%=INKEY(400)
 PROClogo
 OSCLI("/Loader")
 ENDPROC
