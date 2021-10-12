@@ -31,6 +31,11 @@ REM See the GNU General Public
 REM License for more details.
 REM https://www.gnu.org/licenses/
 REM ---------------------------
+
+ON ERROR PROCerror
+
+HIMEM=&7BE4:FOR Z%=0 TO 27:Z%?&7BE4=Z%?&100:NEXT Z%
+
 PROClogo
 PROCexpand
 K%=INKEY(200)
@@ -41,8 +46,26 @@ K%=GET
 PROCshrink
 PROClogo
 PROCexpand
+PROCsaveConfig
 */Loader
 END
+
+DEF PROCerror
+FOR Z%=0 TO 27:Z%?&100=Z%?&7BE4:NEXT Z%
+PRINT TAB(0,10);SPC(40);
+PRINT TAB(0,11);"Unable to save game settings, high score";
+PRINT TAB(0,12);SPC(40);
+PRINT TAB(0,13);"   Press C to CONTINUE WITHOUT SAVING   ";
+PRINT TAB(0,14);SPC(40);
+K%=GET
+IF K%=ASC("C") OR K%=ASC("c") THEN */Loader
+REPEAT UNTIL FALSE
+ENDPROC
+
+DEF PROCsaveConfig
+V%=0:FOR Z%=0 TO 26:V%=(V%+(Z%?&7BE4 EOR &69)) AND &FF:NEXT Z%
+IF V%<>?&7BFF THEN OSCLI("LOAD Config") ELSE OSCLI("SAVE Config 7BE4 +1C")
+ENDPROC
 
 DEF PROCinstructions
 CLS

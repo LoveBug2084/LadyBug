@@ -104,6 +104,10 @@
 ; relocate program to runtime address
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 	
+diskConfig = &7be4				; game config loaded from disk
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 	ldx #hi(bootstrap - progReloc)		; program page length
 	ldy #0
 
@@ -121,6 +125,21 @@
 	dex					; until all pages copied
 	bne relocateProgram
 	
+.relocateProgramConfig
+
+	lda diskConfig, x			; copy config into game settings
+	sta gameSettings, x
+	inx
+	cpx #28
+	bne relocateProgramConfig
+
+	lda highScoreBackup			; copy game settings high score to high score
+	sta highScore
+	lda highScoreBackup + 1
+	sta highScore + 1
+	lda highScoreBackup + 2
+	sta highScore + 2
+
 	jmp main				; run the main game
 
 

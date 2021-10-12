@@ -91,8 +91,8 @@ debugInvulnerable	= false
 ;debugZeroHighScore	= true			; set highScore to 0 at start of new game (any score will register as a high score)
 debugZeroHighScore	= false
 
-debugInstantHighScore	= true			; end the game instantly with a high score to quicky test name registration
-;debugInstantHighScore	= false
+;debugInstantHighScore	= true			; end the game instantly with a high score to quicky test name registration
+debugInstantHighScore	= false
 
 ;debugDiamondOverride	= 1			; override level of diamond bonus or 0 to use the default value
 debugDiamondOverride	= 0
@@ -170,7 +170,7 @@ objectModeYellow	= 2
 .escCounter		equb 0			; escape key counter (times how long esc is pressed)
 
 .score			skip 3			; player score (BCD) last digit always 0 and not stored
-.highScore		equb &00,&10,&00	; initial high score 10000 (BCD) last digit always 0 and not stored
+.highScore		skip 3			; high score (BCD) last digit always 0 and not stored
 
 .lives			equb defaultLadybugLives; number of lives
 
@@ -375,6 +375,8 @@ soundChannels		= 6			; number of software defined sound channels
 
 
 
+.gameSettings					; storage for game options, keys, highscore and name
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; default game options the player can change from the main screen
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -404,8 +406,12 @@ defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=h
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; storage for high score name registration
+; storage for high score copy and high score name
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.highScoreBackup
+
+	skip 3					; copy of high score goes here
 
 .highScoreName
 
@@ -414,10 +420,14 @@ defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=h
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; checksum to validate the game settings and high score data
+
+.gameSettingsEnd
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; validation code for the game settings and high score data
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.validChecksum
+.validationCode
 
 	skip 1
 
@@ -2105,6 +2115,13 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameIntroScreen
 
+	lda highScore				; backup high score for saving to disk
+	sta highScoreBackup
+	lda highScore + 1
+	sta highScoreBackup + 1
+	lda highScore + 2
+	sta highScoreBackup + 2
+
 	jsr drawPlayfieldLower			; display lower playfield
 
 	jsr mainMenu				; display the main menu screen
@@ -3754,6 +3771,31 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; generateValidation				generate a validation code for the game settings + highscore + name
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.generateValidation
+
+	ldx #0					; zero the validation code
+	stx validationCode
+	
+.generateValidationLoop
+
+	lda gameSettings, x			; calculate validation code (validationCode += byte eor &69)
+	eor #&69
+	clc
+	adc validationCode
+	sta validationCode
+	
+	inx
+	cpx #gameSettingsEnd - gameSettings
+	bne generateValidationLoop
+	
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawHexMini					draw A as 2 digits of hexadecimal mini chr tiles (can be used for bcd numbers too)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			A			value to display as hex
@@ -4765,6 +4807,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr mainMenuDrawCursor			; draw updated cursor
 
+	jsr generateValidation			; update the validation code
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4795,7 +4839,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuExit
 
-	rts					; return
+	jsr generateValidation			; update the validation code
+
+	sec					; return with carry set (start a new game)
+	rts
 
 
 
@@ -9989,11 +10036,15 @@ include "soundtables.asm"
 include "relocator.asm"				; append relocation code
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; save main ladybug game and basic boot loader
+; save main ladybug game, basic boot loader and config files
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
 	putbasic "boot.bas", "$.Boot"
+	include "config.asm"
 	print
 	print
 	print
+
+
+
