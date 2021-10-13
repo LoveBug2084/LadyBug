@@ -104,7 +104,7 @@
 ; relocate program to runtime address
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 	
-diskConfig = &7be4				; game config loaded from disk
+config = &7be4					; game config loaded from disk
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -127,7 +127,7 @@ diskConfig = &7be4				; game config loaded from disk
 	
 .relocateProgramConfig
 
-	lda diskConfig, x			; copy config into game settings
+	lda config, x				; copy config into game settings
 	sta gameSettings, x
 	inx
 	cpx #28

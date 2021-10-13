@@ -415,7 +415,7 @@ defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=h
 
 .highScoreName
 
-	equs "LOVEBUG.ML", &ff			; set default high score name
+	skip 11					; storage for high score name
 
 
 

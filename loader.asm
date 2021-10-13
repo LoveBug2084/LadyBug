@@ -135,29 +135,31 @@ align &100
 
 .loaderBuild
 
-	equb 31, 11, 11				; position cursor
-	equs "LadyBug Build "
+	equb 31, 9, 11				; position cursor
+	equs 133, "Lady", 131, "Bug ", 135, "Build "
 	incbin "ladybug-build-padded.txt"
 	equb &ff				; end
 
 .loaderUsingBank
 
-	equb 31, 8, 13				; position cursor
-	equs "Using sideways ram bank "
+	equb 31, 7, 13				; position cursor
+	equs 130, "Using sideways ram bank", 135
+	equb &ff				; end
+
+.loaderUsingWorkspace
+
+	equb 31, 9, 13				; position cursor
+	equs 130, "Using B+ workspace ram"
 	equb &ff				; end
 
 .loaderBank
 
 	equs "0123456789ABCDEF"			; hexadecimal bank number
 
-.loaderBankBPlus
-
-	equs "80", &ff				; bbc b+ bank 80
-
 .loaderRamFailed
 
-	equb 31, 10, 13				; position cursor
-	equs "Sideways ram not found"
+	equb 31, 9, 13				; position cursor
+	equs 129, "Sideways ram not found"
 	equb 31, 0, 10				; position cursor
 	equb 23, 1, 1, 0, 0, 0, 0, 0, 0, 0	; curson on
 	equb &ff				; end
@@ -214,10 +216,8 @@ screenCenterY	= &7e71
 	jsr swrTestByte - loaderReloc
 	bne loaderNotBPlus
 
-	ldy #lo(loaderUsingBank - loaderReloc)	; display sideways bank message
-	jsr loaderPrint - loaderReloc
-
-	ldy #lo(loaderBankBPlus - loaderReloc)	; display bank 128
+						; display workspace message
+	ldy #lo(loaderUsingWorkspace - loaderReloc)
 	jsr loaderPrint - loaderReloc
 
 	jmp loaderCopyData - loaderReloc	; copy data and run ladybug

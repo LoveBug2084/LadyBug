@@ -25,7 +25,9 @@
 
 
 
-	org diskConfig
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	org config
 
 	equb defaultEnemySpeed			; default enemy speed
 	equb defaultEnemyAttack			; default enemy attack
@@ -39,6 +41,7 @@
 	equs "XZ/:"				; default ascii text for keys
 	equb &00,&10,&00			; default high score
 	equs "LOVEBUG.ML", &ff			; default high score name
+	equb &1d				; validation code
 
 	print
 
@@ -46,8 +49,8 @@
 ; save Config
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	save "Config", diskConfig, *
-	clear diskConfig, *
+	save "Config", config, *
+	clear config, *
 
 	print
 	print
