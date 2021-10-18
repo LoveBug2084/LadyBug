@@ -23,24 +23,19 @@
 	print "----------------------------------------------------"
 	print
 
-	org 0
+	org &f000				; temporary cnvas address to store !boot data
+
+.bootasmStart
 
 	equb "*BASIC",13			; select basic language
 	equb 22,7				; mode 7
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
 	equb 23,0,6,0,0,0,0,0,0,0		; disable display
-	equs "*FX 200 3",13			; memory clear, disable ESC
+	equs "*FX 200 1",13			; disable ESC
 	equs "*FX 4 1",13			; disable cursor editing
 	equs "CLOSE#0:CHAIN",34,"Boot",34,13	; close !Boot and CHAIN"Boot"
 
-	print
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; save !boot
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	save "!Boot", 0, *, &ffffff, 0
-	clear 0, *
+.bootasmEnd
 
 	print
 	print

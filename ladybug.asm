@@ -56,6 +56,10 @@
 
 
 
+	include "config.asm"
+
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ladybug main program
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -172,7 +176,7 @@ objectModeYellow	= 2
 .score			skip 3			; player score (BCD) last digit always 0 and not stored
 .highScore		skip 3			; high score (BCD) last digit always 0 and not stored
 
-.lives			equb defaultLadybugLives; number of lives
+.lives			equb defaultLives	; number of lives
 
 .ladybugEntryEnable	skip 1			; enable ladybug entry animation
 .ladybugDeathEnable	skip 1			; enable ladybug death animation
@@ -375,21 +379,22 @@ soundChannels		= 6			; number of software defined sound channels
 
 
 
-.gameSettings					; storage for game options, keys, highscore and name
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; configData					game options, high score, high score name
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; default game options the player can change from the main screen
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+.configData					; start of config data
+	skip 0
 
 defaultEnemySpeed	= 1			; enemy speed 0-3, 0=slower 1=normal 2=faster 3=fastest
 defaultEnemyAttack	= 4			; enemy attack 0-9, 0=more random 4=normal 9=more attack
-defaultLadybugLives	= 3			; number of starting lives 1-9
+defaultLives		= 3			; number of starting lives 1-9
 defaultSound		= 1			; sound enable 0-1, 0=mute, 1=sound
 defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=high
 
 .optionEnemySpeed	equb defaultEnemySpeed
 .optionEnemyAttack	equb defaultEnemyAttack
-.optionLadybugLives	equb defaultLadybugLives
+.optionLadybugLives	equb defaultLives
 .optionSound		equb defaultSound
 .optionTimerVolume	equb defaultTimerVolume
 
@@ -403,12 +408,6 @@ defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=h
 
 			equs "XZ/:"		; default ascii text for keys used in main menu display
 
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; storage for high score copy and high score name
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
 .highScoreBackup
 
 	skip 3					; copy of high score goes here
@@ -417,17 +416,11 @@ defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=h
 
 	skip 11					; storage for high score name
 
+.configDataEnd					; end of config data
 
+	skip 0
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.gameSettingsEnd
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; validation code for the game settings and high score data
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.validationCode
+.validationCode					; validation code of config data
 
 	skip 1
 
@@ -437,12 +430,22 @@ defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=h
 ; cleanReset (break key)			force a power on reset to put the bbc computer into a clean state
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+	org page0130
+
 .cleanReset
 
-	lda #&7f				; disable all via interrupts (simulate power on state)
-	sta viaIer
+	sei					; disable irq interrupts
 	
-	jmp (resetVector)			; reboot the beeb
+.cleanResetBank
+
+	lda #&ff				; page in ram (value previously set by loader)
+	sta bankSelect
+	
+.cleanResetMachine
+
+	ldx #&ff				; get machine type (value previously set by loader)
+
+	jmp swrCleanReset			; continue with reset code
 
 
 
@@ -529,67 +532,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	lda #0 + 8				; psg -we high
 	sta viaPortB
 
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; keyboardScan					check up down left right start and esc keys
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			playerInput		bit 0=up 1=down 2=left 3=right 4=start 5=esc
-;			A			destroyed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.keyboardScan
-
-	lda #&7f				; set port A bit 7 as input ( from keyboard output )
-	sta viaPortDdrA
-	
-	lda #3 + 0				; keyboard -enable low
-	sta viaPortB
-	
-	lda #0					; clear player input flags
-	sta playerInput
-
-	lda #keyEsc				; check esc key
-	jsr keyboardScanKey
-
-	lda #keyReturn				; check start key
-	jsr keyboardScanKey
-
-	lda optionKeys + 0			; check right key
-	jsr keyboardScanKey
-
-	lda optionKeys + 1			; check left key
-	jsr keyboardScanKey
-
-	lda optionKeys + 2			; check down key
-	jsr keyboardScanKey
-	
-	lda optionKeys + 3			; check up key
-	jsr keyboardScanKey
-	
-	lda #3 + 8				; keyboard -enable high
-	sta viaPortB
-	
-	lda #&ff				; set port A all bits output
-	sta viaPortDdrA
-
-	rts					; return
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.keyboardScanKey
-
-	sta viaPortA				; select key
-
-	lda viaPortA				; read key status
-
-	asl a					; shift key status into player input bits
-	rol playerInput
-	
 	rts					; return
 
 
@@ -707,37 +649,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; end of page0100 functions
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-.page0100End
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.stack						; stack area from here to &01ff
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; page0200 irq vector, functions, break key vector
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	org page0200
-
-						; 4 spare memory locations, can be used if needed
-
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; set irq interrupt vector
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	org irqVector
-
-	equw irqInterrupt			; set bbc os irq1v interrupt vector to our irqInterrupt function
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; screenClear					fill entire screen with black (pixelCol0)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
@@ -769,6 +680,134 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; end of page0100 functions
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+.page0100End
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.stack						; stack area from here to &01ff
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; page0200 irq vector, functions, break key vector
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	org page0200
+
+						; 4 spare memory locations, can be used if needed
+
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; set irq interrupt vector
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	org irqVector
+
+	equw irqInterrupt			; set bbc os irq1v interrupt vector to our irqInterrupt function
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; keyboardScan					check up down left right start and esc keys
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			playerInput		bit 0=up 1=down 2=left 3=right 4=start 5=esc
+;			A			destroyed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.keyboardScan
+
+	lda #&7f				; set port A bit 7 as input ( from keyboard output )
+	sta viaPortDdrA
+	
+	lda #3 + 0				; keyboard -enable low
+	sta viaPortB
+	
+	lda #0					; clear player input flags
+	sta playerInput
+
+	lda #keyEsc				; check esc key
+	jsr keyboardScanKey
+
+	lda #keyReturn				; check start key
+	jsr keyboardScanKey
+
+	lda optionKeys + 0			; check right key
+	jsr keyboardScanKey
+
+	lda optionKeys + 1			; check left key
+	jsr keyboardScanKey
+
+	lda optionKeys + 2			; check down key
+	jsr keyboardScanKey
+	
+	lda optionKeys + 3			; check up key
+	jsr keyboardScanKey
+	
+	lda #3 + 8				; keyboard -enable high
+	sta viaPortB
+	
+	lda #&ff				; set port A all bits output
+	sta viaPortDdrA
+
+	rts					; return
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.keyboardScanKey
+
+	sta viaPortA				; select key
+
+	lda viaPortA				; read key status
+
+	asl a					; shift key status into player input bits
+	rol playerInput
+	
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; end of page0200 functions
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+.page0200End
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; page0258					fx 200 0 to make sure the ram is not erased by the os
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	org page0258
+	
+	equb 0
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; end of page0258
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+.page0258End
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; set the break key jump vector
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	org page0287				; set the break jump vector to the clean reset function
+
+	jmp cleanReset
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; random					generate an 8 bit random number
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
@@ -795,165 +834,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	sta randomSeed + 1			; store in hi 8 bits
 
 	rts					; return with random number in A
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; addScoreMultiply				add A to score in bcd mode with multiplier
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			score value
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			destroyed
-;			X			preserved
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.addScoreMultiplyTable
-
-	equb 1, 2, 3, 5				; x1 x2 x3 x5 multiplier
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.addScoreMultiply
-
-	sta addScoreMultiplySaveA		; preserve score
-	stx addScoreMultiplySaveX		; preserve X register
-	
-	ldx scoreMultiplier			; get scoreMultiplier index
-
-	lda addScoreMultiplyTable, x		; get multiplier loop count from table
-	tax
-	
-.addScoreMultiplyLoop
-
-	lda addScoreMultiplySaveA		; add score to player score
-	jsr addScore
-	
-	dex					; repeat as required
-	bne addScoreMultiplyLoop
-	
-	ldx addScoreMultiplySaveX		; restore register
-
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; addScore					add A to score in bcd mode
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			LSB
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			destroyed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.addScore
-
-.addScoreBottom
-
-	sed					; bcd mode
-
-	clc					; add A to score LSB
-	adc score
-	sta score
-
-	lda #0					; add carry if any
-
-.addScoreMiddle
-
-	adc score + 1
-	sta score + 1
-
-	lda #0					; add carry if any
-
-.addScoreTop
-
-	adc score + 2
-	sta score + 2
-
-	bcc addScoreExit			; if no score overflow ( > 999999 ) then exit
-	
-	lda #&99				; else set score to 999999
-	sta score
-	sta score + 1
-	sta score + 2
-
-.addScoreExit
-
-	cld					; back to binary mode
-
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; addScoreVegetable				shift vegetable score one digit and add to score
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry						none
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			destroyed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.addScoreVegetable
-
-	lda vegetableScore			; get vegetable score and shift units digit to tens and add to score
-	asl a
-	asl a
-	asl a
-	asl a
-	jsr addScore
-	
-	lda vegetableScore			; get vegetable score and shift units digit to hundreds
-	lsr a
-	lsr a
-	lsr a
-	lsr a
-	
-	sed					; select bcd mode as we are jumping into the middle of addScore to do the hundreds
-	clc					; no carry
-	bcc addScoreMiddle			; add hundreds
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; addScoreDiamond				add diamond bonus to score
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.addScoreDiamond
-
-	lda #diamondBonusScore			; add the diamond bonus score to score + 2 (bcd)
-	sed
-	clc
-	bcc addScoreTop
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; addScoreSpecial				add special bonus to score
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.addScoreSpecial
-
-	lda #specialBonusScore			; add the special bonus score to score + 2 (bcd)
-	sed
-	clc
-	bcc addScoreTop
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; end of page0200 functions
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-.page0200End
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; set the break key jump vector
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	org page0287				; set the break jump vector to the clean reset function
-
-	jmp cleanReset
 
 
 
@@ -3771,7 +3651,148 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; generateValidation				generate a validation code for the game settings + highscore + name
+; addScoreMultiply				add A to score in bcd mode with multiplier
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			A			score value
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.addScoreMultiplyTable
+
+	equb 1, 2, 3, 5				; x1 x2 x3 x5 multiplier
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.addScoreMultiply
+
+	sta addScoreMultiplySaveA		; preserve score
+	stx addScoreMultiplySaveX		; preserve X register
+	
+	ldx scoreMultiplier			; get scoreMultiplier index
+
+	lda addScoreMultiplyTable, x		; get multiplier loop count from table
+	tax
+	
+.addScoreMultiplyLoop
+
+	lda addScoreMultiplySaveA		; add score to player score
+	jsr addScore
+	
+	dex					; repeat as required
+	bne addScoreMultiplyLoop
+	
+	ldx addScoreMultiplySaveX		; restore register
+
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; addScore					add A to score in bcd mode
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			A			LSB
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.addScore
+
+.addScoreBottom
+
+	sed					; bcd mode
+
+	clc					; add A to score LSB
+	adc score
+	sta score
+
+	lda #0					; add carry if any
+
+.addScoreMiddle
+
+	adc score + 1
+	sta score + 1
+
+	lda #0					; add carry if any
+
+.addScoreTop
+
+	adc score + 2
+	sta score + 2
+
+	bcc addScoreExit			; if no score overflow ( > 999999 ) then exit
+	
+	lda #&99				; else set score to 999999
+	sta score
+	sta score + 1
+	sta score + 2
+
+.addScoreExit
+
+	cld					; back to binary mode
+
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; addScoreVegetable				shift vegetable score one digit and add to score
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry						none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.addScoreVegetable
+
+	lda vegetableScore			; get vegetable score and shift units digit to tens and add to score
+	asl a
+	asl a
+	asl a
+	asl a
+	jsr addScore
+	
+	lda vegetableScore			; get vegetable score and shift units digit to hundreds
+	lsr a
+	lsr a
+	lsr a
+	lsr a
+	
+	sed					; select bcd mode as we are jumping into the middle of addScore to do the hundreds
+	clc					; no carry
+	bcc addScoreMiddle			; add hundreds
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; addScoreDiamond				add diamond bonus to score
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.addScoreDiamond
+
+	lda #diamondBonusScore			; add the diamond bonus score to score + 2 (bcd)
+	sed
+	clc
+	bcc addScoreTop
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; addScoreSpecial				add special bonus to score
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.addScoreSpecial
+
+	lda #specialBonusScore			; add the special bonus score to score + 2 (bcd)
+	sed
+	clc
+	bcc addScoreTop
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; generateValidation				generate a validation code for the config data (game settings, high score, high score name)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .generateValidation
@@ -3781,14 +3802,14 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	
 .generateValidationLoop
 
-	lda gameSettings, x			; calculate validation code (validationCode += byte eor &69)
+	lda configData, x			; calculate validation code (validationCode += byte eor #&69)
 	eor #&69
 	clc
 	adc validationCode
 	sta validationCode
 	
 	inx
-	cpx #gameSettingsEnd - gameSettings
+	cpx #configDataEnd - configData
 	bne generateValidationLoop
 	
 	rts					; return
@@ -4135,12 +4156,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bne instructionsLettersLoop
 
 	jsr drawString
-	equb pixelCol6
+	equb pixelCol2
 	equw screenAddr + 2 + 3 * chrColumn + 11 * chrRow
 	equs "COLLECT FOR BONUS", &ff
 
 	jsr drawString
-	equb pixelCol6
+	equb pixelCol2
 	equw screenAddr + 2 + 5 * chrColumn + 12 * chrRow
 	equs "GARDEN PRIZES", &ff
 
@@ -4839,10 +4860,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuExit
 
-	jsr generateValidation			; update the validation code
-
-	sec					; return with carry set (start a new game)
-	rts
+	jmp generateValidation			; update the validation code and return (start a new game)
 
 
 
@@ -10035,13 +10053,18 @@ include "soundtables.asm"
 
 include "relocator.asm"				; append relocation code
 
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; save main ladybug game, basic boot loader and config files
+; create disk files
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
+	save "!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 	putbasic "boot.bas", "$.Boot"
-	include "config.asm"
+	save "Config", config, configEnd, &ffffff, &ff0000 + config
+	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
+	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
+
 	print
 	print
 	print

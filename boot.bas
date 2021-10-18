@@ -32,26 +32,37 @@ REM License for more details.
 REM https://www.gnu.org/licenses/
 REM ---------------------------
 
+HIMEM=&7BE4
+E%=PAGE+5
+
 ON ERROR PROCerror
 
-HIMEM=&7BE4:FOR Z%=0 TO 27:Z%?&7BE4=Z%?&100:NEXT Z%
+PROCreadStack
 
-PROClogo
-PROCexpand
-K%=INKEY(200)
+PROCintro
 PROCshrink
+
 PROCinstructions
 PROCexpand
 K%=GET
 PROCshrink
+
 PROClogo
 PROCexpand
-PROCsaveConfig
 OSCLI("/Loader")
 END
 
+DEF PROCintro
+IF ?E%<>32 THEN K%=INKEY(300):ENDPROC
+PROClogo
+PROCexpand
+PROCsaveConfig
+K%=INKEY(200)
+ENDPROC
+
 DEF PROCerror
-FOR Z%=0 TO 27:Z%?&100=Z%?&7BE4:NEXT Z%
+?E%=33
+PROCwriteStack
 *FX 19
 PRINT TAB(26,15);" ";TAB(25,15);" ";
 FOR R%=14 TO 10 STEP -1
@@ -61,11 +72,16 @@ NEXT R%
 FOR R%=10 TO 14
 PRINT TAB(0,R%);"  ";
 NEXT R%
-PRINT TAB(7,11);CHR$(129);"Disk is write protected!";
-PRINT TAB(2,13);"Unable to save High Score / Settings";
-K%=INKEY(300)
-REM PROClogo
-OSCLI("/Loader")
+PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
+PRINT TAB(3,13);"Unable to save High Score / Settings";
+ENDPROC
+
+DEF PROCreadStack
+FOR Z%=0 TO 27:Z%?&7BE4=Z%?&100:NEXT Z%
+ENDPROC
+
+DEF PROCwriteStack
+FOR Z%=0 TO 27:Z%?&100=Z%?&7BE4:NEXT Z%
 ENDPROC
 
 DEF PROCsaveConfig
@@ -75,22 +91,22 @@ ENDPROC
 
 DEF PROCinstructions
 CLS
-PRINT CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
-PRINT CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
 PRINT TAB(13,3);CHR$(135);"Instructions"
-PRINT TAB(2,5);CHR$(133);"Guide";CHR$(129);"Lady Bug";CHR$(133);"through the maze"
-PRINT TAB(2,6);CHR$(133);"avoiding deadly";CHR$(131);"enemies";CHR$(133);"and";CHR$(135);"skulls"
+PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maze"
+PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(133);"enemies";CHR$(130);"and";CHR$(135);"skulls"
 PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block"
-PRINT TAB(2,9);CHR$(132);"enemy attacks"
-PRINT TAB(2,11);CHR$(130);"Collecting";CHR$(134);"cyan hearts";CHR$(130);"multiplies"
-PRINT TAB(2,12);CHR$(130);"an items value by";CHR$(135);"x2 x3 x5"
-PRINT TAB(2,14);CHR$(129);"Collecting";CHR$(131);"yellow letters";CHR$(129);"to spell"
-PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"awards";CHR$(133);"2 extra lives"
-PRINT TAB(2,17);CHR$(135);"Collecting";CHR$(129);"red letters";CHR$(135);"to spell"
-PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(135);"awards";CHR$(130);"200,000 points";CHR$(135);"and"
-PRINT TAB(2,19);CHR$(135);"a";CHR$(133);"skull shield";CHR$(135);"for 6 rounds"
-PRINT TAB(2,21);CHR$(132);"Collecting";CHR$(130);"vegetables";CHR$(132);"awards bonus"
-PRINT TAB(2,22);CHR$(132);"points and";CHR$(135);"paralyzes the enemy"
+PRINT TAB(2,9);CHR$(132);"the enemy attack paths"
+PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply"
+PRINT TAB(2,12);CHR$(133);"an items value by";CHR$(135);"x2 x3 x5"
+PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelling"
+PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for";CHR$(133);"2 extra lives"
+PRINT TAB(2,17);CHR$(135);"Collect";CHR$(129);"red letters";CHR$(135);"spelling"
+PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(135);"for";CHR$(130);"200000 points";CHR$(135);"and a"
+PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(135);"lasting 6 rounds"
+PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to";CHR$(131);"paralyse the"
+PRINT TAB(2,22);CHR$(131);"enemy";CHR$(132);"and earn";CHR$(135);"bonus points"
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press any key           ";CHR$(156);
 ENDPROC
 

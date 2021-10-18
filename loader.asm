@@ -32,6 +32,7 @@
 	skip 16					; filler to prevent any possibility of the beeb detecting this as a valid sideways rom after reset
 
 
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; vegetables, points and sprites by drawSprite and share a common address table although the sizes are different
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -119,6 +120,74 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; clean reset code
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+zpAddr 			= 0
+continueBplus		= &d973
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetJmp
+
+	equw swrCleanResetB			; unlikely	Electron
+	equw swrCleanResetB			; working	B
+	equw swrCleanResetBplus			; working	B+
+	equw swrCleanResetB			; not yet	Master
+	equw swrCleanResetB			; not yet	Compact
+	
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; choose correct machine function
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanReset
+
+	lda swrCleanResetJmp, x			; get jump address for machine function
+	sta zpAddr
+	lda swrCleanResetJmp + 1, x
+	sta zpAddr + 1
+	jmp (zpAddr)				; run the function
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; model B reset just use the regular simulated power on reset, stack will be intact
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetB
+
+	lda #&7f				; disable all via interrupts (simulate power on state)
+	sta viaIer
+	
+	jmp (resetVector)			; reboot the beeb
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; model B+ clear zp, jump into os to clear 0200-7fff leaving the stack intact
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetBplus
+
+	lda #opcodeRTI				; disable nmi
+	sta page0d00 
+
+	ldx #&ff				; initialize stack
+	txs
+
+	inx					; push 0 on stack (fake via interrupt enable flags)
+	txa
+	pha
+
+.swrCleanResetBplusLoop
+	sta page0000, x				; fill 0000-00ff with 0
+	inx
+	bne swrCleanResetBplusLoop
+
+	lda #hi(page0200)			; os fill 0200-7fff with 0
+	sta zpAddr + 1
+	txa
+	jmp continueBplus
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 align &100
 .swramLastAddr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -135,21 +204,21 @@ align &100
 
 .loaderBuild
 
-	equb 31, 9, 11				; position cursor
-	equs 133, "Lady", 131, "Bug ", 135, "Build "
+	equb 31,9,11				; position cursor
+	equs 133,"Lady",131,"Bug ",130,"Build",135
 	incbin "ladybug-build-padded.txt"
 	equb &ff				; end
 
 .loaderUsingBank
 
-	equb 31, 7, 13				; position cursor
-	equs 130, "Using sideways ram bank", 135
+	equb 31,7,13				; position cursor
+	equs 132,"Using sideways ram bank",135,"0"
 	equb &ff				; end
 
 .loaderUsingWorkspace
 
-	equb 31, 9, 13				; position cursor
-	equs 130, "Using B+ workspace ram"
+	equb 31,9,13				; position cursor
+	equs 132,"Using B+ workspace ram"
 	equb &ff				; end
 
 .loaderBank
@@ -158,17 +227,17 @@ align &100
 
 .loaderRamFailed
 
-	equb 31, 9, 13				; position cursor
-	equs 129, "Sideways ram not found"
-	equb 31, 0, 10				; position cursor
-	equb 23, 1, 1, 0, 0, 0, 0, 0, 0, 0	; curson on
+	equb 31,9,13				; position cursor
+	equs 129,"Sideways ram not found"
+	equb 31,0,10				; position cursor
+	equb 23,1,1,0,0,0,0,0,0,0		; curson on
 	equb &ff				; end
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .runLadybug
 
-	equs "/LadyBug", &0d			; oscli command to run main game
+	equs "/LadyBug", &0d			; oscli run ladybug
 
 
 
@@ -209,14 +278,20 @@ screenCenterY	= &7e71
 	ldx #1
 	jsr osByte
 
+	stx machineType				; save machine type
+
 	cpx #2					; if it reports back as a b+ model
-	bne loaderNotBPlus
+	bne loaderNotBplus
 
 	ldy #128				; then test that there really is ram at bank 128 (real b+)
 	jsr swrTestByte - loaderReloc
-	bne loaderNotBPlus
+	beq loaderRealBplus			; if ram found in bank 128 then its a real B+
+	
+	dec machineType				; else its a model b with integra
+	bne loaderNotBplus
 
-						; display workspace message
+.loaderRealBplus
+						; we got this far so its a real b+, display b+ workspace message
 	ldy #lo(loaderUsingWorkspace - loaderReloc)
 	jsr loaderPrint - loaderReloc
 
@@ -224,16 +299,13 @@ screenCenterY	= &7e71
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.loaderNotBPlus
+.loaderNotBplus
 
-	jsr swrTest - loaderReloc		; test sideways ram
-	bne loaderFailed
+	jsr swrTest - loaderReloc		; test for sideways ram banks
+	bne loaderFailed			; if none found then jump to failed message
 
-	ldy #lo(loaderUsingBank - loaderReloc)	; display sideways bank message
+	ldy #lo(loaderUsingBank - loaderReloc)	; else display sideways bank message
 	jsr loaderPrint - loaderReloc
-
-	lda #'0'				; add a leading zero
-	jsr osWrch
 
 	ldy swrBank				; display bank number
 	lda loaderBank - loaderReloc, y
@@ -244,6 +316,8 @@ screenCenterY	= &7e71
 .loaderCopyData
 
 	jsr swramCopy - loaderReloc		; copy data to swram
+
+	asl machineType				; convert machine type into index
 
 	ldx #lo(runLadybug - loaderReloc)	; run the main ladybug
 	ldy #hi(runLadybug - loaderReloc)
@@ -286,8 +360,10 @@ screenCenterY	= &7e71
 
 swrTestLocation		= page8000 + 8		; memory location for write test
 
-swrBank			= page8000 - 1		; storage for bank number of swram
-swrBankOriginal		= page8000 - 2		; storage for original system bank number
+machineType		= page8000 - 3		; storage for machine type
+swrBank			= page8000 - 2		; storage for bank number of swram
+swrBankOriginal		= page8000 - 1		; storage for original system bank number
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -371,18 +447,9 @@ swrBankOriginal		= page8000 - 2		; storage for original system bank number
 
 assert P% <= swramEnd				; sideways ram limit exceeded, check ladybug.lst
 
-	print
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; save loader program
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-loaderPage = page3000
+loaderPage = page3000				; load address
 loaderReloc = swramStart - loaderPage
 loaderStartReloc = loaderStart - loaderReloc
-
-	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
-	clear swramStart, loaderEnd
 
 	print
 	print

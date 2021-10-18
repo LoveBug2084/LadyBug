@@ -23,35 +23,35 @@
 	print "----------------------------------------------------"
 	print
 
-
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+config = &7be4					; game config loaded from disk
 
 	org config
 
+	; --------------------------------------------------------------------------------------------------------------------------------------------
+	; see ladybug.asm for default values
+	; --------------------------------------------------------------------------------------------------------------------------------------------
+
 	equb defaultEnemySpeed			; default enemy speed
 	equb defaultEnemyAttack			; default enemy attack
-	equb defaultLadybugLives		; default lives
+	equb defaultLives			; default lives
 	equb defaultSound			; default sound enabled
 	equb defaultTimerVolume			; default timer volume
+
+	; --------------------------------------------------------------------------------------------------------------------------------------------
+
 	equb keyX				; default key for right
 	equb keyZ				; default key for left
 	equb keySlash				; default key for down
 	equb keyColon				; default key for up
 	equs "XZ/:"				; default ascii text for keys
-	equb &00,&10,&00			; default high score
+	equb &00,&10,&00			; default high score 10,000
 	equs "LOVEBUG.ML", &ff			; default high score name
 	equb &1d				; validation code
 
-	print
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; save Config
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	save "Config", config, *
-	clear config, *
-
+.configEnd	
+	
 	print
 	print
 	print

@@ -48,9 +48,6 @@
 	ldx #&ff				; initialise stack
 	txs
 
-	lda swrBank				; select sideways ram bank
-	sta bankSelect
-
 	lda #&02				; initialize random seed
 	sta randomSeed + progOffset
 	sta randomSeed + 1 + progOffset
@@ -104,10 +101,6 @@
 ; relocate program to runtime address
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 	
-config = &7be4					; game config loaded from disk
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
 	ldx #hi(bootstrap - progReloc)		; program page length
 	ldy #0
 
@@ -127,13 +120,21 @@ config = &7be4					; game config loaded from disk
 	
 .relocateProgramConfig
 
-	lda config, x				; copy config into game settings
-	sta gameSettings, x
+	lda config, x				; copy config into the game settings config data
+	sta configData, x
 	inx
 	cpx #28
 	bne relocateProgramConfig
 
-	lda highScoreBackup			; copy game settings high score to high score
+	lda swrBank				; select ram bank
+	sta bankSelect
+
+	sta cleanResetBank + 1			; save ram bank in clean reset code
+	
+	lda machineType				; save machine type index in clean reset code
+	sta cleanResetMachine + 1
+
+	lda highScoreBackup			; copy config data high score to game high score
 	sta highScore
 	lda highScoreBackup + 1
 	sta highScore + 1
