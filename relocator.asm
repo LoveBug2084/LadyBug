@@ -129,10 +129,10 @@
 	lda swrBank				; select ram bank
 	sta bankSelect
 
-	sta cleanResetBank + 1			; save ram bank in clean reset code
+	sta cleanResetBank			; save ram bank in clean reset code
 	
 	lda machineType				; save machine type index in clean reset code
-	sta cleanResetMachine + 1
+	sta cleanResetMachine
 
 	lda highScoreBackup			; copy config data high score to game high score
 	sta highScore
