@@ -211,14 +211,14 @@ align &100
 
 .loaderUsingBank
 
-	equb 31,7,13				; position cursor
-	equs 132,"Using sideways ram bank",135,"0"
+	equb 31,8,13				; position cursor
+	equs "Using sideways ram bank 0"
 	equb &ff				; end
 
 .loaderUsingWorkspace
 
-	equb 31,9,13				; position cursor
-	equs 132,"Using B+ workspace ram"
+	equb 31,10,13				; position cursor
+	equs "Using B+ workspace ram"
 	equb &ff				; end
 
 .loaderBank
