@@ -1,5 +1,5 @@
 # Lady Bug
-A remake of Universals Z80 based arcade game from 1981 written in 6502 assembly language for the Acorn BBC Micro Computer range, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler
+A remake of Universals Z80 based arcade game from 1981 written in 6502 assembly language for the Acorn BBC Micro Computer range, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler (see asm.bat for how to build)
 
 _**Supported models:**_\
 BBC B with sideways ram upgrade ( uses 12K of sideways ram )\
