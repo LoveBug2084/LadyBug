@@ -432,18 +432,24 @@ defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=h
 
 	org page0130
 
+.cleanResetBank
+
+	skip 1					; storage for ram bank
+	
+.cleanResetMachine
+
+	skip 1					; storage for machine index
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .cleanReset
 
 	sei					; disable irq interrupts
 	
-.cleanResetBank
-
-	lda #&ff				; page in ram (value previously set by loader)
+	lda cleanResetBank			; page in ram bank
 	sta bankSelect
 	
-.cleanResetMachine
-
-	ldx #&ff				; get machine type (value previously set by loader)
+	ldx cleanResetMachine			; get machine index
 
 	jmp swrCleanReset			; continue with reset code
 

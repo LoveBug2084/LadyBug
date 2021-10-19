@@ -23,8 +23,8 @@ main ram details
 variables     &0 - &B9 , 186 bytes
 free          &BA - &FF , 70 bytes
 ----------------------------------------------------
-used          &100 - &1C9 , 202 bytes
-stack         &1CA - &1FF , 54 bytes
+used          &100 - &1CD , 206 bytes
+stack         &1CE - &1FF , 50 bytes
 ----------------------------------------------------
 used          &200 - &24A , 75 bytes
 free          &24B - &257 , 13 bytes
@@ -609,109 +609,111 @@ bootstrap     &4700 - &47C8 , 201 bytes
      011B
 .validationCode
      011B
-.cleanReset
-     0130   78         SEI
 .cleanResetBank
-     0131   A9 FF      LDA #&FF
-     0133   8D 30 FE   STA &FE30
+     0130
 .cleanResetMachine
-     0136   A2 FF      LDX #&FF
-     0138   4C 70 AC   JMP &AC70
+     0131
+.cleanReset
+     0132   78         SEI
+     0133   AD 30 01   LDA &0130
+     0136   8D 30 FE   STA &FE30
+     0139   AE 31 01   LDX &0131
+     013C   4C 70 AC   JMP &AC70
 .irqInterrupt
-     013B   AD 4D FE   LDA &FE4D
-     013E   29 02      AND #&02
-     0140   D0 0C      BNE &014E
+     013F   AD 4D FE   LDA &FE4D
+     0142   29 02      AND #&02
+     0144   D0 0C      BNE &0152
 .irqTimer
-     0142   A9 40      LDA #&40
-     0144   8D 4D FE   STA &FE4D
-     0147   A9 FF      LDA #&FF
-     0149   85 02      STA &02
-     014B   A5 FC      LDA &FC
-     014D   40         RTI
+     0146   A9 40      LDA #&40
+     0148   8D 4D FE   STA &FE4D
+     014B   A9 FF      LDA #&FF
+     014D   85 02      STA &02
+     014F   A5 FC      LDA &FC
+     0151   40         RTI
 .irqVsync
-     014E   8D 4D FE   STA &FE4D
-     0151   A9 00      LDA #&00
-     0153   8D 44 FE   STA &FE44
-     0156   A9 27      LDA #&27
-     0158   8D 45 FE   STA &FE45
-     015B   A9 00      LDA #&00
-     015D   85 02      STA &02
-     015F   E6 00      INC &00
-     0161   A5 00      LDA &00
-     0163   29 01      AND #&01
-     0165   D0 02      BNE &0169
-     0167   C6 01      DEC &01
+     0152   8D 4D FE   STA &FE4D
+     0155   A9 00      LDA #&00
+     0157   8D 44 FE   STA &FE44
+     015A   A9 27      LDA #&27
+     015C   8D 45 FE   STA &FE45
+     015F   A9 00      LDA #&00
+     0161   85 02      STA &02
+     0163   E6 00      INC &00
+     0165   A5 00      LDA &00
+     0167   29 01      AND #&01
+     0169   D0 02      BNE &016D
+     016B   C6 01      DEC &01
 .irqVsyncExit
-     0169   A5 FC      LDA &FC
-     016B   40         RTI
+     016D   A5 FC      LDA &FC
+     016F   40         RTI
 .psgWrite
-     016C   8D 4F FE   STA &FE4F
-     016F   A9 00      LDA #&00
-     0171   8D 40 FE   STA &FE40
-     0174   48         PHA
-     0175   68         PLA
-     0176   EA         NOP
-     0177   EA         NOP
-     0178   A9 08      LDA #&08
-     017A   8D 40 FE   STA &FE40
-     017D   60         RTS
+     0170   8D 4F FE   STA &FE4F
+     0173   A9 00      LDA #&00
+     0175   8D 40 FE   STA &FE40
+     0178   48         PHA
+     0179   68         PLA
+     017A   EA         NOP
+     017B   EA         NOP
+     017C   A9 08      LDA #&08
+     017E   8D 40 FE   STA &FE40
+     0181   60         RTS
 .waitVsyncUpper
 .waitVsyncUpperTest
-     017E   24 02      BIT &02
-     0180   10 FC      BPL &017E
-     0182   60         RTS
+     0182   24 02      BIT &02
+     0184   10 FC      BPL &0182
+     0186   60         RTS
 .waitVsyncLower
 .waitVsyncLowerTest
-     0183   24 02      BIT &02
-     0185   30 FC      BMI &0183
-     0187   60         RTS
+     0187   24 02      BIT &02
+     0189   30 FC      BMI &0187
+     018B   60         RTS
 .updateObjectTimerPalette
-     0188   F1
-     0189   F6
-     018A   F4
+     018C   F1
+     018D   F6
+     018E   F4
 .updateObjectTimerFrames
-     018B   AF
-     018C   0F
-     018D   3E
+     018F   AF
+     0190   0F
+     0191   3E
 .updateObjectTimer
-     018E   A5 00      LDA &00
-     0190   29 01      AND #&01
-     0192   F0 01      BEQ &0195
-     0194   60         RTS
+     0192   A5 00      LDA &00
+     0194   29 01      AND #&01
+     0196   F0 01      BEQ &0199
+     0198   60         RTS
 .updateObjectTimerBump
-     0195   C6 26      DEC &26
-     0197   F0 01      BEQ &019A
-     0199   60         RTS
+     0199   C6 26      DEC &26
+     019B   F0 01      BEQ &019E
+     019D   60         RTS
 .updateObjectTimerMode
-     019A   86 97      STX &97
-     019C   A6 27      LDX &27
-     019E   E8         INX
-     019F   E0 03      CPX #&03
-     01A1   D0 02      BNE &01A5
-     01A3   A2 00      LDX #&00
+     019E   86 97      STX &97
+     01A0   A6 27      LDX &27
+     01A2   E8         INX
+     01A3   E0 03      CPX #&03
+     01A5   D0 02      BNE &01A9
+     01A7   A2 00      LDX #&00
 .updateObjectTimerColor
-     01A5   86 27      STX &27
-     01A7   BD 88 01   LDA &0188,X
-     01AA   8D 21 FE   STA &FE21
-     01AD   BD 8B 01   LDA &018B,X
-     01B0   85 26      STA &26
-     01B2   A6 97      LDX &97
-     01B4   60         RTS
+     01A9   86 27      STX &27
+     01AB   BD 8C 01   LDA &018C,X
+     01AE   8D 21 FE   STA &FE21
+     01B1   BD 8F 01   LDA &018F,X
+     01B4   85 26      STA &26
+     01B6   A6 97      LDX &97
+     01B8   60         RTS
 .screenClear
-     01B5   A9 47      LDA #&47
-     01B7   8D C0 01   STA &01C0
-     01BA   A2 F0      LDX #&F0
-     01BC   A9 00      LDA #&00
+     01B9   A9 47      LDA #&47
+     01BB   8D C4 01   STA &01C4
+     01BE   A2 F0      LDX #&F0
+     01C0   A9 00      LDA #&00
 .screenClearLoop
-     01BE   9D 00 FF   STA &FF00,X
-     01C1   E8         INX
-     01C2   D0 FA      BNE &01BE
-     01C4   EE C0 01   INC &01C0
-     01C7   10 F5      BPL &01BE
-     01C9   60         RTS
+     01C2   9D 00 FF   STA &FF00,X
+     01C5   E8         INX
+     01C6   D0 FA      BNE &01C2
+     01C8   EE C4 01   INC &01C4
+     01CB   10 F5      BPL &01C2
+     01CD   60         RTS
 .page0100End
 .stack
-     0204   3B 01
+     0204   3F 01
 .keyboardScan
      0206   A9 7F      LDA #&7F
      0208   8D 43 FE   STA &FE43
@@ -745,7 +747,7 @@ bootstrap     &4700 - &47C8 , 201 bytes
 .page0200End
      0258   00
 .page0258End
-     0287   4C 30 01   JMP &0130
+     0287   4C 32 01   JMP &0132
 .random
      028A   A5 36      LDA &36
      028C   4A         LSR A
@@ -1339,7 +1341,7 @@ bootstrap     &4700 - &47C8 , 201 bytes
      06BD   60         RTS
 .main
      06BE   58         CLI
-     06BF   20 B5 01   JSR &01B5
+     06BF   20 B9 01   JSR &01B9
      06C2   A9 06      LDA #&06
      06C4   8D 00 FE   STA &FE00
      06C7   A9 1A      LDA #&1A
@@ -1407,7 +1409,7 @@ bootstrap     &4700 - &47C8 , 201 bytes
      0753   A9 64      LDA #&64
      0755   85 03      STA &03
 .gameLoopUpper
-     0757   20 7E 01   JSR &017E
+     0757   20 82 01   JSR &0182
      075A   20 3D 08   JSR &083D
      075D   20 6A 08   JSR &086A
      0760   B0 BD      BCS &071F
@@ -1426,10 +1428,10 @@ bootstrap     &4700 - &47C8 , 201 bytes
      0784   B0 0C      BCS &0792
      0786   20 49 25   JSR &2549
      0789   20 E2 08   JSR &08E2
-     078C   20 8E 01   JSR &018E
+     078C   20 92 01   JSR &0192
      078F   20 09 04   JSR &0409
 .gameLoopLower
-     0792   20 83 01   JSR &0183
+     0792   20 87 01   JSR &0187
      0795   20 CE 22   JSR &22CE
      0798   20 E3 1C   JSR &1CE3
      079B   20 C2 0F   JSR &0FC2
@@ -1479,8 +1481,8 @@ bootstrap     &4700 - &47C8 , 201 bytes
      07F3   47 41 4D ...
      07FC   FF
 .gameOverLoop
-     07FD   20 7E 01   JSR &017E
-     0800   20 83 01   JSR &0183
+     07FD   20 82 01   JSR &0182
+     0800   20 87 01   JSR &0187
      0803   20 30 22   JSR &2230
      0806   A5 01      LDA &01
      0808   D0 F3      BNE &07FD
@@ -2521,11 +2523,11 @@ bootstrap     &4700 - &47C8 , 201 bytes
      0F81   60         RTS
 .instructionsFunctions
      0F82   20 AC 0F   JSR &0FAC
-     0F85   20 7E 01   JSR &017E
+     0F85   20 82 01   JSR &0182
      0F88   20 06 22   JSR &2206
      0F8B   20 E3 1C   JSR &1CE3
      0F8E   20 E2 08   JSR &08E2
-     0F91   20 83 01   JSR &0183
+     0F91   20 87 01   JSR &0187
      0F94   20 CE 22   JSR &22CE
      0F97   20 E3 1C   JSR &1CE3
      0F9A   20 3C 0E   JSR &0E3C
@@ -2974,11 +2976,11 @@ bootstrap     &4700 - &47C8 , 201 bytes
      12AF   60         RTS
 .mainMenuFunctions
      12B0   20 3D 12   JSR &123D
-     12B3   20 7E 01   JSR &017E
+     12B3   20 82 01   JSR &0182
      12B6   20 06 22   JSR &2206
      12B9   20 E3 1C   JSR &1CE3
      12BC   20 E2 08   JSR &08E2
-     12BF   20 83 01   JSR &0183
+     12BF   20 87 01   JSR &0187
      12C2   20 CE 22   JSR &22CE
      12C5   20 E3 1C   JSR &1CE3
      12C8   20 3C 0E   JSR &0E3C
@@ -3632,11 +3634,11 @@ bootstrap     &4700 - &47C8 , 201 bytes
      185E   20 0C 23   JSR &230C
      1861   60         RTS
 .nameRegFunctions
-     1862   20 7E 01   JSR &017E
+     1862   20 82 01   JSR &0182
      1865   20 06 22   JSR &2206
      1868   20 E3 1C   JSR &1CE3
      186B   20 E2 08   JSR &08E2
-     186E   20 83 01   JSR &0183
+     186E   20 87 01   JSR &0187
      1871   20 CE 22   JSR &22CE
      1874   20 E3 1C   JSR &1CE3
      1877   20 3C 0E   JSR &0E3C
@@ -4473,8 +4475,8 @@ bootstrap     &4700 - &47C8 , 201 bytes
      1E90   47 4F 4F ...
      1E99   FF
 .drawLevelIntroWait
-     1E9A   20 7E 01   JSR &017E
-     1E9D   20 83 01   JSR &0183
+     1E9A   20 82 01   JSR &0182
+     1E9D   20 87 01   JSR &0187
      1EA0   20 CE 22   JSR &22CE
      1EA3   20 18 1C   JSR &1C18
      1EA6   20 30 22   JSR &2230
@@ -4776,16 +4778,16 @@ bootstrap     &4700 - &47C8 , 201 bytes
      212A   A9 01      LDA #&01
      212C   20 DE 21   JSR &21DE
 .drawBonusScreenWaitUpper
-     212F   20 7E 01   JSR &017E
+     212F   20 82 01   JSR &0182
      2132   20 06 22   JSR &2206
      2135   20 E3 1C   JSR &1CE3
      2138   20 E2 08   JSR &08E2
 .drawBonusScreenWaitLower
-     213B   20 83 01   JSR &0183
+     213B   20 87 01   JSR &0187
      213E   20 CE 22   JSR &22CE
      2141   20 E3 1C   JSR &1CE3
      2144   20 3C 0E   JSR &0E3C
-     2147   20 8E 01   JSR &018E
+     2147   20 92 01   JSR &0192
      214A   20 30 22   JSR &2230
      214D   20 09 04   JSR &0409
      2150   A5 01      LDA &01
@@ -5091,7 +5093,7 @@ bootstrap     &4700 - &47C8 , 201 bytes
      22E7   AD 03 01   LDA &0103
      22EA   F0 05      BEQ &22F1
      22EC   A1 99      LDA (&99,X)
-     22EE   20 6C 01   JSR &016C
+     22EE   20 70 01   JSR &0170
 .processSoundNextByte
      22F1   F6 99      INC &99,X
      22F3   D0 EA      BNE &22DF
@@ -5122,7 +5124,7 @@ bootstrap     &4700 - &47C8 , 201 bytes
      231A   A9 9F      LDA #&9F
 .playSoundSilenceLoop
      231C   48         PHA
-     231D   20 6C 01   JSR &016C
+     231D   20 70 01   JSR &0170
      2320   68         PLA
      2321   18         CLC
      2322   69 20      ADC #&20
@@ -5160,11 +5162,11 @@ bootstrap     &4700 - &47C8 , 201 bytes
      2356   84 A8      STY &A8
      2358   84 A9      STY &A9
      235A   A9 9F      LDA #&9F
-     235C   20 6C 01   JSR &016C
+     235C   20 70 01   JSR &0170
      235F   A9 BF      LDA #&BF
-     2361   20 6C 01   JSR &016C
+     2361   20 70 01   JSR &0170
      2364   A9 DF      LDA #&DF
-     2366   20 6C 01   JSR &016C
+     2366   20 70 01   JSR &0170
      2369   4C 98 23   JMP &2398
 .playSoundLowPriority
      236C   A5 A5      LDA &A5
@@ -8889,9 +8891,9 @@ bootstrap     &4700 - &47C8 , 201 bytes
      4788   D0 F5      BNE &477F
      478A   AD FE 7F   LDA &7FFE
      478D   8D 30 FE   STA &FE30
-     4790   8D 32 01   STA &0132
+     4790   8D 30 01   STA &0130
      4793   AD FD 7F   LDA &7FFD
-     4796   8D 37 01   STA &0137
+     4796   8D 31 01   STA &0131
      4799   AD 0D 01   LDA &010D
      479C   85 07      STA &07
      479E   AD 0E 01   LDA &010E
