@@ -49,6 +49,7 @@
 	incbin "img-vegetables.bin"		; load the 10x10 pixel vegetable sprites into memory
 
 .vegetablesBinEnd
+	skip 0
 
 .pointsBin
 	skip 0
@@ -118,6 +119,36 @@
 	skip 0
 
 
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; reserve space for high score table and config data
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrConfig
+
+	skip 1					; lives
+	skip 1					; enemy speed
+	skip 1					; enemy attack
+	skip 1					; volume off/on
+	skip 1					; timer volume
+	skip 4					; for key scan values
+	skip 4					; for key ascii values
+	
+.highScoreTable
+
+	for i,1,8				; 8 entrys in table
+	
+	skip 3					; reserve space for score
+	skip 11					; reserve space for name
+
+	next
+
+.swrValidationCode
+
+	skip 1					; validation code for settings and high score table
+	
+.swrConfigEnd
+	skip 0
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; clean reset code
@@ -443,6 +474,7 @@ swrBankOriginal		= page8000 - 1		; storage for original system bank number
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .loaderEnd
+	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 assert P% <= swramEnd				; sideways ram limit exceeded, check ladybug.lst

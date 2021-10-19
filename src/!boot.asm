@@ -36,6 +36,7 @@
 	equs "CLOSE#0:CHAIN",34,"Boot",34,13	; close !Boot and CHAIN"Boot"
 
 .bootasmEnd
+	skip 0
 
 	print
 	print

@@ -255,7 +255,7 @@
 	equb &ff
 	equb &40
 	
-; old modulated sound, no so good on a real beeb
+; old modulated sound, not so good on a real beeb
 ; .sfxDataMunch
 
 	; ; sfx channel 5, psg channel 3
