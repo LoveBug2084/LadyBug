@@ -36,6 +36,74 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; game high score table and config
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.configData
+	skip 0
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; high score table
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.highScoreTable
+	skip 0
+	
+	for i,1,8				; 8 entrys in table 1st to 8th
+	
+	skip 3					; reserve space for score
+	skip 11					; reserve space for name
+
+	next
+
+.highScoreTableEnd
+	skip 0
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; game settings
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.optionEnemySpeed
+
+	skip 1					; reserve space for enemy speed
+	
+.optionEnemyAttack
+
+	skip 1					; reserve space for enemy attack
+	
+.optionLives
+
+	skip 1					; reserve space for ladybug lives
+	
+.optionSound
+
+	skip 1					; reserve space for sound off/on
+	
+.optionTimerVolume
+
+	skip 1					; reserve space for timer volume
+	
+.optionKeys
+
+	skip 4					; reserve space for control keys
+	
+.optionKeysAscii
+
+	skip 4					; reserve space for control keys ascii
+
+.validationCode
+
+	skip 1					; reserve space for validation code for high score table and settings
+	
+.configDataEnd
+
+	skip 0
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; vegetables, points and sprites by drawSprite and share a common address table although the sizes are different
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -118,76 +186,6 @@
 	incbin "img-angel.bin"			; load ladybug angel sprite set into memory
 
 .spriteBinEnd
-	skip 0
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; game high score table and config
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	align &80
-
-.configData
-	skip 0
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; high score table
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.highScoreTable
-	skip 0
-	
-	for i,1,8				; 8 entrys in table 1st to 8th
-	
-	skip 3					; reserve space for score
-	skip 11					; reserve space for name
-
-	next
-
-.highScoreTableEnd
-	skip 0
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; game settings
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.optionEnemySpeed
-
-	skip 1					; reserve space for enemy speed
-	
-.optionEnemyAttack
-
-	skip 1					; reserve space for enemy attack
-	
-.optionLives
-
-	skip 1					; reserve space for ladybug lives
-	
-.optionSound
-
-	skip 1					; reserve space for sound off/on
-	
-.optionTimerVolume
-
-	skip 1					; reserve space for timer volume
-	
-.optionKeys
-
-	skip 4					; reserve space for control keys
-	
-.optionKeysAscii
-
-	skip 4					; reserve space for control keys ascii
-
-.validationCode
-
-	skip 1					; reserve space for validation code for high score table and settings
-	
-.configDataEnd
-
 	skip 0
 
 

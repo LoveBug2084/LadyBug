@@ -99,114 +99,114 @@ bootstrap     &4800 - &48BE , 191 bytes
 
 .highRamStart
      8000
-.spriteBin
-     8010
-.sprite10x10Bin
-     8010
-.vegetablesBin
-     8010
-.vegetablesBinEnd
-     83C6
-.pointsBin
-     83C6
-.pointsBinEnd
-     861E
-.sprite10x10BinEnd
-     861E
-.ladybugBin
-     861E
-.enemy1Bin
-     8A38
-.enemy2Bin
-     8E52
-.enemy3Bin
-     926C
-.enemy4Bin
-     9686
-.enemy5Bin
-     9AA0
-.enemy6Bin
-     9EBA
-.enemy7Bin
-     A2D4
-.enemy8Bin
-     A6EE
-.angelBin
-     AB08
-.spriteBinEnd
-     AC66
 .configData
-     AC80
+     8010
 .highScoreTable
-     AC80
-     AC80
-     AC83
-     AC8E
-     AC91
-     AC9C
-     AC9F
-     ACAA
-     ACAD
-     ACB8
-     ACBB
-     ACC6
-     ACC9
-     ACD4
-     ACD7
-     ACE2
-     ACE5
+     8010
+     8010
+     8013
+     801E
+     8021
+     802C
+     802F
+     803A
+     803D
+     8048
+     804B
+     8056
+     8059
+     8064
+     8067
+     8072
+     8075
 .highScoreTableEnd
-     ACF0
+     8080
 .optionEnemySpeed
-     ACF0
+     8080
 .optionEnemyAttack
-     ACF1
+     8081
 .optionLives
-     ACF2
+     8082
 .optionSound
-     ACF3
+     8083
 .optionTimerVolume
-     ACF4
+     8084
 .optionKeys
-     ACF5
+     8085
 .optionKeysAscii
-     ACF9
+     8089
 .validationCode
-     ACFD
+     808D
 .configDataEnd
-     ACFE
+     808E
+.spriteBin
+     808E
+.sprite10x10Bin
+     808E
+.vegetablesBin
+     808E
+.vegetablesBinEnd
+     8444
+.pointsBin
+     8444
+.pointsBinEnd
+     869C
+.sprite10x10BinEnd
+     869C
+.ladybugBin
+     869C
+.enemy1Bin
+     8AB6
+.enemy2Bin
+     8ED0
+.enemy3Bin
+     92EA
+.enemy4Bin
+     9704
+.enemy5Bin
+     9B1E
+.enemy6Bin
+     9F38
+.enemy7Bin
+     A352
+.enemy8Bin
+     A76C
+.angelBin
+     AB86
+.spriteBinEnd
+     ACE4
 .swrCleanResetJmp
-     ACFE   15 AD
-     AD00   15 AD
-     AD02   1D AD
-     AD04   15 AD
-     AD06   15 AD
+     ACE4   FB AC
+     ACE6   FB AC
+     ACE8   03 AD
+     ACEA   FB AC
+     ACEC   FB AC
 .swrCleanReset
-     AD08   BD FE AC   LDA &ACFE,X
-     AD0B   85 00      STA &00
-     AD0D   BD FF AC   LDA &ACFF,X
-     AD10   85 01      STA &01
-     AD12   6C 00 00   JMP (&0000)
+     ACEE   BD E4 AC   LDA &ACE4,X
+     ACF1   85 00      STA &00
+     ACF3   BD E5 AC   LDA &ACE5,X
+     ACF6   85 01      STA &01
+     ACF8   6C 00 00   JMP (&0000)
 .swrCleanResetB
-     AD15   A9 7F      LDA #&7F
-     AD17   8D 4E FE   STA &FE4E
-     AD1A   6C FC FF   JMP (&FFFC)
+     ACFB   A9 7F      LDA #&7F
+     ACFD   8D 4E FE   STA &FE4E
+     AD00   6C FC FF   JMP (&FFFC)
 .swrCleanResetBplus
-     AD1D   A9 40      LDA #&40
-     AD1F   8D 00 0D   STA &0D00
-     AD22   A2 FF      LDX #&FF
-     AD24   9A         TXS
-     AD25   E8         INX
-     AD26   8A         TXA
-     AD27   48         PHA
+     AD03   A9 40      LDA #&40
+     AD05   8D 00 0D   STA &0D00
+     AD08   A2 FF      LDX #&FF
+     AD0A   9A         TXS
+     AD0B   E8         INX
+     AD0C   8A         TXA
+     AD0D   48         PHA
 .swrCleanResetBplusLoop
-     AD28   95 00      STA &00,X
-     AD2A   E8         INX
-     AD2B   D0 FB      BNE &AD28
-     AD2D   A9 02      LDA #&02
-     AD2F   85 01      STA &01
-     AD31   8A         TXA
-     AD32   4C 73 D9   JMP &D973
+     AD0E   95 00      STA &00,X
+     AD10   E8         INX
+     AD11   D0 FB      BNE &AD0E
+     AD13   A9 02      LDA #&02
+     AD15   85 01      STA &01
+     AD17   8A         TXA
+     AD18   4C 73 D9   JMP &D973
 .swramLastAddr
      AE00
 .loaderMessages
@@ -695,7 +695,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      0133   AD 30 01   LDA &0130
      0136   8D 30 FE   STA &FE30
      0139   AE 31 01   LDX &0131
-     013C   4C 08 AD   JMP &AD08
+     013C   4C EE AC   JMP &ACEE
 .irqInterrupt
      013F   AD 4D FE   LDA &FE4D
      0142   29 02      AND #&02
@@ -791,13 +791,13 @@ bootstrap     &4800 - &48BE , 191 bytes
      0216   20 41 02   JSR &0241
      0219   A9 49      LDA #&49
      021B   20 41 02   JSR &0241
-     021E   AD F5 AC   LDA &ACF5
+     021E   AD 85 80   LDA &8085
      0221   20 41 02   JSR &0241
-     0224   AD F6 AC   LDA &ACF6
+     0224   AD 86 80   LDA &8086
      0227   20 41 02   JSR &0241
-     022A   AD F7 AC   LDA &ACF7
+     022A   AD 87 80   LDA &8087
      022D   20 41 02   JSR &0241
-     0230   AD F8 AC   LDA &ACF8
+     0230   AD 88 80   LDA &8088
      0233   20 41 02   JSR &0241
      0236   A9 0B      LDA #&0B
      0238   8D 40 FE   STA &FE40
@@ -1468,11 +1468,11 @@ bootstrap     &4800 - &48BE , 191 bytes
      0702   20 EB 06   JSR &06EB
      0705   20 4D 0A   JSR &0A4D
 .gameIntroScreen
-     0708   AD 80 AC   LDA &AC80
+     0708   AD 10 80   LDA &8010
      070B   85 07      STA &07
-     070D   AD 81 AC   LDA &AC81
+     070D   AD 11 80   LDA &8011
      0710   85 08      STA &08
-     0712   AD 82 AC   LDA &AC82
+     0712   AD 12 80   LDA &8012
      0715   85 09      STA &09
      0717   20 2E 0B   JSR &0B2E
      071A   20 04 12   JSR &1204
@@ -1487,7 +1487,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      072B   85 04      STA &04
      072D   85 05      STA &05
      072F   85 06      STA &06
-     0731   AD F2 AC   LDA &ACF2
+     0731   AD 82 80   LDA &8082
      0734   85 0C      STA &0C
      0736   A9 FF      LDA #&FF
      0738   85 10      STA &10
@@ -1607,9 +1607,9 @@ bootstrap     &4800 - &48BE , 191 bytes
      083E   20 44 08   JSR &0844
      0841   4C 08 07   JMP &0708
 .checkHighScore
-     0844   A9 80      LDA #&80
+     0844   A9 10      LDA #&10
      0846   85 0A      STA &0A
-     0848   A9 AC      LDA #&AC
+     0848   A9 80      LDA #&80
      084A   85 0B      STA &0B
      084C   A2 07      LDX #&07
 .checkHighScoreLoop
@@ -1634,15 +1634,15 @@ bootstrap     &4800 - &48BE , 191 bytes
 .checkHighScoreEntry
      086C   E0 00      CPX #&00
      086E   F0 13      BEQ &0883
-     0870   A0 E1      LDY #&E1
+     0870   A0 71      LDY #&71
 .checkHighScoreShift
-     0872   B9 00 AC   LDA &AC00,Y
-     0875   99 0E AC   STA &AC0E,Y
+     0872   B9 00 80   LDA &8000,Y
+     0875   99 0E 80   STA &800E,Y
      0878   88         DEY
      0879   C4 0A      CPY &0A
      087B   D0 F5      BNE &0872
-     087D   B9 00 AC   LDA &AC00,Y
-     0880   99 0E AC   STA &AC0E,Y
+     087D   B9 00 80   LDA &8000,Y
+     0880   99 0E 80   STA &800E,Y
 .checkHighScoreRegister
      0883   20 62 18   JSR &1862
      0886   20 5E 0D   JSR &0D5E
@@ -1862,7 +1862,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      09EB   86 5B      STX &5B
      09ED   8A         TXA
      09EE   18         CLC
-     09EF   6D F1 AC   ADC &ACF1
+     09EF   6D 81 80   ADC &8081
      09F2   AA         TAX
      09F3   20 BE 02   JSR &02BE
      09F6   DD F2 08   CMP &08F2,X
@@ -2111,9 +2111,9 @@ bootstrap     &4800 - &48BE , 191 bytes
      0BB4   03
      0BB5   62 7E
      0BB7   FF
-     0BB8   A9 83      LDA #&83
+     0BB8   A9 13      LDA #&13
      0BBA   85 3F      STA &3F
-     0BBC   A9 AC      LDA #&AC
+     0BBC   A9 80      LDA #&80
      0BBE   85 40      STA &40
      0BC0   20 C4 23   JSR &23C4
      0BC3   4C 86 04   JMP &0486
@@ -2359,13 +2359,13 @@ bootstrap     &4800 - &48BE , 191 bytes
      0D5C   90 D1      BCC &0D2F
 .generateValidation
      0D5E   A2 00      LDX #&00
-     0D60   8E FD AC   STX &ACFD
+     0D60   8E 8D 80   STX &808D
 .generateValidationLoop
-     0D63   BD 80 AC   LDA &AC80,X
+     0D63   BD 10 80   LDA &8010,X
      0D66   49 69      EOR #&69
      0D68   18         CLC
-     0D69   6D FD AC   ADC &ACFD
-     0D6C   8D FD AC   STA &ACFD
+     0D69   6D 8D 80   ADC &808D
+     0D6C   8D 8D 80   STA &808D
      0D6F   E8         INX
      0D70   E0 7D      CPX #&7D
      0D72   D0 EF      BNE &0D63
@@ -2927,7 +2927,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      119B   E8         INX
 .initLevelSettingsSkulls
      119C   86 22      STX &22
-     119E   AD F0 AC   LDA &ACF0
+     119E   AD 80 80   LDA &8080
      11A1   0A         ASL A
      11A2   0A         ASL A
      11A3   AA         TAX
@@ -3133,12 +3133,12 @@ bootstrap     &4800 - &48BE , 191 bytes
      1319   F0 4F      BEQ &136A
      131B   CA         DEX
      131C   CA         DEX
-     131D   FE F0 AC   INC &ACF0,X
-     1320   BD F0 AC   LDA &ACF0,X
+     131D   FE 80 80   INC &8080,X
+     1320   BD 80 80   LDA &8080,X
      1323   DD FF 11   CMP &11FF,X
      1326   D0 06      BNE &132E
      1328   BD FA 11   LDA &11FA,X
-     132B   9D F0 AC   STA &ACF0,X
+     132B   9D 80 80   STA &8080,X
 .mainMenuProcessStartExit
      132E   20 FA 15   JSR &15FA
      1331   A9 05      LDA #&05
@@ -3158,7 +3158,7 @@ bootstrap     &4800 - &48BE , 191 bytes
 .mainMenuProcessStartLadybugLives
      134A   C9 04      CMP #&04
      134C   D0 08      BNE &1356
-     134E   AD F2 AC   LDA &ACF2
+     134E   AD 82 80   LDA &8082
      1351   85 0C      STA &0C
      1353   20 C6 0B   JSR &0BC6
 .mainMenuProcessReturnFalse
@@ -3196,11 +3196,11 @@ bootstrap     &4800 - &48BE , 191 bytes
      139D   20 A2 14   JSR &14A2
      13A0   A8         TAY
      13A1   B9 0D 11   LDA &110D,Y
-     13A4   8D F8 AC   STA &ACF8
+     13A4   8D 88 80   STA &8088
      13A7   A9 3F      LDA #&3F
      13A9   85 42      STA &42
      13AB   B9 D9 10   LDA &10D9,Y
-     13AE   8D FC AC   STA &ACFC
+     13AE   8D 8C 80   STA &808C
      13B1   20 60 06   JSR &0660
      13B4   A9 05      LDA #&05
      13B6   20 49 24   JSR &2449
@@ -3218,15 +3218,15 @@ bootstrap     &4800 - &48BE , 191 bytes
      13D1   20 A2 14   JSR &14A2
      13D4   A8         TAY
      13D5   B9 0D 11   LDA &110D,Y
-     13D8   CD F8 AC   CMP &ACF8
+     13D8   CD 88 80   CMP &8088
      13DB   F0 F4      BEQ &13D1
-     13DD   8D F7 AC   STA &ACF7
+     13DD   8D 87 80   STA &8087
      13E0   20 8F 23   JSR &238F
      13E3   3F
      13E4   92 74
      13E6   FF
      13E7   B9 D9 10   LDA &10D9,Y
-     13EA   8D FB AC   STA &ACFB
+     13EA   8D 8B 80   STA &808B
      13ED   20 60 06   JSR &0660
      13F0   A9 05      LDA #&05
      13F2   20 49 24   JSR &2449
@@ -3244,17 +3244,17 @@ bootstrap     &4800 - &48BE , 191 bytes
      140D   20 A2 14   JSR &14A2
      1410   A8         TAY
      1411   B9 0D 11   LDA &110D,Y
-     1414   CD F8 AC   CMP &ACF8
+     1414   CD 88 80   CMP &8088
      1417   F0 F4      BEQ &140D
-     1419   CD F7 AC   CMP &ACF7
+     1419   CD 87 80   CMP &8087
      141C   F0 EF      BEQ &140D
-     141E   8D F6 AC   STA &ACF6
+     141E   8D 86 80   STA &8086
      1421   20 8F 23   JSR &238F
      1424   3F
      1425   AA 74
      1427   FF
      1428   B9 D9 10   LDA &10D9,Y
-     142B   8D FA AC   STA &ACFA
+     142B   8D 8A 80   STA &808A
      142E   20 60 06   JSR &0660
      1431   A9 05      LDA #&05
      1433   20 49 24   JSR &2449
@@ -3272,19 +3272,19 @@ bootstrap     &4800 - &48BE , 191 bytes
      144E   20 A2 14   JSR &14A2
      1451   A8         TAY
      1452   B9 0D 11   LDA &110D,Y
-     1455   CD F8 AC   CMP &ACF8
+     1455   CD 88 80   CMP &8088
      1458   F0 F4      BEQ &144E
-     145A   CD F7 AC   CMP &ACF7
+     145A   CD 87 80   CMP &8087
      145D   F0 EF      BEQ &144E
-     145F   CD F6 AC   CMP &ACF6
+     145F   CD 86 80   CMP &8086
      1462   F0 EA      BEQ &144E
-     1464   8D F5 AC   STA &ACF5
+     1464   8D 85 80   STA &8085
      1467   20 8F 23   JSR &238F
      146A   3F
      146B   C2 74
      146D   FF
      146E   B9 D9 10   LDA &10D9,Y
-     1471   8D F9 AC   STA &ACF9
+     1471   8D 89 80   STA &8089
      1474   20 60 06   JSR &0660
      1477   A9 05      LDA #&05
      1479   20 49 24   JSR &2449
@@ -3455,7 +3455,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      15ED   FF
      15EE   A2 03      LDX #&03
 .mainMenuDrawTextKeys
-     15F0   BD F9 AC   LDA &ACF9,X
+     15F0   BD 89 80   LDA &8089,X
      15F3   20 60 06   JSR &0660
      15F6   CA         DEX
      15F7   10 F7      BPL &15F0
@@ -3472,7 +3472,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      1608   FF
      1609   A9 3F      LDA #&3F
      160B   85 42      STA &42
-     160D   AD F0 AC   LDA &ACF0
+     160D   AD 80 80   LDA &8080
      1610   09 30      ORA #&30
      1612   20 60 06   JSR &0660
      1615   20 8F 23   JSR &238F
@@ -3486,7 +3486,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      1623   FF
      1624   A9 3F      LDA #&3F
      1626   85 42      STA &42
-     1628   AD F1 AC   LDA &ACF1
+     1628   AD 81 80   LDA &8081
      162B   09 30      ORA #&30
      162D   20 60 06   JSR &0660
      1630   20 8F 23   JSR &238F
@@ -3500,7 +3500,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      163E   FF
      163F   A9 3F      LDA #&3F
      1641   85 42      STA &42
-     1643   AD F2 AC   LDA &ACF2
+     1643   AD 82 80   LDA &8082
      1646   09 30      ORA #&30
      1648   20 60 06   JSR &0660
      164B   20 8F 23   JSR &238F
@@ -3508,7 +3508,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      164F   42 70
      1651   20 20 20 
      1654   FF
-     1655   AD F3 AC   LDA &ACF3
+     1655   AD 83 80   LDA &8083
      1658   F0 0D      BEQ &1667
      165A   20 8F 23   JSR &238F
      165D   3F
@@ -3535,7 +3535,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      1682   FF
      1683   A9 3F      LDA #&3F
      1685   85 42      STA &42
-     1687   AD F4 AC   LDA &ACF4
+     1687   AD 84 80   LDA &8084
      168A   09 30      ORA #&30
      168C   20 60 06   JSR &0660
      168F   60         RTS
@@ -3614,9 +3614,9 @@ bootstrap     &4800 - &48BE , 191 bytes
      171C   F2 52
      171E   FF
      171F   A2 01      LDX #&01
-     1721   A9 80      LDA #&80
+     1721   A9 10      LDA #&10
      1723   85 0A      STA &0A
-     1725   A9 AC      LDA #&AC
+     1725   A9 80      LDA #&80
      1727   85 0B      STA &0B
 .drawScoreTableLoop
      1729   A9 F0      LDA #&F0
@@ -3748,9 +3748,9 @@ bootstrap     &4800 - &48BE , 191 bytes
      1833   03
      1834   62 7E
      1836   FF
-     1837   A9 83      LDA #&83
+     1837   A9 13      LDA #&13
      1839   85 3F      STA &3F
-     183B   A9 AC      LDA #&AC
+     183B   A9 80      LDA #&80
      183D   85 40      STA &40
      183F   20 C4 23   JSR &23C4
      1842   18         CLC
@@ -5318,7 +5318,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      23FA   29 C0      AND #&C0
      23FC   C9 40      CMP #&40
      23FE   F0 12      BEQ &2412
-     2400   AD F3 AC   LDA &ACF3
+     2400   AD 83 80   LDA &8083
      2403   F0 05      BEQ &240A
      2405   A1 9B      LDA (&9B,X)
      2407   20 70 01   JSR &0170
@@ -5359,7 +5359,7 @@ bootstrap     &4800 - &48BE , 191 bytes
      243D   30 F6      BMI &2435
      243F   60         RTS
 .playSoundTimer
-     2440   AD F4 AC   LDA &ACF4
+     2440   AD 84 80   LDA &8084
      2443   D0 01      BNE &2446
      2445   60         RTS
 .playSoundTimerVolume
@@ -8707,348 +8707,348 @@ bootstrap     &4800 - &48BE , 191 bytes
      4655   97
      4656   A6
 .spriteImgAddrLo
-     4657   10
-     4658   42
-     4659   74
-     465A   A6
-     465B   D8
-     465C   0A
-     465D   3C
-     465E   6E
-     465F   A0
-     4660   D2
-     4661   04
-     4662   36
-     4663   68
-     4664   9A
-     4665   CC
-     4666   FE
-     4667   30
-     4668   62
-     4669   94
-     466A   C6
-     466B   F8
-     466C   2A
-     466D   5C
-     466E   8E
-     466F   C0
-     4670   F2
-     4671   24
-     4672   56
-     4673   88
-     4674   BA
-     4675   EC
-     4676   1E
-     4677   64
-     4678   AA
-     4679   F0
-     467A   36
-     467B   7C
-     467C   C2
-     467D   08
-     467E   4E
-     467F   94
-     4680   DA
-     4681   20
-     4682   66
-     4683   AC
-     4684   F2
-     4685   38
-     4686   7E
-     4687   C4
-     4688   0A
-     4689   50
-     468A   96
-     468B   DC
-     468C   22
-     468D   68
-     468E   AE
-     468F   F4
-     4690   3A
-     4691   80
-     4692   C6
-     4693   0C
-     4694   52
-     4695   98
-     4696   DE
-     4697   24
-     4698   6A
-     4699   B0
-     469A   F6
-     469B   3C
-     469C   82
-     469D   C8
-     469E   0E
-     469F   54
-     46A0   9A
-     46A1   E0
-     46A2   26
-     46A3   6C
-     46A4   B2
-     46A5   F8
-     46A6   3E
-     46A7   84
-     46A8   CA
-     46A9   10
-     46AA   56
-     46AB   9C
-     46AC   E2
-     46AD   28
-     46AE   6E
-     46AF   B4
-     46B0   FA
-     46B1   40
-     46B2   86
-     46B3   CC
-     46B4   12
-     46B5   58
-     46B6   9E
-     46B7   E4
-     46B8   2A
-     46B9   70
-     46BA   B6
-     46BB   FC
-     46BC   42
-     46BD   88
-     46BE   CE
-     46BF   14
-     46C0   5A
-     46C1   A0
-     46C2   E6
-     46C3   2C
-     46C4   72
-     46C5   B8
-     46C6   FE
-     46C7   44
-     46C8   8A
-     46C9   D0
-     46CA   16
-     46CB   5C
-     46CC   A2
-     46CD   E8
-     46CE   2E
-     46CF   74
-     46D0   BA
-     46D1   00
-     46D2   46
-     46D3   8C
-     46D4   D2
-     46D5   18
-     46D6   5E
-     46D7   A4
-     46D8   EA
-     46D9   30
-     46DA   76
-     46DB   BC
-     46DC   02
-     46DD   48
-     46DE   8E
-     46DF   D4
-     46E0   1A
-     46E1   60
-     46E2   A6
-     46E3   EC
-     46E4   32
-     46E5   78
-     46E6   BE
-     46E7   04
-     46E8   4A
-     46E9   90
-     46EA   D6
-     46EB   1C
-     46EC   62
-     46ED   A8
-     46EE   EE
-     46EF   34
-     46F0   7A
-     46F1   C0
-     46F2   06
-     46F3   4C
-     46F4   92
-     46F5   D8
-     46F6   1E
-     46F7   64
-     46F8   AA
-     46F9   F0
-     46FA   36
-     46FB   7C
-     46FC   C2
-     46FD   08
-     46FE   4E
-     46FF   94
-     4700   DA
-     4701   20
+     4657   8E
+     4658   C0
+     4659   F2
+     465A   24
+     465B   56
+     465C   88
+     465D   BA
+     465E   EC
+     465F   1E
+     4660   50
+     4661   82
+     4662   B4
+     4663   E6
+     4664   18
+     4665   4A
+     4666   7C
+     4667   AE
+     4668   E0
+     4669   12
+     466A   44
+     466B   76
+     466C   A8
+     466D   DA
+     466E   0C
+     466F   3E
+     4670   70
+     4671   A2
+     4672   D4
+     4673   06
+     4674   38
+     4675   6A
+     4676   9C
+     4677   E2
+     4678   28
+     4679   6E
+     467A   B4
+     467B   FA
+     467C   40
+     467D   86
+     467E   CC
+     467F   12
+     4680   58
+     4681   9E
+     4682   E4
+     4683   2A
+     4684   70
+     4685   B6
+     4686   FC
+     4687   42
+     4688   88
+     4689   CE
+     468A   14
+     468B   5A
+     468C   A0
+     468D   E6
+     468E   2C
+     468F   72
+     4690   B8
+     4691   FE
+     4692   44
+     4693   8A
+     4694   D0
+     4695   16
+     4696   5C
+     4697   A2
+     4698   E8
+     4699   2E
+     469A   74
+     469B   BA
+     469C   00
+     469D   46
+     469E   8C
+     469F   D2
+     46A0   18
+     46A1   5E
+     46A2   A4
+     46A3   EA
+     46A4   30
+     46A5   76
+     46A6   BC
+     46A7   02
+     46A8   48
+     46A9   8E
+     46AA   D4
+     46AB   1A
+     46AC   60
+     46AD   A6
+     46AE   EC
+     46AF   32
+     46B0   78
+     46B1   BE
+     46B2   04
+     46B3   4A
+     46B4   90
+     46B5   D6
+     46B6   1C
+     46B7   62
+     46B8   A8
+     46B9   EE
+     46BA   34
+     46BB   7A
+     46BC   C0
+     46BD   06
+     46BE   4C
+     46BF   92
+     46C0   D8
+     46C1   1E
+     46C2   64
+     46C3   AA
+     46C4   F0
+     46C5   36
+     46C6   7C
+     46C7   C2
+     46C8   08
+     46C9   4E
+     46CA   94
+     46CB   DA
+     46CC   20
+     46CD   66
+     46CE   AC
+     46CF   F2
+     46D0   38
+     46D1   7E
+     46D2   C4
+     46D3   0A
+     46D4   50
+     46D5   96
+     46D6   DC
+     46D7   22
+     46D8   68
+     46D9   AE
+     46DA   F4
+     46DB   3A
+     46DC   80
+     46DD   C6
+     46DE   0C
+     46DF   52
+     46E0   98
+     46E1   DE
+     46E2   24
+     46E3   6A
+     46E4   B0
+     46E5   F6
+     46E6   3C
+     46E7   82
+     46E8   C8
+     46E9   0E
+     46EA   54
+     46EB   9A
+     46EC   E0
+     46ED   26
+     46EE   6C
+     46EF   B2
+     46F0   F8
+     46F1   3E
+     46F2   84
+     46F3   CA
+     46F4   10
+     46F5   56
+     46F6   9C
+     46F7   E2
+     46F8   28
+     46F9   6E
+     46FA   B4
+     46FB   FA
+     46FC   40
+     46FD   86
+     46FE   CC
+     46FF   12
+     4700   58
+     4701   9E
 .spriteImgAddrHi
      4702   80
      4703   80
      4704   80
-     4705   80
-     4706   80
+     4705   81
+     4706   81
      4707   81
      4708   81
      4709   81
-     470A   81
-     470B   81
+     470A   82
+     470B   82
      470C   82
      470D   82
      470E   82
-     470F   82
-     4710   82
-     4711   82
+     470F   83
+     4710   83
+     4711   83
      4712   83
      4713   83
-     4714   83
-     4715   83
-     4716   83
+     4714   84
+     4715   84
+     4716   84
      4717   84
      4718   84
-     4719   84
-     471A   84
-     471B   84
+     4719   85
+     471A   85
+     471B   85
      471C   85
      471D   85
-     471E   85
-     471F   85
-     4720   85
+     471E   86
+     471F   86
+     4720   86
      4721   86
      4722   86
-     4723   86
-     4724   86
+     4723   87
+     4724   87
      4725   87
      4726   87
-     4727   87
+     4727   88
      4728   88
      4729   88
-     472A   88
-     472B   88
+     472A   89
+     472B   89
      472C   89
      472D   89
-     472E   89
-     472F   89
+     472E   8A
+     472F   8A
      4730   8A
      4731   8A
-     4732   8A
+     4732   8B
      4733   8B
      4734   8B
-     4735   8B
-     4736   8B
+     4735   8C
+     4736   8C
      4737   8C
      4738   8C
-     4739   8C
-     473A   8C
+     4739   8D
+     473A   8D
      473B   8D
      473C   8D
-     473D   8D
+     473D   8E
      473E   8E
      473F   8E
-     4740   8E
-     4741   8E
+     4740   8F
+     4741   8F
      4742   8F
      4743   8F
-     4744   8F
-     4745   8F
+     4744   90
+     4745   90
      4746   90
-     4747   90
-     4748   90
+     4747   91
+     4748   91
      4749   91
      474A   91
-     474B   91
-     474C   91
+     474B   92
+     474C   92
      474D   92
      474E   92
-     474F   92
-     4750   92
+     474F   93
+     4750   93
      4751   93
-     4752   93
-     4753   93
+     4752   94
+     4753   94
      4754   94
      4755   94
-     4756   94
-     4757   94
+     4756   95
+     4757   95
      4758   95
      4759   95
-     475A   95
-     475B   95
+     475A   96
+     475B   96
      475C   96
-     475D   96
-     475E   96
+     475D   97
+     475E   97
      475F   97
      4760   97
-     4761   97
-     4762   97
+     4761   98
+     4762   98
      4763   98
      4764   98
-     4765   98
-     4766   98
+     4765   99
+     4766   99
      4767   99
-     4768   99
-     4769   99
+     4768   9A
+     4769   9A
      476A   9A
      476B   9A
-     476C   9A
-     476D   9A
+     476C   9B
+     476D   9B
      476E   9B
      476F   9B
-     4770   9B
-     4771   9B
+     4770   9C
+     4771   9C
      4772   9C
-     4773   9C
-     4774   9C
+     4773   9D
+     4774   9D
      4775   9D
      4776   9D
-     4777   9D
-     4778   9D
+     4777   9E
+     4778   9E
      4779   9E
      477A   9E
-     477B   9E
+     477B   9F
      477C   9F
      477D   9F
-     477E   9F
-     477F   9F
+     477E   A0
+     477F   A0
      4780   A0
      4781   A0
-     4782   A0
-     4783   A0
+     4782   A1
+     4783   A1
      4784   A1
      4785   A1
-     4786   A1
+     4786   A2
      4787   A2
      4788   A2
-     4789   A2
-     478A   A2
+     4789   A3
+     478A   A3
      478B   A3
      478C   A3
-     478D   A3
-     478E   A3
+     478D   A4
+     478E   A4
      478F   A4
      4790   A4
-     4791   A4
+     4791   A5
      4792   A5
      4793   A5
-     4794   A5
-     4795   A5
+     4794   A6
+     4795   A6
      4796   A6
      4797   A6
-     4798   A6
-     4799   A6
+     4798   A7
+     4799   A7
      479A   A7
      479B   A7
-     479C   A7
+     479C   A8
      479D   A8
      479E   A8
-     479F   A8
-     47A0   A8
+     479F   A9
+     47A0   A9
      47A1   A9
      47A2   A9
-     47A3   A9
-     47A4   A9
+     47A3   AA
+     47A4   AA
      47A5   AA
      47A6   AA
-     47A7   AA
+     47A7   AB
      47A8   AB
      47A9   AB
-     47AA   AB
-     47AB   AB
+     47AA   AC
+     47AB   AC
      47AC   AC
 .programEnd
      47AD
@@ -9121,11 +9121,11 @@ bootstrap     &4800 - &48BE , 191 bytes
      488B   8D 31 01   STA &0131
 .relocateProgramConfig
      488E   BD 80 7B   LDA &7B80,X
-     4891   9D 80 AC   STA &AC80,X
+     4891   9D 10 80   STA &8010,X
      4894   E8         INX
      4895   E0 7E      CPX #&7E
      4897   D0 F5      BNE &488E
-     4899   AD F2 AC   LDA &ACF2
+     4899   AD 82 80   LDA &8082
      489C   85 0C      STA &0C
      489E   4C F2 06   JMP &06F2
 .bootstrapCrtcData

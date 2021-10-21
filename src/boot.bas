@@ -137,7 +137,6 @@ PRINT TAB(3,13);"Unable to save High Score / Settings";
 ENDPROC
 
 DEF PROCreadConfig
-ENDPROC
 P%=HIMEM
 [OPT 0
 SEI
