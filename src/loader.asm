@@ -29,6 +29,8 @@
 
 	org swramStart
 
+.highRamStart
+
 	skip 16					; filler to prevent any possibility of the beeb detecting this as a valid sideways rom after reset
 
 
@@ -121,34 +123,74 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; reserve space for high score table and config data
+; game high score table and config
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrConfig
+	align &80
 
-	skip 1					; lives
-	skip 1					; enemy speed
-	skip 1					; enemy attack
-	skip 1					; volume off/on
-	skip 1					; timer volume
-	skip 4					; for key scan values
-	skip 4					; for key ascii values
-	
+.configData
+	skip 0
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; high score table
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .highScoreTable
-
-	for i,1,8				; 8 entrys in table
+	skip 0
+	
+	for i,1,8				; 8 entrys in table 1st to 8th
 	
 	skip 3					; reserve space for score
 	skip 11					; reserve space for name
 
 	next
 
-.swrValidationCode
-
-	skip 1					; validation code for settings and high score table
-	
-.swrConfigEnd
+.highScoreTableEnd
 	skip 0
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; game settings
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.optionEnemySpeed
+
+	skip 1					; reserve space for enemy speed
+	
+.optionEnemyAttack
+
+	skip 1					; reserve space for enemy attack
+	
+.optionLives
+
+	skip 1					; reserve space for ladybug lives
+	
+.optionSound
+
+	skip 1					; reserve space for sound off/on
+	
+.optionTimerVolume
+
+	skip 1					; reserve space for timer volume
+	
+.optionKeys
+
+	skip 4					; reserve space for control keys
+	
+.optionKeysAscii
+
+	skip 4					; reserve space for control keys ascii
+
+.validationCode
+
+	skip 1					; reserve space for validation code for high score table and settings
+	
+.configDataEnd
+
+	skip 0
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; clean reset code
@@ -221,6 +263,7 @@ continueBplus		= &d973
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 align &100
 .swramLastAddr
+	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -230,6 +273,7 @@ align &100
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderMessages
+	skip 0
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -391,10 +435,9 @@ screenCenterY	= &7e71
 
 swrTestLocation		= page8000 + 8		; memory location for write test
 
-machineType		= page8000 - 3		; storage for machine type
-swrBank			= page8000 - 2		; storage for bank number of swram
 swrBankOriginal		= page8000 - 1		; storage for original system bank number
-
+swrBank			= page8000 - 2		; storage for bank number of swram
+machineType		= page8000 - 3		; storage for machine type
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -452,21 +495,21 @@ swrBankOriginal		= page8000 - 1		; storage for original system bank number
 
 	ldx #hi(swramLastAddr - swramStart)	; number of pages to copy
 
-	ldy #0					; transfer index
+	ldy #0
 
-.swramTransfer
+.swramCopyLoop
 
 	lda loaderPage, y			; read byte from loader data
 	sta swramStart, y			; write byte to sideways ram
 
 	iny					; repeat until page transferred
-	bne swramTransfer
+	bne swramCopyLoop
 	
-	inc swramTransfer + 2 - loaderReloc	; move to next page
-	inc swramTransfer + 5 - loaderReloc
+	inc swramCopyLoop + 2 - loaderReloc	; move to next page
+	inc swramCopyLoop + 5 - loaderReloc
 
 	dex					; repeat until all pages transferred
-	bne swramTransfer
+	bne swramCopyLoop
 
 	rts					; done.
 
@@ -476,8 +519,6 @@ swrBankOriginal		= page8000 - 1		; storage for original system bank number
 .loaderEnd
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-assert P% <= swramEnd				; sideways ram limit exceeded, check ladybug.lst
 
 loaderPage = page3000				; load address
 loaderReloc = swramStart - loaderPage

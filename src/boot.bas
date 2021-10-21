@@ -32,12 +32,13 @@ REM License for more details.
 REM https://www.gnu.org/licenses/
 REM ---------------------------
 
-HIMEM=&7BE4
+HIMEM=&7B00
+H%=HIMEM+&80
 E%=PAGE+5
 
 ON ERROR PROCerror
 
-PROCreadStack
+PROCreadConfig
 
 PROCintro
 PROCshrink
@@ -58,56 +59,6 @@ PROClogo
 PROCexpand
 PROCsaveConfig
 K%=INKEY(200)
-ENDPROC
-
-DEF PROCerror
-?E%=33
-PROCwriteStack
-*FX 19
-PRINT TAB(26,15);" ";TAB(25,15);" ";
-FOR R%=14 TO 10 STEP -1
-*FX 19
-PRINT TAB(2,R%);SPC(38);
-NEXT R%
-FOR R%=10 TO 14
-PRINT TAB(0,R%);"  ";
-NEXT R%
-PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
-PRINT TAB(3,13);"Unable to save High Score / Settings";
-ENDPROC
-
-DEF PROCreadStack
-FOR Z%=0 TO 27:Z%?&7BE4=Z%?&100:NEXT Z%
-ENDPROC
-
-DEF PROCwriteStack
-FOR Z%=0 TO 27:Z%?&100=Z%?&7BE4:NEXT Z%
-ENDPROC
-
-DEF PROCsaveConfig
-V%=0:FOR Z%=0 TO 26:V%=(V%+(Z%?&7BE4 EOR &69)) AND &FF:NEXT Z%
-IF V%<>?&7BFF THEN OSCLI("LOAD Config") ELSE OSCLI("SAVE Config 7BE4 +1C")
-ENDPROC
-
-DEF PROCinstructions
-CLS
-PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
-PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
-PRINT TAB(13,3);CHR$(135);"Instructions"
-PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maze"
-PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(133);"enemies";CHR$(130);"and";CHR$(135);"skulls"
-PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block"
-PRINT TAB(2,9);CHR$(132);"the enemy attack paths"
-PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply"
-PRINT TAB(2,12);CHR$(133);"an items value by";CHR$(135);"x2 x3 x5"
-PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelling"
-PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for";CHR$(133);"2 extra lives"
-PRINT TAB(2,17);CHR$(135);"Collect";CHR$(129);"red letters";CHR$(135);"spelling"
-PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(135);"for";CHR$(130);"200000 points";CHR$(135);"and a"
-PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(135);"lasting 6 rounds"
-PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to";CHR$(131);"paralyse the"
-PRINT TAB(2,22);CHR$(131);"enemy";CHR$(132);"and earn";CHR$(135);"bonus points"
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press any key           ";CHR$(156);
 ENDPROC
 
 DEF PROClogo
@@ -140,10 +91,74 @@ DATA &2020939A,&20207F6A,&3520357F,&217F6B20,&7C203520,&357F2030,&2A202560,&7F20
 DATA &2020939A,&219E2322,&20912322,&20219320,&91232220,&23229320,&3E782021,&23202020,&91232220,&9C9C9420
 ENDPROC
 
+DEF PROCinstructions
+CLS
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
+PRINT TAB(13,3);CHR$(135);"Instructions"
+PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maze"
+PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(133);"enemies";CHR$(130);"and";CHR$(135);"skulls"
+PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block"
+PRINT TAB(2,9);CHR$(132);"the enemy attack paths"
+PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply"
+PRINT TAB(2,12);CHR$(133);"an items value by";CHR$(135);"x2 x3 x5"
+PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelling"
+PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for";CHR$(133);"2 extra lives"
+PRINT TAB(2,17);CHR$(135);"Collect";CHR$(129);"red letters";CHR$(135);"spelling"
+PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(135);"for";CHR$(130);"200000 points";CHR$(135);"and a"
+PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(135);"lasting 6 rounds"
+PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to";CHR$(131);"paralyse the"
+PRINT TAB(2,22);CHR$(131);"enemy";CHR$(132);"and earn";CHR$(135);"bonus points"
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press any key           ";CHR$(156);
+ENDPROC
+
 DEF PROCshrink
 A%=19:FOR R%=24 TO 0 STEP -1:CALL &FFF4:VDU 23,0,6,R%,0,0,0,0,0,0:NEXT R%:CALL &FFF4
 ENDPROC
 
 DEF PROCexpand
-A%=19:FOR R%=1 TO 25:CALL &FFF4:VDU 23,0,6,R%,0,0,0,0,0,0:NEXT R%
+A%=19:FOR R%=1 TO 25:CALL &FFF4:VDU 23,0,6,R%,0,0,0,0,0,0:NEXT R%:CALL &FFF4
+ENDPROC
+
+DEF PROCerror
+?E%=33
+*FX 19
+PRINT TAB(26,15);" ";TAB(25,15);" ";
+FOR R%=14 TO 10 STEP -1
+*FX 19
+PRINT TAB(2,R%);SPC(38);
+NEXT R%
+*FX 19
+FOR R%=10 TO 14
+PRINT TAB(0,R%);"  ";
+NEXT R%
+PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
+PRINT TAB(3,13);"Unable to save High Score / Settings";
+ENDPROC
+
+DEF PROCreadConfig
+ENDPROC
+P%=HIMEM
+[OPT 0
+SEI
+LDA &130
+STA &FE30
+LDX #0
+.LOOP
+LDA &8010, X
+STA H%, X
+INX
+CPX #&7E
+BNE LOOP
+LDA &F4
+STA &FE30
+CLI
+RTS
+]
+CALL HIMEM
+ENDPROC
+
+DEF PROCsaveConfig
+V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR &69)) AND &FF:NEXT Z%
+IF V%=?(H%+&7D) THEN OSCLI("SAVE Config FF7B80 +7E") ELSE OSCLI("LOAD Config")
 ENDPROC

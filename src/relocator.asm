@@ -118,14 +118,6 @@
 	dex					; until all pages copied
 	bne relocateProgram
 	
-.relocateProgramConfig
-
-	lda config, x				; copy config into the game settings config data
-	sta configData, x
-	inx
-	cpx #28
-	bne relocateProgramConfig
-
 	lda swrBank				; select ram bank
 	sta bankSelect
 	sta cleanResetBank			; save ram bank for clean reset code
@@ -133,12 +125,16 @@
 	lda machineType				; save machine type index for clean reset code
 	sta cleanResetMachine
 
-	lda highScoreBackup			; copy config data high score to game high score
-	sta highScore
-	lda highScoreBackup + 1
-	sta highScore + 1
-	lda highScoreBackup + 2
-	sta highScore + 2
+.relocateProgramConfig
+
+	lda config, x				; copy config into the game config data
+	sta configData, x
+	inx
+	cpx #configDataEnd - configData
+	bne relocateProgramConfig
+
+	lda optionLives				; copy lives
+	sta lives
 
 	jmp main				; run the main game
 

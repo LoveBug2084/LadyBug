@@ -247,8 +247,8 @@ registrationBL		= extraTileFlower3BR + 3
 registrationBR		= extraTileFlower3BR + 4
 registrationVL		= extraTileFlower3BR + 5
 registrationVR		= extraTileFlower3BR + 6
-registrationH		= extraTileFlower3BR + 7
-
+registrationTH		= extraTileFlower3BR + 7
+registrationBH		= extraTileFlower3BR + 8
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

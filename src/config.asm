@@ -25,32 +25,66 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-config = &7be4					; game config loaded from disk
+config = &7b80					; default highscore table and settings
 
 	org config
 
-	; --------------------------------------------------------------------------------------------------------------------------------------------
-	; see ladybug.asm for default values
-	; --------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; high score table
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb defaultEnemySpeed			; default enemy speed
-	equb defaultEnemyAttack			; default enemy attack
-	equb defaultLives			; default lives
-	equb defaultSound			; default sound enabled
-	equb defaultTimerVolume			; default timer volume
+	equb &00,&10,&00
+	equs "LOVEBUG.ML", &FF
 
-	; --------------------------------------------------------------------------------------------------------------------------------------------
+	equb &50,&09,&00
+	equs "UNIVERSAL",chrHeart, &FF
 
-	equb keyX				; default key for right
-	equb keyZ				; default key for left
-	equb keySlash				; default key for down
-	equb keyColon				; default key for up
-	equs "XZ/:"				; default ascii text for keys
-	equb &00,&10,&00			; default high score 10,000
-	equs "LOVEBUG.ML", &ff			; default high score name
-	equb &1d				; validation code
+	equb &00,&09,&00
+	equs "LOVEBUG.ML", &FF
 
+	equb &50,&08,&00
+	equs "UNIVERSAL",chrHeart, &FF
+
+	equb &00,&08,&00
+	equs "LOVEBUG.ML", &FF
+
+	equb &50,&07,&00
+	equs "UNIVERSAL",chrHeart, &FF
+
+	equb &00,&07,&00
+	equs "LOVEBUG.ML", &FF
+
+	equb &50,&06,&00
+	equs "UNIVERSAL",chrHeart, &FF
+
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; settings					default settings
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	equb 1					; enemy speed 0-3 (0=slower, 1=normal, 2=faster, 3=fastest)
+	equb 4					; enemy attack 0-9 (0=more random, 4=normal, 9=more attack)
+	equb 3					; lives 1-9
+	equb 1					; sound enable 0-1 (0=off, 1=on)
+	equb 1					; timer volume 0-3 (0=off, 1=low, 2=medium, 3=high)
+
+	equb keyX				; right 'X'
+	equb keyZ				; left 'Z'
+	equb keySlash				; down '/'
+	equb keyColon				; up ':'
+
+	equs "XZ/:"				; ascii text for keys
+
+	equb &d3				; validation code
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .configEnd	
+	skip 0
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	print
 	print

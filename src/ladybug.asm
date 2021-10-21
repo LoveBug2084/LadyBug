@@ -56,6 +56,10 @@
 
 
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; initial config file
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 	include "config.asm"
 
 
@@ -75,14 +79,14 @@
 ; debugging stuff
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+;bp			= true			; show breakpoints
+bp			= false
+
 ;debugRaster		= true			; enable raster timing bars
 debugRaster		= false
 
 ;debugCoordinates	= true			; display ladybug coordinates
 debugCoordinates	= false
-
-;debugSpriteTest		= true			; display sprite animations
-debugSpriteTest		= false
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -91,9 +95,6 @@ debugLevel		= 0
 
 ;debugInvulnerable	= true			; ladybug is invulnerable to harm
 debugInvulnerable	= false
-
-;debugZeroHighScore	= true			; set highScore to 0 at start of new game (any score will register as a high score)
-debugZeroHighScore	= false
 
 ;debugInstantHighScore	= true			; end the game instantly with a high score to quicky test name registration
 debugInstantHighScore	= false
@@ -174,9 +175,10 @@ objectModeYellow	= 2
 .escCounter		equb 0			; escape key counter (times how long esc is pressed)
 
 .score			skip 3			; player score (BCD) last digit always 0 and not stored
-.highScore		skip 3			; high score (BCD) last digit always 0 and not stored
+.highScore		skip 3			; highest score (BCD) last digit always 0 and not stored
+.highScorePtr		skip 2			; pointer to high score position check
 
-.lives			equb defaultLives	; number of lives
+.lives			skip 1			; number of lives
 
 .ladybugEntryEnable	skip 1			; enable ladybug entry animation
 .ladybugDeathEnable	skip 1			; enable ladybug death animation
@@ -381,53 +383,36 @@ soundChannels		= 6			; number of software defined sound channels
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; configData					game options, high score, high score name
+; drawVegetableScore				draws vegetable score in the center box if enabled
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.configData					; start of config data
-	skip 0
+.drawVegetableScore
 
-defaultEnemySpeed	= 1			; enemy speed 0-3, 0=slower 1=normal 2=faster 3=fastest
-defaultEnemyAttack	= 4			; enemy attack 0-9, 0=more random 4=normal 9=more attack
-defaultLives		= 3			; number of starting lives 1-9
-defaultSound		= 1			; sound enable 0-1, 0=mute, 1=sound
-defaultTimerVolume	= 1			; enemy timer tick volume 0-3, 0=off 1=low 2=medium 3=high
+	lda vegetableScoreActive		; if vegetableScoreActive != 0 (active)
+	beq drawVegetableScoreExit
 
-.optionEnemySpeed	equb defaultEnemySpeed
-.optionEnemyAttack	equb defaultEnemyAttack
-.optionLadybugLives	equb defaultLives
-.optionSound		equb defaultSound
-.optionTimerVolume	equb defaultTimerVolume
+						; set draw position to the center box
 
-.optionKeys
-			equb keyX		; default key for right
-			equb keyZ		; default key for left
-			equb keySlash		; default key for down
-			equb keyColon		; default key for up
+	lda #lo(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
+	sta drawChrMiniAddr
+	lda #hi(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
+	sta drawChrMiniAddr + 1
 
-.optionKeysAscii
+	
 
-			equs "XZ/:"		; default ascii text for keys used in main menu display
+	lda vegetableScore			; draw the top 2 digits
+	jsr drawHexMini
+	lda #0					; draw 00
+	jsr drawHexMini
 
-.highScoreBackup
+.drawVegetableScoreExit
 
-	skip 3					; copy of high score goes here
-
-.highScoreName
-
-	skip 11					; storage for high score name
-
-.configDataEnd					; end of config data
-	skip 0
-
-.validationCode					; validation code of config data
-
-	skip 1
+	rts					; return
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; cleanReset (break key)			force a power on reset to put the bbc computer into a clean state
+; cleanReset (break key)			simulated power on reset to put the computer into a clean state when the break key is pressed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org page0130
@@ -657,37 +642,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; screenClear					fill entire screen with black (pixelCol0)
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			destroyed
-;			X			destroyed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.screenClear
-
-	lda #hi(screenAddr)			; set start page of screen
-	sta screenClearLoop + 2
-
-	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
-
-	lda #pixelCol0				; fill screen with black
-
-.screenClearLoop
-
-	sta addr16, x				; fill page with data
-	inx
-	bne screenClearLoop
-	
-	inc screenClearLoop + 2			; next page
-	bpl screenClearLoop			; repeat until page=&80 (end of screen ram)
-
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of page0100 functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .page0100End
@@ -800,6 +754,54 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; clearScreen					; fill screen ram with zero
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.clearScreen
+
+	lda #hi(screenAddr)			; set start page of screen
+	sta clearScreenLoop + 2
+
+	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
+
+	lda #pixelCol0				; fill screen with black
+
+.clearScreenLoop
+
+	sta addr16, x				; fill page with data
+	inx
+	bne clearScreenLoop
+	
+	inc clearScreenLoop + 2			; next page
+	bpl clearScreenLoop			; repeat until page=&80 (end of screen ram)
+
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawObjectScore				draws object score img at xy if enabled
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawObjectScore
+
+	lda objectScoreX			; copy objectScorexy ready for drawing
+	sta drawSpriteX
+	lda objectScoreY
+	sta drawSpriteY
+	
+	lda objectScoreImg			; if objectScoreImg != 0 (active)
+;	bne drawSprite10x10			; then draw it
+	beq drawObjectScoreExit
+	jmp drawSprite10x10
+	
+.drawObjectScoreExit
+
+	rts					; else return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of page0258
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .page0258End
@@ -815,6 +817,55 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	org page0287				; set the break jump vector to the clean reset function
 
 	jmp cleanReset
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; updateEnemyTimer				update the enemy timer, draw timer tile when needed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.updateEnemyTimer
+
+	lda pauseEnemy				; if enemy movement is paused then exit
+	bne updateEnemyTimerExit
+
+	dec enemyTimerSpeedCounter		; bump enemy timer speed counter
+	bne updateEnemyTimerExit		; exit if not zero
+
+	lda enemyTimerSpeed			; reset the enemy timer speed counter
+	sta enemyTimerSpeedCounter
+
+	jsr changeTimerTile			; change enemy timer tile color
+
+	inc enemyTimer				; bump enemy timer
+
+	lda enemyTimer				; if enemyTimer = 88
+	cmp #88
+	bcc updateEnemyTimerSound
+
+	lda #0					; then reset enemy timer
+	sta enemyTimer
+
+.updateEnemyTimerSound
+
+	jsr playSoundTimer			; play timer sound at selected volume
+
+	lda enemyTimer				; if enemyTimer is top left
+	cmp #78
+	bne updateEnemyTimerExit
+	
+	lda enemysActive			; if theres an enemy waiting in the center
+	cmp #spritesTotal - 1
+	beq updateEnemyTimerExit
+
+	lda #sfxEnemyWarning			; then play enemy release warning and enable enemy release
+	jsr playSound
+	lda #&ff
+	sta enemyReleaseEnable
+
+.updateEnemyTimerExit
+
+	rts					; return
 
 
 
@@ -1980,23 +2031,17 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	cli					; enable interrupts
 
-	jsr screenClear				; clear the screen
-
+	jsr clearScreen				; fill screen ram with zero
+	
 	lda #6					; enable display
 	sta crtcAddr
 	lda #screenHeight
 	sta crtcData
 
-	if debugSpriteTest
-
-	jmp spriteTest
-	
-	endif
-
 	lda #pause * 1.00			; wait 1.00 seconds
 	jsr pauseWait
 	
-	jsr drawPlayfieldUpper			; display the upper play field
+	jsr drawPlayfieldUpper			; display the upper playfield
 
 
 
@@ -2006,12 +2051,12 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameIntroScreen
 
-	lda highScore				; backup high score for saving to disk
-	sta highScoreBackup
-	lda highScore + 1
-	sta highScoreBackup + 1
-	lda highScore + 2
-	sta highScoreBackup + 2
+	lda highScoreTable + 0			; copy 1st place high score table entry to highScore for display
+	sta highScore + 0
+	lda highScoreTable + 1
+	sta highScore + 1
+	lda highScoreTable + 2
+	sta highScore + 2
 
 	jsr drawPlayfieldLower			; display lower playfield
 
@@ -2022,19 +2067,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameStartNew
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	
-	if debugZeroHighScore			; if debug mode set highScore = 0
-
-	lda #0
-	sta highScore
-	sta highScore + 1
-	sta highScore + 2
-	
-	endif
-
-
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2065,13 +2097,11 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	endif
 
-
-
 	sta score				; zero the player score
 	sta score + 1
 	sta score + 2
 
-	lda optionLadybugLives			; initialize player lives
+	lda optionLives				; initialize player lives
 	sta lives
 
 
@@ -2364,7 +2394,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #gameOverTime			; set the screen timeout
 	sta pauseCounter
 
-	jsr playfieldMiddleWithTimer		; initialize and draw playfield with only timer
+	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
 
 	jsr initSprites				; initialize all sprites as blanked and erased
 
@@ -2394,35 +2424,77 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; checkHighScore				check if score > highScore and do something
+; checkHighScore				if score > high score table then register
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkHighScore
 
+	lda #lo(highScoreTable)			; start with 1st place
+	sta highScorePtr
+	lda #hi(highScoreTable)
+	sta highScorePtr + 1
+	
+	ldx #7					; 8 entrys (0-7) to check
+
+.checkHighScoreLoop
+
+	ldy #0
+
 	sec					; subtract score from highScore
-	lda highScore
-	sbc score
-	lda highScore + 1
+	lda (highScorePtr), y
+	sbc score + 0
+	iny
+	lda (highScorePtr), y
 	sbc score + 1
-	lda highScore + 2
+	iny
+	lda (highScorePtr), y
 	sbc score + 2
-	bcc checkHighScoreUpdate		; if there was a borrow
+	bcc checkHighScoreEntry			; if there was a borrow then do the name registration
 	
-	rts
+	lda #14					; else move to the next score in the table
+	clc					; cannot cross page boundry so no need to adjust high byte
+	adc highScorePtr
+	sta highScorePtr
 	
-.checkHighScoreUpdate
+	dex					; and repeat until end of table
+	bpl checkHighScoreLoop
+
+	rts					; score didnt qualify for the high score table, return to main menu
+	
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.checkHighScoreEntry
+
+	cpx #0					; if the entry is last in the table then no need to shift scores
+	beq checkHighScoreRegister
+
+	ldy #lo(highScoreTableEnd - 15)
+
+.checkHighScoreShift
+
+	lda hi(highScoreTable) * 256, y		; shift memory
+	sta hi(highScoreTable) * 256 + 14, y
+	
+	dey
+	cpy highScorePtr
+	bne checkHighScoreShift
+
+	lda hi(highScoreTable) * 256, y		; shift last byte
+	sta hi(highScoreTable) * 256 + 14, y
+	
+	
+.checkHighScoreRegister
 
 	jsr nameReg				; get name registration from player
 
-	lda score				; set highScore = score
-	sta highScore
-	lda score + 1
-	sta highScore + 1
-	lda score + 2
-	sta highScore + 2
+	jsr generateValidation			; update the validation code
+
+	lda #sfxMusicLetters			; play high score music
+	jsr playSound
 	
-	lda #sfxMusicLetters			; play high score music and return
-	jmp playSound
+	jsr drawScoreTable			; draw the high score page
+	
+	rts					; return to main menu
 
 
 
@@ -2527,55 +2599,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr levelAdvance			; advance game to next level
 
 	sec					; end level
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateEnemyTimer				update the enemy timer, draw timer tile when needed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.updateEnemyTimer
-
-	lda pauseEnemy				; if enemy movement is paused then exit
-	bne updateEnemyTimerExit
-
-	dec enemyTimerSpeedCounter		; bump enemy timer speed counter
-	bne updateEnemyTimerExit		; exit if not zero
-
-	lda enemyTimerSpeed			; reset the enemy timer speed counter
-	sta enemyTimerSpeedCounter
-
-	jsr changeTimerTile			; change enemy timer tile color
-
-	inc enemyTimer				; bump enemy timer
-
-	lda enemyTimer				; if enemyTimer = 88
-	cmp #88
-	bcc updateEnemyTimerSound
-
-	lda #0					; then reset enemy timer
-	sta enemyTimer
-
-.updateEnemyTimerSound
-
-	jsr playSoundTimer			; play timer sound at selected volume
-
-	lda enemyTimer				; if enemyTimer is top left
-	cmp #78
-	bne updateEnemyTimerExit
-	
-	lda enemysActive			; if theres an enemy waiting in the center
-	cmp #spritesTotal - 1
-	beq updateEnemyTimerExit
-
-	lda #sfxEnemyWarning			; then play enemy release warning and enable enemy release
-	jsr playSound
-	lda #&ff
-	sta enemyReleaseEnable
-
-.updateEnemyTimerExit
-
 	rts					; return
 
 
@@ -3220,9 +3243,9 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equb &ff
 	
-	lda #lo(highScoreName)
+	lda #lo(highScoreTable + 3)
 	sta drawTextAddr
-	lda #Hi(highScoreName)
+	lda #Hi(highScoreTable + 3)
 	sta drawTextAddr + 1
 	
 	jsr drawText
@@ -3301,24 +3324,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	bne drawPlayfieldMiddleLoop2
 	
 	rts
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawObjectScore				draws object score img at xy if enabled
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.drawObjectScore
-
-	lda objectScoreX			; copy objectScorexy ready for drawing
-	sta drawSpriteX
-	lda objectScoreY
-	sta drawSpriteY
-	
-	lda objectScoreImg			; if objectScoreImg != 0 (active)
-	bne drawSprite10x10			; then draw it
-	
-	rts					; else return
 
 
 
@@ -3465,6 +3470,8 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .drawSpriteGetIdAddr
 
+if bp {.bp print ";draw sprite get image address":} endif
+
 	lda drawSpriteImg			; get sprite data address from spriteImg address table
 
 	tay
@@ -3594,35 +3601,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 	clc					; exit with not drawn status
 	bcc drawSpriteExit
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawVegetableScore				draws vegetable score in the center box if enabled
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.drawVegetableScore
-
-	lda vegetableScoreActive		; if vegetableScoreActive != 0 (active)
-	beq drawVegetableScoreExit
-
-						; set draw position to the center box
-
-	lda #lo(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
-	sta drawChrMiniAddr
-	lda #hi(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
-	sta drawChrMiniAddr + 1
-
-	
-
-	lda vegetableScore			; draw the top 2 digits
-	jsr drawHexMini
-	lda #0					; draw 00
-	jsr drawHexMini
-
-.drawVegetableScoreExit
-
-	rts					; return
 
 
 
@@ -3804,7 +3782,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; generateValidation				generate a validation code for the config data (game settings, high score, high score name)
+; generateValidation				generate a validation code for the high score table and game settings
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .generateValidation
@@ -3814,14 +3792,14 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	
 .generateValidationLoop
 
-	lda configData, x			; calculate validation code (validationCode += byte eor #&69)
+	lda configData, x			; validationCode += configData[x] eor #&69
 	eor #&69
 	clc
 	adc validationCode
 	sta validationCode
 	
-	inx
-	cpx #configDataEnd - configData
+	inx					; repeat loop until end of configData
+	cpx #validationCode - configData
 	bne generateValidationLoop
 	
 	rts					; return
@@ -3942,11 +3920,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; levelAdvance					if level < 99 then increase by 1
-;						if level < 20 then increase vegetable score by 500
-;						if shield != 0 then reduce by 1
-;						increase vegetable image by 1
-;						if vegetable image >=0 then vegetable image = 0
+; levelAdvance					note: !!! all values are BCD except vegetableImage !!!
+;						if level < &99 then level=level+1
+;						if vegetableScore < &95 then vegetableScore = vegetableScore + &05
+;						vegetableImage = vegetableImage + 1
+;						if vegetableImage >= &12 then vegetableImage = 0
+;						if shield != 0 then shield = shield - 1
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .levelAdvance
@@ -3962,33 +3941,29 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .levelAdvanceVegetableScore	
 
-	lda level				; if level < &19
-	cmp #&19
-	bcs levelAdvanceshield
-	
-	lda vegetableScore			; add 500 to vegetable score value (carry already clear from previous test)
-	adc #5
+	lda vegetableScore			; if vegetableScore < &95
+	cmp #&95
+	bcs levelAdvanceVegetableImage
+	adc #&05				; add 500 to vegetable score value
 	sta vegetableScore
 	
-.levelAdvanceshield
+.levelAdvanceVegetableImage
+
+	inc vegetableImg			; add 1 to vegetable image
+
+	lda vegetableImg			; if vegetableImg >= &12
+	cmp #&12
+	bcc levelAdvanceShield
+	lda #0					; then vegetableImg = 0 (cucumber)
+	sta vegetableImg
+
+.levelAdvanceShield
 
 	cld					; switch to binary mode
 
 	lda shield				; if shield != 0 then decrement it
-	beq levelAdvanceVegetableImage
-
+	beq levelAdvanceExit
 	dec shield
-
-.levelAdvanceVegetableImage
-
-	inc vegetableImg			; add 1 to vegetable imgage
-
-	lda vegetableImg			; if vegetableImg >= 18
-	cmp #18
-	bcc levelAdvanceExit
-	
-	lda #0					; then vegetableImg = 0 (cucumber)
-	sta vegetableImg
 
 .levelAdvanceExit
 
@@ -4101,7 +4076,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr playSoundSilence			; kill any current sounds
 
-	jsr playfieldMiddleWithTimer		; initialize and draw playfield with only timer
+	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
 
 	jsr initSprites				; initialize all sprites as blanked and erased
 
@@ -4451,6 +4426,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	iny
 	lda (tileMapAddr), y
 	jsr drawMapTile
+
+if bp {.bp print ";draw angel sprite":} endif
 
 	lda spriteBaseImg + 9			; draw angel sprite
 	sta drawSpriteImg
@@ -4809,19 +4786,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenu
 
-	jsr playfieldMiddleWithTimer		; initialize and draw playfield with only timer
-
-	jsr initSprites				; initialize all sprites as blanked and erased
-
-	jsr mainMenuDrawLogo			; draw the ladybug logo
-
-	jsr drawFlowers				; draw the random flowers
-
-	jsr mainMenuDrawText			; draw the menu text
-
-	jsr mainMenuDrawSettings		; draw the current settings
-
-	jsr mainMenuDrawEnemys			; place 4 enemys on screen
+	jsr mainMenuDraw			; draw the main menu screen
 
 	lda #0					; make sure the "START GAME" text is flashing (skull color) by setting shield to 0
 	sta shield
@@ -4865,6 +4830,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr mainMenuProcess			; process the key pressed option
 
+	php					; save start game status
+	
+	jsr generateValidation			; update the validation code
+
+	plp					; restore start game status
+
 	bcc mainMenuUpdateCursor		; loop back until start game selected
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4873,7 +4844,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuExit
 
-	jmp generateValidation			; update the validation code and return (start a new game)
+	rts					; return
 
 
 
@@ -5046,18 +5017,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	dec mainMenuCursor			; mainMenuCursor -= 1
 
-	bmi mainMenuProcessUpNegative		; if mainMenuCursor < 0 then set it back to 7
+	lda mainMenuCursor			; if mainMenuCursor < 0
+	bpl mainMenuProcessUpExit
 
-	lda mainMenuCursor			; if mainMenuCursor == 1
-	cmp #1
-	bne mainMenuProcessUpExit
-
-	lda #0					; then mainMenuCursor == 0
-	beq mainMenuProcessUpExit
-
-.mainMenuProcessUpNegative
-	
-	lda #7					; mainMenuCursor = 7
+	lda #7					; then mainMenuCursor = 7
 	
 .mainMenuProcessUpExit
 
@@ -5079,16 +5042,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	inc mainMenuCursor			; mainMenuCursor += 1
 
-	lda mainMenuCursor			; if mainMenuCursor == 1
-	cmp #1
-	bne mainMenuProcessDownLast
-	
-	lda #2					; then mainMenuCursor == 2
-	bne mainMenuProcessDownExit
-	
-.mainMenuProcessDownLast
-
-	cmp #8					; if mainMenuCursor > 7
+	lda mainMenuCursor			; if mainMenuCursor > 7
+	cmp #8
 	bne mainMenuProcessDownExit
 	
 	lda #0					; then mainMenuCursor == 0
@@ -5109,9 +5064,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuProcessStart
 
-	ldx mainMenuCursor			; if mainMenuCursor != 0 then return true
+	ldx mainMenuCursor			; if mainMenuCursor = 0 then return true (start game)
 	beq mainMenuProcessReturnTrue
 	
+	cpx #1					; if mainMenuCursor = 1 then display high score table
+	beq mainMenuHighScores
+
 	cpx #7					; if mainMenuCursor == 7 then redefine the keyboard
 	beq mainMenuProcessKeyboard
 
@@ -5159,7 +5117,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #4					; if cursor == 4 (ladybugLives) then
 	bne mainMenuProcessReturnFalse
 
-	lda optionLadybugLives			; lives = optionLadybugLives
+	lda optionLives				; lives = optionLadybugLives
 	sta lives
 
 	jsr drawPlayfieldLowerLives		; update the lives value in the lower playfield
@@ -5171,7 +5129,27 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .mainMenuProcessReturnTrue
 
-	sec
+	sec					; return true
+	rts
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; .mainMenuHighScores				; display high score table
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuHighScores
+
+	jsr playSoundSilence			; silence current effect
+
+	lda #sfxObject				; play extra life sound effect
+	jsr playSound
+
+	jsr drawScoreTable			; draw the high scores page and wait for start to be pressed
+	
+	jsr mainMenuDraw			; redraw main menu
+
+	clc					; return
 	rts
 
 
@@ -5457,8 +5435,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawString
 	equb pixelColE
-	equw screenAddr + 2 + 8 + 6 * chrColumn + 13 * chrRow
+	equw screenAddr + 2 + 4 * chrColumn + 13 * chrRow
 	equs "START GAME", &ff
+
+	jsr drawString
+	equb pixelCol3
+	equw screenAddr + 2 + 4 * chrColumn + 14 * chrRow
+	equs "HIGH SCORES", &ff
 
 	jsr drawString
 	equb pixelCol2
@@ -5559,7 +5542,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	lda #pixelCol7
 	sta drawChrColor
-	lda optionLadybugLives
+	lda optionLives
 	ora #'0'
 	jsr drawChr
 	
@@ -5680,6 +5663,184 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; mainMenuDraw					; draw everything on screen
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuDraw
+
+	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
+
+	jsr initSprites				; initialize all sprites as blanked and erased
+
+	jsr mainMenuDrawLogo			; draw the ladybug logo
+
+	jsr drawFlowers				; draw the random flowers
+
+	jsr mainMenuDrawText			; draw the menu text
+
+	jsr mainMenuDrawSettings		; draw the current settings
+
+	jmp mainMenuDrawEnemys			; place 4 enemys on screen and return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawScoreTable				; draw the high score table page and wait for start to be pressed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawScoreTable
+
+	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
+
+	jsr drawString				; draw text
+	equb pixelCol1
+	equw screenAddr + 2 + 8 + 2 * chrColumn + 3 * chrRow
+	equs chrHeart,chrHeart,&ff
+	
+	jsr drawString				; draw text
+	equb pixelCol7
+	equw screenAddr + 2 + 8 + 5 * chrColumn + 3 * chrRow
+	equs "BEST PLAYERS",&ff
+	
+	jsr drawString				; draw text
+	equb pixelCol1
+	equw screenAddr + 2 + 8 + 18 * chrColumn + 3 * chrRow
+	equs chrHeart,chrHeart,&ff
+
+	jsr drawString				; position cursor
+	equb pixelCol0
+	equw screenAddr + 2 + 8 + 2 * chrColumn + 5 * chrRow
+	equb &ff
+
+	ldx #1					; start with 1st entry
+	
+	lda #lo(highScoreTable)
+	sta highScorePtr
+	lda #hi(highScoreTable)
+	sta highScorePtr + 1
+	
+.drawScoreTableLoop
+
+	lda #pixelColC				; draw score
+	sta drawChrColor
+	ldy #2
+	lda (highScorePtr), y
+	jsr drawHex
+	dey
+	lda (highScorePtr), y
+	jsr drawHex
+	dey
+	lda (highScorePtr), y
+	jsr drawHex
+	lda #'0'
+	jsr drawChr
+
+	lda #' '				; 1 space
+	jsr drawChr
+
+	lda drawScoreTableLoop + 1		; alternate score color
+	eor #pixelColC eor pixelColD
+	sta drawScoreTableLoop + 1
+
+.drawScoreTableName
+
+	lda #pixelColA				; draw name
+	sta drawChrColor
+	lda highScorePtr
+	clc
+	adc #3
+	sta drawTextAddr
+	lda highScorePtr + 1
+	sta drawTextAddr + 1
+	jsr drawText
+
+	lda drawScoreTableName + 1		; alternate name color
+	eor #pixelColA eor pixelColB
+	sta drawScoreTableName + 1
+
+	lda drawChrAddr				; advance to next row
+	clc
+	adc #lo((46 - 18) * chrColumn)
+	sta drawChrAddr
+	lda drawChrAddr + 1
+	adc #hi((46 - 19) * chrColumn)
+	sta drawChrAddr + 1
+
+	lda highScorePtr			; advance to next score
+	clc
+	adc #14
+	sta highScorePtr
+	
+	inx					; repeat until all 8 processed
+	cpx #9
+	bne drawScoreTableLoop
+
+	jsr drawString
+	equb pixelColA
+	equw screenAddr + 2 + 8 + 2 * chrColumn + 21 * chrRow
+	equs chrRight, &ff
+	
+	jsr drawString
+	equb pixelColE
+	equw screenAddr + 2 + 8 + 4 * chrColumn + 21 * chrRow
+	equs "RETURN TO MENU", &ff
+	
+	jsr drawString
+	equb pixelColA
+	equw screenAddr + 2 + 8 + 19 * chrColumn + 21 * chrRow
+	equs chrLeft, &ff
+
+.drawScoreTableRelease
+
+	jsr drawScoreTableFunctions		; update colors and scan keyboard
+
+	bne drawScoreTableRelease		; if key is pressed then loop back and wait for release
+	
+.drawScoreTablePress
+
+	jsr drawScoreTableFunctions		; update colors and scan keyboard
+
+	cmp #keyBitStart			; if start or esc pressed then exit else loop back and wait for key press
+	beq drawScoreTableExit
+
+	cmp #keyBitEsc
+	bne drawScoreTablePress
+
+
+.drawScoreTableExit
+
+	jsr playSoundSilence			; kill any sounds playing
+	
+	lda #sfxExtraLife			; play extra life sound effect and return
+	jmp playSound
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawScoreTableFunctions			wait for syncs, update colors, scan keyboard etc
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawScoreTableFunctions
+
+	jsr waitVsyncUpper			; wait upper half
+
+	jsr waitVsyncLower			; wait lower half
+
+	jsr processSound			; process sound effects and music
+
+	jsr updateSkullColor			; update the skull palette color
+
+	jsr updateBonusColor			; update the bonus palette colors
+
+	jsr keyboardScan			; scan keyboard inputs
+
+	lda playerInput				; return with input bits
+
+	rts
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; checkPauseGame
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -5746,9 +5907,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equb &ff
 
-	lda #lo(highScoreName)
+	lda #lo(highScoreTable + 3)
 	sta drawTextAddr
-	lda #Hi(highScoreName)
+	lda #Hi(highScoreTable + 3)
 	sta drawTextAddr + 1
 	
 	jsr drawText
@@ -5773,7 +5934,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameReg
 
-	jsr playfieldMiddleWithTimer		; initialize and draw playfield with only timer
+	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
 
 	jsr initSprites				; initialize all sprites as blanked and erased
 
@@ -5843,14 +6004,30 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #chrDown
 	jsr drawChr
 	
-	ldy #9					; clear high score name
+	ldy #0					; store score into high score table
+	lda score + 0
+	sta (highScorePtr), y
+	iny
+	lda score + 1
+	sta (highScorePtr), y
+	iny
+	lda score + 2
+	sta (highScorePtr), y
+
+	lda #3					; move ptr to high score name
+	clc
+	adc highScorePtr
+	sta highScorePtr
+
+	ldy #0					; clear high score name
 	lda #' '
 	
 .nameRegClear
 
-	sta highScoreName, y
-	dey
-	bpl nameRegClear
+	sta (highScorePtr), y
+	iny
+	cpy #10
+	bne nameRegClear
 
 	lda #0					; position cursor over first letter
 	sta nameRegCursor
@@ -5891,9 +6068,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegExit
 
-	jsr playSoundSilence			; kill any sounds playing
-
-	rts					; return
+	jmp playSoundSilence			; kill any sounds playing and return
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -6106,7 +6281,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	ldy nameRegCursorText			; replace chr in string with space
 	lda #' '
-	sta highScoreName, y
+	sta (highScorePtr), y
 
 	lda #sfxObject				; play sound
 	jsr playSound
@@ -6124,7 +6299,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldx nameRegCursor			; get selected character
 	lda nameRegText, x
 
-	sta highScoreName, y			; store character in string
+	sta (highScorePtr), y			; store character in string
 
 	clc					; erase chr from screen
 	lda screenColumnLo, y
@@ -6146,7 +6321,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta drawChrAddr + 1
 	lda #pixelCol7
 	sta drawChrColor
-	lda highScoreName, y
+	lda (highScorePtr), y
 	jsr drawChr
 
 	inc nameRegCursorText			; move cursor forward 1
@@ -6210,7 +6385,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda #registrationTL		; draw the box
 	jsr drawExtraTile
-	lda #registrationH
+	lda #registrationTH
 	jsr drawExtraTile
 	lda #registrationTR
 	jsr drawExtraTile
@@ -6247,7 +6422,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	lda #registrationBL
 	jsr drawExtraTile
-	lda #registrationH
+	lda #registrationBH
 	jsr drawExtraTile
 	lda #registrationBR
 	jmp drawExtraTile
@@ -9468,127 +9643,6 @@ spriteToAddrOffset	= 4			; correction factor
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .spriteTest					debugging sprite animation test
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	if debugSpriteTest
-
-.spriteTest
-
-	jsr initSprites				; clear all sprites
-
-	jsr clearTileMap			; fill tilemap with blank tile
-	
-	jsr drawString				; display text
-	equb pixelCol7
-	equw screenAddr + 2
-	equs "PRESS START TO SELECT  "
-	equs "NEXT SPRITE SET", &ff
-	
-	jsr drawString
-	equb pixelCol1
-	equw screenAddr + 2 + 3 * chrRow
-	equs "SPRITE SET ", &ff
-
-	lda #9 * 8				; initialise sprite positions
-
-	sta spritesX + 1
-	sta spritesY + 1
-
-	sta spritesY + 2
-
-	sta spritesX + 3
-
-	lda #15 * 8
-
-	sta spritesX + 2
-
-	sta spritesY + 3
-
-	sta spritesX + 4
-	sta spritesY + 4
-
-	lda #moveUp				; set sprite direction and visible
-	sta spritesDir + 1
-	lda #moveDown
-	sta spritesDir + 2
-	lda #moveLeft
-	sta spritesDir + 3
-	lda #moveRight
-	sta spritesDir + 4
-
-	lda #0					; start with sprite set 0
-	sta randomSeed
-	
-.spriteTestImg
-
-	lda #lo(screenAddr + 3 * chrRow + 11 * chrColumn)
-	sta drawMapTileAddr
-	lda #hi(screenAddr + 3 * chrRow + 11 * chrColumn)
-	sta drawMapTileAddr + 1
-	lda randomSeed
-	jsr drawExtraTile
-
-	ldx randomSeed
-
-	lda spriteBaseImg, x			; set sprite img set
-	sta spritesImg + 1
-	sta spritesImg + 2
-	sta spritesImg + 3
-	sta spritesImg + 4
-
-.spriteTestWaitRelease
-
-	jsr waitVsyncUpper			; wait for vsync interrupt for upper area
-
-	jsr redrawSprites			; erase and redraw sprites in upper area
-
-	jsr waitVsyncLower			; wait for vsync interrupt for lower area
-	
-	jsr redrawSprites			; erase and redraw sprites in lower area
-	
-	jsr updateAnimationFrame		; update the animtion frame number
-
-	jsr keyboardScan			; read keyboard input
-
-	lda playerInput				; if start pressed then loop back
-	and #keyBitStart
-	bne spriteTestWaitRelease
-
-.spriteTestWaitPress
-
-	jsr waitVsyncUpper			; wait for vsync interrupt for upper area
-
-	jsr redrawSprites			; erase and redraw sprites in upper area
-
-	jsr waitVsyncLower			; wait for vsync interrupt for lower area
-	
-	jsr redrawSprites			; erase and redraw sprites in lower area
-	
-	jsr updateAnimationFrame		; update the animtion frame number
-
-	jsr keyboardScan			; read keyboard input
-
-	lda playerInput				; if start pressed then loop back
-	and #keyBitStart
-	beq spriteTestWaitPress
-
-	inc randomSeed
-
-	lda randomSeed
-	cmp #9
-	bcc spriteTestImg
-	
-	lda #0
-	sta randomSeed
-
-	beq spriteTestImg
-
-	endif
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; vegetable names
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -10078,6 +10132,9 @@ include "relocator.asm"				; append relocation code
 	save "Config", config, configEnd, &ffffff, &ff0000 + config
 	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
+
+	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst
+	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
 
 	print
 	print
