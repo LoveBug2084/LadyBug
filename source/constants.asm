@@ -21,6 +21,7 @@
 true			= TRUE			; because caps burn the eyes !
 false			= FALSE
 
+magicNumber		= &69			; used to initialize random seed and in generating a validation code
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------

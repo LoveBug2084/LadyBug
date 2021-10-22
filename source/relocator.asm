@@ -48,7 +48,7 @@
 	ldx #&ff				; initialise stack
 	txs
 
-	lda #&02				; initialize random seed
+	lda #magicNumber			; initialize random seed
 	sta randomSeed + progOffset
 	sta randomSeed + 1 + progOffset
 

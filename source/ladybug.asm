@@ -3743,8 +3743,8 @@ if bp {.bp print ";draw sprite get image address":} endif
 	
 .generateValidationLoop
 
-	lda configData, x			; validationCode += configData[x] eor #&69
-	eor #&69
+	lda configData, x			; validationCode += configData[x] eor #magicNumber
+	eor #magicNumber
 	clc
 	adc validationCode
 	sta validationCode
