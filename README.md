@@ -8,7 +8,7 @@ BBC Master 128K/Master Compact ( uses 12K of sideways ram )
 
 I've included fontmaker and pixels written in c (source code and compiled .exe's) for converting the gimp/photoshop font and tile image files from .raw to .bin format for inclusion into the game code
 
-_**Known issues:**_ I recently added a feature to save the high score, high score name and game settings but this currently only functions on the BBC Models B and B+. I am working on a solution for the Master and Compact models
+_**Known issues:**_ I recently added a feature to save the scores and settings but this currently only functions on the BBC Models B and B+. I am working on a solution for the Master and Compact models
 
 _**Note:**_ video and screenshots from various builds during development\
 Game play is identical to the current build\
