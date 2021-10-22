@@ -201,11 +201,11 @@ continueBplus		= &d973
 
 .swrCleanResetJmp
 
-	equw swrCleanResetB			; unlikely	Electron
-	equw swrCleanResetB			; working	B
-	equw swrCleanResetBplus			; working	B+
-	equw swrCleanResetB			; not yet	Master
-	equw swrCleanResetB			; not yet	Compact
+	equw swrCleanResetB			; Electron	Im not even going to try
+	equw swrCleanResetB			; B		Working
+	equw swrCleanResetBplus			; B+		Working
+	equw swrCleanResetB			; Master	To do
+	equw swrCleanResetB			; Compact	To do
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; choose correct machine function
