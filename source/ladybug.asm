@@ -4971,7 +4971,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr drawScore				; draw score (1 digit per loop)
 
-	jsr random				; keep polling random so that when the player starts a game the letters are truely random
+	jsr random				; gaurentee that letters and layout are random when the player starts a game
 
 	jsr keyboardScan			; scan keyboard inputs
 
