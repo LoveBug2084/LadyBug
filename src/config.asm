@@ -34,28 +34,28 @@ config = &7b80					; default highscore table and settings
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	equb &00,&10,&00
-	equs "LOVEBUG.ML", &FF
+	equs "LOVEBUG.ML",&FF
 
 	equb &50,&09,&00
-	equs "UNIVERSAL",chrHeart, &FF
+	equs "UNIVERSAL ",&FF
 
 	equb &00,&09,&00
-	equs "LOVEBUG.ML", &FF
+	equs "LADYBUG   ",&FF
 
 	equb &50,&08,&00
-	equs "UNIVERSAL",chrHeart, &FF
+	equs "LOVEBUG.ML",&FF
 
 	equb &00,&08,&00
-	equs "LOVEBUG.ML", &FF
+	equs "UNIVERSAL ",&FF
 
 	equb &50,&07,&00
-	equs "UNIVERSAL",chrHeart, &FF
+	equs "LADYBUG   ",&FF
 
 	equb &00,&07,&00
-	equs "LOVEBUG.ML", &FF
+	equs "LOVEBUG.ML",&FF
 
 	equb &50,&06,&00
-	equs "UNIVERSAL",chrHeart, &FF
+	equs "UNIVERSAL ",&FF
 
 
 

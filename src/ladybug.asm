@@ -363,7 +363,7 @@ soundChannels		= 6			; number of software defined sound channels
 
 .keyboardScanFullSaveX	skip 1			; preserve register
 
-
+.drawScoreTableZero	skip 1			; leading zero blanking flag for drawing score table
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of page0000
@@ -785,15 +785,15 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 .drawObjectScore
 
-	lda objectScoreX			; copy objectScorexy ready for drawing
+	lda objectScoreX			; set position of object score
 	sta drawSpriteX
 	lda objectScoreY
 	sta drawSpriteY
-	
+
 	lda objectScoreImg			; if objectScoreImg != 0 (active)
-;	bne drawSprite10x10			; then draw it
 	beq drawObjectScoreExit
-	jmp drawSprite10x10
+
+	jmp drawSprite10x10			; then draw it
 	
 .drawObjectScoreExit
 
@@ -2126,29 +2126,25 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
+	if debugBonus = false
+
 	lda #&ff				; clear the bonus bits
 	sta bonusBits
 	sta bonusBits + 1
 
+	else
+
+	lda #&00				; set the bonus bits
+	sta bonusBits
+	sta bonusBits + 1
+
+	lda #&ff
+
+	endif
+	
 	sta ladybugEntryEnable			; enable ladybug entry animation
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	if debugBonus				; if debugBonus then
-
-	lda bonusBits + 1			; enable all special and extra letters
-	and #bonusBitsSpecial eor &ff
-	sta bonusBits + 1
-
-	lda bonusBits + 0
-	and #bonusBitsExtra eor &ff
-	sta bonusBits + 0
-
-	endif
-
-
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4168,9 +4164,19 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs "HOLD ESC TO QUIT", &ff
 
 	jsr drawString
+	equb pixelColA
+	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
+	equs chrRight, &ff
+	
+	jsr drawString
 	equb pixelColE
 	equw screenAddr + 2 + 8 + 6 * chrColumn + 20 * chrRow
 	equs "START GAME", &ff
+	
+	jsr drawString
+	equb pixelColA
+	equw screenAddr + 2 + 8 + 17 * chrColumn + 20 * chrRow
+	equs chrLeft, &ff
 
 	lda #sfxObject				; play object sound effect
 	jsr playSound
@@ -4806,8 +4812,6 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr mainMenuDrawCursor			; draw updated cursor
 
-	jsr generateValidation			; update the validation code
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4816,6 +4820,9 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr mainMenuFunctions			; update colors and scan keyboard
 
+	jsr generateValidation			; update the validation code
+
+	lda playerInput				; get keyboard input data
 	bne mainMenuWaitRelease			; if key is pressed then loop back and wait for release
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4875,10 +4882,10 @@ if bp {.bp print ";draw angel sprite":} endif
 	ldy mainMenuCursorOld			; erase old cursors
 	clc
 	lda screenRowLo, y
-	adc #lo(2 + 3 * chrColumn + 12 * chrRow)
+	adc #lo(2 + 3 * chrColumn + 11 * chrRow)
 	sta drawChrAddr
 	lda screenRowHi, y
-	adc #hi(2 + 3 * chrColumn + 12 * chrRow)
+	adc #hi(2 + 3 * chrColumn + 11 * chrRow)
 	sta drawChrAddr + 1
 	lda #' '
 	jsr drawChr
@@ -4886,10 +4893,10 @@ if bp {.bp print ";draw angel sprite":} endif
 	ldy mainMenuCursorOld			; erase old cursors
 	clc
 	lda screenRowLo, y
-	adc #lo(2 + 19 * chrColumn + 12 * chrRow)
+	adc #lo(2 + 19 * chrColumn + 11 * chrRow)
 	sta drawChrAddr
 	lda screenRowHi, y
-	adc #hi(2 + 19 * chrColumn + 12 * chrRow)
+	adc #hi(2 + 19 * chrColumn + 11 * chrRow)
 	sta drawChrAddr + 1
 	lda #' '
 	jsr drawChr
@@ -4900,10 +4907,10 @@ if bp {.bp print ";draw angel sprite":} endif
 	ldy mainMenuCursor
 	clc
 	lda screenRowLo, y
-	adc #lo(2 + 3 * chrColumn + 12 * chrRow)
+	adc #lo(2 + 3 * chrColumn + 11 * chrRow)
 	sta drawChrAddr
 	lda screenRowHi, y
-	adc #hi(2 + 3 * chrColumn + 12 * chrRow)
+	adc #hi(2 + 3 * chrColumn + 11 * chrRow)
 	sta drawChrAddr + 1
 	lda #chrRight
 	jsr drawChr
@@ -4911,10 +4918,10 @@ if bp {.bp print ";draw angel sprite":} endif
 	ldy mainMenuCursor			; draw new cursors
 	clc
 	lda screenRowLo, y
-	adc #lo(2 + 19 * chrColumn + 12 * chrRow)
+	adc #lo(2 + 19 * chrColumn + 11 * chrRow)
 	sta drawChrAddr
 	lda screenRowHi, y
-	adc #hi(2 + 19 * chrColumn + 12 * chrRow)
+	adc #hi(2 + 19 * chrColumn + 11 * chrRow)
 	sta drawChrAddr + 1
 	lda #chrLeft
 	jsr drawChr
@@ -4969,7 +4976,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	jsr keyboardScan			; scan keyboard inputs
 
 	lda mainMenuCursor			; if cursor on the timer volume selection
-	cmp #6
+	cmp #7
 	bne mainMenuFunctionsExit
 	
 	lda vsyncCounter			; if vsyncCounter & 7 == 0
@@ -5017,10 +5024,15 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	dec mainMenuCursor			; mainMenuCursor -= 1
 
+	lda mainMenuCursor			; get mainMenuCursor
+
+	cmp #1					; if mainMenuCursor = 1 then we need to decrement again
+	beq mainMenuProcessUp
+
 	lda mainMenuCursor			; if mainMenuCursor < 0
 	bpl mainMenuProcessUpExit
 
-	lda #7					; then mainMenuCursor = 7
+	lda #8					; then mainMenuCursor = 8
 	
 .mainMenuProcessUpExit
 
@@ -5042,8 +5054,12 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	inc mainMenuCursor			; mainMenuCursor += 1
 
-	lda mainMenuCursor			; if mainMenuCursor > 7
-	cmp #8
+	lda mainMenuCursor			; get mainMenuCursor
+
+	cmp #1					; if mainMenuCursor = 1
+	beq mainMenuProcessDown			; the increment again
+
+	cmp #9					; if mainMenuCursor >= 9
 	bne mainMenuProcessDownExit
 	
 	lda #0					; then mainMenuCursor == 0
@@ -5067,13 +5083,14 @@ if bp {.bp print ";draw angel sprite":} endif
 	ldx mainMenuCursor			; if mainMenuCursor = 0 then return true (start game)
 	beq mainMenuProcessReturnTrue
 	
-	cpx #1					; if mainMenuCursor = 1 then display high score table
+	cpx #2					; if mainMenuCursor = 1 then display high score table
 	beq mainMenuHighScores
 
-	cpx #7					; if mainMenuCursor == 7 then redefine the keyboard
+	cpx #8					; if mainMenuCursor == 7 then redefine the keyboard
 	beq mainMenuProcessKeyboard
 
-	dex					; index = cursor - 2 as first adjustable setting is 2 away from the start game option
+	dex					; index = cursor - 3 as first adjustable setting is 3 away from the start game option 0
+	dex
 	dex
 
 	inc optionEnemySpeed, x			; option[x] += 1
@@ -5094,7 +5111,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	lda mainMenuCursor			; get cursor
 	
-	cmp #2					; if cursor == 2 (enemySpeed) then
+	cmp #3					; if cursor == 3 (enemySpeed) then
 	bne mainMenuProcessStartEnemyAttack
 	
 	jsr mainMenuDrawEnemys			; place 4 random enemys on screen
@@ -5104,7 +5121,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 .mainMenuProcessStartEnemyAttack
 
-	cmp #3					; if cursor == 3 (enemyAttack) then
+	cmp #4					; if cursor == 4 (enemyAttack) then
 	bne mainMenuProcessStartLadybugLives
 	
 	jsr mainMenuDrawEnemys			; place 4 random enemys on screen
@@ -5114,7 +5131,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 .mainMenuProcessStartLadybugLives
 
-	cmp #4					; if cursor == 4 (ladybugLives) then
+	cmp #5					; if cursor == 5 (ladybugLives) then
 	bne mainMenuProcessReturnFalse
 
 	lda optionLives				; lives = optionLadybugLives
@@ -5145,7 +5162,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxObject				; play extra life sound effect
 	jsr playSound
 
-	jsr drawScoreTable			; draw the high scores page and wait for start to be pressed
+	jsr drawScoreTable			; draw the high scores page and wait for start or esc to be pressed
 	
 	jsr mainMenuDraw			; redraw main menu
 
@@ -5435,7 +5452,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr drawString
 	equb pixelColE
-	equw screenAddr + 2 + 4 * chrColumn + 13 * chrRow
+	equw screenAddr + 2 + 8 + 6 * chrColumn + 12 * chrRow
 	equs "START GAME", &ff
 
 	jsr drawString
@@ -5721,26 +5738,10 @@ if bp {.bp print ";draw angel sprite":} endif
 	
 .drawScoreTableLoop
 
-	lda #pixelColC				; draw score
-	sta drawChrColor
-	ldy #2
-	lda (highScorePtr), y
-	jsr drawHex
-	dey
-	lda (highScorePtr), y
-	jsr drawHex
-	dey
-	lda (highScorePtr), y
-	jsr drawHex
-	lda #'0'
-	jsr drawChr
+	jsr drawScoreTableBlanking		; draw score with leading zero blanking
 
 	lda #' '				; 1 space
 	jsr drawChr
-
-	lda drawScoreTableLoop + 1		; alternate score color
-	eor #pixelColC eor pixelColD
-	sta drawScoreTableLoop + 1
 
 .drawScoreTableName
 
@@ -5777,17 +5778,17 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr drawString
 	equb pixelColA
-	equw screenAddr + 2 + 8 + 2 * chrColumn + 21 * chrRow
+	equw screenAddr + 2 + 8 + 7 * chrColumn + 21 * chrRow
 	equs chrRight, &ff
 	
 	jsr drawString
 	equb pixelColE
-	equw screenAddr + 2 + 8 + 4 * chrColumn + 21 * chrRow
-	equs "RETURN TO MENU", &ff
+	equw screenAddr + 2 + 8 + 9 * chrColumn + 21 * chrRow
+	equs "BACK", &ff
 	
 	jsr drawString
 	equb pixelColA
-	equw screenAddr + 2 + 8 + 19 * chrColumn + 21 * chrRow
+	equw screenAddr + 2 + 8 + 14 * chrColumn + 21 * chrRow
 	equs chrLeft, &ff
 
 .drawScoreTableRelease
@@ -5811,11 +5812,73 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr playSoundSilence			; kill any sounds playing
 	
-	lda #sfxExtraLife			; play extra life sound effect and return
+	lda #sfxSkull				; play skull sound effect and return
 	jmp playSound
 
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawScoreTableBlanking			draw the score with leading zero blanking
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+.drawScoreTableBlanking
+
+	lda #0					; enable leading zero blanking
+	sta drawScoreTableZero
+
+	ldy #2					; index to score bytes
+
+.drawScoreTableBlankingColor
+
+	lda #pixelColC				; set score color
+	sta drawChrColor
+
+.drawScoreTableBlankingPrint
+
+	lda (highScorePtr), y			; draw pair of digits
+	pha
+	lsr a
+	lsr a
+	lsr a
+	lsr a
+	jsr drawScoreTableBlankingDigit
+	pla
+	and #&0f
+	jsr drawScoreTableBlankingDigit
+	
+	dey					; repeat until all pairs displayed
+	bpl drawScoreTableBlankingPrint
+	
+	lda #'0'				; draw final digit
+	jsr drawChr
+
+	lda drawScoreTableBlankingColor + 1	; alternate score color
+	eor #pixelColC eor pixelColD
+	sta drawScoreTableBlankingColor + 1
+
+	rts					; return
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawScoreTableBlankingDigit			draw a single digit with leading zero blanking
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawScoreTableBlankingDigit
+
+	bne drawScoreTableBlankingDigitNotZero
+	bit drawScoreTableZero
+	bmi drawScoreTableBlankingDigitNotZero
+	
+	lda #' '
+	jmp drawChr
+
+.drawScoreTableBlankingDigitNotZero
+
+	ora #'0'
+	jsr drawChr
+
+	lda #&ff
+	sta drawScoreTableZero
+	rts
+	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawScoreTableFunctions			wait for syncs, update colors, scan keyboard etc
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6035,7 +6098,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	sta nameRegCursorText			; position text cursor on 1st character
 
-	lda #animateLadybugHighScore		; initialize the highScore animation
+	lda #animateLadybugNameReg		; initialize the highScore animation
 	jsr animateLadybugInitialize
 
 	jsr nameRegCursorUpdate			; display the initial cursor position
@@ -7128,16 +7191,6 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #animateLadybugEntry		; initialize the walk on entry animation and return
 	jmp animateLadybugInitialize
 
-	; lda #moveRight				; set ladybug direction right moving
-	; sta spritesDir + 0
-	
-	; lda #ladybugEnterX			; set ladybug to bottom left
-	; sta spritesX + 0
-	; lda #ladybugEnterY
-	; sta spritesY + 0
-
-	; rts					; return
-
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -7836,36 +7889,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 18 * chrRow
 	equs "PTS", &ff
 
-	if specialBonusShield = 1
-
-	jsr drawString
-	equb pixelCol3
-	equw screenAddr + 2 + 8 + 5 * chrColumn + 20 * chrRow
-	equs "+", &ff
-
-	jsr drawString
-	equb pixelCol7
-	equw screenAddr + 2 + 8 + 7 * chrColumn + 20 * chrRow
-	equb &ff
-
-	lda #specialBonusShield + '0'
-	jsr drawChr
-	
-	jsr drawString
-	equb pixelCol3
-	equw screenAddr + 2 + 8 + 9 * chrColumn + 20 * chrRow
-	equs "SHIELD", &ff
-
-	lda #lo(screenAddr + 8 + 16 * chrColumn + 20 * chrRow)
-	sta drawMapTileAddr
-	lda #hi(screenAddr + 8 + 16 * chrColumn + 20 * chrRow)
-	sta drawMapTileAddr + 1
-
-	lda #mapTileSkull
-	jsr drawMapTile
-
-	else
-
 	jsr drawString
 	equb pixelCol3
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
@@ -7891,8 +7914,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #mapTileSkull
 	jsr drawMapTile
-
-	endif
 
 	lda #sfxMusicSpecial			; play special bonus music
 	jsr playSound
@@ -8127,7 +8148,7 @@ ladybugBonusY		= 11
 ladybugHighScoreX	= 96			; sprite coordinates in pixels
 ladybugHighScoreY	= 12
 
-.animateLadybugHighScoreTable
+.animateLadybugNameRegTable
 
 	equb 65, moveRight
 	equb 56, moveDown
@@ -8169,16 +8190,19 @@ ladybugHighScoreY	= 12
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-ladybugMainMenuX	= 96			; sprite coordinates in pixels
-ladybugMainMenuY	= 85
+ladybugMainMenuX	= 165			; sprite coordinates in pixels
+ladybugMainMenuY	= 89
 
 .animateLadybugMainMenuTable
 
-	equb 65, moveRight
-	equb 79, moveDown
-	equb 145, moveLeft
-	equb 79, moveUp
-	equb 79, moveRight
+	equb 200, moveUp + moveStop
+	equb 75, moveDown
+	equb 151, moveLeft
+	equb 75, moveUp
+	equb 200, moveUp + moveStop
+	equb 76, moveDown
+	equb 151, moveRight
+	equb 75, moveUp
 	equb 0
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8188,18 +8212,18 @@ ladybugInstructionsY	= 141
 
 .animateLadybugInstructionsTable
 
-	equb 41, moveRight
+	equb 57, moveRight
 	equb 23, moveDown
-	equb 100, moveLeft
+	equb 132, moveLeft
 	equb 23, moveUp
-	equb 58, moveRight
+	equb 74, moveRight
 	equb 0
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 animateLadybugEntry		= 0		; entry animation index
 animateLadybugBonus		= 1		; bonus animation index
-animateLadybugHighScore		= 2		; high score animation index
+animateLadybugNameReg		= 2		; high score animation index
 animateLadybugMainMenu		= 3		; main menu animation index
 animateLadybugInstructions	= 4		; instructions animation index
 
@@ -8215,7 +8239,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	equb ladybugBonusX
 	equb ladybugBonusY
 	
-	equw animateLadybugHighScoreTable
+	equw animateLadybugNameRegTable
 	equb ladybugHighScoreX
 	equb ladybugHighScoreY
 

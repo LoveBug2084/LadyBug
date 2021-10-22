@@ -246,7 +246,7 @@
 
 	equb 5
 
-	equb &e6, &f0
+	equb &e6, &f2
 	equb &44
 
 	equb &e4
@@ -254,31 +254,6 @@
 
 	equb &ff
 	equb &40
-	
-; old modulated sound, not so good on a real beeb
-; .sfxDataMunch
-
-	; ; sfx channel 5, psg channel 3
-
-	; equb 5
-
-	; equb &e2, &f0
-	; equb &41
-
-	; equb &e6
-	; equb &41
-
-	; equb &e2
-	; equb &41
-
-	; equb &e6
-	; equb &41
-
-	; equb &e4
-	; equb &42
-
-	; equb &ff
-	; equb &40
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
