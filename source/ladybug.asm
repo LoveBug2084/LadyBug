@@ -605,17 +605,11 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 	lda vsyncCounter			; if vsync counter and 1 = 0 (25Hz)
 	and #1
-	beq updateObjectTimerBump
-	rts
+	bne updateObjectTimerExit
 	
-.updateObjectTimerBump
-
 	dec objectModeTimer			; then bump object timer
-	beq updateObjectTimerMode		; if objectModeTimer = 0
-	rts
+	bne updateObjectTimerExit		; if objectModeTimer = 0
 
-.updateObjectTimerMode
-	
 	stx updateObjectTimerSaveX		; save register
 	
 	ldx objectMode				; get current objectMode
@@ -637,6 +631,8 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 	ldx updateObjectTimerSaveX		; restore register
 	
+.updateObjectTimerExit
+
 	rts					; return
 
 
@@ -2051,14 +2047,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameIntroScreen
 
-	lda highScoreTable + 0			; copy 1st place high score table entry to highScore for display
-	sta highScore + 0
-	lda highScoreTable + 1
-	sta highScore + 1
-	lda highScoreTable + 2
-	sta highScore + 2
-
-	jsr drawPlayfieldLower			; display lower playfield
+	jsr updateHighScoreFirstPlace		; copy first place high score from table and display it
 
 	jsr mainMenu				; display the main menu screen
 
@@ -2488,6 +2477,8 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #sfxMusicLetters			; play high score music
 	jsr playSound
 	
+	jsr updateHighScoreFirstPlace		; copy first place high score and display in playfield lower
+
 	jsr drawScoreTable			; draw the high score page
 	
 	rts					; return to main menu
@@ -3597,42 +3588,6 @@ if bp {.bp print ";draw sprite get image address":} endif
 
 	clc					; exit with not drawn status
 	bcc drawSpriteExit
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-.page0287End
-	skip 0
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; page 0d00
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	org page0d00
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; nmi interrupt					it shouldnt happen but just in case it does
-;
-;						then again if something generated an nmi and requires some hardware register write
-;						to clear it then we're screwed anyway as we'll have an infinite stream of nmi's
-;						and the game will freeze but I guess freezing is better than crashing ?
-;
-;						we'll set the background color to red to show that an nmi was received
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.nmiInterrupt
-
-	pha					; save A
-
-	lda #palRed				; set background color to show that an nmi was received
-	sta ulaPalette
-
-	pla					; restore A
-	rti					; return
 
 
 
@@ -5784,7 +5739,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	jsr drawString
 	equb pixelColE
 	equw screenAddr + 2 + 8 + 9 * chrColumn + 21 * chrRow
-	equs "BACK", &ff
+	equs "MENU", &ff
 	
 	jsr drawString
 	equb pixelColA
@@ -9367,6 +9322,8 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ora spritesDir + 0
 	sta spritesDir + 0
 
+.updateLadyBugReturn
+
 	rts					; return
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -9664,6 +9621,24 @@ spriteToAddrOffset	= 4			; correction factor
 	ldx spriteToAddrSaveX				
 
 	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; updateHighScoreFirstPlace			; copy first place high score from table to high score and display it
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.updateHighScoreFirstPlace
+
+	lda highScoreTable + 0			; copy 1st place high score table entry to highScore for display
+	sta highScore + 0
+	lda highScoreTable + 1
+	sta highScore + 1
+	lda highScoreTable + 2
+	sta highScore + 2
+
+	jmp drawPlayfieldLower			; display it and return
+
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------

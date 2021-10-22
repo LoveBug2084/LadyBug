@@ -40,7 +40,7 @@ config = &7b80					; default highscore table and settings
 	equs "UNIVERSAL ",&FF
 
 	equb &00,&09,&00
-	equs "LADYBUG   ",&FF
+	equs "LADY BUG  ",&FF
 
 	equb &50,&08,&00
 	equs "LOVEBUG.ML",&FF
@@ -49,7 +49,7 @@ config = &7b80					; default highscore table and settings
 	equs "UNIVERSAL ",&FF
 
 	equb &50,&07,&00
-	equs "LADYBUG   ",&FF
+	equs "LADY BUG  ",&FF
 
 	equb &00,&07,&00
 	equs "LOVEBUG.ML",&FF
