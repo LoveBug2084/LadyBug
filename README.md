@@ -6,7 +6,7 @@ BBC B with sideways ram upgrade ( uses 12K of sideways ram )\
 BBC B+ 64K/128K ( uses 12K of workspace ram, no sideways ram required )\
 BBC Master 128K/Master Compact ( uses 12K of sideways ram )
 
-I've included fontmaker and pixels written in c (source code and compiled .exe's) for converting the gimp/photoshop font and tile image files from .raw to .bin format for inclusion into the game code
+I've included fontmaker and pixels written in c (source code and compiled .exe's) for converting the gimp/photoshop font and tile image files from .raw to the .bin format required during assembly
 
 _**Known issues:**_ I recently added a feature to save the scores and settings but this currently functions on the BBC B and B+ models only, I am working on a solution for the Master and Compact models
 
