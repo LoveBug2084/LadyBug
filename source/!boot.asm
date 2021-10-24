@@ -33,13 +33,13 @@
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
 	equb 23,0,6,0,0,0,0,0,0,0		; disable display
 
-	equs "*SHADOW 1", 13			; disable shadow mode
-	equb 22,7				; mode 7
-	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
-	equb 23,0,6,0,0,0,0,0,0,0		; disable display
-
+	equs "*SHADOW 1", 13			; disable shadow ram
 	equs "*FX 200 1",13			; disable ESC
 	equs "*FX 4 1",13			; disable cursor editing
+
+	equb 22,7				; do it again
+	equb 23,1,0,0,0,0,0,0,0,0
+	equb 23,0,6,0,0,0,0,0,0,0
 
 	equs "CLOSE#0:CHAIN",34,"Boot",34,13	; close !Boot and CHAIN"Boot"
 

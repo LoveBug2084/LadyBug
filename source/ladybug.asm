@@ -4194,7 +4194,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr playSoundSilence			; kill any current sounds
 
-	lda #sfxSkull				; play skull sound effect
+	lda #sfxExtraLife			; play sound effect
 	jsr playSound
 
 	sec					; return true
@@ -5785,7 +5785,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr playSoundSilence			; kill any sounds playing
 	
-	lda #sfxSkull				; play skull sound effect and return
+	lda #sfxExtraLife			; play sound effect and return
 	jmp playSound
 
 

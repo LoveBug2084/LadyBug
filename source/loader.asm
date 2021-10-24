@@ -265,15 +265,16 @@ continueBplus		= &d973
 
 .swrCleanResetMaster
 
-	cpu 1			; switch to cmos instruction set
+	lda #%00000001		; clear bits 7-1 of acccon
+	and acccon
+	sta acccon
 
-	lda #&fe		; clear bits 7-1 of acccon
-	trb acccon
+	lda #0			; zero &dfdd ????? not sure this instruction does anything but copied from os just in case
+	sta &dfdd
 
-	stz &dfdd		; zero &dfdd ????? not sure this instruction does anything but copied from os just in case
-
-	lda #&0c		; set bits 3-2 in acccon
-	tsb acccon
+	lda #%00001100		; set bits 3-2 in acccon
+	ora acccon
+	sta acccon
 
 	lda #0			; store simulated via interrupt enable flags on stack (power on reset)
 	pha
@@ -284,8 +285,8 @@ continueBplus		= &d973
 
 	tya
 
-	stz zpAddr + 1		; start at page0000
-	stz zpAddr
+	sta zpAddr + 1		; start at page0000
+	sta zpAddr
 
 .swrCleanResetMasterWipe
 
@@ -315,10 +316,16 @@ continueBplus		= &d973
 	cpx #&e0		; if page != &e0 then wipe page
 	bne swrCleanResetMasterWipe
 
-	lda #&04		; test bit 2 of acccon
-	trb &fe34		; clear bit 2 of acccon
+	lda #&04		; test bit 2 of acccon and save test result
+	and acccon
+	php
 
-				; if result of previous test != 0 then wipe again (this is used to wipe both shadow and main ram)
+	lda #%11111011		; clear bit 2 of acccon
+	and acccon
+	sta acccon
+
+
+	plp			; if result of bit 2 test != 0 then wipe whole memory again (both shadow and main ram clear)
 	bne swrCleanResetMasterInit
 
 	jmp cleanResetMaster	; jump to code in stack to continue with os setup

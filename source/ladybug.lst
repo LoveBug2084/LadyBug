@@ -78,32 +78,32 @@ bootstrap     &4800 - &48C6 , 199 bytes
      F01C   00
      F01D   2A 53 48 ...
      F026   0D
-     F027   16
-     F028   07
-     F029   17
-     F02A   01
-     F02B   00
-     F02C   00
-     F02D   00
-     F02E   00
-     F02F   00
-     F030   00
-     F031   00
-     F032   00
-     F033   17
-     F034   00
-     F035   06
-     F036   00
-     F037   00
-     F038   00
-     F039   00
-     F03A   00
-     F03B   00
-     F03C   00
-     F03D   2A 46 58 ...
-     F046   0D
-     F047   2A 46 58 ...
-     F04E   0D
+     F027   2A 46 58 ...
+     F030   0D
+     F031   2A 46 58 ...
+     F038   0D
+     F039   16
+     F03A   07
+     F03B   17
+     F03C   01
+     F03D   00
+     F03E   00
+     F03F   00
+     F040   00
+     F041   00
+     F042   00
+     F043   00
+     F044   00
+     F045   17
+     F046   00
+     F047   06
+     F048   00
+     F049   00
+     F04A   00
+     F04B   00
+     F04C   00
+     F04D   00
+     F04E   00
      F04F   43 4C 4F ...
      F05C   22
      F05D   42 6F 6F ...
@@ -201,7 +201,7 @@ bootstrap     &4800 - &48C6 , 199 bytes
      ACE6   04 AD
      ACE8   0C AD
      ACEA   1B AD
-     ACEC   59 AD
+     ACEC   6B AD
 .swrCleanReset
      ACEE   A9 40      LDA #&40
      ACF0   8D 00 0D   STA &0D00
@@ -229,42 +229,50 @@ bootstrap     &4800 - &48C6 , 199 bytes
      AD17   8A         TXA
      AD18   4C 73 D9   JMP &D973
 .swrCleanResetMaster
-     AD1B   A9 FE      LDA #&FE
-     AD1D   1C 34 FE   TRB &FE34
-     AD20   9C DD DF   STZ &DFDD
-     AD23   A9 0C      LDA #&0C
-     AD25   0C 34 FE   TSB &FE34
-     AD28   A9 00      LDA #&00
-     AD2A   48         PHA
-     AD2B   A8         TAY
+     AD1B   A9 01      LDA #&01
+     AD1D   2D 34 FE   AND &FE34
+     AD20   8D 34 FE   STA &FE34
+     AD23   A9 00      LDA #&00
+     AD25   8D DD DF   STA &DFDD
+     AD28   A9 0C      LDA #&0C
+     AD2A   0D 34 FE   ORA &FE34
+     AD2D   8D 34 FE   STA &FE34
+     AD30   A9 00      LDA #&00
+     AD32   48         PHA
+     AD33   A8         TAY
 .swrCleanResetMasterInit
-     AD2C   98         TYA
-     AD2D   64 01      STZ &01
-     AD2F   64 00      STZ &00
+     AD34   98         TYA
+     AD35   85 01      STA &01
+     AD37   85 00      STA &00
 .swrCleanResetMasterWipe
-     AD31   91 00      STA (&00),Y
-     AD33   C8         INY
-     AD34   D0 FB      BNE &AD31
-     AD36   A2 40      LDX #&40
-     AD38   8E 00 0D   STX &0D00
+     AD39   91 00      STA (&00),Y
+     AD3B   C8         INY
+     AD3C   D0 FB      BNE &AD39
+     AD3E   A2 40      LDX #&40
+     AD40   8E 00 0D   STX &0D00
 .swrCleanResetMasterNext
-     AD3B   E6 01      INC &01
-     AD3D   A6 01      LDX &01
-     AD3F   E0 01      CPX #&01
-     AD41   F0 F8      BEQ &AD3B
-     AD43   E0 80      CPX #&80
-     AD45   D0 04      BNE &AD4B
-     AD47   A2 C0      LDX #&C0
-     AD49   86 01      STX &01
+     AD43   E6 01      INC &01
+     AD45   A6 01      LDX &01
+     AD47   E0 01      CPX #&01
+     AD49   F0 F8      BEQ &AD43
+     AD4B   E0 80      CPX #&80
+     AD4D   D0 04      BNE &AD53
+     AD4F   A2 C0      LDX #&C0
+     AD51   86 01      STX &01
 .swrCleanResetMasterEnd
-     AD4B   E0 E0      CPX #&E0
-     AD4D   D0 E2      BNE &AD31
-     AD4F   A9 04      LDA #&04
-     AD51   1C 34 FE   TRB &FE34
-     AD54   D0 D6      BNE &AD2C
-     AD56   4C 3F 01   JMP &013F
+     AD53   E0 E0      CPX #&E0
+     AD55   D0 E2      BNE &AD39
+     AD57   A9 04      LDA #&04
+     AD59   2D 34 FE   AND &FE34
+     AD5C   08         PHP
+     AD5D   A9 FB      LDA #&FB
+     AD5F   2D 34 FE   AND &FE34
+     AD62   8D 34 FE   STA &FE34
+     AD65   28         PLP
+     AD66   D0 CC      BNE &AD34
+     AD68   4C 3F 01   JMP &013F
 .swrCleanResetCompact
-     AD59   4C 04 AD   JMP &AD04
+     AD6B   4C 04 AD   JMP &AD04
 .swramLastAddr
      AE00
 .loaderMessages
@@ -2665,7 +2673,7 @@ bootstrap     &4800 - &48C6 , 199 bytes
      0F66   60         RTS
 .instructionsReturnTrue
      0F67   20 3E 24   JSR &243E
-     0F6A   A9 09      LDA #&09
+     0F6A   A9 00      LDA #&00
      0F6C   20 62 24   JSR &2462
      0F6F   38         SEC
      0F70   60         RTS
@@ -3737,7 +3745,7 @@ bootstrap     &4800 - &48C6 , 199 bytes
      178F   D0 F5      BNE &1786
 .drawScoreTableExit
      1791   20 3E 24   JSR &243E
-     1794   A9 09      LDA #&09
+     1794   A9 00      LDA #&00
      1796   4C 62 24   JMP &2462
 .drawScoreTableBlanking
      1799   A9 00      LDA #&00
