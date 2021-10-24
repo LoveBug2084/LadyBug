@@ -195,17 +195,18 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 zpAddr 			= 0
+
 continueBplus		= &d973
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrCleanResetJmp
 
-	equw swrCleanResetB			; Electron	Im not even going to try
-	equw swrCleanResetB			; B		Working
-	equw swrCleanResetBplus			; B+		Working
-	equw swrCleanResetB			; Master	To do
-	equw swrCleanResetB			; Compact	To do
+	equw swrCleanResetB			; Electron	No plans for this
+	equw swrCleanResetB			; B		Save feature working
+	equw swrCleanResetBplus			; B+		Save feature working
+	equw swrCleanResetMaster		; Master	Working on it !
+	equw swrCleanResetCompact		; Compact	To do
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; choose correct machine function
@@ -213,14 +214,23 @@ continueBplus		= &d973
 
 .swrCleanReset
 
+	lda #opcodeRTI				; disable nmi
+	sta page0d00 
+
 	lda swrCleanResetJmp, x			; get jump address for machine function
 	sta zpAddr
 	lda swrCleanResetJmp + 1, x
 	sta zpAddr + 1
+
+	ldx #&ff				; initialize stack
+	txs
+
+	inx					; x = 0
+
 	jmp (zpAddr)				; run the function
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; model B reset just use the regular simulated power on reset, stack will be intact
+; B reset just use the regular simulated power on reset, stack will be intact
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrCleanResetB
@@ -231,19 +241,12 @@ continueBplus		= &d973
 	jmp (resetVector)			; reboot the beeb
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; model B+ clear zp, jump into os to clear 0200-7fff leaving the stack intact
+; B+ clear zp, jump into os to clear 0200-7fff leaving the stack intact
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrCleanResetBplus
 
-	lda #opcodeRTI				; disable nmi
-	sta page0d00 
-
-	ldx #&ff				; initialize stack
-	txs
-
-	inx					; push 0 on stack (fake via interrupt enable flags)
-	txa
+	txa					; push 0 on stack (fake via interrupt enable flags)
 	pha
 
 .swrCleanResetBplusLoop
@@ -255,6 +258,78 @@ continueBplus		= &d973
 	sta zpAddr + 1
 	txa
 	jmp continueBplus
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; Master
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetMaster
+
+	cpu 1			; switch to cmos instruction set
+
+	lda #&fe		; clear bits 7-1 of acccon
+	trb acccon
+
+	stz &dfdd		; zero &dfdd ????? not sure this instruction does anything but copied from os just in case
+
+	lda #&0c		; set bits 3-2 in acccon
+	tsb acccon
+
+	lda #0			; store simulated via interrupt enable flags on stack (power on reset)
+	pha
+
+	tay			; zero index
+
+.swrCleanResetMasterInit
+
+	tya
+
+	stz zpAddr + 1		; start at page0000
+	stz zpAddr
+
+.swrCleanResetMasterWipe
+
+	sta (zpAddr), y		; wipe a page of memory
+	iny
+	bne swrCleanResetMasterWipe
+
+	ldx #opcodeRTI		; disable nmi
+	stx page0d00
+
+.swrCleanResetMasterNext
+
+	inc zpAddr + 1		; next page
+
+	ldx zpAddr + 1		; if page = &01 (stack) then skip to the next page
+	cpx #&01
+	beq swrCleanResetMasterNext
+
+	cpx #&80		; if page = &80 (swr) then skip to page &c0
+	bne swrCleanResetMasterEnd
+	
+	ldx #&c0
+	stx zpAddr + 1
+
+.swrCleanResetMasterEnd
+
+	cpx #&e0		; if page != &e0 then wipe page
+	bne swrCleanResetMasterWipe
+
+	lda #&04		; test bit 2 of acccon
+	trb &fe34		; clear bit 2 of acccon
+
+				; if result of previous test != 0 then wipe again (this is used to wipe both shadow and main ram)
+	bne swrCleanResetMasterInit
+
+	jmp cleanResetMaster	; jump to code in stack to continue with os setup
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; Compact
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetCompact
+
+	jmp swrCleanResetB
 
 
 

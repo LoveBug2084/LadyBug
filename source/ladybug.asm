@@ -412,7 +412,7 @@ soundChannels		= 6			; number of software defined sound channels
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; cleanReset (break key)			simulated power on reset to put the computer into a clean state when the break key is pressed
+; cleanReset (break key)			simulated power on reset while preserving the stack and high ram
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org page0130
@@ -439,6 +439,24 @@ soundChannels		= 6			; number of software defined sound channels
 	ldx cleanResetMachine			; get machine index
 
 	jmp swrCleanReset			; continue with reset code
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; cleanResetMaster				page in bank 15 jump into os to continue
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+continueMaster		= &8073
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.cleanResetMaster
+
+	lda #&0f				; page in extra os code
+	sta bankSelectCopy
+	sta bankSelect
+	
+	jmp continueMaster			; continue with master os reset code
 
 
 

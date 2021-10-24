@@ -336,8 +336,9 @@ osByte			= &fff4			; os function
 osCli			= &fff7			; os function
 osWrch			= &ffee			; os function
 resetVector		= &fffc			; os reset vector
-bankSelect		= &fe30			; paged rom/ram bank select
 bankSelectCopy		= &f4			; os stores current bank copy here
+bankSelect		= &fe30			; paged rom/ram bank select
+acccon			= &fe34			; access control register
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; define program addresses

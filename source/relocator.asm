@@ -118,6 +118,10 @@
 	dex					; until all pages copied
 	bne relocateProgram
 	
+	lda acccon				; disable shadow ram
+	and #&38
+	sta acccon
+
 	lda swrBank				; select ram bank
 	sta bankSelect
 	sta cleanResetBank			; save ram bank for clean reset code
