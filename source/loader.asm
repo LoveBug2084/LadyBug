@@ -205,7 +205,7 @@ continueBplus		= &d973
 	equw swrCleanResetB			; Electron	No plans for this
 	equw swrCleanResetB			; B		Save feature working
 	equw swrCleanResetBplus			; B+		Save feature working
-	equw swrCleanResetMaster		; Master	Working on it !
+	equw swrCleanResetMaster		; Master	Save feature working
 	equw swrCleanResetCompact		; Compact	To do
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
