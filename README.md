@@ -4,7 +4,7 @@ A remake of Universals Z80 based arcade game from 1981 written in 6502 assembly 
 _**Tested on the following models:**_\
 BBC B OS 1.20 uses 12K of sideways ram\
 BBC B+ 64K/128K OS 2.00 uses 12K of workspace ram ( no sideways ram required )\
-BBC Master 128K MOS 3.20 uses 12K of sideways ram\
+BBC Master 128K MOS 3.20 uses 12K of sideways ram
 
 I've included fontmaker and pixels written in c (source code and compiled .exe's) for converting the gimp/photoshop font and tile image files from .raw to the .bin format required during assembly
 
