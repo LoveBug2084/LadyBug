@@ -217,7 +217,7 @@ continueBplus		= &d973
 	lda #opcodeRTI				; disable nmi
 	sta page0d00 
 
-	lda swrCleanResetJmp, x			; get jump address for machine function
+	lda swrCleanResetJmp, x			; get function address for machine type
 	sta zpAddr
 	lda swrCleanResetJmp + 1, x
 	sta zpAddr + 1
@@ -230,7 +230,7 @@ continueBplus		= &d973
 	jmp (zpAddr)				; run the function
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; B reset just use the regular simulated power on reset, stack will be intact
+; B reset use the regular simulated power on reset
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrCleanResetB
@@ -241,7 +241,7 @@ continueBplus		= &d973
 	jmp (resetVector)			; reboot the beeb
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; B+ clear zp, jump into os to clear 0200-7fff leaving the stack intact
+; B+ reset clear zp, jump into os to clear 0200-7fff
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrCleanResetBplus
@@ -260,20 +260,14 @@ continueBplus		= &d973
 	jmp continueBplus
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Master
+; Master reset clear 0000-00ff, 0200-07ff, c000-dfff twice (once with shadow ram selected and then with main ram selected)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrCleanResetMaster
 
-	lda #%00000001		; clear bits 7-1 of acccon
-	and acccon
-	sta acccon
-
-	lda #0			; zero &dfdd ????? not sure this instruction does anything but copied from os just in case
-	sta &dfdd
-
-	lda #%00001100		; set bits 3-2 in acccon
-	ora acccon
+	lda acccon		; clear bits 7-4, 1-0. set bits 3-2 of accon
+	and #%11110011
+	ora #%00001100		; set bits 3-2 in acccon (select shadow ram at 3000-7fff and private ram at c000-dfff)
 	sta acccon
 
 	lda #0			; store simulated via interrupt enable flags on stack (power on reset)
@@ -316,16 +310,15 @@ continueBplus		= &d973
 	cpx #&e0		; if page != &e0 then wipe page
 	bne swrCleanResetMasterWipe
 
-	lda #&04		; test bit 2 of acccon and save test result
-	and acccon
+	lda acccon		; test bit 2 of acccon and save test result (shadow ram select)
+	and #%00000100
 	php
 
-	lda #%11111011		; clear bit 2 of acccon
-	and acccon
+	lda acccon		; clear bit 2 of acccon (select main ram into 3000-7fff)
+	and #%11111011
 	sta acccon
 
-
-	plp			; if result of bit 2 test != 0 then wipe whole memory again (both shadow and main ram clear)
+	plp			; if previous test showed that shadow ram was selected then we wipe memory again but this time with main ram selected
 	bne swrCleanResetMasterInit
 
 	jmp cleanResetMaster	; jump to code in stack to continue with os setup

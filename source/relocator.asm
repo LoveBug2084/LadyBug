@@ -119,7 +119,7 @@
 	bne relocateProgram
 	
 	lda acccon				; disable shadow ram
-	and #&38
+	and #%00111000
 	sta acccon
 
 	lda swrBank				; select ram bank
