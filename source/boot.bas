@@ -135,7 +135,7 @@ FOR R%=10 TO 14
 PRINT TAB(0,R%);"  ";
 NEXT R%
 PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
-PRINT TAB(4,13);"Unable to save Scores and Settings";
+PRINT TAB(4,13);"Unable to save";CHR$(132);"Scores";CHR$(135);"and";CHR$(132);"Settings";
 ENDPROC
 
 DEF PROCreadConfig

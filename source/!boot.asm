@@ -37,9 +37,11 @@
 	equs "*FX 200 1",13			; disable ESC
 	equs "*FX 4 1",13			; disable cursor editing
 
-	equb 22,7				; do it again
-	equb 23,1,0,0,0,0,0,0,0,0
-	equb 23,0,6,0,0,0,0,0,0,0
+	equb 12					; erase text from screen
+
+	equb 22,7				; select non-shadow mode 7
+	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
+	equb 23,0,6,0,0,0,0,0,0,0		; disable display
 
 	equs "CLOSE#0:CHAIN",34,"Boot",34,13	; close !Boot and CHAIN"Boot"
 
