@@ -35,17 +35,17 @@ echo.
 pixels				img-enemy8.raw								10	14	img-enemy8.bin
 echo.
 pixels				img-angel.raw									10	14	img-angel.bin
-set /p ladybugBuild=<ladybug-build.txt
-set "ladybugBuildPadded=00000%ladybugBuild%"
-set "ladybugBuildPadded=%ladybugBuildPadded:~-6%"
-echo %ladybugBuildPadded%>ladybug-build-padded.txt
+set /p build=<build.txt
+set "buildPadded=00000%build%"
+set "buildPadded=%buildPadded:~-6%"
+echo %buildPadded%>build-padded.txt
 echo.
 beebasm -title LadyBug -v -i ladybug.asm -do ladybug.ssd -opt 3 > ladybug.lst
 if NOT %ERRORLEVEL% == 0 goto buildFalse
 :buildTrue
 echo.
-echo build %ladybugBuildPadded%
+echo build %buildPadded%
 echo.
-set /a ladybugBuild+=1
-echo %ladybugBuild%>ladybug-build.txt
+set /a build+=1
+echo %build%>build.txt
 :buildFalse

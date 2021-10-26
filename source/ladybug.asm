@@ -2094,7 +2094,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #debugLevel				; start game on debugLevel
 	sta level
 
-	lda #&95				; start with a horse radish at 9500 points
+	lda #&95				; start with a horseradish at 9500 points
 	sta vegetableScore
 	lda #17
 	sta vegetableImg
@@ -2585,7 +2585,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #&ff				; flag level as ended
 	sta levelEnd
 
-	jsr playSoundSilence			; silence all sound channels
+;	jsr playSoundSilence			; silence all sound channels
 
 	lda #sfxEndLevel			; play end of level sound
 	jsr playSound
@@ -3901,38 +3901,42 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	sed					; switch to bcd mode
 
+	lda shield				; if shield != 0
+	beq levelAdvanceLevel
+
+	sec					; then shield = shield - 1
+	sbc #1
+	sta shield
+
+.levelAdvanceLevel
+
 	lda level				; if level < &99
 	cmp #&99
 	bcs levelAdvanceVegetableScore
 
-	adc #1					; add 1 to level (carry already clear from previous CMP)
+	adc #1					; add 1 to level (carry already clear from previous cmp result)
 	sta level
 	
 .levelAdvanceVegetableScore	
 
-	lda vegetableScore			; if vegetableScore < &95
+	lda vegetableScore			; if vegetableScore < 9500
 	cmp #&95
 	bcs levelAdvanceVegetableImage
-	adc #&05				; add 500 to vegetable score value
+	adc #&05				; then vegetableScore += 500
 	sta vegetableScore
 	
 .levelAdvanceVegetableImage
 
-	inc vegetableImg			; add 1 to vegetable image
-
-	lda vegetableImg			; if vegetableImg >= &12
-	cmp #&12
-	bcc levelAdvanceShield
-	lda #0					; then vegetableImg = 0 (cucumber)
-	sta vegetableImg
-
-.levelAdvanceShield
-
 	cld					; switch to binary mode
 
-	lda shield				; if shield != 0 then decrement it
-	beq levelAdvanceExit
-	dec shield
+	inc vegetableImg			; add 1 to vegetable image
+
+	lda vegetableImg			; if vegetableImg >= &12 (last vegetable horse radish = &11)
+	cmp #&12
+	bcc levelAdvanceExit
+
+	lda #&00				; then vegetableImg = &00 (back to first vegetable cucumber)
+	sta vegetableImg
 
 .levelAdvanceExit
 
