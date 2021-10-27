@@ -2579,13 +2579,14 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	sta pauseLadybug
 	sta pauseEnemy
 
-	lda soundTimers + 0			; if sound effect not playing on channel 0
+	lda soundTimers + 0			; if sound effect not playing on channel 0 (music)
+	bne checkLevelEndExit
+
+	lda soundTimers + 3			; and if sound effects not playing on channel 3 (object)
 	bne checkLevelEndExit
 
 	lda #&ff				; flag level as ended
 	sta levelEnd
-
-;	jsr playSoundSilence			; silence all sound channels
 
 	lda #sfxEndLevel			; play end of level sound
 	jsr playSound

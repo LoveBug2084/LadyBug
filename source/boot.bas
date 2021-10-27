@@ -47,7 +47,7 @@ PROCshrink
 
 PROCinstructions
 PROCexpand
-K%=GET
+REPEAT K%=GET:UNTIL K%=13
 PROCshrink
 
 PROClogo
@@ -56,11 +56,11 @@ OSCLI("/Loader")
 END
 
 DEF PROCintro
-IF ?E%<>32 THEN K%=INKEY(300):ENDPROC
+IF ?E%<>32 THEN TIME=0:REPEAT K%=INKEY(0):UNTIL K%=13 OR TIME >=300:ENDPROC
 PROClogo
 PROCexpand
 PROCsaveConfig
-K%=INKEY(200)
+TIME=0:REPEAT K%=INKEY(0):UNTIL K%=13 OR TIME >=200
 ENDPROC
 
 DEF PROClogo
@@ -111,7 +111,7 @@ PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(135);"for";CHR$(130);"200000 points
 PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(135);"lasting 6 rounds"
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to";CHR$(131);"paralyse the"
 PRINT TAB(2,22);CHR$(131);"enemy";CHR$(132);"and earn";CHR$(135);"bonus points"
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press any key           ";CHR$(156);
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press RETURN           ";CHR$(156);
 ENDPROC
 
 DEF PROCshrink
