@@ -293,7 +293,10 @@ endif
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-spritesTotal		= 5			; total number of sprites in game (1 for ladybug and 4 for enemys)
+spritesTotal		= 5			; total number of sprites in game (9 is the absolute maximum)
+						; 1 sprite required for ladybug and 4 sprites for enemys in a regular game
+						; 8 enemys max, if more are selected then the enemy spawn function will freeze the game
+						; in the multi-enemy levels as there are only 8 possible enemy types
 
 .spritesImg		skip spritesTotal	; sprite image, position and direction for drawing
 .spritesX		skip spritesTotal
@@ -2872,12 +2875,13 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	stx moveSpritesSaveX			; preserve X
 
 	txa					; adjust X with enemyAttack value
+	and #3
 	clc
 	adc optionEnemyAttack
 	tax
 
 	jsr random				; compare random number with enemyRandomChance table
-	cmp enemyRandomChance - 1, x
+	cmp enemyRandomChance, x
 
 	ldx moveSpritesSaveX			; restore X
 
@@ -4333,11 +4337,14 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #(256 - ladybugDeathFlashTime) - 1
 	bne ladybugDeathAnimationCheckUpperLower
 
-	lda #spriteBlanking			; erase all enemys
-	sta spritesDir + 1
-	sta spritesDir + 2
-	sta spritesDir + 3
-	sta spritesDir + 4
+	ldx #spritesTotal - 1			; erase all enemys
+	lda #spriteBlanking
+
+.ladybugDeathAnimationDrawAngelLoop
+
+	sta spritesDir, x
+	dex
+	bne ladybugDeathAnimationDrawAngelLoop
 
 	lda #centerBoxX				; erase center box (remove vegetable or diamond)
 	sta drawSpriteX
@@ -4790,6 +4797,14 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr mainMenuDrawCursor			; draw updated cursor
 
+	jsr generateValidation			; update the validation code
+
+	jsr waitVsyncUpper			; wait upper half
+	jsr waitVsyncLower			; wait lower half
+
+	jsr processSound			; process sound effects and music
+
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4797,8 +4812,6 @@ if bp {.bp print ";draw angel sprite":} endif
 .mainMenuWaitRelease
 
 	jsr mainMenuFunctions			; update colors and scan keyboard
-
-	jsr generateValidation			; update the validation code
 
 	lda playerInput				; get keyboard input data
 	bne mainMenuWaitRelease			; if key is pressed then loop back and wait for release
@@ -4815,12 +4828,6 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr mainMenuProcess			; process the key pressed option
 
-	php					; save start game status
-	
-	jsr generateValidation			; update the validation code
-
-	plp					; restore start game status
-
 	bcc mainMenuUpdateCursor		; loop back until start game selected
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4829,7 +4836,10 @@ if bp {.bp print ";draw angel sprite":} endif
 
 .mainMenuExit
 
-	rts					; return
+	jsr generateValidation			; update the validation code
+
+	sec					; return with carry set (start new game)
+	rts
 
 
 
@@ -6996,6 +7006,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	sec
 	sbc #1
 	asl a
+	and #7
 	sta enemyReleaseFrame
 	
 	lda vsyncCounter			; if (vsyncCounter & 7) != enemyReleaseFrame then exit
