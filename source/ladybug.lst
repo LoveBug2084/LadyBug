@@ -3243,7 +3243,7 @@ bootstrap     &4800 - &48C6 , 199 bytes
      1364   60         RTS
 .mainMenuHighScores
      1365   20 4D 24   JSR &244D
-     1368   A9 07      LDA #&07
+     1368   A9 05      LDA #&05
      136A   20 71 24   JSR &2471
      136D   20 FB 16   JSR &16FB
      1370   20 E6 16   JSR &16E6
@@ -3749,7 +3749,7 @@ bootstrap     &4800 - &48C6 , 199 bytes
      179C   D0 F5      BNE &1793
 .drawScoreTableExit
      179E   20 4D 24   JSR &244D
-     17A1   A9 00      LDA #&00
+     17A1   A9 05      LDA #&05
      17A3   4C 71 24   JMP &2471
 .drawScoreTableBlanking
      17A6   A9 00      LDA #&00

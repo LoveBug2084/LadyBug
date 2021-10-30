@@ -2488,7 +2488,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda hi(highScoreTable) * 256, y		; shift last byte
 	sta hi(highScoreTable) * 256 + 14, y
 	
-	
 .checkHighScoreRegister
 
 	jsr nameReg				; get name registration from player
@@ -5147,7 +5146,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr playSoundSilence			; silence current effect
 
-	lda #sfxObject				; play extra life sound effect
+	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
 	jsr drawScoreTable			; draw the high scores page and wait for start or esc to be pressed
@@ -5795,12 +5794,11 @@ if bp {.bp print ";draw angel sprite":} endif
 	cmp #keyBitEsc
 	bne drawScoreTablePress
 
-
 .drawScoreTableExit
 
 	jsr playSoundSilence			; kill any sounds playing
 	
-	lda #sfxExtraLife			; play sound effect and return
+	lda #sfxTurnstile			; play sound effect and return
 	jmp playSound
 
 
