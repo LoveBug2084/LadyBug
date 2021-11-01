@@ -139,6 +139,7 @@ PRINT TAB(4,13);"Unable to save";CHR$(132);"Scores";CHR$(135);"and";CHR$(132);"S
 ENDPROC
 
 DEF PROCreadConfig
+IF ?&132 <> ((?&130 EOR M%) + (?&131 EOR M%)) AND 255 THEN FOR Z%=&00 TO &7D:Z%?H%=0:NEXT Z%:ENDPROC
 P%=HIMEM
 [OPT 0
 SEI
@@ -161,5 +162,5 @@ ENDPROC
 
 DEF PROCsaveConfig
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%
-IF V%=?(H%+&7D) THEN OSCLI("SAVE Config FF7B80 +7E") ELSE OSCLI("LOAD Config")
+IF V%=H%?&7D THEN OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E") ELSE OSCLI("LOAD Config")
 ENDPROC

@@ -430,6 +430,10 @@ soundChannels		= 6			; number of software defined sound channels
 
 	skip 1					; storage for machine index
 
+.cleanResetValidation
+
+	skip 1					; storage for validation of cleanResetBank and cleanResetMachine
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .cleanReset
@@ -2179,8 +2183,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr drawPlayfieldLower			; draw playfield lower section (info panel)
 
 	jsr instructions			; display the game instructions
-	bcs gameIntroScreen			; return to intro screen if esc was pressed
-
+	bcc gameIntroScreen			; return to intro screen if esc was pressed
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4183,11 +4186,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	beq instructionsPress			; if key not pressed then loop back and wait for key press
 
-	cmp #keyBitStart			; if start key was pressed then exit with false status
-	beq instructionsReturnFalse
-
-	cmp #keyBitEsc				; if esc key was pressed then exit with true status
+	cmp #keyBitStart			; if start key was pressed then exit with true status (start game)
 	beq instructionsReturnTrue
+
+	cmp #keyBitEsc				; if esc key was pressed then exit with false status (return to menu)
+	beq instructionsReturnFalse
 	
 	bne instructionsRelease			; else loop back and wait for key release
 
@@ -4195,15 +4198,15 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr playSoundSilence			; kill any current sounds
 
+	lda #sfxTurnstile			; play sound effect
+	jsr playSound
+
 	clc					; return false
 	rts
 
 .instructionsReturnTrue
 
 	jsr playSoundSilence			; kill any current sounds
-
-	lda #sfxExtraLife			; play sound effect
-	jsr playSound
 
 	sec					; return true
 	rts
@@ -10159,11 +10162,13 @@ include "relocator.asm"				; append relocation code
 ; create disk files
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	save "!Boot", bootasmStart, bootasmEnd, &ffffff, 0
+	save "$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 	putbasic "boot.bas", "$.Boot"
-	save "Config", config, configEnd, &ffffff, &ff0000 + config
+	save "$.Config", config, configEnd, &ffffff, &ff0000 + config
 	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
+	save "$.Default", config, configEnd, &ffffff, &ff0000 + config
+	putbasic "reset.bas", "$.Reset"
 
 	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst
 	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
