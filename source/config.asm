@@ -77,7 +77,7 @@ config = &7b80					; default highscore table and settings
 
 	equs "XZ/:"				; ascii text for keys
 
-	equb &d3				; validation code
+	equb &d7				; validation code
 
 
 

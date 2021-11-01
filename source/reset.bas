@@ -33,18 +33,59 @@ REM https://www.gnu.org/licenses/
 REM ---------------------------
 
 MODE 7
-HIMEM=&7B00
 
-*LOAD $.Default FF7B00
-*LOAD $.Config FF7B80
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
+PRINT TAB(16,3);CHR$(135);"Reset"
 
-INPUT "Do you wish to reset the high score     table to default Y/N ";H$
-IF H$="Y" THEN FOR Z%=0 TO 111:Z%?&7B80=Z%?&7B00:NEXT Z%
-PRINT
+HIMEM=&7A80
+D%=HIMEM+&80
+H%=D%+&80
+S%=&8010
+M%=&69
 
-INPUT "Do you wish to reset the game settings  to default Y/N ";S$
-IF S$="Y" THEN FOR Z%=112 TO 125:Z%?&7B80=Z%?&7B00:NEXT Z%
-PRINT
+OSCLI("LOAD $.Default " + STR$~(&FF0000 + D%))
 
-IF H$="Y" OR S$="Y" THEN ?&130=0:?&131=0:?&132=0:PRINT "Saving $.Config":*SAVE $.Config FF7B80 +7E
-PRINT
+P%=HIMEM
+[OPT 0
+SEI
+LDA &130
+STA &FE30
+LDX #0
+.LOOP
+LDA S%, X
+STA H%, X
+INX
+CPX #&7E
+BNE LOOP
+LDA &F4
+STA &FE30
+CLI
+RTS
+]
+
+IF ?&132 = ((?&130 EOR M%) + (?&131 EOR M%)) AND 255 THEN CALL HIMEM ELSE OSCLI("LOAD Config")
+V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%
+IF V% <> H%?&7D THEN OSCLI("LOAD Config")
+
+PRINT TAB(1, 7);CHR$(133);"Do you wish to reset the high score";
+PRINT TAB(1, 8);CHR$(133);"table to default Y/N";CHR$(135);"?";
+INPUT "" H$
+IF H$="Y" THEN FOR Z%=0 TO 111:Z%?H%=Z%?D%:NEXT Z%
+
+PRINT TAB(1,10);CHR$(130);"Do you wish to reset the game";
+PRINT TAB(1,11);CHR$(130);"settings to default Y/N";CHR$(135);"?";
+INPUT "" S$
+IF S$="Y" THEN FOR Z%=112 TO 125:Z%?H%=Z%?D%:NEXT Z%
+
+PRINT TAB(1, 13);
+
+IF H$<>"Y" AND S$<>"Y" THEN PRINT CHR$(129);"Nothing to do":PRINT:END
+
+V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%
+
+PRINT CHR$(131);"Saving $.Config":PRINT
+OSCLI("SAVE $.Config " + STR$~(&FF0000 + H%) + " +7E")
+?&130=0:?&131=0:?&132=0
+
+END
