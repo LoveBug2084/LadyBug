@@ -1,5 +1,5 @@
 # Lady Bug
-A remake of Universals Z80 based arcade game from 1981 written in 6502 assembly language for the Acorn BBC Micro Computer range, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler
+A remake of [Universals Z80 based arcade game from 1981](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the Acorn BBC Micro Computer range, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler
 
 I've included fontmaker and pixels written in c ( source code and compiled .exe's ) for converting the gimp/photoshop font and tile image files from .raw to the .bin format required during assembly ( see asm.bat for details )
 
