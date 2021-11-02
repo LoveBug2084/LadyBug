@@ -163,6 +163,6 @@ CALL HIMEM
 ENDPROC
 
 DEF PROCsaveConfig
-V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%
+V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND 255:NEXT Z%
 IF V%=H%?&7D THEN OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E") ELSE OSCLI("LOAD Config")
 ENDPROC
