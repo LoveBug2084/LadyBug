@@ -36,6 +36,7 @@ HIMEM=&7B00
 H%=HIMEM+&80
 S%=&8010
 E%=PAGE+5
+F%=&130
 M%=&69
 
 ON ERROR PROCerror
@@ -111,7 +112,7 @@ PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(135);"for";CHR$(130);"200000 points
 PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(135);"lasting 6 rounds"
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to";CHR$(131);"paralyse the"
 PRINT TAB(2,22);CHR$(131);"enemy";CHR$(132);"and earn";CHR$(135);"bonus points"
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press RETURN           ";CHR$(156);
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
 ENDPROC
 
 DEF PROCshrink
@@ -139,11 +140,12 @@ PRINT TAB(4,13);"Unable to save";CHR$(132);"Scores";CHR$(135);"and";CHR$(132);"S
 ENDPROC
 
 DEF PROCreadConfig
-IF ?&132 <> ((?&130 EOR M%) + (?&131 EOR M%)) AND 255 THEN FOR Z%=&00 TO &7D:Z%?H%=0:NEXT Z%:ENDPROC
+V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND 255 
+IF F%?2 <> V% THEN FOR Z%=&00 TO &7D:Z%?H%=0:NEXT Z%:ENDPROC
 P%=HIMEM
 [OPT 0
 SEI
-LDA &130
+LDA F%
 STA &FE30
 LDX #0
 .LOOP

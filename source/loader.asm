@@ -204,8 +204,15 @@ zpAddr 			= 0
 	equw swrCleanResetB			; B		Save feature working
 	equw swrCleanResetBplus			; B+		Save feature working
 	equw swrCleanResetMaster		; Master	Save feature working
-	equw swrCleanResetCompact		; Compact	To do
-	
+	equw swrCleanResetB			; Master ET	Unable to test
+	equw swrCleanResetCompact		; Compact	In progress
+	equw swrCleanResetB			; Unknown
+	equw swrCleanResetB			; Unknown
+	equw swrCleanResetB			; Unknown
+	equw swrCleanResetB			; Unknown
+
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; choose correct machine function
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -260,8 +267,9 @@ continueBplus		= &d973
 	inx
 	bne swrCleanResetBplusLoop
 
-	lda #hi(page0200)			; os fill 0200-7fff with 0
+	lda #2					; os fill 0200-7fff with 0
 	sta zpAddr + 1
+	stx zpAddr
 	txa
 	jmp continueBplus
 
@@ -273,50 +281,77 @@ continueBplus		= &d973
 
 .swrCleanResetMaster
 
+	txa					; push 0 on stack (fake via interrupt enable flags)
+	pha
+
+	jsr swrCleanResetMC			; clear shadow and main ram
+	
+	jmp cleanResetMaster			; jump to code in stack to continue with os setup
+	
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; Compact
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetCompact
+
+	txa					; push 0 on stack (fake via interrupt enable flags)
+	pha
+
+	jsr swrCleanResetMC			; clear shadow and main ram
+	
+	jmp cleanResetCompact			; jump to code in stack to continue with os setup
+	
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; clear shadow and main ram (used for Master 128 and Master Compact
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetMC
+
+	tay			; zero index
+
 	lda acccon		; clear bits 7-4, 1-0. set bits 3-2 of accon
 	and #%11110011
 	ora #%00001100		; set bits 3-2 in acccon (select shadow ram at 3000-7fff and private ram at c000-dfff)
 	sta acccon
 
-	lda #0			; store simulated via interrupt enable flags on stack (power on reset)
-	pha
-
-	tay			; zero index
-
-.swrCleanResetMasterInit
+.swrCleanResetInit
 
 	tya
 
 	sta zpAddr + 1		; start at page0000
 	sta zpAddr
 
-.swrCleanResetMasterWipe
+.swrCleanResetWipe
 
 	sta (zpAddr), y		; wipe a page of memory
 	iny
-	bne swrCleanResetMasterWipe
+	bne swrCleanResetWipe
 
 	ldx #opcodeRTI		; disable nmi
 	stx page0d00
 
-.swrCleanResetMasterNext
+.swrCleanResetNext
 
 	inc zpAddr + 1		; next page
 
 	ldx zpAddr + 1		; if page = &01 (stack) then skip to the next page
 	cpx #&01
-	beq swrCleanResetMasterNext
+	beq swrCleanResetNext
 
 	cpx #&80		; if page = &80 (swr) then skip to page &c0
-	bne swrCleanResetMasterEnd
+	bne swrCleanResetEnd
 	
 	ldx #&c0
 	stx zpAddr + 1
 
-.swrCleanResetMasterEnd
+.swrCleanResetEnd
 
 	cpx #&e0		; if page != &e0 then wipe page
-	bne swrCleanResetMasterWipe
+	bne swrCleanResetWipe
 
 	lda acccon		; test bit 2 of acccon and save test result (shadow ram select)
 	and #%00000100
@@ -327,19 +362,9 @@ continueBplus		= &d973
 	sta acccon
 
 	plp			; if previous test showed that shadow ram was selected then we wipe memory again but this time with main ram selected
-	bne swrCleanResetMasterInit
+	bne swrCleanResetInit
 
-	jmp cleanResetMaster	; jump to code in stack to continue with os setup
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Compact
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.swrCleanResetCompact
-
-	jmp swrCleanResetB
+	rts			; return
 
 
 
