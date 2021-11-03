@@ -204,8 +204,8 @@ zpAddr 			= 0
 	equw swrCleanResetB			; B		Save feature working
 	equw swrCleanResetBplus			; B+		Save feature working
 	equw swrCleanResetMaster		; Master	Save feature working
-	equw swrCleanResetB			; Master ET	Unable to test
-	equw swrCleanResetCompact		; Compact	In progress
+	equw swrCleanResetB			; Master ET	No plans for this
+	equw swrCleanResetCompact		; Compact	Save feature working
 	equw swrCleanResetB			; Unknown
 	equw swrCleanResetB			; Unknown
 	equw swrCleanResetB			; Unknown
