@@ -36,7 +36,8 @@ MODE 7
 
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
-PRINT TAB(16,3);CHR$(135);"Reset"
+
+PRINT TAB(12,3);CHR$(135);"Reset Settings"
 
 HIMEM=&7A80
 D%=HIMEM+&80
