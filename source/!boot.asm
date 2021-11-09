@@ -23,7 +23,7 @@
 	print "----------------------------------------------------"
 	print
 
-	org &f000				; temporary cnvas address to store !boot data
+	org &f000				; temporary address for !Boot data
 
 .bootasmStart
 

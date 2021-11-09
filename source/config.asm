@@ -37,25 +37,25 @@ config = &7b80					; default highscore table and settings
 	equs "LOVEBUG.ML",&FF
 
 	equb &50,&09,&00
-	equs "UNIVERSAL ",&FF
+	equs "ASTEROIDS ",&FF
 
 	equb &00,&09,&00
-	equs "LADY BUG  ",&FF
+	equs "CENTIPEDE ",&FF
 
 	equb &50,&08,&00
-	equs "LOVEBUG.ML",&FF
+	equs "GALAXIAN  ",&FF
 
 	equb &00,&08,&00
-	equs "UNIVERSAL ",&FF
+	equs "ROBOTRON  ",&FF
 
 	equb &50,&07,&00
-	equs "LADY BUG  ",&FF
+	equs "DEFENDER  ",&FF
 
 	equb &00,&07,&00
-	equs "LOVEBUG.ML",&FF
+	equs "SCRAMBLE  ",&FF
 
 	equb &50,&06,&00
-	equs "UNIVERSAL ",&FF
+	equs "GAUNTLET  ",&FF
 
 
 

@@ -51,7 +51,7 @@ OSCLI("LOAD $.Default " + STR$~(&FF0000 + D%))
 P%=HIMEM
 [OPT 0
 SEI
-LDA &130
+LDA F%
 STA &FE30
 LDX #0
 .LOOP
@@ -90,6 +90,6 @@ V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%
 
 PRINT CHR$(131);"Saving updated $.Config":PRINT
 OSCLI("SAVE $.Config " + STR$~(&FF0000 + H%) + " +7E")
-?&130=0:?&131=0:?&132=0
+F%?0=0:F%?1=0:F%?2=0
 
 END

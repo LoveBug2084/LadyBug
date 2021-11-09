@@ -100,18 +100,18 @@ PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
 PRINT TAB(13,3);CHR$(135);"Instructions"
 PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maze"
-PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(133);"enemies";CHR$(130);"and";CHR$(135);"skulls"
+PRINT TAB(2,6);CHR$(130);"avoiding deadly enemies and skulls"
 PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block"
 PRINT TAB(2,9);CHR$(132);"the enemy attack paths"
 PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply"
-PRINT TAB(2,12);CHR$(133);"an items value by";CHR$(135);"x2 x3 x5"
+PRINT TAB(2,12);CHR$(133);"an items score value by x2 x3 x5"
 PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelling"
-PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for";CHR$(133);"2 extra lives"
-PRINT TAB(2,17);CHR$(135);"Collect";CHR$(129);"red letters";CHR$(135);"spelling"
-PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(135);"for";CHR$(130);"200000 points";CHR$(135);"and a"
-PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(135);"lasting 6 rounds"
-PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to";CHR$(131);"paralyse the"
-PRINT TAB(2,22);CHR$(131);"enemy";CHR$(132);"and earn";CHR$(135);"bonus points"
+PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for 2 extra lives"
+PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"spelling"
+PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(134);"for 200000 points and a"
+PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds"
+PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the"
+PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points"
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
 ENDPROC
 

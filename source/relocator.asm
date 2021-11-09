@@ -201,7 +201,7 @@
 	equb &c0 + palYellow			; flashing yellow/green letters
 	equb &d0 + palGreen			; flashing yellow/greem letters alternate phase
 	equb &e0 + palWhite			; skull color changed by game for normal/invulnerable mode
-	equb &f0 + palCyan			; bonus pickups color change cyan, red, yellow for hearts and letters
+	equb &f0 + palCyan			; object color change cyan, red, yellow for hearts and letters
 
 	print
 
