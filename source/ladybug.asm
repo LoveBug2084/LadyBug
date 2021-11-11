@@ -1900,10 +1900,10 @@ drawMapTileAddr 		= drawMapTileWrite + 1
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawChr					draw chr to screen, move to next chr position ready for next
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			chr to be drawn 0-50
+; entry			A			chr to be drawn
 ;			drawChrAddr		current screen location for chr
 ;			drawChrColor		bit mask for pixel colors
-;						if chr = " " then use color 8 instead
+;						if chr = ' ' then use color pixelCol8 instead of drawChrColor
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		drawChrFontData		data read from font to be converted to pixels
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1913,14 +1913,16 @@ drawMapTileAddr 		= drawMapTileWrite + 1
 ;			y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-; chrs are 6 x 6 pixels stored in pixel pairs from to bottom, left to right using 5 bytes per character, the last 4 bits are unused
-
-; 763276
-; 541054
-; 327632
-; 105410
-; 763276
-; 541054
+; chrs are 6 x 6 pixels stored in pairs from top to bottom, left to right order using 5 bytes per character, the last 4 bits are unused
+;
+; [byte,bit]
+;
+;[0,7][0,6][1,3][1,2][3,7][3,6]
+;[0,5][0,4][1,1][1,0][3,5][3,4]
+;[0,3][0,2][2,7][2,6][3,3][3,2]
+;[0,1][0,0][2,5][2,4][3,1][3,0]
+;[1,7][1,6][2,3][2,2][4,7][4,6]
+;[1,5][1,4][2,1][1,0][4,5][4,4]
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -5192,10 +5194,8 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr drawString				; erase text
-	equb pixelColC
-	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
-	equs "               ", &ff
+						; erase text
+	jsr mainMenuProcessKeyboardEraseText15
 
 	jsr drawString				; draw text
 	equb pixelColC
@@ -5226,10 +5226,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr drawString				; erase test
-	equb pixelColB
-	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs "     ", &ff
+	jsr mainMenuProcessKeyboardEraseText5	; erase text
 
 	jsr drawString				; draw text
 	equb pixelColB
@@ -5262,10 +5259,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr drawString				; erase test
-	equb pixelColB
-	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs "     ", &ff
+	jsr mainMenuProcessKeyboardEraseText5	; erase text
 
 	jsr drawString				; draw text
 	equb pixelColB
@@ -5300,10 +5294,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr drawString				; erase test
-	equb pixelColB
-	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs "     ", &ff
+	jsr mainMenuProcessKeyboardEraseText5	; erase text
 
 	jsr drawString				; draw text
 	equb pixelColB
@@ -5340,10 +5331,8 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr drawString				; erase test
-	equb pixelCol3
-	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
-	equs "           ", &ff
+						; erase text
+	jsr mainMenuProcessKeyboardEraseText11
 
 	jsr drawString				; restore original text
 	equb pixelCol3
@@ -5353,6 +5342,47 @@ if bp {.bp print ";draw angel sprite":} endif
 	clc					; return
 	rts
 	
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuProcessKeyboardEraseText15
+
+	jsr drawString				; erase text
+	equb pixelCol3
+	equw screenAddr + 2 + 15 * chrColumn + 20 * chrRow
+	equs "    ", &ff
+
+	; drop through into erase text 11
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuProcessKeyboardEraseText11
+
+	jsr mainMenuProcessKeyboardEraseText6
+
+	; drop through into erase text 5
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuProcessKeyboardEraseText5
+
+	jsr drawString				; erase text
+	equb pixelCol3
+	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
+	equs "     ", &ff
+
+	rts
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuProcessKeyboardEraseText6
+
+	jsr drawString				; erase text
+	equb pixelCol3
+	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
+	equs "      ", &ff
+
+	rts
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessKeyboardKey
