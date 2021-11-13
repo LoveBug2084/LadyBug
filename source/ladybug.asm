@@ -4804,19 +4804,13 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr generateValidation			; update the validation code
 
-	jsr waitVsyncUpper			; wait upper half
-	jsr waitVsyncLower			; wait lower half
-
-	jsr processSound			; process sound effects and music
-
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuWaitRelease
 
-	jsr mainMenuFunctions			; update colors and scan keyboard
+	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
 	lda playerInput				; get keyboard input data
 	bne mainMenuWaitRelease			; if key is pressed then loop back and wait for release
@@ -4827,7 +4821,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 .mainMenuWaitPress
 
-	jsr mainMenuFunctions			; update colors and scan keyboard
+	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
 	beq mainMenuWaitPress			; if key not pressed then loop back and wait for key press
 
@@ -5443,7 +5437,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	jsr drawString
 	equb pixelCol2
 	equw screenAddr + 2 + 4 * chrColumn + 17 * chrRow
-	equs "LADYBUG LIVES", &ff
+	equs "LADY BUGS", &ff
 	
 	jsr drawString
 	equb pixelCol3
@@ -5870,7 +5864,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	sta pauseGame
 	
 	jsr drawString				; draw paused message
-	equb pixelColC
+	equb pixelColA
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equs chrHeart, " PAUSED ", chrHeart, &ff
 	
@@ -5976,7 +5970,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #chrLeft
 	jsr drawChr
 	
-	lda #' '
+	lda #' '				; space
 	jsr drawChr
 	
 	lda #pixelColE				; draw enter in skull color
@@ -5999,15 +5993,14 @@ if bp {.bp print ";draw angel sprite":} endif
 	adc highScorePtr
 	sta highScorePtr
 
-	ldy #0					; clear high score name
+	ldy #9					; clear high score name
 	lda #' '
 	
 .nameRegClear
 
 	sta (highScorePtr), y
-	iny
-	cpy #10
-	bne nameRegClear
+	dey
+	bpl nameRegClear
 
 	lda #0					; position cursor over first letter
 	sta nameRegCursor
@@ -6132,11 +6125,11 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	sec
+	sec					; move back 8 positions
 	lda nameRegCursor
 	sbc #8
 	sta nameRegCursor
-	bpl nameRegProcessCursor
+	bpl nameRegProcessCursor		; handle wrap around
 
 	bmi nameRegProcessAdd32
 
@@ -6148,12 +6141,12 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	clc
+	clc					; move forward 8 positions
 	lda nameRegCursor
 	adc #8
 	sta nameRegCursor
 
-	cmp #32
+	cmp #32					; handle wrap around
 	bcc nameRegProcessCursor
 
 	bcs nameRegProcessSub32
@@ -6166,11 +6159,11 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	sec
+	sec					; move back 1 position
 	lda nameRegCursor
 	sbc #1
 	sta nameRegCursor
-	bpl nameRegProcessCursor
+	bpl nameRegProcessCursor		; handle wrap around
 
 	bmi nameRegProcessAdd32
 
@@ -6182,12 +6175,12 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	clc
+	clc					; move forward 1 position
 	lda nameRegCursor
 	adc #1
 	sta nameRegCursor
 
-	cmp #32
+	cmp #32					; handle wrap around
 	bcc nameRegProcessCursor
 
 	bcs nameRegProcessSub32
@@ -6202,7 +6195,6 @@ if bp {.bp print ";draw angel sprite":} endif
 	bne nameRegProcessDelete
 
 	sec					; exit with carry set (end)
-	
 	rts
 
 .nameRegProcessCursor
@@ -6210,7 +6202,6 @@ if bp {.bp print ";draw angel sprite":} endif
 	jsr nameRegCursorUpdate
 
 	clc
-
 	rts
 
 
@@ -6230,24 +6221,17 @@ if bp {.bp print ";draw angel sprite":} endif
 	cmp #30					; if cursor = 30 (delete)
 	bne nameRegProcessChr
 	
-	lda nameRegCursorText			; if cursor != 0
+	ldy nameRegCursorText			; if cursor != 0
 	beq nameRegProcessCursor
 
-	dec nameRegCursorText			; move cursor back 1
+	dey					; move back 1 position
 
-	ldy nameRegCursorText			; erase chr from screen
-	clc
-	lda screenColumnLo, y
-	adc #lo(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
-	sta drawChrAddr
-	lda screenColumnHi, y
-	adc #Hi(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
-	sta drawChrAddr + 1
-	lda #' '
-	jsr drawChr
+	sty nameRegCursorText			; update cursor
 
-	ldy nameRegCursorText			; print blue -
-	clc
+	lda #' '				; replace chr in string with space
+	sta (highScorePtr), y
+
+	clc					; print blue -
 	lda screenColumnLo, y
 	adc #lo(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr
@@ -6258,10 +6242,6 @@ if bp {.bp print ";draw angel sprite":} endif
 	sta drawChrColor
 	lda #'-'
 	jsr drawChr
-
-	ldy nameRegCursorText			; replace chr in string with space
-	lda #' '
-	sta (highScorePtr), y
 
 	lda #sfxObject				; play sound
 	jsr playSound
@@ -6281,18 +6261,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	sta (highScorePtr), y			; store character in string
 
-	clc					; erase chr from screen
-	lda screenColumnLo, y
-	adc #lo(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
-	sta drawChrAddr
-	lda screenColumnHi, y
-	adc #Hi(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
-	sta drawChrAddr + 1
-	lda #' '
-	jsr drawChr
-
-	ldy nameRegCursorText			; print chr
-	clc
+	clc					; print chr
 	lda screenColumnLo, y
 	adc #lo(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr
@@ -6515,6 +6484,8 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	lda #sfxMusicLetters			; play bonus letters music
 	jsr playSound
+
+
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; return to game (no bonus)
