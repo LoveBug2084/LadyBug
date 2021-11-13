@@ -1,6 +1,6 @@
 @echo off
-set /p ladybugBuildPadded=<ladybug-build-padded.txt
-echo creating ..\..\backup\%ladybugBuildPadded%
-mkdir ..\..\backup\%ladybugBuildPadded% > nul
-echo copying project to ..\..\backup\%ladybugBuildPadded%
-xcopy *.* ..\..\backup\%ladybugBuildPadded% /y /h /s /e > nul
+set /p backupDir=<build-padded.txt
+echo creating ..\..\backup\%backupDir%
+mkdir ..\..\backup\%backupDir% > nul
+echo copying project to ..\..\backup\%backupDir%
+xcopy *.* ..\..\backup\%backupDir% /y /h /s /e > nul

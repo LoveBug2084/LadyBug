@@ -79,34 +79,34 @@
 ; debugging stuff
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-;bp			= true			; show breakpoints
 bp			= false
+;bp			= true			; show breakpoints
 
-;debugRaster		= true			; enable raster timing bars
 debugRaster		= false
+;debugRaster		= true			; enable raster timing bars
 
-;debugCoordinates	= true			; display ladybug coordinates
 debugCoordinates	= false
+;debugCoordinates	= true			; display ladybug coordinates
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+debugLevel		= false
 ;debugLevel		= &18			; start on this level
-debugLevel		= 0
 
-;debugInvulnerable	= true			; ladybug is invulnerable to harm
 debugInvulnerable	= false
+;debugInvulnerable	= true			; ladybug is invulnerable to harm
 
-;debugInstantHighScore	= true			; end the game instantly with a high score to quicky test name registration
 debugInstantHighScore	= false
+;debugInstantHighScore	= true			; end the game instantly with a high score to quicky test name registration
 
+debugDiamondOverride	= false
 ;debugDiamondOverride	= 1			; override level of diamond bonus or 0 to use the default value
-debugDiamondOverride	= 0
 
-;debugDiamondBonus	= true			; enable instant diamond bonus garden for quick testing
 debugDiamondBonus	= false
+;debugDiamondBonus	= true			; enable instant diamond bonus garden for quick testing
 
-;debugBonus		= true			; enable all special and extra letters for quick testing of gardens
 debugBonus		= false
+;debugBonus		= true			; enable all special and extra letters for quick testing of gardens
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; page0000 variables
@@ -1903,7 +1903,6 @@ drawMapTileAddr 		= drawMapTileWrite + 1
 ; entry			A			chr to be drawn
 ;			drawChrAddr		current screen location for chr
 ;			drawChrColor		bit mask for pixel colors
-;						if chr = ' ' then use color pixelCol8 instead of drawChrColor
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		drawChrFontData		data read from font to be converted to pixels
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1917,17 +1916,17 @@ drawMapTileAddr 		= drawMapTileWrite + 1
 ;
 ; [byte,bit]
 ;
-;[0,7][0,6][1,3][1,2][3,7][3,6]
-;[0,5][0,4][1,1][1,0][3,5][3,4]
-;[0,3][0,2][2,7][2,6][3,3][3,2]
-;[0,1][0,0][2,5][2,4][3,1][3,0]
-;[1,7][1,6][2,3][2,2][4,7][4,6]
-;[1,5][1,4][2,1][1,0][4,5][4,4]
+; [0,7][0,6][1,3][1,2][3,7][3,6]
+; [0,5][0,4][1,1][1,0][3,5][3,4]
+; [0,3][0,2][2,7][2,6][3,3][3,2]
+; [0,1][0,0][2,5][2,4][3,1][3,0]
+; [1,7][1,6][2,3][2,2][4,7][4,6]
+; [1,5][1,4][2,1][1,0][4,5][4,4]
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-pixelLeft		= &aa			; bit mask for left pixel color F
-pixelRight		= &55			; bit mask for right pixel color F
+pixelLeft		= &aa			; bit mask for left pixel
+pixelRight		= &55			; bit mask for right pixel
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1940,19 +1939,12 @@ pixelRight		= &55			; bit mask for right pixel color F
 	sbc #' '
 
 	sta drawChrFontRead + 1			; save chr in lsb address
-	lda #0					; zero msb address
-	sta drawChrFontRead + 2
 
-	ldy drawChrColor			; get color
+	ldx #0					; zero msb address
+	stx drawChrFontRead + 2
 
-	lda drawChrFontRead + 1			; get chr
-	bne drawChrCalcAddr			; if chr = space
-
-	ldy #pixelCol8				; then use color 8 instead of drawChrColor
-
-.drawChrCalcAddr
-
-	sty drawChrWriteColor + 1		; store chr color
+	ldy drawChrColor			; store chr color
+	sty drawChrWriteColor + 1
 
 	asl a					; calculate chr address A * 5 + chrTable
 	rol drawChrFontRead + 2
@@ -1975,8 +1967,6 @@ pixelRight		= &55			; bit mask for right pixel color F
 
 	ldy #6					; 6 lines per column
 	
-	ldx #0					; counter for bit pairs
-
 .drawChrLoop
 
 	txa					; every 4 pairs get a byte from chr table
@@ -2008,8 +1998,6 @@ pixelRight		= &55			; bit mask for right pixel color F
 .drawChrWriteColor	
 
 	and #&ff				; mask pixels with color value previously stored here
-
-	beq drawChrNextLine			; skip writing if byte = &00
 
 .drawChrWriteScreen
 
@@ -2900,7 +2888,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 	stx moveSpritesSaveX			; preserve X
 
-	txa					; adjust X with enemyAttack value
+	txa					; enemyAttack tableIndex = optionEnemyAttack + (spriteNumber and 3) 
 	and #3
 	clc
 	adc optionEnemyAttack
@@ -3090,7 +3078,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	equw screenAddr + 2 + 16 * chrColumn
 	equs chrMultiplierX, ' ', chrMultiplierX, ' ', chrMultiplierX, &ff
 
-						; contine to drawPlayfieldUpperBonus
+	; contine to drawPlayfieldUpperBonus
 	
 
 
@@ -3180,6 +3168,7 @@ bonusBitsExtra		= &f8			; bit mask for extra bits on bonusBits + 0
 bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits + 0
 
 
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawPlayfieldLower				draws the bottom info panel showing lives, vegetable, level, score, highScore, highScore name
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3216,11 +3205,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr drawString				; draw 4 spaces to erase old vegetable value
-	equb pixelCol2
-	equw screenAddr + 2 + 16 + 5 * chrColumn + 24 * chrRow
-	equs "    ", &ff
-
 	jsr drawString				; draw vegetable value
 	equb pixelCol2
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 24 * chrRow
@@ -3237,11 +3221,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	equb pixelCol4
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 24 * chrRow
 	equs "L", &ff
-
-	jsr drawString				; draw 2 spaces to erase old level value
-	equb pixelCol5
-	equw screenAddr + 2 + 8 + 11 * chrColumn + 24 * chrRow
-	equs "  ", &ff
 
 	jsr drawString				; draw 2 digit level number
 	equb pixelCol5
@@ -3269,24 +3248,29 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr drawString				; draw 10 spaces to erase old highScore name
-	equb pixelCol1
-	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs "          ", &ff
+	jsr drawHighScoreName			; draw the high score name in red
 
-	jsr drawString				; draw high score name in red
+	jmp drawHighScore			; draw high score points and exit
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawHighScoreName				draw the high score name in red on the lower playfield panel
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawHighScoreName
+
+	jsr drawString				; set screen position and color
 	equb pixelCol1
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equb &ff
 	
-	lda #lo(highScoreTable + 3)
+	lda #lo(highScoreTable + 3)		; draw the high score name text
 	sta drawTextAddr
 	lda #Hi(highScoreTable + 3)
 	sta drawTextAddr + 1
 	
-	jsr drawText
-
-	jmp drawHighScore			; draw highScore and exit
+	jmp drawText
 
 
 
@@ -3295,11 +3279,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawPlayfieldLowerLives
-
-	jsr drawString				; draw 2 spaces to erase old lives value
-	equb pixelCol3
-	equw screenAddr + 2 + 16 + 1 * chrColumn + 24 * chrRow
-	equs "  ", &ff
 
 	jsr drawString				; draw 2 digit lives
 	equb pixelCol3
@@ -5194,18 +5173,15 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-						; erase text
-	jsr mainMenuProcessKeyboardEraseText15
-
 	jsr drawString				; draw text
 	equb pixelColC
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
-	equs "PRESS", &ff
+	equs "PRESS          ", &ff
 
 	jsr drawString				; draw text
 	equb pixelColB
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs "UP   ", &ff
+	equs "UP", &ff
 	
 	jsr mainMenuProcessKeyboardKey		; get key index
 	
@@ -5214,8 +5190,10 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	sta optionKeys + 3			; store up key scan code
 
-	lda #pixelCol7				; set color to white
-	sta drawChrColor
+	jsr drawString				; position for printing
+	equb pixelCol7
+	equw screenAddr + 2 + 15 * chrColumn + 20 * chrRow
+	equb &ff
 
 	lda keyAsciiCodes, y			; get ascii chr of key
 
@@ -5226,12 +5204,10 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr mainMenuProcessKeyboardEraseText5	; erase text
-
 	jsr drawString				; draw text
 	equb pixelColB
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs "DOWN ", &ff
+	equs "DOWN", &ff
 	
 .mainMenuProcessKeyboardDown
 
@@ -5259,12 +5235,10 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr mainMenuProcessKeyboardEraseText5	; erase text
-
 	jsr drawString				; draw text
 	equb pixelColB
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs "LEFT ", &ff
+	equs "LEFT", &ff
 	
 .mainMenuProcessKeyboardLeft
 
@@ -5293,8 +5267,6 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
-
-	jsr mainMenuProcessKeyboardEraseText5	; erase text
 
 	jsr drawString				; draw text
 	equb pixelColB
@@ -5331,9 +5303,6 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-						; erase text
-	jsr mainMenuProcessKeyboardEraseText11
-
 	jsr drawString				; restore original text
 	equb pixelCol3
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
@@ -5342,47 +5311,6 @@ if bp {.bp print ";draw angel sprite":} endif
 	clc					; return
 	rts
 	
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.mainMenuProcessKeyboardEraseText15
-
-	jsr drawString				; erase text
-	equb pixelCol3
-	equw screenAddr + 2 + 15 * chrColumn + 20 * chrRow
-	equs "    ", &ff
-
-	; drop through into erase text 11
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.mainMenuProcessKeyboardEraseText11
-
-	jsr mainMenuProcessKeyboardEraseText6
-
-	; drop through into erase text 5
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.mainMenuProcessKeyboardEraseText5
-
-	jsr drawString				; erase text
-	equb pixelCol3
-	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs "     ", &ff
-
-	rts
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.mainMenuProcessKeyboardEraseText6
-
-	jsr drawString				; erase text
-	equb pixelCol3
-	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
-	equs "      ", &ff
-
-	rts
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessKeyboardKey
@@ -5558,59 +5486,33 @@ if bp {.bp print ";draw angel sprite":} endif
 .mainMenuDrawSettings
 
 	jsr drawString				; draw enemy speed
-	equb pixelCol1
-	equw screenAddr + 2 + 18 * chrColumn + 15 * chrRow
-	equs " ", &ff
-	
-	jsr drawString
-	equb pixelCol1
+	equb pixelCol7
 	equw screenAddr + 2 + 18 * chrColumn + 15 * chrRow
 	equb &ff
 	
-	lda #pixelCol7
-	sta drawChrColor
 	lda optionEnemySpeed
 	ora #'0'
 	jsr drawChr
 	
 	jsr drawString				; draw enemy attack
-	equb pixelCol2
-	equw screenAddr + 2 + 18 * chrColumn + 16 * chrRow
-	equs " ", &ff
-	
-	jsr drawString
-	equb pixelCol2
+	equb pixelCol7
 	equw screenAddr + 2 + 18 * chrColumn + 16 * chrRow
 	equb &ff
 	
-	lda #pixelCol7
-	sta drawChrColor
 	lda optionEnemyAttack
 	ora #'0'
 	jsr drawChr
 	
 	jsr drawString				; draw ladybug lives
-	equb pixelCol3
-	equw screenAddr + 2 + 18 * chrColumn + 17 * chrRow
-	equs " ", &ff
-	
-	jsr drawString
-	equb pixelCol3
+	equb pixelCol7
 	equw screenAddr + 2 + 18 * chrColumn + 17 * chrRow
 	equb &ff
 	
-	lda #pixelCol7
-	sta drawChrColor
 	lda optionLives
 	ora #'0'
 	jsr drawChr
 	
-	jsr drawString				; draw sound on/off
-	equb pixelCol4
-	equw screenAddr + 2 + 16 * chrColumn + 18 * chrRow
-	equs "   ", &ff
-	
-	lda optionSound
+	lda optionSound				; draw sound on/off
 	beq mainMenuDrawSettingsMute
 
 	jsr drawString
@@ -5631,17 +5533,10 @@ if bp {.bp print ";draw angel sprite":} endif
 .mainMenuDrawSettingsTimerVolume
 	
 	jsr drawString				; draw timer volume
-	equb pixelCol4
-	equw screenAddr + 2 + 18 * chrColumn + 19 * chrRow
-	equs " ", &ff
-	
-	jsr drawString
-	equb pixelCol4
+	equb pixelCol7
 	equw screenAddr + 2 + 18 * chrColumn + 19 * chrRow
 	equb &ff
 	
-	lda #pixelCol7
-	sta drawChrColor
 	lda optionTimerVolume
 	ora #'0'
 	jsr drawChr
@@ -5974,15 +5869,10 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #&ff				; else pause game
 	sta pauseGame
 	
-	jsr drawString				; draw 10 spaces to erase highScore name
-	equb pixelCol1
-	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs "          ", &ff
-
 	jsr drawString				; draw paused message
-	equb pixelColA
-	equw screenAddr + 2 + 8 + 8 * chrColumn + 25 * chrRow
-	equs "PAUSED", &ff
+	equb pixelColC
+	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
+	equs chrHeart, " PAUSED ", chrHeart, &ff
 	
 .checkPauseGameReturnTrue
 
@@ -6002,23 +5892,8 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #0					; deactivate game pause
 	sta pauseGame
 	
-	jsr drawString				; draw 6 spaces to erase pause message
-	equb pixelCol1
-	equw screenAddr + 2 + 8 + 8 * chrColumn + 25 * chrRow
-	equs "      ", &ff
+	jsr drawHighScoreName			; draw the high score name in red
 
-	jsr drawString				; draw high score name in red
-	equb pixelCol1
-	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equb &ff
-
-	lda #lo(highScoreTable + 3)
-	sta drawTextAddr
-	lda #Hi(highScoreTable + 3)
-	sta drawTextAddr + 1
-	
-	jsr drawText
-	
 	clc					; return false
 	rts
 
@@ -6571,8 +6446,10 @@ if bp {.bp print ";draw angel sprite":} endif
 
 .checkBonus
 
-	lda ladybugEntryEnable			; if entry enabled then exit
+	lda ladybugEntryEnable			; if ladybug entry animation is enabled then exit
 	bne checkBonusExit
+
+
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; handle the diamond bonus stuff
@@ -6611,11 +6488,11 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jmp checkBonusExit			; return to game
 
+
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; handle the extra bonus stuff
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-
 
 .checkBonusExtra
 
@@ -6672,7 +6549,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	if debugDiamondBonus
 	
-	lda #0
+	lda #0					; disable diamond bonus
 	sta bonusDiamondActive
 	
 	endif
