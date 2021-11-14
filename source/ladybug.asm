@@ -5640,17 +5640,17 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
 
-	jsr drawString				; draw text
+	jsr drawString				; draw 2 red hearts
 	equb pixelCol1
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,&ff
 	
-	jsr drawString				; draw text
+	jsr drawString				; draw text in white
 	equb pixelCol7
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 3 * chrRow
 	equs "BEST PLAYERS",&ff
 	
-	jsr drawString				; draw text
+	jsr drawString				; draw 2 red hearts
 	equb pixelCol1
 	equw screenAddr + 2 + 8 + 18 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,&ff
@@ -5660,8 +5660,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 5 * chrRow
 	equb &ff
 
-	ldx #1					; start with 1st entry
-	
+	ldx #0					; start with 1st entry
 	lda #lo(highScoreTable)
 	sta highScorePtr
 	lda #hi(highScoreTable)
@@ -5704,7 +5703,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	sta highScorePtr
 	
 	inx					; repeat until all 8 processed
-	cpx #9
+	cpx #8
 	bne drawScoreTableLoop
 
 	jsr drawString
@@ -5722,12 +5721,16 @@ if bp {.bp print ";draw angel sprite":} endif
 	equw screenAddr + 2 + 8 + 14 * chrColumn + 21 * chrRow
 	equs chrLeft, &ff
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .drawScoreTableRelease
 
 	jsr drawScoreTableFunctions		; update colors and scan keyboard
 
 	bne drawScoreTableRelease		; if key is pressed then loop back and wait for release
 	
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .drawScoreTablePress
 
 	jsr drawScoreTableFunctions		; update colors and scan keyboard
@@ -5737,6 +5740,8 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	cmp #keyBitEsc
 	bne drawScoreTablePress
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawScoreTableExit
 
@@ -5788,6 +5793,8 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	rts					; return
 
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawScoreTableBlankingDigit			draw a single digit with leading zero blanking
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5809,7 +5816,9 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #&ff
 	sta drawScoreTableZero
 	rts
-	
+
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawScoreTableFunctions			wait for syncs, update colors, scan keyboard etc
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8008,10 +8017,10 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 ; ladybug animation tables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-ladybugEntryX		= 8			; sprite coordinates in pixels
-ladybugEntryY		= 168
-
 .animateLadybugEntryTable
+
+ladybugEntryX		= 8			; starting position
+ladybugEntryY		= 168
 
 	equb (ladybugStartX - ladybugEntryX) - 1, moveRight
 	equb (ladybugEntryY - ladybugStartY) - 1, moveUp
@@ -8020,10 +8029,10 @@ ladybugEntryY		= 168
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-ladybugBonusX		= 168			; sprite coordinates in pixels
-ladybugBonusY		= 11
-
 .animateLadybugBonusTable
+
+ladybugBonusX		= 168			; starting position
+ladybugBonusY		= 11
 
 	equb 34, moveLeft
 	equb 53, moveDown
@@ -8036,10 +8045,10 @@ ladybugBonusY		= 11
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-ladybugHighScoreX	= 96			; sprite coordinates in pixels
-ladybugHighScoreY	= 12
-
 .animateLadybugNameRegTable
+
+ladybugHighScoreX	= 96			; starting position
+ladybugHighScoreY	= 12
 
 	equb 65, moveRight
 	equb 56, moveDown
@@ -8081,10 +8090,10 @@ ladybugHighScoreY	= 12
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-ladybugMainMenuX	= 165			; sprite coordinates in pixels
-ladybugMainMenuY	= 89
-
 .animateLadybugMainMenuTable
+
+ladybugMainMenuX	= 165			; starting position
+ladybugMainMenuY	= 89
 
 	equb 200, moveUp + moveStop
 	equb 75, moveDown
@@ -8098,10 +8107,10 @@ ladybugMainMenuY	= 89
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-ladybugInstructionsX	= 96			; sprite coordinates in pixels
-ladybugInstructionsY	= 141
-
 .animateLadybugInstructionsTable
+
+ladybugInstructionsX	= 96			; starting position
+ladybugInstructionsY	= 141
 
 	equb 57, moveRight
 	equb 23, moveDown
@@ -8141,14 +8150,16 @@ animateLadybugInstructions	= 4		; instructions animation index
 	equw animateLadybugInstructionsTable
 	equb ladybugInstructionsX
 	equb ladybugInstructionsY
-	
+
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; animateLadybugInitialize			setup everything ready for a ladybug animation
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .animateLadybugInitialize
 
-	asl a					; create index to init table
+	asl a					; create index into table
 	asl a
 	tay
 	
@@ -8228,7 +8239,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateBonusColor				update the special extra letters and multiplier colors
+; updateBonusColor				update the special/extra letter color palette
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8271,7 +8282,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; clearTileMap					fill tileMap with blank tile
+; clearTileMap					fill tileMap with blank tile (23 * 23 tiles = &211 bytes)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8279,31 +8290,19 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;			X			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-						; tileMap = 23 * 23 tiles = &211 bytes
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
 .clearTileMap
 
 	ldx #0
 	
-	lda #mapTileBlank			; fill tileMap with blank tile
+	lda #mapTileBlank
 
-.clearTileMapLoop0
+.clearTileMapLoop
 
-	sta tileMap, x				; store blank tile in 2 pages of &211 bytes
+	sta tileMap, x				; store blank tile in &211 bytes
 	sta tileMap + &100, x
-	
+	sta tileMap + &111, x
 	inx
-	bne clearTileMapLoop0
-	
-.clearTileMapLoop1
-
-	sta tileMap + &200, x			; store blank tile in the last &11 of &211 bytes
-
-	inx
-	cpx #&11
-	bne clearTileMapLoop1
+	bne clearTileMapLoop
 	
 	rts					; return
 
@@ -8313,6 +8312,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 ; drawString					draw text string terminanated by byte with bit 7 set
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			string			string is read from memory following the jsr
+;						format is
+;						1 byte color mask
+;						2 bytes screen address
+;						text string terminated with a byte with bit 7 set (not printed)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			PC			returns to address following string terminator
 ;			drawChrAddr		points to next chr position on screen
@@ -8325,7 +8328,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	sty drawStringSaveY			; preserve register
 
-	pla					; pop return address and add 1 to get address of text (6502 quirk)
+	pla					; pop return address and add 1 (6502 quirk) to get address of text
 	clc
 	adc #1
 	sta drawTextAddr
@@ -8419,7 +8422,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; processSound					; process sound effects tables and send to psg
+; processSound					; process sound effect/music tables and send data to psg
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8469,10 +8472,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .processSoundNextByte
 
-	inc soundAddrPtrs, x			; inc pointer and go get another byte from table
+	inc soundAddrPtrs, x			; inc pointer and get another byte from table
 	bne processSoundGetData
 	inc soundAddrPtrs + 1, x
-	bne processSoundGetData			; and get another sound byte from table
+	bne processSoundGetData
 
 .processSoundGetTimer
 
@@ -8544,8 +8547,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .playSoundTimerVolume
 
-	clc					; then play the required timer bleep and return
+	clc					; then select timer bleep volume
 	adc #sfxTimerLow - 1
+
+	; contine to play sound			; play timer sound effect and exit
 
 
 
@@ -8576,8 +8581,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	; create table address from sound number and get sound effect information
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda playSoundSaveA			; make table offset
-	asl a
+	asl a					; make table offset
 	tay
 	
 	lda sfxAddrTable, y			; get sound effect data address from table
@@ -8595,7 +8599,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	tax
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; channel 0 high priority
+	; channel 0 high priority (music)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	cpy #0					; if channel = 0 (music)
@@ -8774,6 +8778,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	rts					; and return
 
+	;-------------------------------------------------------------------------------------------------------------------------------------------------
+	; handle vegetable score
+	;-------------------------------------------------------------------------------------------------------------------------------------------------
+
 .checkForObjectsVegetableScore
 
 	lda #&ff				; activate the vegetable score display
@@ -8797,7 +8805,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	rts					; return
 	
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
-	; check tiles
+	; check for object tiles (dots, hearts, letters, skulls)
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 	
 .checkForObjectsTile
@@ -8907,10 +8915,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda objectScore, x
 	jsr addScoreMultiply
 
-	cpx #objectModeCyan			; if the object was not cyan then
+	cpx #objectModeCyan			; if the object was not cyan
 	beq checkForObjectsHeartRestoreX
 
-	lda #0					; remove the possibility of getting a diamond bonus
+	lda #0					; then remove the possibility of getting a diamond bonus
 	sta bonusDiamondEnable
 
 .checkForObjectsHeartRestoreX
@@ -9029,8 +9037,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	rts					; return
 
-
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .objectLetterBitsRed				; red mode	S P E C I A L - - - = bits 6 5 4 3 2 1 0 - - -
@@ -9086,9 +9092,9 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #0					; remove the possibility of getting a diamond bonus
 	sta bonusDiamondEnable
 
-	sta vegetableActive			; deactivate vegetable/diamon
+	sta vegetableActive			; deactivate vegetable/diamond
 
-	sed					; reduce lives by 1
+	sed					; reduce lives by 1 (BCD)
 	sec
 	lda lives
 	sbc #1

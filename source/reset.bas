@@ -32,12 +32,14 @@ REM License for more details.
 REM https://www.gnu.org/licenses/
 REM ---------------------------
 
+ON ERROR REPORT:PRINT:PRINT:END
+
 MODE 7
 
-PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
-PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);SPC(12);"Lady Bug";SPC(14);CHR$(156)
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);SPC(12);"Lady Bug";SPC(14);CHR$(156)
 
-PRINT TAB(12,3);CHR$(135);"Reset Settings"
+PRINT TAB(12,4);CHR$(135);"Reset Settings"
 
 HIMEM=&7A80
 D%=HIMEM+&80
@@ -72,24 +74,28 @@ IF F%?2 = V% THEN CALL HIMEM ELSE OSCLI("LOAD Config")
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND 255:NEXT Z%
 IF V% <> H%?&7D THEN OSCLI("LOAD Config")
 
-PRINT TAB(1, 7);CHR$(133);"Do you wish to reset the high score";
-PRINT TAB(1, 8);CHR$(133);"table to default Y/N";CHR$(135);"?";
+PRINT TAB(1,7);CHR$(133);"Do you wish to reset the high score";
+PRINT TAB(1,8);CHR$(133);"table to default Y/N";CHR$(135);"?";CHR$(131);
 INPUT "" H$
 IF H$="Y" THEN FOR Z%=0 TO 111:Z%?H%=Z%?D%:NEXT Z%
 
 PRINT TAB(1,10);CHR$(130);"Do you wish to reset the game";
-PRINT TAB(1,11);CHR$(130);"settings to default Y/N";CHR$(135);"?";
+PRINT TAB(1,11);CHR$(130);"settings to default Y/N";CHR$(135);"?";CHR$(131);
 INPUT "" S$
 IF S$="Y" THEN FOR Z%=112 TO 125:Z%?H%=Z%?D%:NEXT Z%
 
-PRINT TAB(1, 13);
+PRINT TAB(1,13);
 
 IF H$<>"Y" AND S$<>"Y" THEN PRINT CHR$(129);"Nothing to do":PRINT:END
 
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%
 
-PRINT CHR$(131);"Saving updated $.Config":PRINT
+PRINT CHR$(129);"Saving config"
 OSCLI("SAVE $.Config " + STR$~(&FF0000 + H%) + " +7E")
 F%?0=0:F%?1=0:F%?2=0
+PRINT
+
+PRINT TAB(1,15);CHR$(132);"Config update completed"
+PRINT
 
 END
