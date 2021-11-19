@@ -135,8 +135,21 @@ NEXT R%
 FOR R%=10 TO 14
 PRINT TAB(0,R%);"  ";
 NEXT R%
+IF ERR<>201 THEN PROCunexpectedError
 PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
 PRINT TAB(4,13);"Unable to save";CHR$(132);"Scores";CHR$(135);"and";CHR$(132);"Settings";
+ENDPROC
+
+DEF PROCunexpectedError
+CLS
+PRINT "An unexpected error has occurred"
+REPORT
+PRINT " at line ";ERL
+PRINT
+VDU 23,1,1,0,0,0,0,0,0,0
+VDU 23,0,6,25,0,0,0,0,0,0
+*FX 4
+END
 ENDPROC
 
 DEF PROCreadConfig

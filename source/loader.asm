@@ -454,9 +454,6 @@ screenCenterY	= &7e71
 
 	sei					; disable interrupts
 
-	lda bankSelectCopy			; save original sideways bank
-	sta swrBankOriginal
-
 	lda #0					; get bbc model
 	ldx #1
 	jsr osByte
@@ -510,8 +507,7 @@ screenCenterY	= &7e71
 
 .loaderFailed
 
-	lda swrBankOriginal			; restore original sideways bank
-	sta bankSelectCopy
+	sta bankSelectCopy			; restore original sideways bank
 	sta bankSelect
 
 	cli					; enable interrupts
@@ -541,11 +537,10 @@ screenCenterY	= &7e71
 ; check system for sideways ram
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+swrTestCopyright	= page8000 + 7		; memory location for copyright offset
 swrTestLocation		= page8000 + 8		; memory location for write test
-
-swrBankOriginal		= page8000 - 1		; storage for original system bank number
-swrBank			= page8000 - 2		; storage for bank number of swram
-machineType		= page8000 - 3		; storage for machine type
+swrBank			= page8000 - 1		; storage for bank number of swram
+machineType		= page8000 - 2		; storage for machine type
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -555,8 +550,33 @@ machineType		= page8000 - 3		; storage for machine type
 	
 .swrTestLoop
 
+	sty swrBank				; store bank number
+
+	sty bankSelect				; select bank
+	
+	ldx swrTestCopyright			; skip bank if in use (contains the copyright)
+
+	lda page8000 + 0, x
+	bne swrTestWrite
+	
+	lda page8000 + 1, x
+	cmp #'('
+	bne swrTestWrite
+	
+	lda page8000 + 2, x
+	cmp #'C'
+	bne swrTestWrite
+	
+	lda page8000 + 3, x
+	cmp #')'
+	beq swrTestNext
+
+.swrTestWrite
+
 	jsr swrTestByte - loaderReloc		; if ram found then exit
 	beq swrTestExit
+
+.swrTestNext
 
 	iny					; else try next bank
 
@@ -573,11 +593,6 @@ machineType		= page8000 - 3		; storage for machine type
 
 .swrTestByte
 
-	sty swrBank				; store bank number
-
-	sty bankSelectCopy			; select bank
-	sty bankSelect
-	
 	lda swrTestLocation			; invert byte at test location
 	eor #&ff
 	sta swrTestLocation

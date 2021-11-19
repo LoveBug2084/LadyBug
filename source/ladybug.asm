@@ -5875,7 +5875,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	jsr drawString				; draw paused message
 	equb pixelColA
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs chrHeart, " PAUSED ", chrHeart, &ff
+	equs "  PAUSED  ", &ff
 	
 .checkPauseGameReturnTrue
 
