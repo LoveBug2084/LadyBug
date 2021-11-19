@@ -1,8 +1,8 @@
 ----------------------------------------------------
 sideways ram  &8000 - &AFFF , 12288 bytes
 ----------------------------------------------------
-used          &8000 - &AF73 , 12148  bytes
-free          &AF74 - &AFFF , 140 bytes
+used          &8000 - &AF7B , 12156  bytes
+free          &AF7C - &AFFF , 132 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -300,158 +300,162 @@ bootstrap     &4700 - &47DD , 222 bytes
      AE1C   FF
 .loaderUsingBank
      AE1D   1F
-     AE1E   08
+     AE1E   07
      AE1F   0D
-     AE20   55 73 69 ...
-     AE39   FF
+     AE20   84
+     AE21   55 73 69 ...
+     AE3A   FF
 .loaderUsingWorkspace
-     AE3A   1F
-     AE3B   0A
-     AE3C   0D
-     AE3D   55 73 69 ...
-     AE53   FF
+     AE3B   1F
+     AE3C   09
+     AE3D   0D
+     AE3E   84
+     AE3F   55 73 69 ...
+     AE55   FF
 .loaderBank
-     AE54   30 31 32 ...
+     AE56   30 31 32 ...
 .loaderRamFailed
-     AE64   1F
-     AE65   09
-     AE66   0D
-     AE67   81
-     AE68   53 69 64 ...
-     AE7E   1F
-     AE7F   00
-     AE80   0B
-     AE81   17
-     AE82   01
-     AE83   01
-     AE84   00
-     AE85   00
+     AE66   1F
+     AE67   09
+     AE68   0D
+     AE69   81
+     AE6A   53 69 64 ...
+     AE80   1F
+     AE81   00
+     AE82   0B
+     AE83   17
+     AE84   01
+     AE85   01
      AE86   00
      AE87   00
      AE88   00
      AE89   00
      AE8A   00
-     AE8B   FF
+     AE8B   00
+     AE8C   00
+     AE8D   FF
 .runLadybug
-     AE8C   2F 4C 61 ...
-     AE94   0D
+     AE8E   2F 4C 61 ...
+     AE96   0D
 .runBasic
-     AE95   42 41 53 ...
-     AE9A   0D
+     AE97   42 41 53 ...
+     AE9C   0D
 .loaderStart
-     AE9B   A9 13      LDA #&13
-     AE9D   20 F4 FF   JSR &FFF4
-     AEA0   A2 00      LDX #&00
-     AEA2   A9 20      LDA #&20
+     AE9D   A9 13      LDA #&13
+     AE9F   20 F4 FF   JSR &FFF4
+     AEA2   A2 00      LDX #&00
+     AEA4   A9 20      LDA #&20
 .loaderClearCenter
-     AEA4   9D 90 7D   STA &7D90,X
-     AEA7   E8         INX
-     AEA8   E0 C8      CPX #&C8
-     AEAA   D0 F8      BNE &AEA4
-     AEAC   8D 71 7E   STA &7E71
-     AEAF   8D 72 7E   STA &7E72
-     AEB2   A0 00      LDY #&00
-     AEB4   20 0C 5F   JSR &5F0C
-     AEB7   78         SEI
-     AEB8   A9 00      LDA #&00
-     AEBA   A2 01      LDX #&01
-     AEBC   20 F4 FF   JSR &FFF4
-     AEBF   8E FE 7F   STX &7FFE
-     AEC2   E0 02      CPX #&02
-     AEC4   D0 14      BNE &AEDA
-     AEC6   A0 80      LDY #&80
-     AEC8   20 4C 5F   JSR &5F4C
-     AECB   F0 05      BEQ &AED2
-     AECD   CE FE 7F   DEC &7FFE
-     AED0   D0 08      BNE &AEDA
+     AEA6   9D 90 7D   STA &7D90,X
+     AEA9   E8         INX
+     AEAA   E0 C8      CPX #&C8
+     AEAC   D0 F8      BNE &AEA6
+     AEAE   8D 71 7E   STA &7E71
+     AEB1   8D 72 7E   STA &7E72
+     AEB4   A0 00      LDY #&00
+     AEB6   20 0E 5F   JSR &5F0E
+     AEB9   78         SEI
+     AEBA   A9 00      LDA #&00
+     AEBC   A2 01      LDX #&01
+     AEBE   20 F4 FF   JSR &FFF4
+     AEC1   8E FE 7F   STX &7FFE
+     AEC4   E0 02      CPX #&02
+     AEC6   D0 14      BNE &AEDC
+     AEC8   A0 80      LDY #&80
+     AECA   20 4E 5F   JSR &5F4E
+     AECD   F0 05      BEQ &AED4
+     AECF   CE FE 7F   DEC &7FFE
+     AED2   D0 08      BNE &AEDC
 .loaderRealBplus
-     AED2   A0 3A      LDY #&3A
-     AED4   20 0C 5F   JSR &5F0C
-     AED7   4C ED 5E   JMP &5EED
+     AED4   A0 3B      LDY #&3B
+     AED6   20 0E 5F   JSR &5F0E
+     AED9   4C EF 5E   JMP &5EEF
 .loaderNotBplus
-     AEDA   20 1A 5F   JSR &5F1A
-     AEDD   D0 1B      BNE &AEFA
-     AEDF   A0 1D      LDY #&1D
-     AEE1   20 0C 5F   JSR &5F0C
-     AEE4   AC FF 7F   LDY &7FFF
-     AEE7   B9 54 5E   LDA &5E54,Y
-     AEEA   20 EE FF   JSR &FFEE
+     AEDC   20 1C 5F   JSR &5F1C
+     AEDF   D0 1B      BNE &AEFC
+     AEE1   A0 1D      LDY #&1D
+     AEE3   20 0E 5F   JSR &5F0E
+     AEE6   AC FF 7F   LDY &7FFF
+     AEE9   B9 56 5E   LDA &5E56,Y
+     AEEC   20 EE FF   JSR &FFEE
 .loaderCopyData
-     AEED   20 5D 5F   JSR &5F5D
-     AEF0   0E FE 7F   ASL &7FFE
-     AEF3   A2 8C      LDX #&8C
-     AEF5   A0 5E      LDY #&5E
-     AEF7   4C F7 FF   JMP &FFF7
+     AEEF   20 65 5F   JSR &5F65
+     AEF2   0E FE 7F   ASL &7FFE
+     AEF5   A2 8E      LDX #&8E
+     AEF7   A0 5E      LDY #&5E
+     AEF9   4C F7 FF   JMP &FFF7
 .loaderFailed
-     AEFA   85 F4      STA &F4
-     AEFC   8D 30 FE   STA &FE30
-     AEFF   A0 64      LDY #&64
-     AF01   20 0C 5F   JSR &5F0C
-     AF04   58         CLI
-     AF05   A2 95      LDX #&95
-     AF07   A0 5E      LDY #&5E
-     AF09   4C F7 FF   JMP &FFF7
+     AEFC   85 F4      STA &F4
+     AEFE   8D 30 FE   STA &FE30
+     AF01   A0 66      LDY #&66
+     AF03   20 0E 5F   JSR &5F0E
+     AF06   58         CLI
+     AF07   A2 97      LDX #&97
+     AF09   A0 5E      LDY #&5E
+     AF0B   4C F7 FF   JMP &FFF7
 .loaderPrint
-     AF0C   B9 00 5E   LDA &5E00,Y
-     AF0F   C9 FF      CMP #&FF
-     AF11   F0 06      BEQ &AF19
-     AF13   20 EE FF   JSR &FFEE
-     AF16   C8         INY
-     AF17   D0 F3      BNE &AF0C
+     AF0E   B9 00 5E   LDA &5E00,Y
+     AF11   C9 FF      CMP #&FF
+     AF13   F0 06      BEQ &AF1B
+     AF15   20 EE FF   JSR &FFEE
+     AF18   C8         INY
+     AF19   D0 F3      BNE &AF0E
 .loaderPrintExit
-     AF19   60         RTS
+     AF1B   60         RTS
 .swrTest
-     AF1A   A0 00      LDY #&00
+     AF1C   A0 00      LDY #&00
 .swrTestLoop
-     AF1C   8C FF 7F   STY &7FFF
-     AF1F   8C 30 FE   STY &FE30
-     AF22   AE 07 80   LDX &8007
-     AF25   BD 00 80   LDA &8000,X
-     AF28   D0 15      BNE &AF3F
-     AF2A   BD 01 80   LDA &8001,X
-     AF2D   C9 28      CMP #&28
-     AF2F   D0 0E      BNE &AF3F
-     AF31   BD 02 80   LDA &8002,X
-     AF34   C9 43      CMP #&43
-     AF36   D0 07      BNE &AF3F
-     AF38   BD 03 80   LDA &8003,X
-     AF3B   C9 29      CMP #&29
-     AF3D   F0 05      BEQ &AF44
+     AF1E   8C FF 7F   STY &7FFF
+     AF21   8C 30 FE   STY &FE30
+     AF24   AE 07 80   LDX &8007
+     AF27   BD 00 80   LDA &8000,X
+     AF2A   D0 15      BNE &AF41
+     AF2C   BD 01 80   LDA &8001,X
+     AF2F   C9 28      CMP #&28
+     AF31   D0 0E      BNE &AF41
+     AF33   BD 02 80   LDA &8002,X
+     AF36   C9 43      CMP #&43
+     AF38   D0 07      BNE &AF41
+     AF3A   BD 03 80   LDA &8003,X
+     AF3D   C9 29      CMP #&29
+     AF3F   F0 05      BEQ &AF46
 .swrTestWrite
-     AF3F   20 4C 5F   JSR &5F4C
-     AF42   F0 07      BEQ &AF4B
+     AF41   20 4E 5F   JSR &5F4E
+     AF44   F0 07      BEQ &AF4D
 .swrTestNext
-     AF44   C8         INY
-     AF45   C0 10      CPY #&10
-     AF47   D0 D3      BNE &AF1C
-     AF49   A9 FF      LDA #&FF
+     AF46   C8         INY
+     AF47   C0 10      CPY #&10
+     AF49   D0 D3      BNE &AF1E
+     AF4B   A9 FF      LDA #&FF
 .swrTestExit
-     AF4B   60         RTS
+     AF4D   60         RTS
 .swrTestByte
-     AF4C   AD 08 80   LDA &8008
-     AF4F   49 FF      EOR #&FF
-     AF51   8D 08 80   STA &8008
-     AF54   A2 00      LDX #&00
+     AF4E   8C FF 7F   STY &7FFF
+     AF51   8C 30 FE   STY &FE30
+     AF54   AD 08 80   LDA &8008
+     AF57   49 FF      EOR #&FF
+     AF59   8D 08 80   STA &8008
+     AF5C   A2 00      LDX #&00
 .swrTestByteDelay
-     AF56   CA         DEX
-     AF57   D0 FD      BNE &AF56
-     AF59   CD 08 80   CMP &8008
-     AF5C   60         RTS
+     AF5E   CA         DEX
+     AF5F   D0 FD      BNE &AF5E
+     AF61   CD 08 80   CMP &8008
+     AF64   60         RTS
 .swramCopy
-     AF5D   A2 2E      LDX #&2E
-     AF5F   A0 00      LDY #&00
+     AF65   A2 2E      LDX #&2E
+     AF67   A0 00      LDY #&00
 .swramCopyLoop
-     AF61   B9 00 30   LDA &3000,Y
-     AF64   99 00 80   STA &8000,Y
-     AF67   C8         INY
-     AF68   D0 F7      BNE &AF61
-     AF6A   EE 63 5F   INC &5F63
-     AF6D   EE 66 5F   INC &5F66
-     AF70   CA         DEX
-     AF71   D0 EE      BNE &AF61
-     AF73   60         RTS
+     AF69   B9 00 30   LDA &3000,Y
+     AF6C   99 00 80   STA &8000,Y
+     AF6F   C8         INY
+     AF70   D0 F7      BNE &AF69
+     AF72   EE 6B 5F   INC &5F6B
+     AF75   EE 6E 5F   INC &5F6E
+     AF78   CA         DEX
+     AF79   D0 EE      BNE &AF69
+     AF7B   60         RTS
 .loaderEnd
-     AF74
+     AF7C
 
 
 
