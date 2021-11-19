@@ -293,10 +293,10 @@ endif
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-spritesTotal		= 5			; total number of sprites in game (minimum = 5, absolute maximum = 9)
-						; 1 sprite required for ladybug and 4 sprites for enemys in a regular game
-						; 8 enemys max, if more are selected then the enemy spawn function will freeze the game
-						; in the multi-enemy levels as there are only 8 possible enemy types
+spritesTotal		= 5			; total number of sprites in game (minimum = 5, maximum = 9)
+						; 1 sprite required for ladybug plus 4 sprites for enemies (regular game)
+						; 8 enemies max, more than 8 enemies will freeze the game in an infinite loop
+						; when the game reaches level 9
 
 .spritesImg		skip spritesTotal	; sprite image, position and direction for drawing
 .spritesX		skip spritesTotal

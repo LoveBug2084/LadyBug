@@ -523,7 +523,7 @@ screenCenterY	= &7e71
 	
 	cli					; enable interrupts
 	
-	ldx #lo(runBasic - loaderReloc)		; return to basic
+	ldx #lo(runBasic - loaderReloc)		; run basic
 	ldy #hi(runBasic - loaderReloc)
 	jmp osCli
 
