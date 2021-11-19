@@ -412,7 +412,7 @@ align &100
 
 	equb 31,9,13				; position cursor
 	equs 129,"Sideways ram not found"
-	equb 31,0,10				; position cursor
+	equb 31,0,11				; position cursor
 	equb 23,1,1,0,0,0,0,0,0,0		; curson on
 	equb &ff				; end
 
@@ -421,6 +421,14 @@ align &100
 .runLadybug
 
 	equs "/LadyBug", &0d			; oscli run ladybug
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.runBasic
+
+	equs "BASIC", &0d			; oscli run basic
 
 
 
@@ -510,10 +518,15 @@ screenCenterY	= &7e71
 	sta bankSelectCopy			; restore original sideways bank
 	sta bankSelect
 
-	cli					; enable interrupts
-
 	ldy #lo(loaderRamFailed - loaderReloc)	; display failure message
+	jsr loaderPrint - loaderReloc
 	
+	cli					; enable interrupts
+	
+	ldx #lo(runBasic - loaderReloc)		; return to basic
+	ldy #hi(runBasic - loaderReloc)
+	jmp osCli
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderPrint	
