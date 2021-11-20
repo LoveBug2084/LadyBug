@@ -30,7 +30,7 @@
 .bootstrap
 
 	lda #19					; wait vsync
-	jsr osByte
+	jsr osbyte
 
 	lda #6					; disable screen
 	sta crtcAddr
@@ -38,10 +38,10 @@
 	sta crtcData
 
 	lda #19					; wait 4 x vsync
-	jsr osByte
-	jsr osByte
-	jsr osByte
-	jsr osByte
+	jsr osbyte
+	jsr osbyte
+	jsr osbyte
+	jsr osbyte
 
 	sei					; disable cpu irq interrupts
 

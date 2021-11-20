@@ -410,8 +410,8 @@ align &100
 
 .loaderRamFailed
 
-	equb 31,9,13				; position cursor
-	equs 129,"Sideways ram not found"
+	equb 31,8,13				; position cursor
+	equs 132,"Sideways ram unavailable"
 	equb 31,0,11				; position cursor
 	equb 23,1,1,0,0,0,0,0,0,0		; curson on
 	equb &ff				; end
@@ -442,7 +442,7 @@ screenCenterY	= &7e71
 .loaderStart
 
 	lda #19					; wait for vsync
-	jsr osByte
+	jsr osbyte
 
 	ldx #0					; clear center section of display for messages
 	lda #' '
@@ -467,7 +467,7 @@ screenCenterY	= &7e71
 
 	lda #0					; get bbc model
 	ldx #1
-	jsr osByte
+	jsr osbyte
 
 	stx machineType				; save machine type
 
@@ -500,7 +500,7 @@ screenCenterY	= &7e71
 
 	ldy swrBank				; display bank number
 	lda loaderBank - loaderReloc, y
-	jsr osWrch
+	jsr oswrch
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -512,7 +512,7 @@ screenCenterY	= &7e71
 
 	ldx #lo(runLadybug - loaderReloc)	; run the main ladybug
 	ldy #hi(runLadybug - loaderReloc)
-	jmp osCli
+	jmp oscli
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -525,11 +525,19 @@ screenCenterY	= &7e71
 	sta bankSelectCopy
 	sta bankSelect
 
+	lda #4					; turn cursor editing back on
+	ldx #0
+	jsr osbyte
+	
+	lda #200				; turn escape key back on
+	ldx #0
+	jsr osbyte
+
 	cli					; enable interrupts
 	
 	ldx #lo(runBasic - loaderReloc)		; start basic
 	ldy #hi(runBasic - loaderReloc)
-	jmp osCli
+	jmp oscli
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -539,7 +547,7 @@ screenCenterY	= &7e71
 	cmp #&ff				; if its the end marker (&ff) then exit
 	beq loaderPrintExit
 
-	jsr osWrch				; else print it
+	jsr oswrch				; else print it
 	
 	iny					; and get another
 	bne loaderPrint
@@ -589,8 +597,8 @@ machineType		= page8000 - 3		; storage for machine type
 
 	sty swrBank				; store bank number
 
-	sty bankSelectCopy
-	sty bankSelect				; select bank
+	sty bankSelectCopy			; select bank
+	sty bankSelect
 	
 	ldx swrTestCopyright			; skip bank if in use ( contains 0,"(C)" at copyright offset )
 
@@ -612,7 +620,7 @@ machineType		= page8000 - 3		; storage for machine type
 .swrTestByteWrite
 
 	lda swrTestLocation			; invert byte at test location
-	eor #&ff
+	eor #magicNumber
 	sta swrTestLocation
 	
 	ldx #0					; delay loop

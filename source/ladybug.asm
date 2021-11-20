@@ -65,6 +65,14 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; generate fake sideways rom for testing
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	include "rom.asm"
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ladybug main program
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -445,7 +453,7 @@ soundChannels		= 6			; number of software defined sound channels
 	
 	ldx cleanResetMachine			; get machine index
 
-	jmp swrCleanReset			; continue with reset code
+	jmp swrCleanReset			; continue with reset code in high ram
 
 
 
@@ -10071,7 +10079,7 @@ include "relocator.asm"				; append relocation code
 	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
 	save "$.Default", config, configEnd, &ffffff, &ff0000 + config
 	putbasic "reset.bas", "$.Reset"
-
+	save "$.Rom", romStart, romEnd, &ffffff, 0
 	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst
 	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
 

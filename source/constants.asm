@@ -332,13 +332,13 @@ irqAcc			= &fc			; irq1 bbc os stores accumilator here
 irqVector		= &204			; irq1 jump vector
 fx200			= &0258			; *fx 200 value
 breakVector		= &0287			; break key reset jump
-osByte			= &fff4			; os function
-osCli			= &fff7			; os function
-osWrch			= &ffee			; os function
 resetVector		= &fffc			; os reset vector
 bankSelectCopy		= &f4			; os stores current bank copy here
 bankSelect		= &fe30			; paged rom/ram bank select
 acccon			= &fe34			; access control register
+osbyte			= &fff4			; os function
+oscli			= &fff7			; os function
+oswrch			= &ffee			; os function
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; define program addresses
