@@ -122,16 +122,11 @@
 	and #%00111000
 	sta acccon
 
-	lda #0					; zero validation code for bank and machine
-	sta cleanResetValidation
-
 	lda swrBank				; select ram bank
 	sta bankSelect
 	sta cleanResetBank			; save ram bank for clean reset code
 
 	eor #magicNumber			; calculate validation
-	clc
-	adc cleanResetValidation
 	sta cleanResetValidation
 	
 	lda machineType				; save machine type index for clean reset code

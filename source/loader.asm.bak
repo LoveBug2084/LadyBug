@@ -388,7 +388,7 @@ align &100
 .loaderBuild
 
 	equb 31,9,11				; position cursor
-	equs 129,"Lady Bug ",132,"Build",135
+	equs 132,"Lady Bug  Build",135
 	incbin "build-padded.txt"
 	equb &ff				; end
 
@@ -462,9 +462,6 @@ screenCenterY	= &7e71
 
 	sei					; disable interrupts
 
-	lda bankSelectCopy			; save original sideways bank
-	sta swrBankOriginal
-
 	lda #0					; get bbc model
 	ldx #1
 	jsr osByte
@@ -521,10 +518,6 @@ screenCenterY	= &7e71
 	ldy #lo(loaderRamFailed - loaderReloc)	; display failure message
 	jsr loaderPrint - loaderReloc
 	
-	lda swrBankOriginal			; restore original sideways bank
-	sta bankSelectCopy
-	sta bankSelect
-
 	cli					; enable interrupts
 	
 	ldx #lo(runBasic - loaderReloc)		; start basic
@@ -554,7 +547,7 @@ screenCenterY	= &7e71
 ; check system for sideways ram
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-swrTestCopyright	= page8000 + 7		; memory location for copyright offset
+;swrTestCopyright	= page8000 + 7		; memory location for copyright offset
 swrTestLocation		= page8000 + 8		; memory location for write test
 
 swrBankOriginal		= page8000 - 1		; storage for original system bank number
@@ -577,10 +570,19 @@ machineType		= page8000 - 3		; storage for machine type
 	cpy #16					; until all banks tested
 	bne swrTestLoop
 
+;.swrTestFailed
+;
 	lda #&ff				; ram test failed
 
 .swrTestExit
 
+;	php					; save exit status
+;
+;	lda bankSelectCopy	; restore original sideways bank
+;	sta bankSelect
+;
+;	plp					; restore exit status
+;
 	rts					; done.
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -589,27 +591,26 @@ machineType		= page8000 - 3		; storage for machine type
 
 	sty swrBank				; store bank number
 
-	sty bankSelectCopy
 	sty bankSelect				; select bank
 	
-	ldx swrTestCopyright			; skip bank if in use ( contains 0,"(C)" at copyright offset )
-
-	lda page8000 + 0, x
-	bne swrTestByteWrite
+;	ldx swrTestCopyright			; skip bank if in use (contains the copyright)
+;
+;	lda page8000 + 0, x
+;	bne swrTestByteWrite
+;	
+;	lda page8000 + 1, x
+;	cmp #'('
+;	bne swrTestByteWrite
 	
-	lda page8000 + 1, x
-	cmp #'('
-	bne swrTestByteWrite
-	
-	lda page8000 + 2, x
-	cmp #'C'
-	bne swrTestByteWrite
-	
-	lda page8000 + 3, x
-	cmp #')'
-	beq swrTestFailed
-
-.swrTestByteWrite
+;	lda page8000 + 2, x
+;	cmp #'C'
+;	bne swrTestByteWrite
+;	
+;	lda page8000 + 3, x
+;	cmp #')'
+;	beq swrTestFailed
+;
+;.swrTestByteWrite
 
 	lda swrTestLocation			; invert byte at test location
 	eor #&ff
@@ -622,13 +623,9 @@ machineType		= page8000 - 3		; storage for machine type
 	dex
 	bne swrTestByteDelay
 	
-	cmp swrTestLocation			; check if ram is present (value matches) and exit with equal (passed) or not equal (failed)
-	rts
+	cmp swrTestLocation			; check if ram is present (value matches)
 
-.swrTestFailed
-
-	lda #&ff				; exit with not equal (failed)
-	rts
+	rts					; exit with equal / not equal result in Z flag
 
 
 
