@@ -46,7 +46,12 @@ PROCreadConfig
 PROCintro
 PROCshrink
 
-PROCinstructions
+PROCinstructionsPage1
+PROCexpand
+REPEAT K%=GET:UNTIL K%=13
+PROCshrink
+
+PROCinstructionsPage2
 PROCexpand
 REPEAT K%=GET:UNTIL K%=13
 PROCshrink
@@ -94,24 +99,58 @@ DATA &2020939A,&20207F6A,&3520357F,&217F6B20,&7C203520,&357F2030,&2A202560,&7F20
 DATA &2020939A,&219E2322,&20912322,&20219320,&91232220,&23229320,&3E782021,&23202020,&91232220,&9C9C9420
 ENDPROC
 
-DEF PROCinstructions
+DEF PROCinstructionsPage1
 CLS
-PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
-PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156)
-PRINT TAB(13,3);CHR$(135);"Instructions"
-PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maze"
-PRINT TAB(2,6);CHR$(130);"avoiding deadly enemies and skulls"
-PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block"
-PRINT TAB(2,9);CHR$(132);"the enemy attack paths"
-PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply"
-PRINT TAB(2,12);CHR$(133);"an items score value by x2 x3 x5"
-PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelling"
-PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for 2 extra lives"
-PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"spelling"
-PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(134);"for 200000 points and a"
-PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds"
-PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the"
-PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points"
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+
+PRINT TAB(11,3);CHR$(135);"Instructions";CHR$(131);"1/2";
+
+PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maze";
+PRINT TAB(2,6);CHR$(130);"avoiding deadly enemies and skulls";
+
+PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block";
+PRINT TAB(2,9);CHR$(132);"the enemy attack paths";
+
+PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply";
+PRINT TAB(2,12);CHR$(133);"an items score value by x2 x3 x5";
+
+PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelling";
+PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for 2 extra lives";
+
+PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"spelling";
+PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(134);"for 200000 points and a";
+PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds";
+
+PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
+PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
+
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
+ENDPROC
+
+DEF PROCinstructionsPage2
+CLS
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+
+PRINT TAB(11,3);CHR$(135);"Instructions";CHR$(131);"2/2";
+
+PRINT TAB(2,6);CHR$(130);"A special diamond bonus worth";
+PRINT TAB(2,7);CHR$(135);"1000000 points";CHR$(130);"will be";
+PRINT TAB(2,8);CHR$(130);"awarded if you can reach";CHR$(133);"level 6";
+PRINT TAB(2,9);CHR$(130);"without losing a life and only";
+PRINT TAB(2,10);CHR$(130);"collecting";CHR$(134);"cyan hearts";CHR$(130);"and";CHR$(134);"letters";
+
+PRINT TAB(2,12);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"/";CHR$(131);"down";CHR$(129);"controls to";
+PRINT TAB(2,13);CHR$(129);"navigate the menu and";CHR$(132);"return";CHR$(129);"to";
+PRINT TAB(2,14);CHR$(129);"adjust the game settings or";
+PRINT TAB(2,15);CHR$(129);"redefine the player controls";
+
+PRINT TAB(2,17);CHR$(134);"During the game press";CHR$(132);"return";CHR$(134);"to"
+PRINT TAB(2,18);CHR$(134);"pause, move Lady Bug to unpause";
+
+PRINT TAB(2,20);CHR$(131);"Hold";CHR$(129);"Esc";CHR$(131);"to quit back to the menu";
+
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
 ENDPROC
 
@@ -137,7 +176,7 @@ PRINT TAB(0,R%);"  ";
 NEXT R%
 IF ERR<>201 THEN PROCunexpectedError
 PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
-PRINT TAB(4,13);"Unable to save";CHR$(132);"Scores";CHR$(135);"and";CHR$(132);"Settings";
+PRINT TAB(3,13);CHR$(132);"Unable to save";CHR$(135);"Scores";CHR$(132);"and";CHR$(135);"Settings";
 ENDPROC
 
 DEF PROCunexpectedError
