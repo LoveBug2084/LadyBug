@@ -149,7 +149,7 @@ PRINT TAB(2,15);CHR$(129);"redefine the player controls";
 PRINT TAB(2,17);CHR$(134);"During the game press";CHR$(132);"return";CHR$(134);"to"
 PRINT TAB(2,18);CHR$(134);"pause, move Lady Bug to unpause";
 
-PRINT TAB(2,20);CHR$(131);"Hold";CHR$(129);"Esc";CHR$(131);"to quit back to the menu";
+PRINT TAB(2,20);CHR$(131);"Hold";CHR$(129);"esc";CHR$(131);"to quit back to the menu";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
 ENDPROC
