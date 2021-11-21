@@ -412,8 +412,6 @@ align &100
 
 	equb 31,7,13				; position cursor
 	equs 136,132,"Sideways ram unavailable"
-	equb 31,0,11				; position cursor
-	equb 23,1,1,0,0,0,0,0,0,0		; curson on
 	equb &ff				; end
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -421,14 +419,6 @@ align &100
 .runLadybug
 
 	equs "/LadyBug", &0d			; oscli run ladybug
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.runBasic
-
-	equs "BASIC", &0d			; oscli run basic
 
 
 
@@ -521,25 +511,16 @@ screenCenterY	= &7e71
 	ldy #lo(loaderRamFailed - loaderReloc)	; display failure message
 	jsr loaderPrint - loaderReloc
 	
-	lda swrBankOriginal			; restore original sideways bank
-	sta bankSelectCopy
-	sta bankSelect
+.loaderFailedLoop
 
-	lda #4					; turn cursor editing back on
-	ldx #0
-	jsr osbyte
-	
-	lda #200				; turn escape key back on
-	ldx #0
-	jsr osbyte
+	jmp loaderFailedLoop - loaderReloc	; infinite loop
 
-	cli					; enable interrupts
-	
-	ldx #lo(runBasic - loaderReloc)		; start basic
-	ldy #hi(runBasic - loaderReloc)
-	jmp oscli
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; loaderPrint					print from loaderMessages,y to oswrch
+;						quit at terminator byte &ff (not printed)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderPrint	
 
@@ -600,7 +581,7 @@ machineType		= page8000 - 3		; storage for machine type
 	sty bankSelectCopy			; select bank
 	sty bankSelect
 	
-	ldx swrTestCopyright			; skip bank if in use ( contains 0,"(C)" at copyright offset )
+	ldx swrTestCopyright			; skip bank if in use ( contains &00,"(C)" at copyright offset )
 
 	lda page8000 + 0, x
 	bne swrTestByteWrite

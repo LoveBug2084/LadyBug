@@ -121,7 +121,7 @@ PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to b
 PRINT TAB(2,9);CHR$(132);"the enemy attack paths";
 
 PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply";
-PRINT TAB(2,12);CHR$(133);"an items score value by x2 x3 x5";
+PRINT TAB(2,12);CHR$(133);"an items score value by";CHR$(134);"x2 x3 x5";
 
 PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelling";
 PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for 2 extra lives";
