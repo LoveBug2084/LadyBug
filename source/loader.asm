@@ -410,8 +410,8 @@ align &100
 
 .loaderRamFailed
 
-	equb 31,8,13				; position cursor
-	equs 132,"Sideways ram unavailable"
+	equb 31,7,13				; position cursor
+	equs 136,132,"Sideways ram unavailable"
 	equb 31,0,11				; position cursor
 	equb 23,1,1,0,0,0,0,0,0,0		; curson on
 	equb &ff				; end
