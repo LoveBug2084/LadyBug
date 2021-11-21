@@ -151,7 +151,7 @@ PRINT TAB(2,7);CHR$(130);"you can reach";CHR$(132);"level 6";CHR$(130);"while on
 PRINT TAB(2,8);CHR$(130);"collecting";CHR$(134);"cyan";CHR$(130);"hearts and letters";
 PRINT TAB(2,9);CHR$(130);"and without losing a life";
 
-PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"/";CHR$(131);"down";CHR$(129);"controls to";
+PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"and";CHR$(131);"down";CHR$(129);"controls to";
 PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"return";CHR$(129);"to";
 PRINT TAB(2,13);CHR$(129);"adjust the game settings or";
 PRINT TAB(2,14);CHR$(129);"redefine the control keys";
