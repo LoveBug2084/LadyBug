@@ -135,21 +135,24 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 
 PRINT TAB(11,3);CHR$(135);"Instructions";CHR$(131);"2/2";
 
-PRINT TAB(2,6);CHR$(130);"A special diamond bonus worth";
-PRINT TAB(2,7);CHR$(135);"1000000 points";CHR$(130);"will be";
-PRINT TAB(2,8);CHR$(130);"awarded if you can reach";CHR$(133);"level 6";
-PRINT TAB(2,9);CHR$(130);"without losing a life and only";
-PRINT TAB(2,10);CHR$(130);"collecting";CHR$(134);"cyan hearts";CHR$(130);"and";CHR$(134);"letters";
+PRINT TAB(2,5);CHR$(130);"A special diamond bonus worth";
+PRINT TAB(2,6);CHR$(135);"1000000 points";CHR$(130);"will be";
+PRINT TAB(2,7);CHR$(130);"awarded if you can reach";CHR$(133);"level 6";
+PRINT TAB(2,8);CHR$(130);"without losing a life and only";
+PRINT TAB(2,9);CHR$(130);"collecting";CHR$(134);"cyan hearts";CHR$(130);"and";CHR$(134);"letters";
 
-PRINT TAB(2,12);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"/";CHR$(131);"down";CHR$(129);"controls to";
-PRINT TAB(2,13);CHR$(129);"navigate the menu and";CHR$(132);"return";CHR$(129);"to";
-PRINT TAB(2,14);CHR$(129);"adjust the game settings or";
-PRINT TAB(2,15);CHR$(129);"redefine the player controls";
+PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"/";CHR$(131);"down";CHR$(129);"controls to";
+PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"return";CHR$(129);"to";
+PRINT TAB(2,13);CHR$(129);"adjust the game settings or";
+PRINT TAB(2,14);CHR$(129);"redefine the player controls";
 
-PRINT TAB(2,17);CHR$(134);"During the game press";CHR$(132);"return";CHR$(134);"to"
-PRINT TAB(2,18);CHR$(134);"pause, move Lady Bug to unpause";
+PRINT TAB(2,16);CHR$(134);"During the game press";CHR$(129);"return";CHR$(134);"to"
+PRINT TAB(2,17);CHR$(134);"pause, move Lady Bug to unpause";
 
-PRINT TAB(2,20);CHR$(131);"Hold";CHR$(129);"esc";CHR$(131);"to quit back to the menu";
+PRINT TAB(2,19);CHR$(131);"Hold";CHR$(129);"esc";CHR$(131);"to quit back to the menu";
+
+PRINT TAB(2,21);CHR$(132);"Rebooting the disk will save your";
+PRINT TAB(2,22);CHR$(132);"high scores and game settings";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
 ENDPROC
