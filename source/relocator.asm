@@ -189,7 +189,7 @@
 	equb &50 + palMagenta
 	equb &60 + palCyan
 	equb &70 + palWhite
-	equb &80 + palBlack			; black for printing blank chrTiles/mapTiles and in score digits
+	equb &80 + palBlack			; unused
 	equb &90 + palBlack			; unused
 	equb &a0 + palRed			; flashing red/magenta letters
 	equb &b0 + palMagenta			; flashing red/magenta letters alternte phase

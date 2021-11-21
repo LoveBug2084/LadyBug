@@ -146,8 +146,8 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(11,3);CHR$(135);"Instructions";CHR$(131);"2/2";
 
 PRINT TAB(2,5);CHR$(130);"A special diamond bonus worth";
-PRINT TAB(2,6);CHR$(132);"1000000 points";CHR$(130);"will be awarded if";
-PRINT TAB(2,7);CHR$(130);"you can reach";CHR$(132);"level 6";CHR$(130);"while only";
+PRINT TAB(2,6);CHR$(133);"1000000 points";CHR$(130);"will be awarded if";
+PRINT TAB(2,7);CHR$(130);"you can reach";CHR$(133);"level 6";CHR$(130);"while only";
 PRINT TAB(2,8);CHR$(130);"collecting";CHR$(134);"cyan";CHR$(130);"hearts and letters";
 PRINT TAB(2,9);CHR$(130);"and without losing a life";
 
@@ -161,7 +161,7 @@ PRINT TAB(2,17);CHR$(131);"pause, move";CHR$(129);"Lady Bug";CHR$(131);"to unpau
 
 PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"esc";CHR$(133);"to quit the current game";
 
-PRINT TAB(2,21);CHR$(132);"Rebooting the disk will save your";
+PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";
 PRINT TAB(2,22);CHR$(134);"high scores";CHR$(132);"and";CHR$(134);"game settings";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);

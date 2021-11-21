@@ -5649,8 +5649,8 @@ if bp {.bp print ";draw angel sprite":} endif
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,&ff
 	
-	jsr drawString				; draw text in white
-	equb pixelCol7
+	jsr drawString				; draw text in skull color
+	equb pixelColE
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 3 * chrRow
 	equs "BEST PLAYERS",&ff
 	
