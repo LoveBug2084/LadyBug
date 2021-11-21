@@ -32,6 +32,8 @@ REM License for more details.
 REM https://www.gnu.org/licenses/
 REM ---------------------------
 
+
+
 HIMEM=&7B00
 H%=HIMEM+&80
 S%=&8010
@@ -61,6 +63,8 @@ PROCexpand
 OSCLI("/Loader")
 END
 
+
+
 DEF PROCintro
 IF ?E%<>32 THEN TIME=0:REPEAT K%=INKEY(0):UNTIL K%=13 OR TIME >=300:ENDPROC
 PROClogo
@@ -68,6 +72,8 @@ PROCexpand
 PROCsaveConfig
 TIME=0:REPEAT K%=INKEY(0):UNTIL K%=13 OR TIME >=200
 ENDPROC
+
+
 
 DEF PROClogo
 RESTORE
@@ -99,6 +105,8 @@ DATA &2020939A,&20207F6A,&3520357F,&217F6B20,&7C203520,&357F2030,&2A202560,&7F20
 DATA &2020939A,&219E2322,&20912322,&20219320,&91232220,&23229320,&3E782021,&23202020,&91232220,&9C9C9420
 ENDPROC
 
+
+
 DEF PROCinstructionsPage1
 CLS
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
@@ -119,7 +127,7 @@ PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelli
 PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for 2 extra lives";
 
 PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"spelling";
-PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(134);"for 200000 points and a";
+PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(134);"for 200000 points plus a";
 PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds";
 
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
@@ -127,6 +135,8 @@ PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
 ENDPROC
+
+
 
 DEF PROCinstructionsPage2
 CLS
@@ -136,34 +146,40 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(11,3);CHR$(135);"Instructions";CHR$(131);"2/2";
 
 PRINT TAB(2,5);CHR$(130);"A special diamond bonus worth";
-PRINT TAB(2,6);CHR$(135);"1000000 points";CHR$(130);"will be";
-PRINT TAB(2,7);CHR$(130);"awarded if you can reach";CHR$(133);"level 6";
-PRINT TAB(2,8);CHR$(130);"without losing a life and only";
-PRINT TAB(2,9);CHR$(130);"collecting";CHR$(134);"cyan hearts";CHR$(130);"and";CHR$(134);"letters";
+PRINT TAB(2,6);CHR$(132);"1000000 points";CHR$(130);"will be awarded if";
+PRINT TAB(2,7);CHR$(130);"you can reach";CHR$(132);"level 6";CHR$(130);"while only";
+PRINT TAB(2,8);CHR$(130);"collecting";CHR$(134);"cyan";CHR$(130);"hearts and letters";
+PRINT TAB(2,9);CHR$(130);"and without losing a life";
 
 PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"/";CHR$(131);"down";CHR$(129);"controls to";
 PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"return";CHR$(129);"to";
 PRINT TAB(2,13);CHR$(129);"adjust the game settings or";
-PRINT TAB(2,14);CHR$(129);"redefine the player controls";
+PRINT TAB(2,14);CHR$(129);"redefine the control keys";
 
-PRINT TAB(2,16);CHR$(134);"During the game press";CHR$(129);"return";CHR$(134);"to"
-PRINT TAB(2,17);CHR$(134);"pause, move Lady Bug to unpause";
+PRINT TAB(2,16);CHR$(131);"During the game press";CHR$(129);"return";CHR$(131);"to"
+PRINT TAB(2,17);CHR$(131);"pause, move";CHR$(129);"Lady Bug";CHR$(131);"to unpause";
 
-PRINT TAB(2,19);CHR$(131);"Hold";CHR$(129);"esc";CHR$(131);"to quit back to the menu";
+PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"esc";CHR$(133);"to quit the current game";
 
-PRINT TAB(2,21);CHR$(133);"Rebooting the disk will save your";
-PRINT TAB(2,22);CHR$(133);"high scores and game settings";
+PRINT TAB(2,21);CHR$(132);"Rebooting the disk will save your";
+PRINT TAB(2,22);CHR$(134);"high scores";CHR$(132);"and";CHR$(134);"game settings";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
 ENDPROC
+
+
 
 DEF PROCshrink
 A%=19:FOR R%=24 TO 0 STEP -1:CALL &FFF4:VDU 23,0,6,R%,0,0,0,0,0,0:NEXT R%:CALL &FFF4
 ENDPROC
 
+
+
 DEF PROCexpand
 A%=19:FOR R%=1 TO 25:CALL &FFF4:VDU 23,0,6,R%,0,0,0,0,0,0:NEXT R%:CALL &FFF4
 ENDPROC
+
+
 
 DEF PROCerror
 ?E%=33
@@ -182,6 +198,8 @@ PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
 PRINT TAB(3,13);CHR$(132);"Unable to save";CHR$(135);"Scores";CHR$(132);"and";CHR$(135);"Settings";
 ENDPROC
 
+
+
 DEF PROCunexpectedError
 CLS
 PRINT "An unexpected error has occurred"
@@ -193,6 +211,8 @@ VDU 23,0,6,25,0,0,0,0,0,0
 *FX 4
 END
 ENDPROC
+
+
 
 DEF PROCreadConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND 255 
@@ -216,6 +236,8 @@ RTS
 ]
 CALL HIMEM
 ENDPROC
+
+
 
 DEF PROCsaveConfig
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND 255:NEXT Z%

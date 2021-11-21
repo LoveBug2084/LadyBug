@@ -461,7 +461,7 @@ soundChannels		= 6			; number of software defined sound channels
 ; cleanResetMaster				page in bank 15 jump into os to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-continueMaster		= &8073
+continueMaster		= &8073			; os rom reset code
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -479,7 +479,7 @@ continueMaster		= &8073
 ; cleanResetCompact				page in bank 15 jump into os to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-continueCompact		= &8068
+continueCompact		= &8068			; os rom reset code
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -10080,8 +10080,9 @@ include "relocator.asm"				; append relocation code
 	save "$.Default", config, configEnd, &ffffff, &ff0000 + config
 	putbasic "reset.bas", "$.Reset"
 	save "$.Rom", romStart, romEnd, &ffffff, 0
-	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst
+
 	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
+	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst
 
 	print
 	print

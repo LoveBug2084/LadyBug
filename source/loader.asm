@@ -253,7 +253,7 @@ zpAddr 			= 0
 ; B+ reset clear zp, jump into os to clear 0200-7fff
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-continueBplus		= &d973
+continueBplus		= &d973			; os rom reset code
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -267,7 +267,7 @@ continueBplus		= &d973
 	inx
 	bne swrCleanResetBplusLoop
 
-	lda #2					; os fill 0200-7fff with 0
+	lda #&02				; fill 0200-7fff with 0 using the os rom reset code
 	sta zpAddr + 1
 	stx zpAddr
 	txa
@@ -313,9 +313,9 @@ continueBplus		= &d973
 
 	tay			; zero index
 
-	lda acccon		; clear bits 7-4, 1-0. set bits 3-2 of accon
+	lda acccon		; clear bits 7-4, 1-0. set bits 3-2 of accon (select shadow ram at 3000-7fff and private ram at c000-dfff)
 	and #%11110011
-	ora #%00001100		; set bits 3-2 in acccon (select shadow ram at 3000-7fff and private ram at c000-dfff)
+	ora #%00001100
 	sta acccon
 
 .swrCleanResetInit
@@ -619,7 +619,7 @@ machineType		= page8000 - 3		; storage for machine type
 
 .swrTestByteWrite
 
-	lda swrTestLocation			; invert byte at test location
+	lda swrTestLocation			; flip bits at test location
 	eor #magicNumber
 	sta swrTestLocation
 	
@@ -674,7 +674,8 @@ machineType		= page8000 - 3		; storage for machine type
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 loaderPage = page3000				; load address
-loaderReloc = swramStart - loaderPage
+
+loaderReloc = swramStart - loaderPage		; relocation
 loaderStartReloc = loaderStart - loaderReloc
 
 	print
