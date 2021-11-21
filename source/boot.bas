@@ -151,8 +151,8 @@ PRINT TAB(2,17);CHR$(134);"pause, move Lady Bug to unpause";
 
 PRINT TAB(2,19);CHR$(131);"Hold";CHR$(129);"esc";CHR$(131);"to quit back to the menu";
 
-PRINT TAB(2,21);CHR$(132);"Rebooting the disk will save your";
-PRINT TAB(2,22);CHR$(132);"high scores and game settings";
+PRINT TAB(2,21);CHR$(133);"Rebooting the disk will save your";
+PRINT TAB(2,22);CHR$(133);"high scores and game settings";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
 ENDPROC
