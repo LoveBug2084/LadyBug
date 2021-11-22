@@ -964,12 +964,12 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 	stx levelEdibles			; initialize edibles
 	
-.initPlayfieldMiddleLoop0
+.initPlayfieldMiddleLoop0			; this loop does the first 256 bytes
 
-	lda mazeData, x
+	lda mazeData, x				; get a tile from the mazeData table and store it into the tileMap
 	sta tileMap + 23, x
 	
-	cmp #mapTileDot				; if a dot is found during copy of maze to tilemap then increment levelEdibles
+	cmp #mapTileDot				; if its a dot then increment levelEdibles (ie count the dots)
 	bne initPlayfieldMiddleLoop0Next
 	inc levelEdibles
 
@@ -978,12 +978,12 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	inx
 	bne initPlayfieldMiddleLoop0
 	
-.initPlayfieldMiddleLoop1
+.initPlayfieldMiddleLoop1			; this loop does the final 227 bytes
 
-	lda mazeData + &100, x
+	lda mazeData + &100, x			; get a tile from the mazeData table and store it into the tileMap
 	sta tileMap + &100 + 23, x
 	
-	cmp #mapTileDot				; if a dot is found during copy of maze to tilemap then increment levelEdibles
+	cmp #mapTileDot				; if its a dot then increment levelEdibles (ie count the dots)
 	bne initPlayfieldMiddleLoop1Next
 	inc levelEdibles
 
@@ -993,13 +993,13 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	cpx #lo(21 * 23)
 	bne initPlayfieldMiddleLoop1
 	
-	jsr placeTileMapHearts			; place 3 hearts at random positions in the tileMap
+	jsr placeTileMapHearts			; place 3 hearts at random positions in the tileMap (replacing dots)
 
-	jsr placeTileMapLetters			; place the 3 random letters at random positions in the tileMap
+	jsr placeTileMapLetters			; place 3 random letters at random positions in the tileMap (replacing dots)
 
-	jsr placeTileMapSkulls			; place the correct number of skull at random positions in the tileMap
+	jsr placeTileMapSkulls			; place the correct number of skull at random positions in the tileMap (replacing dots)
 
-	sec					; levelEdibles -= levelSkulls
+	sec					; levelEdibles -= levelSkulls (skulls replaced dots but are not edible so subtract them from the total)
 	lda levelEdibles
 	sbc levelSkulls
 	sta levelEdibles

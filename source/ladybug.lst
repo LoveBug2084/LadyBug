@@ -497,7 +497,7 @@ bootstrap     &4700 - &47D4 , 213 bytes
      7BF7   68
      7BF8   48
      7BF9   58 5A 2F ...
-     7BFD   D7
+     7BFD   00
 .configEnd
      7BFE
 
