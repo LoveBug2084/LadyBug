@@ -5935,9 +5935,9 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	sta shield				; clear shields so that skull color will sequence
 
-	lda #0					; enable enemy warning sound
+	lda #0					; enable enemy release flag usage and warning sound
 	sta enemysActive
-	sta enemyReleaseEnable			; disable enemy release flag (used later to test end of timer)
+	sta enemyReleaseEnable			; disable enemy release flag (used later in timeout test)
 
 	jsr drawString
 	equb pixelCol1
