@@ -170,7 +170,7 @@ FOR R%=21 TO 5 STEP -2
 PRINT TAB(0,R%+1);SPC(40);TAB(0,R%);SPC(40);
 NEXT R%
 
-PRINT TAB(34,3);CHR$(131);"2/2";
+PRINT TAB(34,3);CHR$(131);"2";
 
 PRINT TAB(2,5);CHR$(130);"A special diamond bonus worth";
 PRINT TAB(2,6);CHR$(133);"1000000 points";CHR$(130);"will be awarded if";
