@@ -165,35 +165,43 @@ ENDPROC
 
 DEF PROCinstructionsPage2
 
-FOR R%=21 TO 5 STEP -2
-*FX 19
-PRINT TAB(0,R%+1);SPC(40);TAB(0,R%);SPC(40);
+L%=0
+FOR R%=22 TO 5 STEP -1
+L%=L%+1
+IF L%>2 THEN L%=L%-3:*FX 19
+PRINT TAB(0,R%);SPC(40);
 NEXT R%
 
 PRINT TAB(34,3);CHR$(131);"2";
 
 PRINT TAB(2,5);CHR$(130);"A special diamond bonus worth";
-PRINT TAB(2,6);CHR$(133);"1000000 points";CHR$(130);"will be awarded if";
 *FX 19
+PRINT TAB(2,6);CHR$(133);"1000000 points";CHR$(130);"will be awarded if";
 
 PRINT TAB(2,7);CHR$(130);"you can reach";CHR$(133);"level 6";CHR$(130);"while only";
-PRINT TAB(2,8);CHR$(130);"collecting";CHR$(134);"cyan";CHR$(130);"hearts and letters";
+*FX 19
+PRINT TAB(2,8);CHR$(130);"collecting";CHR$(134);"cyan hearts and letters";
+*FX 19
 PRINT TAB(2,9);CHR$(130);"and without losing a life";
 *FX 19
 
 PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"and";CHR$(131);"down";CHR$(129);"controls to";
-PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"return";CHR$(129);"to";
-PRINT TAB(2,13);CHR$(129);"adjust the game settings or";
-PRINT TAB(2,14);CHR$(129);"redefine the control keys";
 *FX 19
+PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"return";CHR$(129);"to";
+*FX 19
+PRINT TAB(2,13);CHR$(129);"adjust the game settings or";
+*FX 19
+PRINT TAB(2,14);CHR$(129);"redefine the control keys";
 
 PRINT TAB(2,16);CHR$(131);"During the game press";CHR$(129);"return";CHR$(131);"to"
+*FX 19
 PRINT TAB(2,17);CHR$(131);"pause, move";CHR$(129);"Lady Bug";CHR$(131);"to unpause";
 
 PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"esc";CHR$(133);"to quit the current game";
 *FX 19
 
 PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";
+*FX 19
 PRINT TAB(2,22);CHR$(134);"high scores";CHR$(132);"and";CHR$(134);"game settings";
 
 ENDPROC

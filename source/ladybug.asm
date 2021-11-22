@@ -9779,10 +9779,8 @@ chrHeart		= '*'
 
 
 
-	align 8					; this is not needed, only here so that if someone *load ladybug in mode 2 then the graphics line up
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; minifont 0-F used for vegetable bonus and debugging
+; minifont used for vegetable bonus (and debugging info)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .miniFontBin
@@ -9793,13 +9791,13 @@ chrHeart		= '*'
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; mapTile data
+; mapTile data					maze tiles used in map
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mapTileBin
 	skip 0
 
-	incbin "img-tiles.bin"			; load tile table into memory, max 128
+	incbin "img-tiles.bin"			; load tiles (maze tiles)
 
 .mapTileBinEnd
 	skip 0
@@ -9807,31 +9805,27 @@ chrHeart		= '*'
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; objectTile data
+; objectTile data				object tiles used in map
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .objectTileBin
 	skip 0
 
-	incbin "img-objects.bin"		; load objects table into memory
+	incbin "img-objects.bin"		; load object tiles (hearts, letters, skulls)
 
 .objectTileBinEnd
 	skip 0
 
-mapTileObject = (objectTileBin - mapTileBin) / mapTileBytes 
-assert mapTileObject < 115			; more than 128 tiles
-
-
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; extra tile data
+; extra tile data				extra tiles used on screen only
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .extraTileBin
 	skip 0
 
-	incbin "img-extra.bin"			; load extra tile table into memory
+	incbin "img-extra.bin"			; load extra tiles (all other non-maze tile graphics)
 
 .extraTileBinEnd
 	skip 0
@@ -9852,8 +9846,6 @@ assert mapTileObject < 115			; more than 128 tiles
 	equb hi(n)
 	next
 
-
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .objectTileAddrLo				; generate objectTiles address
@@ -9868,10 +9860,6 @@ assert mapTileObject < 115			; more than 128 tiles
 	equb hi(n)
 	next
 
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; table to extra tiles
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .extraTileAddrLo				; generate extraTiles address
