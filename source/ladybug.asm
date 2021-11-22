@@ -5935,8 +5935,9 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	sta shield				; clear shields so that skull color will sequence
 
-	lda #spritesTotal - 1			; prevent enemy warning sound
+	lda #0					; enable enemy warning sound
 	sta enemysActive
+	sta enemyReleaseEnable			; disable enemy release flag (used later to test end of timer)
 
 	jsr drawString
 	equb pixelCol1
@@ -6027,6 +6028,8 @@ if bp {.bp print ";draw angel sprite":} endif
 	jsr nameRegCursorUpdate			; display the initial cursor position
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; do functions and wait for key release
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegWaitRelease
 
@@ -6036,6 +6039,8 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	bne nameRegWaitRelease			; if key is pressed then loop back and wait for release
 	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; do functions, wait for key press and process key press
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegWaitPress
@@ -6056,7 +6061,11 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jmp playSoundSilence			; kill any sounds playing and return
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; nameRegFunctions				wait for sync, update sound and graphics, scan keyboard etc etc
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegFunctions
 
@@ -6082,29 +6091,31 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr updateSkullColor			; update the skull palette color
 
-	lda enemyTimer				; if timeout complete then exit
-	cmp #87
-	beq nameRegTimeout
+	jsr keyboardScan			; scan keyboard
+
+	lda enemyReleaseEnable			; if timer has passed the top left
+	beq nameRegTimerActive
+	lda enemyTimer				; and if timer is at position 1
+	cmp #1
+	beq nameRegTimerTimeout			; then exit with timer timeout status
 	
-	jsr keyboardScan			; and with keyboard status
-	lda playerInput
+.nameRegTimerActive
 
-	clc					; exit with timer active status
-
-	rts					; return
+	lda playerInput				; read keyboard status and exit with timer active status
+	clc
+	rts
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.nameRegTimeout
+.nameRegTimerTimeout
 
-	jsr keyboardScan			; and with keyboard status
-	lda playerInput
+	lda playerInput				; read keyboard status and exit with timer timeout status
+	sec
+	rts
 
-	sec					; enemy timer timed out so exit with timeout status
-	
-	rts					; return
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; nameRegProcess and support functions		process key presses (handle insert delete characters in name, cursor update etc etc)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessAdd32
 
@@ -6114,7 +6125,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	sta nameRegCursor
 	bpl nameRegProcessCursor
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessSub32
 
@@ -6124,11 +6135,11 @@ if bp {.bp print ";draw angel sprite":} endif
 	sta nameRegCursor
 	bpl nameRegProcessCursor
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcess
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessUp
 
@@ -6145,6 +6156,8 @@ if bp {.bp print ";draw angel sprite":} endif
 	bpl nameRegProcessCursor		; handle wrap around
 
 	bmi nameRegProcessAdd32
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessDown
 
@@ -6164,6 +6177,8 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	bcs nameRegProcessSub32
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .nameRegProcessLeft
 
 	lsr playerInput				; if left pressed
@@ -6179,6 +6194,8 @@ if bp {.bp print ";draw angel sprite":} endif
 	bpl nameRegProcessCursor		; handle wrap around
 
 	bmi nameRegProcessAdd32
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessRight
 
@@ -6198,6 +6215,8 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	bcs nameRegProcessSub32
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .nameRegProcessStart
 
 	lsr playerInput				; if start pressed
@@ -6210,6 +6229,8 @@ if bp {.bp print ";draw angel sprite":} endif
 	sec					; exit with carry set (end)
 	rts
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .nameRegProcessCursor
 
 	jsr nameRegCursorUpdate
@@ -6218,7 +6239,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	rts
 
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegCursorUpdate
 
@@ -6227,7 +6248,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	jsr nameRegCursorAddr
 	jmp nameRegCursorDraw
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessDelete
 
@@ -6261,7 +6282,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jmp nameRegProcessCursor
 	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessChr
 
@@ -6293,7 +6314,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jmp nameRegProcessCursor		; exit
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegCursorErase
 
@@ -6341,7 +6362,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #extraTileBlank
 	jmp drawExtraTile
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegCursorDraw
 
@@ -6389,7 +6410,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #registrationBR
 	jmp drawExtraTile
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegCursorAddr
 
