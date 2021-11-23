@@ -239,7 +239,7 @@ endif
 .enemyReleaseEnable	skip 1			; enables release of enemy when != 0
 .enemyReleaseFrame	skip 1			; frame number to release enemy
 
-.enemysActive		skip 1			; number of enemys currectly active
+.enemiesActive		skip 1			; number of enemies currectly active
 .enemyTimer		skip 1			; enemy release timer counter 0-91, enemy released when = 0 and enemy release enable != 0
 .enemyTimerSpeed	skip 1			; enemy release timer speed (frames) level 1=8, level 2-4=5, level 5-99=3
 .enemyTimerSpeedCounter skip 1			; enemy timer tick counter
@@ -901,7 +901,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	cmp #78
 	bne updateEnemyTimerExit
 	
-	lda enemysActive			; if theres an enemy waiting in the center
+	lda enemiesActive			; if theres an enemy waiting in the center
 	cmp #spritesTotal - 1
 	beq updateEnemyTimerExit
 
@@ -1329,8 +1329,8 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	dex
 	bpl initSpritesLoop			; repeat until all sprites initialised
 
-	lda #0					; no active enemys yet
-	sta enemysActive
+	lda #0					; no active enemies yet
+	sta enemiesActive
 	
 	sta animateLadybugActive		; disable ladybug animation
 
@@ -2596,7 +2596,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda levelEdibles			; if theres still edible objects then exit
 	bne checkLevelEndExit
 	
-	lda #endLevelTime			; pause ladybug and enemys
+	lda #endLevelTime			; pause ladybug and enemies
 	sta pauseLadybug
 	sta pauseEnemy
 
@@ -2699,21 +2699,21 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx #0					; move sprites 0 to max 1 pixel (ladybug and enemys)
+	ldx #0					; move sprites 0 to max 1 pixel (ladybug and enemies)
 	jsr moveSpritesPixel
 	
-	clc					; do the speed fraction counter see if we need to move enemys another pixel
+	clc					; do the speed fraction counter see if we need to move enemies another pixel
 	lda enemySpeedCounter
 	adc enemySpeed
 	sta enemySpeedCounter
-	bcs moveSpritesEnemy			; if carry generated then move enemys 1 extra pixel
+	bcs moveSpritesEnemy			; if carry generated then move enemies 1 extra pixel
 	jmp moveSpritesExit
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesEnemy
 
-	ldx #1					; else move sprites 1 to max 1 pixel (enemys only, not ladybug sprite 0)
+	ldx #1					; else move sprites 1 to max 1 pixel (enemies only, not ladybug sprite 0)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2735,7 +2735,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	
 .moveSpritesIsEnemyEnabled
 
-	lda pauseEnemy				; if index > 0 (enemys) and enemys are paused then skip them
+	lda pauseEnemy				; if index > 0 (enemies) and enemies are paused then skip them
 	beq moveSpritesGetDirection
 	jmp moveSpritesNext
 
@@ -2851,7 +2851,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	lda #sfxSkull				; play skull sound
 	jsr playSound
 
-	dec enemysActive			; reduce number of active enemys
+	dec enemiesActive			; reduce number of active enemies
 	
 	lda #spriteBlanking			; deactivate the current enemy
 	ora spritesDir, x
@@ -3362,7 +3362,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	lda vegetableActive			; if the vegetable not active
 	beq drawVegetableCenterExit		; then exit
 
-	lda enemysActive			; if maximum number of enemys are active
+	lda enemiesActive			; if maximum number of enemies are active
 	cmp #spritesTotal - 1
 	beq drawVegetableCenterActive
 
@@ -4346,7 +4346,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #(256 - ladybugDeathFlashTime) - 1
 	bne ladybugDeathAnimationCheckUpperLower
 
-	ldx #spritesTotal - 1			; erase all enemys
+	ldx #spritesTotal - 1			; erase all enemies
 	lda #spriteBlanking
 
 .ladybugDeathAnimationDrawAngelLoop
@@ -5105,7 +5105,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	cmp #3					; if cursor == 3 (enemySpeed) then
 	bne mainMenuProcessStartEnemyAttack
 	
-	jsr mainMenuDrawEnemys			; place 4 random enemys on screen
+	jsr mainMenuDrawEnemies			; place 4 random enemies on screen
 	
 	clc					; return false
 	rts
@@ -5115,7 +5115,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	cmp #4					; if cursor == 4 (enemyAttack) then
 	bne mainMenuProcessStartLadybugLives
 	
-	jsr mainMenuDrawEnemys			; place 4 random enemys on screen
+	jsr mainMenuDrawEnemies			; place 4 random enemies on screen
 	
 	clc					; return false
 	rts
@@ -5544,30 +5544,30 @@ if bp {.bp print ";draw angel sprite":} endif
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .mainMenuDrawEnemys				; draw 4 enemys on screen
+; .mainMenuDrawEnemies				; draw 4 enemies on screen
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.mainMenuEnemysX
+.mainMenuEnemiesX
 
 	equb 27, 149, 157, 19			; enemy x positions
 
-.mainMenuEnemysY
+.mainMenuEnemiesY
 
 	equb 69, 69, 50, 50			; enemy y positions
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.mainMenuDrawEnemys
+.mainMenuDrawEnemies
 
 	jsr random				; pick a random direction and enemy for the draw loop
 
-	ldx #3					; 4 enemys to draw
+	ldx #3					; 4 enemies to draw
 	
-.mainMenuDrawEnemysLoop
+.mainMenuDrawEnemiesLoop
 
-	lda mainMenuEnemysX, x			; set X and Y position
+	lda mainMenuEnemiesX, x			; set X and Y position
 	sta spritesX + 1, x
-	lda mainMenuEnemysY, x
+	lda mainMenuEnemiesY, x
 	sta spritesY + 1, x
 	
 	lda randomSeed + 1			; set sprite image
@@ -5587,8 +5587,8 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	inc randomSeed + 1			; increment sprite image for next sprite
 
-	dex					; repeat until all enemys places
-	bpl mainMenuDrawEnemysLoop
+	dex					; repeat until all enemies places
+	bpl mainMenuDrawEnemiesLoop
 	
 	rts					; return
 
@@ -5632,7 +5632,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 	jsr mainMenuDrawSettings		; draw the current settings
 
-	jmp mainMenuDrawEnemys			; place 4 enemys on screen and return
+	jmp mainMenuDrawEnemies			; place 4 enemies on screen and return
 
 
 
@@ -5928,7 +5928,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #nameRegTimer			; set enemy timer speed
 	sta enemyTimerSpeed
 
-	lda #0					; unpause enemys so that the timer will tick
+	lda #0					; unpause enemies so that the timer will tick
 	sta pauseEnemy
 
 	sta pauseLadybug			; unpause ladybug so that it will animate
@@ -5936,7 +5936,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	sta shield				; clear shields so that skull color will sequence
 
 	lda #0					; enable enemy release flag usage and warning sound
-	sta enemysActive
+	sta enemiesActive
 	sta enemyReleaseEnable			; disable enemy release flag (used later in timeout test)
 
 	jsr drawString
@@ -6476,7 +6476,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	and #bonusBitsSpecial
 	bne checkBonusExtra
 
-	lda #letterBonusTime			; pause ladybug and enemys
+	lda #letterBonusTime			; pause ladybug and enemies
 	sta pauseLadybug
 	sta pauseEnemy
 
@@ -6506,7 +6506,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	and #bonusBitsExtra
 	bne checkBonusExit
 	
-	lda #letterBonusTime			; pause ladybug and enemys
+	lda #letterBonusTime			; pause ladybug and enemies
 	sta pauseLadybug
 	sta pauseEnemy
 
@@ -6917,7 +6917,7 @@ if bp {.bp print ";draw angel sprite":} endif
 	cmp #5
 	bcs enemyReleaseExit
 
-	lda enemysActive			; if enemysActive < spritesTotal - 1
+	lda enemiesActive			; if enemiesActive < spritesTotal - 1
 	cmp #spritesTotal - 1
 	bcs enemyReleaseExit
 
@@ -6952,12 +6952,12 @@ if bp {.bp print ";draw angel sprite":} endif
 	lda #moveUp				; pending enemy found so release it by setting it moving upwards out of the box
 	sta spritesDir, x
 
-	inc enemysActive			; increase enemys active count
+	inc enemiesActive			; increase enemies active count
 
 	lda #0					; disable enemy release until timer re-enables it
 	sta enemyReleaseEnable
 
-	lda enemysActive			; if maximum enemys not active yet
+	lda enemiesActive			; if maximum enemies not active yet
 	cmp #spritesTotal - 1
 	beq enemyReleaseMax
 	
@@ -6969,7 +6969,7 @@ if bp {.bp print ";draw angel sprite":} endif
 
 .enemyReleaseMax
 
-	lda #&ff				; maximum enemys released so activate center vegetable
+	lda #&ff				; maximum enemies released so activate center vegetable
 	sta vegetableActive
 	
 	rts
@@ -6983,10 +6983,10 @@ if bp {.bp print ";draw angel sprite":} endif
 .enemySpawn
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; first check that there are currently no enemys in the box
+	; first check that there are currently no enemies in the box
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx #spritesTotal - 1			; check that there are currently no enemys in the box
+	ldx #spritesTotal - 1			; check that there are currently no enemies in the box
 
 .enemySpawnCheckEmpty
 
@@ -8794,7 +8794,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #0					; disable the diamond after this
 	sta bonusDiamondEnable
 	
-	lda #letterBonusTime			; pause ladybug and enemys
+	lda #letterBonusTime			; pause ladybug and enemies
 	sta pauseLadybug
 	sta pauseEnemy
 
@@ -8822,7 +8822,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #vegetableLadybugTime		; pause ladybug
 	sta pauseLadybug
 
-	lda #vegetableEnemyTime			; pause enemys
+	lda #vegetableEnemyTime			; pause enemies
 	sta pauseEnemy
 
 	jsr addScoreVegetable			; add the vegetable bonus score
@@ -9129,7 +9129,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #sfxMusicDeath			; play ladybug death music
 	jsr playSound
 
-	lda #ladybugDeathTime			; pause ladybug and enemys
+	lda #ladybugDeathTime			; pause ladybug and enemies
 	sta pauseLadybug
 	sta pauseEnemy
 
@@ -10037,7 +10037,7 @@ include "soundtables.asm"
 	next
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; generate address table for ladybug and enemys
+	; generate address table for ladybug and enemies
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	for n, ladybugBin, spriteBinEnd - 1, spriteTileBytes
@@ -10057,7 +10057,7 @@ include "soundtables.asm"
 	next
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; generate address table for ladybug and enemys
+	; generate address table for ladybug and enemies
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	for n, ladybugBin, spriteBinEnd - 1, spriteTileBytes

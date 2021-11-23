@@ -613,7 +613,7 @@ bootstrap     &4700 - &47D4 , 213 bytes
      002F
 .enemyReleaseFrame
      0030
-.enemysActive
+.enemiesActive
      0031
 .enemyTimer
      0032
@@ -3580,20 +3580,20 @@ bootstrap     &4700 - &47D4 , 213 bytes
      15D4   09 30      ORA #&30
      15D6   20 60 06   JSR &0660
      15D9   60         RTS
-.mainMenuEnemysX
+.mainMenuEnemiesX
      15DA   1B
      15DB   95
      15DC   9D
      15DD   13
-.mainMenuEnemysY
+.mainMenuEnemiesY
      15DE   45
      15DF   45
      15E0   32
      15E1   32
-.mainMenuDrawEnemys
+.mainMenuDrawEnemies
      15E2   20 BE 02   JSR &02BE
      15E5   A2 03      LDX #&03
-.mainMenuDrawEnemysLoop
+.mainMenuDrawEnemiesLoop
      15E7   BD DA 15   LDA &15DA,X
      15EA   95 64      STA &64,X
      15EC   BD DE 15   LDA &15DE,X
