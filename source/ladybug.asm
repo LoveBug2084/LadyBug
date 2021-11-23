@@ -239,7 +239,7 @@ endif
 .enemiesActive		skip 1			; number of enemies currectly active
 .enemyTimer		skip 1			; enemy release timer counter 0-91, enemy released when = 0 and enemy release enable != 0
 .enemyTimerSpeed	skip 1			; enemy release timer speed (frames) level 1=8, level 2-4=5, level 5-99=3
-.enemyTimerSpeedCounter skip 1			; enemy timer tick counter
+.enemyTimerSpeedCounter skip 1			; enemy release timer speed counter (frame counter)
 
 .enemySpawnSaveX	skip 1			; preserve current enemy index
 
@@ -3899,22 +3899,23 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; levelAdvance					note: !!! all values are BCD except vegetableImage !!!
-;						if level < &99 then level=level+1
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;						if level < &99 then level=level+&01
 ;						if vegetableScore < &95 then vegetableScore = vegetableScore + &05
 ;						vegetableImage = vegetableImage + 1
 ;						if vegetableImage >= &12 then vegetableImage = 0
-;						if shield != 0 then shield = shield - 1
+;						if shield != 0 then shield = shield - &01
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .levelAdvance
 
 	sed					; switch to bcd mode
 
-	lda shield				; if shield != 0
+	lda shield				; if shield != &00
 	beq levelAdvanceLevel
 
-	sec					; then shield = shield - 1
-	sbc #1
+	sec					; then shield = shield - &01
+	sbc #&01
 	sta shield
 
 .levelAdvanceLevel
@@ -3923,15 +3924,15 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #&99
 	bcs levelAdvanceVegetableScore
 
-	adc #1					; add 1 to level (carry already clear from previous cmp result)
+	adc #&01				; add &01 to level (carry already clear from previous cmp result)
 	sta level
 	
 .levelAdvanceVegetableScore	
 
-	lda vegetableScore			; if vegetableScore < 9500
+	lda vegetableScore			; if vegetableScore < &9500
 	cmp #&95
 	bcs levelAdvanceVegetableImage
-	adc #&05				; then vegetableScore += 500
+	adc #&05				; then vegetableScore += &0500
 	sta vegetableScore
 	
 .levelAdvanceVegetableImage
@@ -6570,9 +6571,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda shield				; if theres currently shield active
 	beq checkBonusSpecialLevel
 	
-	sed					; then add 1 to shield (bcd) as the call to levelAdvance will reduce shield by 1
+	sed					; then add &01 to shield (bcd) as the call to levelAdvance will reduce shield by &01
 	clc					; so the player does not lose a shield for gaining extra shields
-	lda #1
+	lda #&01
 	adc shield
 	sta shield
 	cld
@@ -6614,9 +6615,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda shield				; if theres currently shield active
 	beq checkBonusExtraLevel
 	
-	sed					; then add 1 to shield (bcd) as the call to levelAdvance will reduce shield by 1
-	clc					; so the player does not lose a shield for gaining an extra life
-	lda #1
+	sed					; then add &01 to shield (bcd) as the call to levelAdvance will reduce shield by &01
+	clc					; so the player does not lose a shield for gaining extra lives
+	lda #&01
 	adc shield
 	sta shield
 	cld
