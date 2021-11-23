@@ -237,7 +237,7 @@ endif
 .enemyReleaseFrame	skip 1			; frame number to release enemy
 
 .enemiesActive		skip 1			; number of enemies currectly active
-.enemyTimer		skip 1			; enemy release timer counter 0-91, enemy released when = 0 and enemy release enable != 0
+.enemyTimer		skip 1			; enemy release timer counter 0-87, enemy released when = 0 and enemy release enable != 0
 .enemyTimerSpeed	skip 1			; enemy release timer speed (frames) level 1=8, level 2-4=5, level 5-99=3
 .enemyTimerSpeedCounter skip 1			; enemy release timer speed counter (frame counter)
 
