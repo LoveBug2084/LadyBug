@@ -87,9 +87,6 @@
 ; debugging stuff
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-bp			= false
-;bp			= true			; show breakpoints
-
 debugRaster		= false
 ;debugRaster		= true			; enable raster timing bars
 
@@ -3489,8 +3486,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .drawSpriteGetIdAddr
 
-if bp {.bp print ";draw sprite get image address":} endif
-
 	lda drawSpriteImg			; get sprite data address from spriteImg address table
 
 	tay
@@ -4426,8 +4421,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	iny
 	lda (tileMapAddr), y
 	jsr drawMapTile
-
-if bp {.bp print ";draw angel sprite":} endif
 
 	lda spriteBaseImg + 9			; draw angel sprite
 	sta drawSpriteImg
