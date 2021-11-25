@@ -3160,8 +3160,8 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .upperBonusColor				; colors for special, extra, 235
 
-	equb pixelColA, pixelColB, pixelColA, pixelColB, pixelColA, pixelColB, pixelColA
-	equb pixelColD, pixelColC, pixelColD, pixelColC, pixelColD
+	equb pixelColSpecial0, pixelColSpecial1, pixelColSpecial0, pixelColSpecial1, pixelColSpecial0, pixelColSpecial1, pixelColSpecial0
+	equb pixelColExtra1, pixelColExtra0, pixelColExtra1, pixelColExtra0, pixelColExtra1
 	equb pixelCol6, pixelCol6, pixelCol6
 
 bonusBitsSpecial	= &7f			; bit mask for special bits on bonusBits + 1
@@ -4151,17 +4151,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs "HOLD ESC TO QUIT", &ff
 
 	jsr drawString
-	equb pixelColA
+	equb pixelColSpecial0
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs chrRight, &ff
 	
 	jsr drawString
-	equb pixelColE
+	equb pixelColSkull
 	equw screenAddr + 2 + 8 + 6 * chrColumn + 20 * chrRow
 	equs "START GAME", &ff
 	
 	jsr drawString
-	equb pixelColA
+	equb pixelColSpecial0
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 20 * chrRow
 	equs chrLeft, &ff
 
@@ -4886,7 +4886,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #' '
 	jsr drawChr
 
-	lda #pixelColA				; draw new cursors
+	lda #pixelColSpecial0				; draw new cursors
 	sta drawChrColor
 
 	ldy mainMenuCursor
@@ -5166,12 +5166,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelColC
+	equb pixelColExtra0
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "PRESS          ", &ff
 
 	jsr drawString				; draw text
-	equb pixelColB
+	equb pixelColSpecial1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "UP", &ff
 	
@@ -5197,7 +5197,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelColB
+	equb pixelColSpecial1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "DOWN", &ff
 	
@@ -5228,7 +5228,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelColB
+	equb pixelColSpecial1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "LEFT", &ff
 	
@@ -5261,7 +5261,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelColB
+	equb pixelColSpecial1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "RIGHT", &ff
 	
@@ -5413,7 +5413,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs "LOVEBUG 2021", &ff
 
 	jsr drawString
-	equb pixelColE
+	equb pixelColSkull
 	equw screenAddr + 2 + 8 + 6 * chrColumn + 12 * chrRow
 	equs "START GAME", &ff
 
@@ -5644,7 +5644,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs chrHeart,chrHeart,&ff
 	
 	jsr drawString				; draw text in skull color
-	equb pixelColE
+	equb pixelColSkull
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 3 * chrRow
 	equs "BEST PLAYERS",&ff
 	
@@ -5673,7 +5673,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .drawScoreTableName
 
-	lda #pixelColA				; draw name
+	lda #pixelColSpecial0				; draw name
 	sta drawChrColor
 	lda highScorePtr
 	clc
@@ -5684,7 +5684,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawText
 
 	lda drawScoreTableName + 1		; alternate name color
-	eor #pixelColA eor pixelColB
+	eor #pixelColSpecial0 eor pixelColSpecial1
 	sta drawScoreTableName + 1
 
 	lda drawChrAddr				; advance to next row
@@ -5705,17 +5705,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bne drawScoreTableLoop
 
 	jsr drawString
-	equb pixelColA
+	equb pixelColSpecial0
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 21 * chrRow
 	equs chrRight, &ff
 	
 	jsr drawString
-	equb pixelColE
+	equb pixelColSkull
 	equw screenAddr + 2 + 8 + 9 * chrColumn + 21 * chrRow
 	equs "MENU", &ff
 	
 	jsr drawString
-	equb pixelColA
+	equb pixelColSpecial0
 	equw screenAddr + 2 + 8 + 14 * chrColumn + 21 * chrRow
 	equs chrLeft, &ff
 
@@ -5763,7 +5763,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .drawScoreTableBlankingColor
 
-	lda #pixelColC				; set score color
+	lda #pixelColExtra0				; set score color
 	sta drawChrColor
 
 .drawScoreTableBlankingPrint
@@ -5786,7 +5786,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawChr
 
 	lda drawScoreTableBlankingColor + 1	; alternate score color
-	eor #pixelColC eor pixelColD
+	eor #pixelColExtra0 eor pixelColExtra1
 	sta drawScoreTableBlankingColor + 1
 
 	rts					; return
@@ -5871,7 +5871,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta pauseGame
 	
 	jsr drawString				; draw paused message
-	equb pixelColA
+	equb pixelColSpecial0
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equs "  PAUSED  ", &ff
 	
@@ -5981,7 +5981,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #' '				; space
 	jsr drawChr
 	
-	lda #pixelColE				; draw enter in skull color
+	lda #pixelColSkull				; draw enter in skull color
 	sta drawChrColor
 	lda #chrDown
 	jsr drawChr

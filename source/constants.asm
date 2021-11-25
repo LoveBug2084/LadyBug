@@ -315,14 +315,14 @@ pixelCol4		= &30
 pixelCol5		= &33
 pixelCol6		= &3c
 pixelCol7		= &3f
-pixelCol8		= &c0
-pixelCol9		= &c3
-pixelColA		= &cc
-pixelColB		= &cf
-pixelColC		= &f0
-pixelColD		= &f3
-pixelColE		= &fc
-pixelColF		= &ff
+pixelColUnused0		= &c0
+pixelColUnused1		= &c3
+pixelColSpecial0	= &cc
+pixelColSpecial1	= &cf
+pixelColExtra0		= &f0
+pixelColExtra1		= &f3
+pixelColSkull		= &fc
+pixelColObject		= &ff
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; os vectors and functions

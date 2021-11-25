@@ -191,12 +191,12 @@
 	equb &70 + palWhite
 	equb &80 + palBlack			; unused
 	equb &90 + palBlack			; unused
-	equb &a0 + palRed			; flashing red/magenta letters
-	equb &b0 + palMagenta			; flashing red/magenta letters alternte phase
-	equb &c0 + palYellow			; flashing yellow/green letters
-	equb &d0 + palGreen			; flashing yellow/greem letters alternate phase
-	equb &e0 + palWhite			; skull color changed by game for normal/invulnerable mode
-	equb &f0 + palCyan			; object color change cyan, red, yellow for hearts and letters
+	equb &a0 + palRed			; flashing red/magenta special
+	equb &b0 + palMagenta			; flashing red/magenta special
+	equb &c0 + palYellow			; flashing yellow/green extra
+	equb &d0 + palGreen			; flashing yellow/greem extra
+	equb &e0 + palWhite			; skull
+	equb &f0 + palCyan			; object
 
 	print
 
