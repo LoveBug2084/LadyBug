@@ -808,7 +808,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
 
-	lda #pixelCol0				; fill screen with black
+	lda #pixels0				; fill screen with black
 
 .clearScreenLoop
 
@@ -1636,7 +1636,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	eor #7
 	tax
 
-	lda #pixelCol0				; fill byte = black
+	lda #pixels0				; fill byte = black
 
 .eraseBlockWrite
 
@@ -1665,7 +1665,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 	ldx #7					; reset row adjust counter
 
-	lda #pixelCol0				; reload A with black
+	lda #pixels0				; reload A with black
 
 .eraseBlockContinue
 
@@ -2421,7 +2421,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr initSprites				; initialize all sprites as blanked and erased
 
 	jsr drawString				; draw game over message
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 7 * chrColumn + 12 * chrRow
 	equs "GAME OVER", &ff
 	
@@ -3075,7 +3075,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	jsr drawExtraTile
 
 	jsr drawString				; draw the 3 multipliers
-	equb pixelCol6
+	equb pixels6
 	equw screenAddr + 2 + 16 * chrColumn
 	equs chrMultiplierX, ' ', chrMultiplierX, ' ', chrMultiplierX, &ff
 
@@ -3098,7 +3098,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	stx drawPlayfieldUpperBonusSaveX	; save x
 
 	jsr drawString				; set address
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 16
 	equb &ff
 	
@@ -3113,7 +3113,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .drawPlayfieldUpperText
 
-	lda #pixelCol7				; if bit = 1 use white
+	lda #pixels7				; if bit = 1 use white
 	bit bonusBitsTemp + 1
 	bmi drawPlayfieldUpperTextChr
 	lda upperBonusColor, x			; else bit = 0 so use color from table
@@ -3160,9 +3160,9 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .upperBonusColor				; colors for special, extra, 235
 
-	equb pixelColSpecial0, pixelColSpecial1, pixelColSpecial0, pixelColSpecial1, pixelColSpecial0, pixelColSpecial1, pixelColSpecial0
-	equb pixelColExtra1, pixelColExtra0, pixelColExtra1, pixelColExtra0, pixelColExtra1
-	equb pixelCol6, pixelCol6, pixelCol6
+	equb pixelsSpecial0, pixelsSpecial1, pixelsSpecial0, pixelsSpecial1, pixelsSpecial0, pixelsSpecial1, pixelsSpecial0
+	equb pixelsExtra1, pixelsExtra0, pixelsExtra1, pixelsExtra0, pixelsExtra1
+	equb pixels6, pixels6, pixels6
 
 bonusBitsSpecial	= &7f			; bit mask for special bits on bonusBits + 1
 bonusBitsExtra		= &f8			; bit mask for extra bits on bonusBits + 0
@@ -3207,7 +3207,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; draw vegetable value
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 24 * chrRow
 	equb &ff
 
@@ -3219,12 +3219,12 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; "L"
-	equb pixelCol4
+	equb pixels4
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 24 * chrRow
 	equs "L", &ff
 
 	jsr drawString				; draw 2 digit level number
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 8 + 11 * chrColumn + 24 * chrRow
 	equb &ff
 
@@ -3234,7 +3234,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; "1P"
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 16 + 13 * chrColumn + 24 * chrRow
 	equs "1P", &ff
 	
@@ -3262,7 +3262,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .drawHighScoreName
 
 	jsr drawString				; set screen position and color
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equb &ff
 	
@@ -3282,7 +3282,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .drawPlayfieldLowerLives
 
 	jsr drawString				; draw 2 digit lives
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 16 + 1 * chrColumn + 24 * chrRow
 	equb &ff
 
@@ -4069,7 +4069,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawFlowers				; draw two random flowers
 
 	jsr drawString				; draw instruction text
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 4 * chrRow
 	equs "INSTRUCTIONS", &ff
 	
@@ -4091,7 +4091,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawMapTile
 	
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 16 + 6 * chrColumn + 7 * chrRow
 	equs "MULTIPLY SCORE", &ff
 
@@ -4126,42 +4126,42 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bne instructionsLettersLoop
 
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 3 * chrColumn + 11 * chrRow
 	equs "COLLECT FOR BONUS", &ff
 
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 5 * chrColumn + 12 * chrRow
 	equs "GARDEN PRIZES", &ff
 
 	jsr drawString
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 6 * chrColumn + 15 * chrRow
 	equs "DURING GAME", &ff
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 5 * chrColumn + 16 * chrRow
 	equs "RETURN PAUSES", &ff
 
 	jsr drawString
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 8 + 3 * chrColumn + 17 * chrRow
 	equs "HOLD ESC TO QUIT", &ff
 
 	jsr drawString
-	equb pixelColSpecial0
+	equb pixelsSpecial0
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs chrRight, &ff
 	
 	jsr drawString
-	equb pixelColSkull
+	equb pixelsSkull
 	equw screenAddr + 2 + 8 + 6 * chrColumn + 20 * chrRow
 	equs "START GAME", &ff
 	
 	jsr drawString
-	equb pixelColSpecial0
+	equb pixelsSpecial0
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 20 * chrRow
 	equs chrLeft, &ff
 
@@ -4886,7 +4886,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #' '
 	jsr drawChr
 
-	lda #pixelColSpecial0				; draw new cursors
+	lda #pixelsSpecial0				; draw new cursors
 	sta drawChrColor
 
 	ldy mainMenuCursor
@@ -5166,12 +5166,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelColExtra0
+	equb pixelsExtra0
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "PRESS          ", &ff
 
 	jsr drawString				; draw text
-	equb pixelColSpecial1
+	equb pixelsSpecial1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "UP", &ff
 	
@@ -5183,7 +5183,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta optionKeys + 3			; store up key scan code
 
 	jsr drawString				; position for printing
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 15 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5197,7 +5197,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelColSpecial1
+	equb pixelsSpecial1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "DOWN", &ff
 	
@@ -5214,7 +5214,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta optionKeys + 2			; store down key scan code
 
 	jsr drawString				; position for printing
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 16 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5228,7 +5228,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelColSpecial1
+	equb pixelsSpecial1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "LEFT", &ff
 	
@@ -5247,7 +5247,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta optionKeys + 1			; store left key scan code
 
 	jsr drawString				; position for printing
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 17 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5261,7 +5261,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelColSpecial1
+	equb pixelsSpecial1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "RIGHT", &ff
 	
@@ -5282,7 +5282,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta optionKeys + 0			; store right key scan code
 
 	jsr drawString				; position for printing
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 18 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5296,7 +5296,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; restore original text
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "CONTROLS   ", &ff
 
@@ -5398,62 +5398,62 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawText
 
 	jsr drawString
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 7 * chrRow
 	equs "UNIVERSAL", chrCopyright, "1981", &ff
 
 	jsr drawString
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 5 * chrColumn + 9 * chrRow
 	equs "PROGRAMMED BY", &ff
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 10 * chrRow
 	equs "LOVEBUG 2021", &ff
 
 	jsr drawString
-	equb pixelColSkull
+	equb pixelsSkull
 	equw screenAddr + 2 + 8 + 6 * chrColumn + 12 * chrRow
 	equs "START GAME", &ff
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 14 * chrRow
 	equs "HIGH SCORES", &ff
 
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 4 * chrColumn + 15 * chrRow
 	equs "ENEMY SPEED", &ff
 	
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 16 * chrRow
 	equs "ENEMY ATTACK", &ff
 	
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 4 * chrColumn + 17 * chrRow
 	equs "LADY BUGS", &ff
 	
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 18 * chrRow
 	equs "SOUND", &ff
 	
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 4 * chrColumn + 19 * chrRow
 	equs "TIMER VOLUME", &ff
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "CONTROLS", &ff
 	
 	jsr drawString
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 15 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5478,7 +5478,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawSettings
 
 	jsr drawString				; draw enemy speed
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 18 * chrColumn + 15 * chrRow
 	equb &ff
 	
@@ -5487,7 +5487,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawChr
 	
 	jsr drawString				; draw enemy attack
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 18 * chrColumn + 16 * chrRow
 	equb &ff
 	
@@ -5496,7 +5496,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawChr
 	
 	jsr drawString				; draw ladybug lives
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 18 * chrColumn + 17 * chrRow
 	equb &ff
 	
@@ -5508,7 +5508,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	beq mainMenuDrawSettingsMute
 
 	jsr drawString
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 16 * chrColumn + 18 * chrRow
 	equs " ON", &ff
 	jmp mainMenuDrawSettingsTimerVolume
@@ -5516,7 +5516,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawSettingsMute
 
 	jsr drawString
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 16 * chrColumn + 18 * chrRow
 	equs "OFF", &ff
 
@@ -5525,7 +5525,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawSettingsTimerVolume
 	
 	jsr drawString				; draw timer volume
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 18 * chrColumn + 19 * chrRow
 	equb &ff
 	
@@ -5639,22 +5639,22 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
 
 	jsr drawString				; draw 2 red hearts
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,&ff
 	
 	jsr drawString				; draw text in skull color
-	equb pixelColSkull
+	equb pixelsSkull
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 3 * chrRow
 	equs "BEST PLAYERS",&ff
 	
 	jsr drawString				; draw 2 red hearts
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 8 + 18 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,&ff
 
 	jsr drawString				; position cursor
-	equb pixelCol0
+	equb pixels0
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 5 * chrRow
 	equb &ff
 
@@ -5673,7 +5673,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .drawScoreTableName
 
-	lda #pixelColSpecial0				; draw name
+	lda #pixelsSpecial0				; draw name
 	sta drawChrColor
 	lda highScorePtr
 	clc
@@ -5684,7 +5684,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawText
 
 	lda drawScoreTableName + 1		; alternate name color
-	eor #pixelColSpecial0 eor pixelColSpecial1
+	eor #pixelsSpecial0 eor pixelsSpecial1
 	sta drawScoreTableName + 1
 
 	lda drawChrAddr				; advance to next row
@@ -5705,17 +5705,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bne drawScoreTableLoop
 
 	jsr drawString
-	equb pixelColSpecial0
+	equb pixelsSpecial0
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 21 * chrRow
 	equs chrRight, &ff
 	
 	jsr drawString
-	equb pixelColSkull
+	equb pixelsSkull
 	equw screenAddr + 2 + 8 + 9 * chrColumn + 21 * chrRow
 	equs "MENU", &ff
 	
 	jsr drawString
-	equb pixelColSpecial0
+	equb pixelsSpecial0
 	equw screenAddr + 2 + 8 + 14 * chrColumn + 21 * chrRow
 	equs chrLeft, &ff
 
@@ -5763,7 +5763,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .drawScoreTableBlankingColor
 
-	lda #pixelColExtra0				; set score color
+	lda #pixelsExtra0				; set score color
 	sta drawChrColor
 
 .drawScoreTableBlankingPrint
@@ -5786,7 +5786,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawChr
 
 	lda drawScoreTableBlankingColor + 1	; alternate score color
-	eor #pixelColExtra0 eor pixelColExtra1
+	eor #pixelsExtra0 eor pixelsExtra1
 	sta drawScoreTableBlankingColor + 1
 
 	rts					; return
@@ -5871,7 +5871,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta pauseGame
 	
 	jsr drawString				; draw paused message
-	equb pixelColSpecial0
+	equb pixelsSpecial0
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equs "  PAUSED  ", &ff
 	
@@ -5934,46 +5934,46 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta enemyReleaseEnable			; disable enemy release flag (used later in timeout test)
 
 	jsr drawString
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 16 + 4 * chrRow + 3 * chrColumn
 	equs "CONGRATULATIONS!", &ff
 
 	jsr drawString
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 6 * chrRow + 5 * chrColumn
 	equs "REGISTER YOUR", &ff
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 8 * chrRow + 4 * chrColumn
 	equs "HIGH SCORE NAME", &ff
 
 	jsr drawString
-	equb pixelCol4
+	equb pixels4
 	equw screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn
 	equs "----------", &ff
 
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 14 * chrRow + 4 * chrColumn
 	equs "A B C D E F G H", &ff
 	
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 16 * chrRow + 4 * chrColumn
 	equs "I J K L M N O P", &ff
 
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 18 * chrRow + 4 * chrColumn
 	equs "Q R S T U V W X", &ff
 
 	jsr drawString
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 20 * chrRow + 4 * chrColumn
 	equs "Y Z ", chrHeart, " ! .   ", &ff
 
-	lda #pixelCol1				; draw delete in red
+	lda #pixels1				; draw delete in red
 	sta drawChrColor
 	lda #chrLeft
 	jsr drawChr
@@ -5981,7 +5981,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #' '				; space
 	jsr drawChr
 	
-	lda #pixelColSkull				; draw enter in skull color
+	lda #pixelsSkull				; draw enter in skull color
 	sta drawChrColor
 	lda #chrDown
 	jsr drawChr
@@ -6266,7 +6266,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda screenColumnHi, y
 	adc #Hi(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr + 1
-	lda #pixelCol4
+	lda #pixels4
 	sta drawChrColor
 	lda #'-'
 	jsr drawChr
@@ -6296,7 +6296,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda screenColumnHi, y
 	adc #Hi(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr + 1
-	lda #pixelCol7
+	lda #pixels7
 	sta drawChrColor
 	lda (highScorePtr), y
 	jsr drawChr
@@ -7407,11 +7407,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; draw level text
-	equb pixelCol2
+	equb pixels2
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 4 * chrRow
 	equs "LEVEL ", &ff
 	
-	lda #pixelCol5				; draw level number
+	lda #pixels5				; draw level number
 	sta drawChrColor
 	
 	lda level
@@ -7428,7 +7428,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawVegetable
 
 	jsr drawString				; draw vegetable score
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 6 * chrRow
 	equb &ff
 
@@ -7441,7 +7441,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; draw vegetable name centered
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda #pixelCol3				; draw vegetable name
+	lda #pixels3				; draw vegetable name
 	sta drawChrColor
 
 	lda vegetableImg
@@ -7562,11 +7562,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	beq drawLevelIntroGoodLuck
 
 	jsr drawString
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 7 * chrColumn + 20 * chrRow
 	equs "SHIELD ", &ff
 	
-	lda #pixelCol7
+	lda #pixels7
 	sta drawChrColor
 	lda shield
 	jsr drawHex
@@ -7580,7 +7580,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 .drawLevelIntroGoodLuck
 
 	jsr drawString
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 7 * chrColumn + 20 * chrRow
 	equs "GOOD LUCK", &ff
 	
@@ -7782,16 +7782,16 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta ulaPalette
 
 	jsr drawString				; draw the bonus text
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 8 + 3 * chrColumn + 16 * chrRow
 	equs "CONGRATULATIONS!", &ff
 
 	jsr drawString
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 18 * chrRow
 	equs "YOU WIN ", &ff
 
-	lda #pixelCol7
+	lda #pixels7
 	sta drawChrColor
 	
 	lda #specialBonusScore + '0'
@@ -7804,17 +7804,17 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 
 	jsr drawString
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 18 * chrRow
 	equs "PTS", &ff
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "AND", &ff
 
 	jsr drawString
-	equb pixelCol7
+	equb pixels7
 	equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -7822,7 +7822,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 	
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "SHIELDS", &ff
 
@@ -7849,16 +7849,16 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	beq drawBonusScreenDiamond
 
 	jsr drawString				; draw the bonus text
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 16 + 3 * chrColumn + 16 * chrRow
 	equs "CONGRATULATIONS!", &ff
 
 	jsr drawString
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 7 * chrColumn + 18 * chrRow
 	equs "YOU WIN ", &ff
 
-	lda #pixelCol7
+	lda #pixels7
 	sta drawChrColor
 
 	lda #extraBonusLives + '0'
@@ -7867,14 +7867,14 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	if extraBonusLives = 1
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs "EXTRA LADY BUG", &ff
 
 	else
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "EXTRA LADY BUGS", &ff
 
@@ -7942,21 +7942,21 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	bne drawBonusScreenDiamondGraphicsLoop3
 
 	jsr drawString				; draw the bonus text
-	equb pixelCol1
+	equb pixels1
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 16 * chrRow
 	equs "YOU DISCOVERED THE", &ff
 
 	jsr drawString
-	equb pixelCol3
+	equb pixels3
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 18 * chrRow
 	equs "DIAMOND GARDEN", &ff
 
 	jsr drawString
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 2 * chrColumn + 20 * chrRow
 	equs "AND WIN ", &ff
 
-	lda #pixelCol7
+	lda #pixels7
 	sta drawChrColor
 	
 	lda #diamondBonusScore
@@ -7969,7 +7969,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 
 	jsr drawString
-	equb pixelCol5
+	equb pixels5
 	equw screenAddr + 2 + 18 * chrColumn + 20 * chrRow
 	equs "PTS", &ff
 

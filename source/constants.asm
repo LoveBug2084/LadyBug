@@ -21,7 +21,7 @@
 true			= TRUE			; because caps burn the eyes !
 false			= FALSE
 
-magicNumber		= &69			; used to initialize random seed and in generating a validation code
+magicNumber		= &69			; used for random seed, validation generation, swr test
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -152,33 +152,25 @@ spriteBlanking		= &08			; bit 3 when set prevents the sprite being drawn althoug
 wallSolid		= &c0			; solid tile to enemy and player
 wallTurnstile		= &80			; solid tile to enemy only
 
-mapTileBlank		= &00
+mapTileBlank		= &00			; empty tile
 
-mapTileDot		= &01
+mapTileDot		= &01			; dot tile
 
-mapTileTimerTopLeft	= &02
-;mapTileTimerTopLeft	= &03
+mapTileTimerTopLeft	= &02			; timer tiles
 mapTileTimerTop		= &04
-;mapTileTimerTop	= &05
 mapTileTimerTopRight	= &06
-;mapTileTimerTopRight	= &07
 mapTileTimerLeft	= &08
-;mapTileTimerLeft	= &09
 mapTileTimerRight	= &0a
-;mapTileTimerRight	= &0b
 mapTileTimerBottomLeft	= &0c
-;mapTileTimerBottomLeft	= &0d
 mapTileTimerBottom	= &0e
-;mapTileTimerBottom	= &0f
 mapTileTimerBottomRight	= &10
-;mapTileTimerBottomRight= &11
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-mapTileVerticalBar	= &16
+mapTileVerticalBar	= &16			; maze tile
 
-mapTileTurnstileCV	= &1c
+mapTileTurnstileCV	= &1c			; turnstile tiles
 mapTileTurnstileCH	= &1d
 mapTileTurnstileD	= &1e
 mapTileTurnstileU	= &1f
@@ -218,7 +210,7 @@ extraTileUpper		= extraTileLogo + 36	; upper playfield bonus holders
 extraTileLeavesL	= extraTileUpper + 9	; leaves
 extraTileLeavesR	= extraTileUpper + 10
 
-extraTileFlower0TL	= extraTileUpper + 11
+extraTileFlower0TL	= extraTileUpper + 11	; flowers
 extraTileFlower0TR	= extraTileUpper + 12
 extraTileFlower0BL	= extraTileUpper + 13
 extraTileFlower0BR	= extraTileUpper + 14
@@ -241,6 +233,8 @@ extraTileFlower3BR	= extraTileUpper + 26
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+						; name registration letter box
 
 registrationTL		= extraTileFlower3BR + 1
 registrationTR		= extraTileFlower3BR + 2
@@ -307,22 +301,22 @@ palWhite		= 7 eor 7
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-pixelCol0		= &00			; pixel mask color values
-pixelCol1		= &03
-pixelCol2		= &0c
-pixelCol3		= &0f
-pixelCol4		= &30
-pixelCol5		= &33
-pixelCol6		= &3c
-pixelCol7		= &3f
-pixelColUnused0		= &c0
-pixelColUnused1		= &c3
-pixelColSpecial0	= &cc
-pixelColSpecial1	= &cf
-pixelColExtra0		= &f0
-pixelColExtra1		= &f3
-pixelColSkull		= &fc
-pixelColObject		= &ff
+pixels0			= &00			; pixel mask color values
+pixels1			= &03
+pixels2			= &0c
+pixels3			= &0f
+pixels4			= &30
+pixels5			= &33
+pixels6			= &3c
+pixels7			= &3f
+pixelsUnused0		= &c0
+pixelsUnused1		= &c3
+pixelsSpecial0		= &cc
+pixelsSpecial1		= &cf
+pixelsExtra0		= &f0
+pixelsExtra1		= &f3
+pixelsSkull		= &fc
+pixelsObject		= &ff
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; os vectors and functions
