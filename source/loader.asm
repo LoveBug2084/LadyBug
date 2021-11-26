@@ -281,6 +281,10 @@ continueBplus		= &d973			; os rom reset code
 
 .swrCleanResetMaster
 
+	lda resetVector				; if this is mos 3.50 (not handled yet)
+	cmp #&74
+	beq swrCleanResetB			; then use model B reset which will wipe ram but its better than crashing !
+
 	txa					; push 0 on stack (fake via interrupt enable flags)
 	pha
 

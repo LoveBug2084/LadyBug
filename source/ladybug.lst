@@ -203,7 +203,7 @@ bootstrap     &4700 - &47D4 , 213 bytes
      ACE8   16 AD
      ACEA   27 AD
      ACEC   0E AD
-     ACEE   2F AD
+     ACEE   36 AD
      ACF0   0E AD
      ACF2   0E AD
      ACF4   0E AD
@@ -236,52 +236,55 @@ bootstrap     &4700 - &47D4 , 213 bytes
      AD23   8A         TXA
      AD24   4C 73 D9   JMP &D973
 .swrCleanResetMaster
-     AD27   8A         TXA
-     AD28   48         PHA
-     AD29   20 37 AD   JSR &AD37
-     AD2C   4C 40 01   JMP &0140
+     AD27   AD FC FF   LDA &FFFC
+     AD2A   C9 74      CMP #&74
+     AD2C   F0 E0      BEQ &AD0E
+     AD2E   8A         TXA
+     AD2F   48         PHA
+     AD30   20 3E AD   JSR &AD3E
+     AD33   4C 40 01   JMP &0140
 .swrCleanResetCompact
-     AD2F   8A         TXA
-     AD30   48         PHA
-     AD31   20 37 AD   JSR &AD37
-     AD34   4C 4A 01   JMP &014A
+     AD36   8A         TXA
+     AD37   48         PHA
+     AD38   20 3E AD   JSR &AD3E
+     AD3B   4C 4A 01   JMP &014A
 .swrCleanResetMC
-     AD37   A8         TAY
-     AD38   AD 34 FE   LDA &FE34
-     AD3B   29 F3      AND #&F3
-     AD3D   09 0C      ORA #&0C
-     AD3F   8D 34 FE   STA &FE34
+     AD3E   A8         TAY
+     AD3F   AD 34 FE   LDA &FE34
+     AD42   29 F3      AND #&F3
+     AD44   09 0C      ORA #&0C
+     AD46   8D 34 FE   STA &FE34
 .swrCleanResetInit
-     AD42   98         TYA
-     AD43   85 01      STA &01
-     AD45   85 00      STA &00
+     AD49   98         TYA
+     AD4A   85 01      STA &01
+     AD4C   85 00      STA &00
 .swrCleanResetWipe
-     AD47   91 00      STA (&00),Y
-     AD49   C8         INY
-     AD4A   D0 FB      BNE &AD47
-     AD4C   A2 40      LDX #&40
-     AD4E   8E 00 0D   STX &0D00
+     AD4E   91 00      STA (&00),Y
+     AD50   C8         INY
+     AD51   D0 FB      BNE &AD4E
+     AD53   A2 40      LDX #&40
+     AD55   8E 00 0D   STX &0D00
 .swrCleanResetNext
-     AD51   E6 01      INC &01
-     AD53   A6 01      LDX &01
-     AD55   E0 01      CPX #&01
-     AD57   F0 F8      BEQ &AD51
-     AD59   E0 80      CPX #&80
-     AD5B   D0 04      BNE &AD61
-     AD5D   A2 C0      LDX #&C0
-     AD5F   86 01      STX &01
+     AD58   E6 01      INC &01
+     AD5A   A6 01      LDX &01
+     AD5C   E0 01      CPX #&01
+     AD5E   F0 F8      BEQ &AD58
+     AD60   E0 80      CPX #&80
+     AD62   D0 04      BNE &AD68
+     AD64   A2 C0      LDX #&C0
+     AD66   86 01      STX &01
 .swrCleanResetEnd
-     AD61   E0 E0      CPX #&E0
-     AD63   D0 E2      BNE &AD47
-     AD65   AD 34 FE   LDA &FE34
-     AD68   29 04      AND #&04
-     AD6A   08         PHP
-     AD6B   AD 34 FE   LDA &FE34
-     AD6E   29 FB      AND #&FB
-     AD70   8D 34 FE   STA &FE34
-     AD73   28         PLP
-     AD74   D0 CC      BNE &AD42
-     AD76   60         RTS
+     AD68   E0 E0      CPX #&E0
+     AD6A   D0 E2      BNE &AD4E
+     AD6C   AD 34 FE   LDA &FE34
+     AD6F   29 04      AND #&04
+     AD71   08         PHP
+     AD72   AD 34 FE   LDA &FE34
+     AD75   29 FB      AND #&FB
+     AD77   8D 34 FE   STA &FE34
+     AD7A   28         PLP
+     AD7B   D0 CC      BNE &AD49
+     AD7D   60         RTS
 .swramLastAddr
      AE00
 .loaderMessages
