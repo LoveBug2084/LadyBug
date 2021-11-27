@@ -279,11 +279,26 @@ continueBplus		= &d973			; os rom reset code
 ; Master reset clear 0000-00ff, 0200-7fff, c000-dfff (twice, once with shadow ram selected and then with main ram selected)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+masterMos320 = &e364				; reset vector @ fffc
+masterMos350 = &e374
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .swrCleanResetMaster
 
-	lda resetVector				; if this is mos 3.50 (not handled yet)
-	cmp #&74
-	beq swrCleanResetB			; then use model B reset which will wipe ram but its better than crashing !
+	lda resetVector				; check for mos version
+	
+	cmp #lo(masterMos320)
+	beq swrCleanResetMaster320
+	
+	cmp #lo(masterMos350)
+	beq swrCleanResetMaster350
+
+	bne swrCleanResetB
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetMaster320
 
 	txa					; push 0 on stack (fake via interrupt enable flags)
 	pha
@@ -291,7 +306,13 @@ continueBplus		= &d973			; os rom reset code
 	jsr swrCleanResetMC			; clear shadow and main ram
 	
 	jmp cleanResetMaster			; jump to code in stack to continue with os setup
-	
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrCleanResetMaster350
+
+	beq swrCleanResetB			; not yet supported, just clear ram for now
+
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
