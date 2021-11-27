@@ -313,7 +313,7 @@ FOR Z%=&00 TO &7C
 V%=(V%+(Z%?H% EOR M%)) AND &FF
 NEXT Z%
 
-IF V%=H%?&7D THEN OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E") ELSE *LOAD Config
+IF V%<>H%?&7D THEN OSCLI("LOAD Config") ELSE OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E"):PRINT TAB(20,15);CHR$(131);"Game";TAB(27,15);CHR$(131);"saved ok";
 
 ENDPROC
 

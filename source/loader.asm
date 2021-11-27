@@ -288,13 +288,13 @@ masterMos350 = &e374
 
 	lda resetVector				; check for mos version
 	
-	cmp #lo(masterMos320)
+	cmp #lo(masterMos320)			; mos 3.20 supported
 	beq swrCleanResetMaster320
 	
-	cmp #lo(masterMos350)
+	cmp #lo(masterMos350)			; mos 3.50 supported
 	beq swrCleanResetMaster350
 
-	bne swrCleanResetB
+	bne swrCleanResetB			; other mos not supported, use the bbc model b function to wipe memory
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -305,13 +305,18 @@ masterMos350 = &e374
 
 	jsr swrCleanResetMC			; clear shadow and main ram
 	
-	jmp cleanResetMaster			; jump to code in stack to continue with os setup
+	jmp cleanResetMaster320			; jump to code in stack to continue with mos setup
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrCleanResetMaster350
 
-	beq swrCleanResetB			; not yet supported, just clear ram for now
+	txa					; push 0 on stack (fake via interrupt enable flags)
+	pha
+
+	jsr swrCleanResetMC			; clear shadow and main ram
+	
+	jmp cleanResetMaster350			; jump to code in stack to continue with mos setup
 
 
 

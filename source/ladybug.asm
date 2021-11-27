@@ -455,25 +455,46 @@ soundChannels		= 6			; number of software defined sound channels
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; cleanResetMaster				page in bank 15 jump into os to continue
+; cleanResetMaster320				page in bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-continueMaster		= &8073			; os rom reset code
+continueMaster320	= &8073			; mos 3.20 entry point
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.cleanResetMaster
+.cleanResetMaster320
 
 	lda #&0f				; page in extra os code
 	sta bankSelectCopy
 	sta bankSelect
 	
-	jmp continueMaster			; continue with master os reset code
+	jmp continueMaster320			; continue with master os reset code
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; cleanResetCompact				page in bank 15 jump into os to continue
+; cleanResetMaster350				page in extra mos code at fc00, page in bank 15, jump into mos to continue
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+continueMaster350	= &fc76			; mos 3.50 entry point
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.cleanResetMaster350
+
+	lda #&49				; page in extra mos code at fc00
+	sta acccon
+
+	lda #&0f				; page in extra mos code at 8000
+	sta bankSelectCopy
+	sta bankSelect
+	
+	jmp continueMaster350			; continue with master os reset code
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; cleanResetCompact				page in bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 continueCompact		= &8068			; os rom reset code
