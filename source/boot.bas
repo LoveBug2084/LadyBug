@@ -233,23 +233,13 @@ ENDPROC
 DEF PROCerror
 
 ?E%=33
-*FX 19
-PRINT TAB(26,15);" ";TAB(25,15);" ";
 
-FOR R%=14 TO 10 STEP -1
-*FX 19
-PRINT TAB(2,R%);SPC(38);
-NEXT R%
-
-*FX 19
-FOR R%=10 TO 14
-PRINT TAB(0,R%);"  ";
-NEXT R%
+PROCeraseCenter
 
 IF ERR<>201 THEN PROCunexpectedError
 
 PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
-PRINT TAB(3,13);CHR$(132);"Unable to save";CHR$(135);"Scores";CHR$(132);"and";CHR$(135);"Settings";
+PRINT TAB(3,13);CHR$(132);"Unable to save";CHR$(135);"scores";CHR$(132);"and";CHR$(135);"settings";
 
 ENDPROC
 
@@ -313,9 +303,33 @@ FOR Z%=&00 TO &7C
 V%=(V%+(Z%?H% EOR M%)) AND &FF
 NEXT Z%
 
-IF V%<>H%?&7D THEN OSCLI("LOAD Config") ELSE OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E"):PRINT TAB(20,15);CHR$(131);"Game";TAB(27,15);CHR$(131);"saved ok";
+IF V%<>H%?&7D THEN OSCLI("LOAD Config"):ENDPROC
+
+OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E")
+
+PROCeraseCenter
+PRINT TAB(5,11);CHR$(135);"High scores";CHR$(132);"and";CHR$(135);"game settings";
+PRINT TAB(10,13);CHR$(132);"saved successfully";
 
 ENDPROC
 
+
+
+DEF PROCeraseCenter
+
+*FX 19
+PRINT TAB(26,15);" ";TAB(25,15);" ";
+
+FOR R%=14 TO 10 STEP -1
+*FX 19
+PRINT TAB(2,R%);SPC(38);
+NEXT R%
+
+*FX 19
+FOR R%=10 TO 14
+PRINT TAB(0,R%);"  ";
+NEXT R%
+
+ENDPROC
 
 
