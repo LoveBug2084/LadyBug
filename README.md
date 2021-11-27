@@ -6,7 +6,7 @@ I've included fontmaker and pixels written in c ( source code and compiled .exe'
 **Tested on the following computer models:**\
 B OS 1.20 using 12K of sideways ram\
 B+ 64K/128K OS 2.00 using 12K of workspace ram ( no sideways ram required )\
-Master 128K MOS 3.20 using 12K of sideways ram\
+Master 128K MOS 3.20/3.50 using 12K of sideways ram\
 Master Compact MOS 5.00/5.10 using 12K of sideways ram
 
 _**Note:**_ The video and screenshots are from various builds during development so the final build may differ slightly\
