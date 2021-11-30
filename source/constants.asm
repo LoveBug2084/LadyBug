@@ -191,7 +191,7 @@ mapTileT		= objectTileIndex + 8
 mapTileR		= objectTileIndex + 9
 mapTileSkull		= objectTileIndex + 10
 mapTileHeart		= objectTileIndex + 11
-mapTileBlueHeart	= objectTileIndex + 12
+mapTilecyanHeart	= objectTileIndex + 12
 mapTileYellowE		= objectTileIndex + 13
 mapTileYellowX		= objectTileIndex + 14
 mapTileYellowT		= objectTileIndex + 15
@@ -201,34 +201,34 @@ mapTileBlankObj		= objectTileIndex + 18
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-extraTileDigits		= &00			; digits 0-9
-extraTileBlank		= extraTileDigits + 10	; blank tile
-extraTileDiamond	= extraTileBlank + 1	; diamond image base
-extraTileLogo		= extraTileDiamond + 16	; ladybug logo tile image base
-extraTileUpper		= extraTileLogo + 36	; upper playfield bonus holders
+extraTileDigits		= 0			; digits 0-9
+extraTileBlank		= 10			; blank tile
+extraTileDiamond	= 11			; diamond image base
+extraTileLogo		= 27			; ladybug logo tile image base
+extraTileUpper		= 63			; upper playfield bonus holders
 
-extraTileLeavesL	= extraTileUpper + 9	; leaves
-extraTileLeavesR	= extraTileUpper + 10
+extraTileLeavesL	= 72			; leaves
+extraTileLeavesR	= 73
 
-extraTileFlower0TL	= extraTileUpper + 11	; flowers
-extraTileFlower0TR	= extraTileUpper + 12
-extraTileFlower0BL	= extraTileUpper + 13
-extraTileFlower0BR	= extraTileUpper + 14
+extraTileFlower0TL	= 74			; flowers
+extraTileFlower0TR	= 75
+extraTileFlower0BL	= 76
+extraTileFlower0BR	= 77
 
-extraTileFlower1TL	= extraTileUpper + 15
-extraTileFlower1TR	= extraTileUpper + 16
-extraTileFlower1BL	= extraTileUpper + 17
-extraTileFlower1BR	= extraTileUpper + 18
+extraTileFlower1TL	= 78
+extraTileFlower1TR	= 79
+extraTileFlower1BL	= 80
+extraTileFlower1BR	= 81
 
-extraTileFlower2TL	= extraTileUpper + 19
-extraTileFlower2TR	= extraTileUpper + 20
-extraTileFlower2BL	= extraTileUpper + 21
-extraTileFlower2BR	= extraTileUpper + 22
+extraTileFlower2TL	= 82
+extraTileFlower2TR	= 83
+extraTileFlower2BL	= 84
+extraTileFlower2BR	= 85
 
-extraTileFlower3TL	= extraTileUpper + 23
-extraTileFlower3TR	= extraTileUpper + 24
-extraTileFlower3BL	= extraTileUpper + 25
-extraTileFlower3BR	= extraTileUpper + 26
+extraTileFlower3TL	= 86
+extraTileFlower3TR	= 87
+extraTileFlower3BL	= 88
+extraTileFlower3BR	= 89
 
 
 
@@ -236,14 +236,14 @@ extraTileFlower3BR	= extraTileUpper + 26
 
 						; name registration letter box
 
-registrationTL		= extraTileFlower3BR + 1
-registrationTR		= extraTileFlower3BR + 2
-registrationBL		= extraTileFlower3BR + 3
-registrationBR		= extraTileFlower3BR + 4
-registrationVL		= extraTileFlower3BR + 5
-registrationVR		= extraTileFlower3BR + 6
-registrationTH		= extraTileFlower3BR + 7
-registrationBH		= extraTileFlower3BR + 8
+registrationTL		= 90
+registrationTR		= 91
+registrationBL		= 92
+registrationBR		= 93
+registrationVL		= 94
+registrationVR		= 95
+registrationTH		= 96
+registrationBH		= 97
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

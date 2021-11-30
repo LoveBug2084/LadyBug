@@ -65,6 +65,9 @@
 ; game settings
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+.gameSettings					; start of game settings
+	skip 0
+
 .optionEnemySpeed
 
 	skip 1					; reserve space for enemy speed

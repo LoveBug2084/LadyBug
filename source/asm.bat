@@ -40,7 +40,7 @@ set "buildPadded=00000%build%"
 set "buildPadded=%buildPadded:~-6%"
 echo %buildPadded%>build-padded.txt
 echo.
-beebasm -title LadyBug -v -i ladybug.asm -do ladybug.ssd -opt 3 > ladybug.lst
+beebasm -title LadyBug -v -i ladybug.asm -do ladybug.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 goto buildFalse
 :buildTrue
 echo.

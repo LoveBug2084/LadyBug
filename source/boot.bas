@@ -50,19 +50,12 @@ PROCshrink
 
 PROCinstructionsPage1
 PROCexpand
-
-REPEAT
-K%=GET
-UNTIL K%=13
+PROCwaitReturn(6000)
 
 PROCinstructionsPage2
-
-REPEAT
-K%=GET
-UNTIL K%=13
+PROCwaitReturn(6000)
 
 PROCshrink
-
 PROClogo
 PROCexpand
 
@@ -74,17 +67,14 @@ END
 
 DEF PROCintro
 
-IF ?E%<>32 THEN TIME=0:REPEAT K%=INKEY(0):UNTIL K%=13 OR TIME>=300:ENDPROC
+IF ?E%<>32 THEN PROCwaitReturn(400):ENDPROC
 
 PROClogo
 PROCexpand
 
 PROCsaveConfig
 
-TIME=0
-REPEAT
-K%=INKEY(0)
-UNTIL K%=13 OR TIME>=200
+PROCwaitReturn(200)
 
 ENDPROC
 
@@ -157,7 +147,7 @@ PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds";
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
 PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
 
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"           Press Return           ";CHR$(156);
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press Return            ";CHR$(156);
 
 ENDPROC
 
@@ -238,8 +228,8 @@ PROCeraseCenter
 
 IF ERR<>201 THEN PROCunexpectedError
 
-PRINT TAB(8,11);CHR$(129);"Disk is write protected!";
-PRINT TAB(3,13);CHR$(132);"Unable to save";CHR$(135);"scores";CHR$(132);"and";CHR$(135);"settings";
+PRINT TAB(5,11);CHR$(136);CHR$(129);"Write protected!";CHR$(132);"cannot save";
+PRINT TAB(5,13);CHR$(136);CHR$(135);"high scores";CHR$(132);"or";CHR$(135);"game settings";
 
 ENDPROC
 
@@ -309,7 +299,7 @@ OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E")
 
 PROCeraseCenter
 PRINT TAB(5,11);CHR$(135);"High scores";CHR$(132);"and";CHR$(135);"game settings";
-PRINT TAB(10,13);CHR$(132);"saved successfully";
+PRINT TAB(11,13);CHR$(132);"saved successfully";
 
 ENDPROC
 
@@ -331,5 +321,17 @@ PRINT TAB(0,R%);"  ";
 NEXT R%
 
 ENDPROC
+
+
+DEF PROCwaitReturn(T%)
+
+TIME=0
+
+REPEAT
+K%=INKEY(0)
+UNTIL K%=13 OR TIME>=T%
+
+ENDPROC
+
 
 

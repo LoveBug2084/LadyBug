@@ -181,6 +181,10 @@
 
 .bootstrapPalData
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; regular beeb colors 0-7
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	equb &00 + palBlack
 	equb &10 + palRed
 	equb &20 + palGreen
@@ -189,14 +193,24 @@
 	equb &50 + palMagenta
 	equb &60 + palCyan
 	equb &70 + palWhite
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; unused
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	equb &80 + palBlack			; unused
 	equb &90 + palBlack			; unused
-	equb &a0 + palRed			; flashing red/magenta special
-	equb &b0 + palMagenta			; flashing red/magenta special
-	equb &c0 + palYellow			; flashing yellow/green extra
-	equb &d0 + palGreen			; flashing yellow/greem extra
-	equb &e0 + palWhite			; skull
-	equb &f0 + palCyan			; object
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; effect colors (palette swap in ladybug.asm)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	equb &a0 + palRed			; special red/magenta
+	equb &b0 + palMagenta			; special magenta/red
+	equb &c0 + palYellow			; extra yellow/green
+	equb &d0 + palGreen			; extra green/red
+	equb &e0 + palWhite			; skull fade/red
+	equb &f0 + palCyan			; object red/yellow/cyan
 
 	print
 
