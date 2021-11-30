@@ -687,7 +687,7 @@ machineType		= page8000 - 3		; storage for machine type
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-loaderPage = page3000				; load address
+loaderPage = page2000				; load address
 
 loaderReloc = swramStart - loaderPage		; relocation
 loaderStartReloc = loaderStart - loaderReloc

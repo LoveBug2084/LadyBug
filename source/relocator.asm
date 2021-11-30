@@ -148,6 +148,23 @@
 	lda optionLives				; copy lives
 	sta lives
 
+	ldx #0					; copy maze data into ram
+	
+.relocateProgramMazeData
+
+	lda maze0Load, x
+	sta maze0, x
+
+	lda maze1Load, x
+	sta maze1, x
+
+	lda maze2Load, x
+	sta maze2, x
+
+	inx
+	cpx #21*11
+	bne relocateProgramMazeData
+
 	jmp main				; run the main game
 
 

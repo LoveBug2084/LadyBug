@@ -49,14 +49,6 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; game loader
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	include "loader.asm"
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; initial config file
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -65,10 +57,18 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; generate fake sideways rom for testing
+; game loader
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	include "rom.asm"
+	include "loader.asm"
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; generate the 3 default mazes
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	include "maze.asm"
 
 
 
@@ -181,7 +181,9 @@ objectModeYellow	= 2
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.escCounter		equb 0			; escape key counter (times how long esc is pressed)
+.escCounter		skip 1			; escape key counter (times how long esc is pressed)
+
+.mazeMap		skip 1			; current maze map 0 to 2
 
 .score			skip 3			; player score (BCD) last digit always 0 and not stored
 .highScore		skip 3			; highest score (BCD) last digit always 0 and not stored
@@ -981,14 +983,24 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+.initPlayfieldMiddleMazeTable
+
+	equw maze0, maze1, maze2		; list of available maze maps
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .initPlayfieldMiddle
 
 	lda #0
 	sta levelEdibles			; initialize edibles
 
-	lda #lo(mazeData)			; set start address of maze data
+	lda mazeMap				; get maze map number * 2
+	asl a
+	tay
+
+	lda initPlayfieldMiddleMazeTable, y	; set start address of maze data
 	sta initPlayfieldMiddleRead + 1
-	lda #hi(mazeData)
+	lda initPlayfieldMiddleMazeTable + 1, y
 	sta initPlayfieldMiddleRead + 2
 	
 	lda #lo(tileMap + 24)			; set start address of tile map
@@ -2213,6 +2225,8 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	sta score				; zero the player score
 	sta score + 1
 	sta score + 2
+
+	sta mazeMap				; start with mazeMap 0
 
 	lda optionLives				; initialize player lives
 	sta lives
@@ -3960,7 +3974,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; levelAdvance					note: !!! all values are BCD except vegetableImage !!!
+; levelAdvance					note: !!! all values are BCD except vegetableImage and mazeMap
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ;						if level < &99 then level = level + &01
 ;						if shield != &00 then shield = shield - &01
@@ -4005,10 +4019,21 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda vegetableImg			; if vegetableImg >= &12 (last vegetable horse radish = &11)
 	cmp #&12
-	bcc levelAdvanceExit
+	bcc levelAdvanceMazeMap
 
 	lda #&00				; then vegetableImg = &00 (back to first vegetable cucumber)
 	sta vegetableImg
+
+.levelAdvanceMazeMap
+
+	inc mazeMap				; add 1 to mazeMap
+
+	lda mazeMap				; if mazeMap >= 3
+	cmp #3
+	bcc levelAdvanceExit
+	
+	lda #0					; then mazeMap = 0
+	sta mazeMap
 
 .levelAdvanceExit
 
@@ -10025,44 +10050,6 @@ chrHeart		= '*'
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.mazeTileTableLeft				; tile translation tables for left and right sides
-
-	equb &00,&01,&9c,&9d,&9e,&9f,&a0,&a1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&da,&db
-
-.mazeTileTableRight
-
-	equb &00,&01,&9c,&9d,&9e,&9f,&a1,&a0,&d3,&d2,&d5,&d4,&d6,&d7,&d8,&d9,&db,&da
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.mazeData					; 21 rows of 11 bytes (left half of maze only)
-
-	equb &01,&00,&01,&00,&01,&00,&01,&00,&01,&00,&01
-	equb &00,&0f,&07,&03,&06,&0f,&00,&11,&0d,&09,&00
-	equb &01,&0c,&01,&00,&01,&0c,&01,&05,&01,&0c,&01
-	equb &00,&0a,&0d,&10,&00,&0e,&00,&02,&00,&0e,&00
-	equb &01,&05,&01,&00,&01,&00,&01,&04,&01,&00,&01
-	equb &00,&02,&00,&0f,&07,&03,&06,&11,&0d,&09,&00
-	equb &01,&04,&01,&0c,&01,&00,&01,&00,&01,&0c,&01
-	equb &00,&11,&0d,&0b,&00,&0f,&07,&03,&06,&0e,&00
-	equb &01,&00,&01,&00,&01,&0c,&01,&00,&01,&00,&01
-	equb &00,&11,&0d,&09,&00,&0e,&00,&0f,&00,&0f,&00
-	equb &01,&00,&01,&0c,&01,&05,&01,&0c,&01,&0c,&00
-	equb &00,&0f,&00,&0e,&00,&02,&00,&0e,&00,&0a,&0d
-	equb &01,&0c,&01,&05,&01,&04,&01,&05,&01,&00,&01
-	equb &00,&0c,&00,&02,&00,&0f,&00,&02,&00,&0f,&00
-	equb &01,&0c,&01,&04,&01,&0c,&01,&04,&01,&0c,&01
-	equb &00,&0a,&0d,&10,&00,&0e,&00,&11,&0d,&0b,&00
-	equb &01,&00,&01,&00,&01,&00,&01,&00,&01,&00,&00
-	equb &00,&08,&0d,&0d,&0d,&10,&07,&03,&06,&0f,&00
-	equb &01,&0c,&01,&00,&01,&00,&01,&00,&01,&0c,&00
-	equb &00,&0e,&07,&03,&06,&11,&0d,&10,&00,&0e,&00
-	equb &01,&00,&01,&00,&01,&00,&01,&00,&01,&00,&00
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; storage for the tileMap virtual screen
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -10149,11 +10136,45 @@ include "soundtables.asm"
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; maze tile translation tables for left/right halves
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mazeTileTableLeft				; tile translation tables for left and right sides
+
+	equb &00,&01,&9c,&9d,&9e,&9f,&a0,&a1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&da,&db
+
+.mazeTileTableRight
+
+	equb &00,&01,&9c,&9d,&9e,&9f,&a1,&a0,&d3,&d2,&d5,&d4,&d6,&d7,&d8,&d9,&db,&da
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; maze data files loaded here by loader.asm
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mazeData					; 21 rows of 11 bytes (left half of maze only)
+
+.maze0	skip 231
+.maze1	skip 231
+.maze2	skip 231
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .programEnd					; end of program
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print
+	print
+	print
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; relocator 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 include "relocator.asm"				; append relocation code
 
@@ -10166,11 +10187,16 @@ include "relocator.asm"				; append relocation code
 	save "$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 	putbasic "boot.bas", "$.Boot"
 	save "$.Config", config, configEnd, &ffffff, &ff0000 + config
+	save "$.Maze0", mazeDefault0, mazeDefault0end, &ffffff, 0
+	save "$.Maze1", mazeDefault1, mazeDefault1end, &ffffff, 0
+	save "$.Maze2", mazeDefault2, mazeDefault2end, &ffffff, 0
 	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
-	save "$.Default", config, configEnd, &ffffff, &ff0000 + config
 	putbasic "reset.bas", "$.Reset"
-	save "$.Rom", romStart, romEnd, &ffffff, 0
+	save "D.Maze0", mazeDefault0, mazeDefault0end, &ffffff, 0
+	save "D.Maze1", mazeDefault1, mazeDefault1end, &ffffff, 0
+	save "D.Maze2", mazeDefault2, mazeDefault2end, &ffffff, 0
+	save "D.Config", config, configEnd, &ffffff, &ff0000 + config
 
 	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
 	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst

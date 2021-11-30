@@ -332,6 +332,7 @@ bankSelect		= &fe30			; paged rom/ram bank select
 acccon			= &fe34			; access control register
 osbyte			= &fff4			; os function
 oscli			= &fff7			; os function
+osfile			= &ffdd			; os function
 oswrch			= &ffee			; os function
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -345,14 +346,14 @@ page0200		= &0200
 page0258		= &0258
 page0287		= &0287
 page0d00		= &0d00
-page1900		= &1900
-page3000		= &3000
+page2000		= &2000
 page8000		= &8000
 pageB000		= &b000
 pageC000		= &c000
 
 progReloc		= page0000		; relocation address of program
-progLoad		= page3000		; load address of program
+progLoad		= page2000		; load address of program
+
 						; relocation offset
 progOffset		= progLoad - progReloc
 

@@ -34,8 +34,9 @@ REM ---------------------------
 
 
 
-HIMEM=&7B00
-H%=HIMEM+&80
+HIMEM=&7800
+
+C%=&7B80
 S%=&8010
 E%=PAGE+5
 F%=&130
@@ -59,7 +60,10 @@ PROCshrink
 PROClogo
 PROCexpand
 
-*/Loader
+*LOAD $.Maze0 7800
+*LOAD $.Maze1 7900
+*LOAD $.Maze2 7A00
+*/$.Loader
 
 END
 
@@ -260,9 +264,9 @@ DEF PROCreadConfig
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
 
-IF F%?2<>V% THEN FOR Z%=&00 TO &7D:Z%?H%=0:NEXT Z%:ENDPROC
+IF F%?2<>V% THEN FOR Z%=&00 TO &7D:Z%?C%=0:NEXT Z%:ENDPROC
 
-P%=HIMEM
+P%=&7B00
 [OPT 0
 SEI
 LDA F%
@@ -270,7 +274,7 @@ STA &FE30
 LDX #0
 .LOOP
 LDA S%, X
-STA H%, X
+STA C%, X
 INX
 CPX #&7E
 BNE LOOP
@@ -280,7 +284,7 @@ CLI
 RTS
 ]
 
-CALL HIMEM
+CALL &7B00
 
 ENDPROC
 
@@ -290,12 +294,12 @@ DEF PROCsaveConfig
 
 V%=0
 FOR Z%=&00 TO &7C
-V%=(V%+(Z%?H% EOR M%)) AND &FF
+V%=(V%+(Z%?C% EOR M%)) AND &FF
 NEXT Z%
 
-IF V%<>H%?&7D THEN OSCLI("LOAD Config"):ENDPROC
+IF V%<>C%?&7D THEN OSCLI("LOAD $.Config"):ENDPROC
 
-OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E")
+OSCLI("SAVE $.Config " + STR$~(&FF0000 + C%) + " +7E")
 
 PROCeraseCenter
 PRINT TAB(5,11);CHR$(135);"High scores";CHR$(132);"and";CHR$(135);"game settings";

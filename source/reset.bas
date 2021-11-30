@@ -50,7 +50,7 @@ S%=&8010
 F%=&130
 M%=&69
 
-OSCLI("LOAD $.Default " + STR$~(&FF0000 + D%))
+OSCLI("LOAD D.Config " + STR$~(&FF0000 + D%))
 
 P%=HIMEM
 [OPT 0
@@ -71,10 +71,10 @@ RTS
 ]
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-IF F%?2 = V% THEN CALL HIMEM ELSE OSCLI("LOAD Config")
+IF F%?2 = V% THEN CALL HIMEM ELSE OSCLI("LOAD $.Config")
 
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%
-IF V% <> H%?&7D THEN OSCLI("LOAD Config")
+IF V% <> H%?&7D THEN OSCLI("LOAD $.Config")
 
 PRINT TAB(1,7);CHR$(133);"Do you wish to reset the high score";
 PRINT TAB(1,8);CHR$(133);"table to default Y/N";CHR$(135);"?";CHR$(131);
