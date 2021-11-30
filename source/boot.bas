@@ -60,9 +60,13 @@ PROCshrink
 PROClogo
 PROCexpand
 
-*LOAD $.Maze0 7800
-*LOAD $.Maze1 7900
-*LOAD $.Maze2 7A00
+Z%=OPENIN("$.Mazes")
+INPUT#Z%,A$,B$,C$
+CLOSE#Z%
+
+OSCLI("LOAD "+A$+" 7800")
+OSCLI("LOAD "+B$+" 7900")
+OSCLI("LOAD "+C$+" 7A00")
 */$.Loader
 
 END

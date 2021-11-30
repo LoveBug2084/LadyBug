@@ -29,7 +29,21 @@ maze0Load = &7800				; load addresses for mazes (boot.bas)
 maze1Load = &7900
 maze2Load = &7a00
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 	org &d000				; temporary space for creating maze files (saved by ladybug.asm)
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mazeFilenames
+
+	equb &00,&07,"0ezaM.D"			; the 3 default mazes to load D.Maze0 D.Maze1 D.Maze2
+	equb &00,&07,"1ezaM.D"			; acorn backwards style strings for use with OPENIN#
+	equb &00,&07,"2ezaM.D"
+
+.mazeFilenamesEnd
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mazeDefault0
 

@@ -34,7 +34,7 @@ REM ---------------------------
 
 
 
-ON ERROR PRINT TAB(0,17);:REPORT:PRINT:END
+ON ERROR PRINT TAB(0,20);:REPORT:PRINT:CLOSE#0:END
 
 MODE 7
 
@@ -76,27 +76,32 @@ IF F%?2 = V% THEN CALL HIMEM ELSE OSCLI("LOAD $.Config")
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%
 IF V% <> H%?&7D THEN OSCLI("LOAD $.Config")
 
-PRINT TAB(1,7);CHR$(133);"Do you wish to reset the high score";
-PRINT TAB(1,8);CHR$(133);"table to default Y/N";CHR$(135);"?";CHR$(131);
+PRINT TAB(1,7);CHR$(132);"Do you wish to reset the mazes";
+PRINT TAB(1,8);CHR$(132);"to default Y/N";CHR$(135);"?";CHR$(131);
+INPUT "" M$
+
+PRINT TAB(1,10);CHR$(133);"Do you wish to reset the high score";
+PRINT TAB(1,11);CHR$(133);"table to default Y/N";CHR$(135);"?";CHR$(131);
 INPUT "" H$
 IF H$="Y" THEN FOR Z%=&00 TO &6F:Z%?H%=Z%?D%:NEXT Z%
 
-PRINT TAB(1,10);CHR$(130);"Do you wish to reset the game";
-PRINT TAB(1,11);CHR$(130);"settings to default Y/N";CHR$(135);"?";CHR$(131);
+PRINT TAB(1,13);CHR$(130);"Do you wish to reset the game";
+PRINT TAB(1,14);CHR$(130);"settings to default Y/N";CHR$(135);"?";CHR$(131);
 INPUT "" S$
 IF S$="Y" THEN FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%
 
-PRINT TAB(1,13);
+PRINT TAB(0,16);
 
-IF H$<>"Y" AND S$<>"Y" THEN PRINT CHR$(129);"Nothing to do":PRINT:END
+IF M$="Y" THEN PRINT " ";CHR$(129);"Saving mazes":Z%=OPENOUT("$.Mazes"):PRINT#Z%,"D.Maze0","D.Maze1","D.Maze2":CLOSE#Z%
+
+IF H$<>"Y" AND S$<>"Y" THEN END
 
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%
 
-PRINT CHR$(129);"Saving config"
+IF H$="Y" THEN PRINT " ";CHR$(129);"Saving high scores"
+IF S$="Y" THEN PRINT " ";CHR$(129);"Saving settings"
+
 OSCLI("SAVE $.Config " + STR$~(&FF0000 + H%) + " +7E")
 F%?0=0:F%?1=0:F%?2=0
-
-PRINT TAB(1,15);CHR$(132);"Config update completed"
-PRINT
 
 END

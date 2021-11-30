@@ -10187,16 +10187,15 @@ include "relocator.asm"				; append relocation code
 	save "$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 	putbasic "boot.bas", "$.Boot"
 	save "$.Config", config, configEnd, &ffffff, &ff0000 + config
-	save "$.Maze0", mazeDefault0, mazeDefault0end, &ffffff, 0
-	save "$.Maze1", mazeDefault1, mazeDefault1end, &ffffff, 0
-	save "$.Maze2", mazeDefault2, mazeDefault2end, &ffffff, 0
-	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
-	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
-	putbasic "reset.bas", "$.Reset"
+	save "$.Mazes", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 	save "D.Maze0", mazeDefault0, mazeDefault0end, &ffffff, 0
 	save "D.Maze1", mazeDefault1, mazeDefault1end, &ffffff, 0
 	save "D.Maze2", mazeDefault2, mazeDefault2end, &ffffff, 0
+	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
+	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
+	putbasic "reset.bas", "$.Reset"
 	save "D.Config", config, configEnd, &ffffff, &ff0000 + config
+	putfile "img-editor.bin", "G.Tiles", 0, &ffffff
 
 	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
 	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst

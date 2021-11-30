@@ -183,7 +183,7 @@
 	equb 0					; r5  vertical total adjust
 	equb 0					; r6  vertical displayed (set to 0 here to blank the display, set later in the game code)
 	equb 32					; r7  vertical position
-	equb 0					; r8  non-interlaced and no delays
+	equb 0					; r8  non-interlaced, no skew
 	equb 7					; r9  scanlines per row
 	equb 32					; r10 cursor start
 	equb 8					; r11 cursor end
