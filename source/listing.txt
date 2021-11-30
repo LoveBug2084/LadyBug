@@ -7000,7 +7000,7 @@ bootstrap     &4700 - &47D4 , 213 bytes
      3C7C   00
      3C7D   01
      3C7E   0C
-     3C7F   01
+     3C7F   00
      3C80   00
      3C81   0E
      3C82   07
@@ -7022,7 +7022,7 @@ bootstrap     &4700 - &47D4 , 213 bytes
      3C92   00
      3C93   01
      3C94   00
-     3C95   01
+     3C95   00
 .tileMap
      3C96
 .tileMapRowsLo
