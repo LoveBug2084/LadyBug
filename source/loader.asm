@@ -344,9 +344,9 @@ masterMos350 = &e374
 
 .swrCleanResetMC
 
-	tay			; zero index
+	tay					; zero index
 
-	lda acccon		; clear bits 7-4, 1-0. set bits 3-2 of accon (select shadow ram at 3000-7fff and private ram at c000-dfff)
+	lda acccon				; clear bits 7-4, 1-0. set bits 3-2 of accon (select shadow ram at 3000-7fff and private ram at c000-dfff)
 	and #%11110011
 	ora #%00001100
 	sta acccon
@@ -355,27 +355,27 @@ masterMos350 = &e374
 
 	tya
 
-	sta zpAddr + 1		; start at page0000
+	sta zpAddr + 1				; start at page0000
 	sta zpAddr
 
 .swrCleanResetWipe
 
-	sta (zpAddr), y		; wipe a page of memory
+	sta (zpAddr), y				; wipe a page of memory
 	iny
 	bne swrCleanResetWipe
 
-	ldx #opcodeRTI		; disable nmi
+	ldx #opcodeRTI				; disable nmi
 	stx page0d00
 
 .swrCleanResetNext
 
-	inc zpAddr + 1		; next page
+	inc zpAddr + 1				; next page
 
-	ldx zpAddr + 1		; if page = &01 (stack) then skip to the next page
+	ldx zpAddr + 1				; if page = &01 (stack) then skip to the next page
 	cpx #&01
 	beq swrCleanResetNext
 
-	cpx #&80		; if page = &80 (swr) then skip to page &c0
+	cpx #&80				; if page = &80 (swr) then skip to page &c0
 	bne swrCleanResetEnd
 	
 	ldx #&c0
@@ -383,21 +383,102 @@ masterMos350 = &e374
 
 .swrCleanResetEnd
 
-	cpx #&e0		; if page != &e0 then wipe page
+	cpx #&e0				; if page != &e0 then wipe page
 	bne swrCleanResetWipe
 
-	lda acccon		; test bit 2 of acccon and save test result (shadow ram select)
+	lda acccon				; test bit 2 of acccon and save test result (shadow ram select)
 	and #%00000100
 	php
 
-	lda acccon		; clear bit 2 of acccon (select main ram into 3000-7fff)
+	lda acccon				; clear bit 2 of acccon (select main ram into 3000-7fff)
 	and #%11111011
 	sta acccon
 
-	plp			; if previous test showed that shadow ram was selected then we wipe memory again but this time with main ram selected
+	plp					; if shadow ram was wipe then wipe main memory
 	bne swrCleanResetInit
 
-	rts			; return
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrClearScreen				fill screen ram with zero
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrClearScreen
+
+	lda #hi(screenAddr)			; set start page of screen
+	sta swrClearScreenLoop + 2
+
+	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
+
+	lda #pixels0				; fill screen with black
+
+.swrClearScreenLoop
+
+	sta addr16, x				; fill page with data
+	inx
+	bne swrClearScreenLoop
+	
+	inc swrClearScreenLoop + 2		; next page
+	bpl swrClearScreenLoop			; repeat until page=&80 (end of screen ram)
+
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrSetupPalette				setup color palette defaults
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrSetupPalette
+
+	ldx #15					; setup the 16 palette colors
+
+.swrSetupPaletteLoop
+
+	lda swrSetupPaletteData, x		; copy colors to ula
+	sta ulaPalette
+
+	dex					; until done
+	bpl swrSetupPaletteLoop
+	
+	rts					; return
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrSetupPaletteData
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; regular beeb colors 0-7
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	equb &00 + palBlack
+	equb &10 + palRed
+	equb &20 + palGreen
+	equb &30 + palYellow
+	equb &40 + palBlue
+	equb &50 + palMagenta
+	equb &60 + palCyan
+	equb &70 + palWhite
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; unused
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	equb &80 + palBlack			; unused
+	equb &90 + palBlack			; unused
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; effect colors (palette swap in ladybug.asm)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	equb &a0 + palRed			; special red/magenta
+	equb &b0 + palMagenta			; special magenta/red
+	equb &c0 + palYellow			; extra yellow/green
+	equb &d0 + palGreen			; extra green/red
+	equb &e0 + palWhite			; skull fade/red
+	equb &f0 + palCyan			; object red/yellow/cyan
 
 
 

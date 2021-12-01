@@ -94,7 +94,7 @@ PRINT TAB(0,16);
 
 IF M$="Y" THEN PRINT " ";CHR$(129);"Saving mazes":Z%=OPENOUT("$.Mazes"):PRINT#Z%,"D.Maze0","D.Maze1","D.Maze2":CLOSE#Z%
 
-IF H$<>"Y" AND S$<>"Y" THEN END
+IF H$<>"Y" AND S$<>"Y" THEN PRINT " ";CHR$(132);"Done":END
 
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%
 
@@ -103,5 +103,7 @@ IF S$="Y" THEN PRINT " ";CHR$(129);"Saving settings"
 
 OSCLI("SAVE $.Config " + STR$~(&FF0000 + H%) + " +7E")
 F%?0=0:F%?1=0:F%?2=0
+
+PRINT " ";CHR$(132);"Done"
 
 END

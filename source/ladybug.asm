@@ -824,32 +824,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; clearScreen					; fill screen ram with zero
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.clearScreen
-
-	lda #hi(screenAddr)			; set start page of screen
-	sta clearScreenLoop + 2
-
-	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
-
-	lda #pixels0				; fill screen with black
-
-.clearScreenLoop
-
-	sta addr16, x				; fill page with data
-	inx
-	bne clearScreenLoop
-	
-	inc clearScreenLoop + 2			; next page
-	bpl clearScreenLoop			; repeat until page=&80 (end of screen ram)
-
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawObjectScore				draws object score img at xy if enabled
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2163,16 +2137,15 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	cli					; enable interrupts
 
-	jsr clearScreen				; fill screen ram with zero
+	jsr swrClearScreen			; fill screen ram with zero
 	
 	lda #6					; enable display
 	sta crtcAddr
 	lda #screenHeight
 	sta crtcData
 
-	lda #pause * 1.00			; wait 1.00 seconds
-	jsr pauseWait
-	
+	jsr swrSetupPalette			; setup colors
+
 	jsr drawPlayfieldUpper			; display the upper playfield
 
 

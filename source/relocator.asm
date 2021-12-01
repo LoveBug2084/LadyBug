@@ -71,16 +71,15 @@
 	lda #&ff				; via port A bits 0 - 7 output
 	sta viaPortDdrA
 
-	ldx #15					; setup the 16 palette colors
+	lda #palBlack				; set all 16 colors to black
 
 .bootstrapPalette
 
-	lda bootstrapPalData + progOffset, x	; copy colors to ula
 	sta ulaPalette
-
-	dex					; until done
-	bpl bootstrapPalette
-
+	clc
+	adc #&10
+	bcc bootstrapPalette
+	
 	ldx #13					; 14 crtc registers for custom video mode
 
 .bootstrapCrtc
@@ -189,47 +188,6 @@
 	equb 8					; r11 cursor end
 	equb hi(screenAddr / 8)			; r12 screen start address, high
 	equb lo(screenAddr / 8)			; r13 screen start address, low
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; palette data
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.bootstrapPalData
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; regular beeb colors 0-7
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	equb &00 + palBlack
-	equb &10 + palRed
-	equb &20 + palGreen
-	equb &30 + palYellow
-	equb &40 + palBlue
-	equb &50 + palMagenta
-	equb &60 + palCyan
-	equb &70 + palWhite
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; unused
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	equb &80 + palBlack			; unused
-	equb &90 + palBlack			; unused
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; effect colors (palette swap in ladybug.asm)
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	equb &a0 + palRed			; special red/magenta
-	equb &b0 + palMagenta			; special magenta/red
-	equb &c0 + palYellow			; extra yellow/green
-	equb &d0 + palGreen			; extra green/red
-	equb &e0 + palWhite			; skull fade/red
-	equb &f0 + palCyan			; object red/yellow/cyan
-
-	print
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .bootstrapEnd					; end of bootstrap program
