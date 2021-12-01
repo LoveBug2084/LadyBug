@@ -402,58 +402,47 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrClearScreen				fill screen ram with zero
+; swrInitScreen					fill screen ram with zero, setup palette
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrClearScreen
-
-	lda #hi(screenAddr)			; set start page of screen
-	sta swrClearScreenLoop + 2
+.swrInitScreen
 
 	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
 
 	lda #pixels0				; fill screen with black
 
-.swrClearScreenLoop
+.swrInitScreenClear
 
-	sta addr16, x				; fill page with data
+	sta hi(screenAddr) * 256, x		; fill page with data
 	inx
-	bne swrClearScreenLoop
+	bne swrInitScreenClear
 	
-	inc swrClearScreenLoop + 2		; next page
-	bpl swrClearScreenLoop			; repeat until page=&80 (end of screen ram)
+	inc swrInitScreenClear + 2		; next page
+	bpl swrInitScreenClear			; repeat until end of screen ram
 
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrSetupPalette				setup color palette defaults
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.swrSetupPalette
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup default palette colors
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #15					; setup the 16 palette colors
 
-.swrSetupPaletteLoop
+.swrInitScreenPalette
 
-	lda swrSetupPaletteData, x		; copy colors to ula
+	lda swrPaletteData, x			; copy colors to ula
 	sta ulaPalette
 
 	dex					; until done
-	bpl swrSetupPaletteLoop
+	bpl swrInitScreenPalette
 	
 	rts					; return
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.swrSetupPaletteData
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; regular beeb colors 0-7
+	; initial palette colors
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb &00 + palBlack
+.swrPaletteData
+
+	equb &00 + palBlack			; colors 0-7 are regular beeb colors
 	equb &10 + palRed
 	equb &20 + palGreen
 	equb &30 + palYellow
@@ -462,23 +451,15 @@ masterMos350 = &e374
 	equb &60 + palCyan
 	equb &70 + palWhite
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; unused
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+	equb &80 + palBlack			; color 8 unused
+	equb &90 + palBlack			; color 9 unused
 
-	equb &80 + palBlack			; unused
-	equb &90 + palBlack			; unused
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; effect colors (palette swap in ladybug.asm)
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	equb &a0 + palRed			; special red/magenta
-	equb &b0 + palMagenta			; special magenta/red
-	equb &c0 + palYellow			; extra yellow/green
-	equb &d0 + palGreen			; extra green/red
-	equb &e0 + palWhite			; skull fade/red
-	equb &f0 + palCyan			; object red/yellow/cyan
+	equb &a0 + palRed			; color 10 special flashing red/magenta
+	equb &b0 + palMagenta			; color 11 special flashing magenta/red
+	equb &c0 + palYellow			; color 12 extra flashing yellow/green
+	equb &d0 + palGreen			; color 13 extra flashing green/red
+	equb &e0 + palWhite			; color 14 skull fade effect or red when shield is active
+	equb &f0 + palCyan			; color 15 object changes red,yellow,cyan
 
 
 

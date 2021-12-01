@@ -2137,14 +2137,15 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	cli					; enable interrupts
 
-	jsr swrClearScreen			; fill screen ram with zero
+	jsr swrInitScreen			; erase screen, setup colors
+	
+	lda #pause * 0.5			; wait 0.5 seconds
+	jsr pauseWait
 	
 	lda #6					; enable display
 	sta crtcAddr
 	lda #screenHeight
 	sta crtcData
-
-	jsr swrSetupPalette			; setup colors
 
 	jsr drawPlayfieldUpper			; display the upper playfield
 
