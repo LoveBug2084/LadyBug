@@ -1,6 +1,6 @@
 MODE1:HIMEM=&2B00
 
-ONERRORCOLOUR128:COLOUR3:PRINTTAB(0,28);:REPORT:PRINT" basic line ";ERL;:PROCa:PROCm
+ONERRORCOLOUR128:COLOUR3:PRINTTAB(0,28);:REPORT:VDU7:PROCa:PROCm
 
 PROCi
 PROCds
@@ -44,7 +44,7 @@ ENDPROC
 
 
 
-DEF PROCdf
+DEFPROCdf
 
 FORi%=0TO2
 
@@ -75,7 +75,7 @@ ENDPROC
 
 
 
-DEF PROCpk
+DEFPROCpk
 
 IFINKEY(-98)THENIFX%>0THENPROCdmt(X%,Y%):X%=X%-1:C%=1:CC%=1
 IFINKEY(-67)THENIFX%<20THENPROCdmt(X%,Y%):X%=X%+1:C%=1:CC%=1
@@ -95,9 +95,9 @@ IFk$="3"THENIFM%<>2 THEN M%=2:PROCdf:PROCdm:C%=1:CC%=1:ENDPROC
 
 IFk$="L"THENPROClm:ENDPROC
 IFk$="S"THENPROCsm:ENDPROC
-IFk$="C"THENPROCcat:ENDPROC
+IFk$="C"THENPROCc:ENDPROC
 IFk$="E"THENm$="erase maze":IFFNc THENPROCem:ENDPROC
-IFk$="B"THENm$="boot game":IFFNc THENOSCLI("EXEC !Boot"):END
+IFk$="B"THENm$="boot disk":IFFNc THENOSCLI("EXEC !Boot"):END
 
 ENDPROC
 
@@ -109,18 +109,18 @@ COLOUR(3)
 INPUT TAB(0,29);"Load file name ";l$
 PROCb
 
-IFl$<>""THENf%=OPENIN(l$):IFf%=0THENPRINTTAB(0,29);l$;" does not exist";:PROCa:ENDPROC
+f%=OPENIN(l$):IFf%=0THENPRINTTAB(0,29);l$;" does not exist";:PROCa:ENDPROC
 CLOSE#f%
 
 OSCLI("LOAD "+l$+" "+STR$~(&2F19-M%*&E7))
 f$(M%)=l$
 
-f%=OPENOUT("$.Mazes")
-PRINT#f%,f$(0),f$(1),f$(2)
-CLOSE#f%
-
 PROCdf
 PROCdm
+
+f%=OPENOUT("$.Maps")
+PRINT#f%,f$(0),f$(1),f$(2)
+CLOSE#f%
 
 ENDPROC
 
@@ -139,7 +139,7 @@ f%=OPENIN(s$):IFf%<>0THENCLOSE#f%:m$="OVERWRITE FILE":IFNOTFNc THENENDPROC
 OSCLI("SAVE "+s$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
 f$(M%)=s$
 
-f%=OPENOUT("$.Mazes")
+f%=OPENOUT("$.Maps")
 PRINT#f%,f$(0),f$(1),f$(2)
 CLOSE#f%
 
@@ -149,15 +149,14 @@ ENDPROC
 
 
 
-DEFPROCcat
+DEFPROCc
 
 CLS
 
-COLOUR 2
+COLOUR 3
 *CAT
 
 PROCa
-
 PROCds
 
 ENDPROC
@@ -198,7 +197,7 @@ DRAW(V%+21)*48+24,1020-(W%+21)*32-16
 DRAWV%*48-24,1020-(W%+21)*32-16
 DRAWV%*48-24,1020-W%*32+16
 
-FORy%=0TO20:FORx%=0TO10:PROCdmt(x%,y%):NEXT,
+FORy%=0TO20:!&78=y%*11+&2F19-M%*&E7:!&74=(W%+y%)*640+V%*24+&3000:CALL&2B4F:NEXT
 
 ENDPROC
 
@@ -234,7 +233,7 @@ ENDPROC
 
 DEFPROCdt(x%,y%,t%)
 
-!&70=t%*24+&2B83:!&74=y%*640+x%*24+&3000:CALL&2B12
+!&74=y%*640+x%*24+&3000:A%=t%:CALL&2B12
 
 ENDPROC
 
@@ -274,7 +273,7 @@ VDU19,1,4;0;19,2,5;0;19,3,2;0;
 
 DIM f$(3)
 
-f%=OPENIN("$.Mazes")
+f%=OPENIN("$.Maps")
 INPUT#f%,f$(0),f$(1),f$(2)
 CLOSE#f%
 
@@ -283,7 +282,7 @@ FORZ%=0TO2:OSCLI("LOAD "+f$(Z%)+" "+STR$~(&2F19-Z%*&E7)):NEXT
 V%=3:W%=1
 G%=4:H%=23
 
-T%=0
+T%=1
 X%=0:Y%=0
 
 C%=1:CC%=1

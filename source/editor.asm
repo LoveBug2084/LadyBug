@@ -24,46 +24,114 @@
 	print
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; main editor functions
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org &2b00
 
 .editorStart
 	skip 0
 
-.editorTileMirror
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+basTileSet	= &2b83				; start address of editor mode 1 tile set
+
+basTile		= &70				; calculated address of tile
+basScreen	= &74				; screen address to write tile
+basMaze		= &78				; maze data address
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.editorTileMirror				; mirror tile id's for right hand
 
 	equb &00,&01,&02,&03,&04,&05,&07,&06,&09,&08,&0B,&0A,&0C,&0D,&0E,&0F,&11,&10
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.editorMain
+.editorDrawTile
 
-	lda &70					; get tile address
-	sta editorRead + 1
-	lda &71
-	sta editorRead + 2
+	asl a					; multiply tile id by 8
+	asl a
+	asl a
+	
+	sta basTile + 2				; save it
 
-	lda &74					; get screen address
-	sta editorWrite + 1
-	lda &75
-	sta editorWrite + 2
+	clc					; add to tile set address 3 times
+	adc #lo(basTileSet)
+	sta basTile + 0
+	lda #0
+	adc #hi(basTileSet)
+	sta basTile + 1
+
+	lda basTile + 2
+	clc
+	adc basTile + 0
+	sta basTile + 0
+	bcc P%+4
+	inc basTile + 1
+	
+	lda basTile + 2
+	clc
+	adc basTile + 0
+	sta basTile + 0
+	bcc P%+4
+	inc basTile + 1
 	
 	ldy #23					; transfer 24 bytes
 
-.editorRead
+.editorDrawTileLoop
 
-	lda addr16, y
-	
-.editorWrite
-
-	sta addr16, y
-	
+	lda (basTile), y
+	sta (basScreen), y
 	dey
-	bpl editorRead
+	bpl editorDrawTileLoop
 	
+	clc					; add 24 to screen address
+	lda #24
+	adc basScreen + 0
+	sta basScreen + 0
+	lda #0
+	adc basScreen + 1
+	sta basScreen + 1
+
 	rts					; return
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; draw a line of maze tiles
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.editorDrawLine
+
+	lda basMaze + 0				; store maze data adress into loop
+	sta editorDrawLineLeft + 1
+	sta editorDrawLineRight + 1
+	lda basMaze + 1
+	sta editorDrawLineLeft + 2
+	sta editorDrawLineRight + 2
+
+	ldx #0					; draw 11 bytes from maze (left half)
+
+.editorDrawLineLeft
+
+	lda addr16, x				; get byte from maze and draw tile on screen
+	jsr editorDrawTile
+	
+	inx
+	cpx #11
+	bne editorDrawLineLeft
+	
+	ldx #9					; draw 10 bytes from maze mirrored (right half)
+
+.editorDrawLineRight
+
+	ldy addr16, x				; get byte from maze
+	lda editorTileMirror, y			; get mirrored tile id and draw it
+	jsr editorDrawTile
+	
+	dex
+	bpl editorDrawLineRight
+
+	rts
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .editorEnd

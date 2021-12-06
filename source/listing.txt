@@ -8850,7 +8850,7 @@ bootstrap     &4800 - &48DC , 221 bytes
 
 Saving file '$.!Boot'
 Saving file '$.Config'
-Saving file '$.Mazes'
+Saving file '$.Maps'
 Saving file 'D.Maze1'
 Saving file 'D.Maze2'
 Saving file 'D.Maze3'
@@ -8885,25 +8885,67 @@ Saving file 'D.Config'
      2B0F   0F
      2B10   11
      2B11   10
-.editorMain
-     2B12   A5 70      LDA &70
-     2B14   8D 29 2B   STA &2B29
-     2B17   A5 71      LDA &71
-     2B19   8D 2A 2B   STA &2B2A
-     2B1C   A5 74      LDA &74
-     2B1E   8D 2C 2B   STA &2B2C
-     2B21   A5 75      LDA &75
-     2B23   8D 2D 2B   STA &2B2D
-     2B26   A0 17      LDY #&17
-.editorRead
-     2B28   B9 00 FF   LDA &FF00,Y
-.editorWrite
-     2B2B   99 00 FF   STA &FF00,Y
-     2B2E   88         DEY
-     2B2F   10 F7      BPL &2B28
-     2B31   60         RTS
+.editorDrawTile
+     2B12   0A         ASL A
+     2B13   0A         ASL A
+     2B14   0A         ASL A
+     2B15   85 72      STA &72
+     2B17   18         CLC
+     2B18   69 83      ADC #&83
+     2B1A   85 70      STA &70
+     2B1C   A9 00      LDA #&00
+     2B1E   69 2B      ADC #&2B
+     2B20   85 71      STA &71
+     2B22   A5 72      LDA &72
+     2B24   18         CLC
+     2B25   65 70      ADC &70
+     2B27   85 70      STA &70
+     2B29   90 02      BCC &2B2D
+     2B2B   E6 71      INC &71
+     2B2D   A5 72      LDA &72
+     2B2F   18         CLC
+     2B30   65 70      ADC &70
+     2B32   85 70      STA &70
+     2B34   90 02      BCC &2B38
+     2B36   E6 71      INC &71
+     2B38   A0 17      LDY #&17
+.editorDrawTileLoop
+     2B3A   B1 70      LDA (&70),Y
+     2B3C   91 74      STA (&74),Y
+     2B3E   88         DEY
+     2B3F   10 F9      BPL &2B3A
+     2B41   18         CLC
+     2B42   A9 18      LDA #&18
+     2B44   65 74      ADC &74
+     2B46   85 74      STA &74
+     2B48   A9 00      LDA #&00
+     2B4A   65 75      ADC &75
+     2B4C   85 75      STA &75
+     2B4E   60         RTS
+.editorDrawLine
+     2B4F   A5 78      LDA &78
+     2B51   8D 62 2B   STA &2B62
+     2B54   8D 6F 2B   STA &2B6F
+     2B57   A5 79      LDA &79
+     2B59   8D 63 2B   STA &2B63
+     2B5C   8D 70 2B   STA &2B70
+     2B5F   A2 00      LDX #&00
+.editorDrawLineLeft
+     2B61   BD 00 FF   LDA &FF00,X
+     2B64   20 12 2B   JSR &2B12
+     2B67   E8         INX
+     2B68   E0 0B      CPX #&0B
+     2B6A   D0 F5      BNE &2B61
+     2B6C   A2 09      LDX #&09
+.editorDrawLineRight
+     2B6E   BC 00 FF   LDY &FF00,X
+     2B71   B9 00 2B   LDA &2B00,Y
+     2B74   20 12 2B   JSR &2B12
+     2B77   CA         DEX
+     2B78   10 F4      BPL &2B6E
+     2B7A   60         RTS
 .editorEnd
-     2B32
+     2B7B
 
 
 

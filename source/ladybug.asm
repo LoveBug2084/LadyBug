@@ -10161,7 +10161,7 @@ include "relocator.asm"				; append relocation code
 	save "$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 	putbasic "boot.bas", "$.Boot"
 	save "$.Config", config, configEnd, &ffffff, &ff0000 + config
-	save "$.Mazes", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
+	save "$.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 	save "D.Maze1", mazeDefault1, mazeDefault1end, &ffffff, 0
 	save "D.Maze2", mazeDefault2, mazeDefault2end, &ffffff, 0
 	save "D.Maze3", mazeDefault3, mazeDefault3end, &ffffff, 0
@@ -10192,7 +10192,7 @@ include "relocator.asm"				; append relocation code
 	putfile "img-editor.bin", "E.Tiles", 0, &ffffff
 	putbasic "editor.bas", "$.Editor"
 	include "editor.asm"
-	save "E.Editor", editorStart, editorEnd, &ff0000 + editorMain, &ff0000 + editorStart
+	save "E.Editor", editorStart, editorEnd, &ffffff, &ff0000 + editorStart
 
 	print
 	print

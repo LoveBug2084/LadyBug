@@ -47,26 +47,34 @@ ON ERROR PROCerror
 PROCreadConfig
 
 PROCintro
+
+REPEAT
+
 PROCshrink
-
-PROCinstructionsPage1
+PROCoptions
 PROCexpand
-PROCwaitReturn(6000)
 
-PROCinstructionsPage2
-PROCwaitReturn(6000)
+k$=FNwaitKey(6000)
+
+IF k$="I" THEN PROCshrink:PROCinstructionsGame1:PROCexpand:PROCwaitReturn(6000):PROCinstructionsGame2:PROCwaitReturn(6000)
+
+IF k$="E" THEN CHAIN "Editor"
+
+IF k$="R" THEN PROCshrink:PROCinstructionsEdit:PROCexpand:PROCwaitReturn(6000)
+
+UNTIL k$=CHR$(13)
 
 PROCshrink
 PROClogo
 PROCexpand
 
-Z%=OPENIN("$.Mazes")
-INPUT#Z%,A$,B$,C$
+Z%=OPENIN("$.Maps")
+INPUT#Z%,maze1$,maze2$,maze3$
 CLOSE#Z%
 
-OSCLI("LOAD "+A$+" 7800")
-OSCLI("LOAD "+B$+" 7900")
-OSCLI("LOAD "+C$+" 7A00")
+OSCLI("LOAD "+maze1$+" 7800")
+OSCLI("LOAD "+maze2$+" 7900")
+OSCLI("LOAD "+maze3$+" 7A00")
 */$.Loader
 
 END
@@ -127,7 +135,34 @@ ENDPROC
 
 
 
-DEF PROCinstructionsPage1
+DEF PROCoptions
+
+CLS
+
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug            ";CHR$(156);
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug            ";CHR$(156);
+
+PRINT TAB(14,3);"Menu options";
+
+PRINT TAB(3,9);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
+PRINT TAB(3,10);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
+
+PRINT TAB(3,12);CHR$(141);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
+PRINT TAB(3,13);CHR$(141);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
+
+PRINT TAB(3,15);CHR$(141);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
+PRINT TAB(3,16);CHR$(141);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
+
+PRINT TAB(3,18);CHR$(141);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
+PRINT TAB(3,19);CHR$(141);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
+
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option        ";CHR$(156);
+
+ENDPROC
+
+
+
+DEF PROCinstructionsGame1
 
 CLS
 
@@ -161,7 +196,7 @@ ENDPROC
 
 
 
-DEF PROCinstructionsPage2
+DEF PROCinstructionsGame2
 
 L%=0
 FOR R%=22 TO 5 STEP -1
@@ -199,6 +234,41 @@ PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"esc";CHR$(133);"to quit the current 
 PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";
 *FX 19
 PRINT TAB(2,22);CHR$(134);"high scores";CHR$(132);"and";CHR$(134);"game settings";
+
+ENDPROC
+
+
+
+DEF PROCinstructionsEdit
+
+CLS
+
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+
+PRINT TAB(10,3);"Editor Instructions";
+
+PRINT TAB(13,5);CHR$(130);"Control Keys";
+
+PRINT TAB(3,7);CHR$(135);"123";CHR$(129);"Select current map to edit  ";
+
+PRINT TAB(3,9);CHR$(135);":/ZX";CHR$(130);"Move the editing cursor    ";
+PRINT TAB(3,10);CHR$(135);",.";CHR$(131);"Choose the current draw tile ";
+
+PRINT TAB(3,12);CHR$(135);"Return";CHR$(132);"draw the tile onto map   ";
+PRINT TAB(3,13);CHR$(135);"Shift";CHR$(133);"erase tile from map       ";
+
+PRINT TAB(3,15);CHR$(135);"E";CHR$(134);"Erase map with dots + home box";
+
+PRINT TAB(3,17);CHR$(135);"L";CHR$(129);"Load map file from disk       ";
+PRINT TAB(3,18);CHR$(135);"S";CHR$(130);"Save map file to disk         ";
+PRINT TAB(3,19);CHR$(135);"C";CHR$(131);"Catalogue disk                ";
+
+PRINT TAB(3,21);CHR$(135);"B";CHR$(133);"Boot disk                     ";
+
+
+
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press Return            ";CHR$(156);
 
 ENDPROC
 
@@ -343,3 +413,14 @@ ENDPROC
 
 
 
+DEF FNwaitKey(T%)
+
+TIME=0
+
+REPEAT
+k$=INKEY$(0)
+UNTIL k$=CHR$(13) OR k$="I" OR k$="E" OR k$="R" OR TIME>=T%
+
+IF k$<>"" THEN =k$
+
+=CHR$(13)
