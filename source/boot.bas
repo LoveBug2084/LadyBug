@@ -142,19 +142,25 @@ CLS
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug            ";CHR$(156);
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug            ";CHR$(156);
 
-PRINT TAB(14,3);"Menu options";
 
-PRINT TAB(3,9);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
-PRINT TAB(3,10);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
+PRINT TAB(8,3);CHR$(131);"Remake of the original";
+PRINT TAB(11,4);CHR$(131);"1981 arcade game";
+PRINT TAB(13,5);CHR$(131);"by";CHR$(129);"Universal";
+PRINT TAB(7,7);"Programmed by";CHR$(133);"Lovebug";CHR$(135);"2021";
 
-PRINT TAB(3,12);CHR$(141);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
-PRINT TAB(3,13);CHR$(141);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
+PRINT TAB(13,10);CHR$(129);"Menu options";
 
-PRINT TAB(3,15);CHR$(141);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
-PRINT TAB(3,16);CHR$(141);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
+PRINT TAB(3,12);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
+PRINT TAB(3,13);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
 
-PRINT TAB(3,18);CHR$(141);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
-PRINT TAB(3,19);CHR$(141);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
+PRINT TAB(3,15);CHR$(141);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
+PRINT TAB(3,16);CHR$(141);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
+
+PRINT TAB(3,18);CHR$(141);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
+PRINT TAB(3,19);CHR$(141);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
+
+PRINT TAB(3,21);CHR$(141);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
+PRINT TAB(3,22);CHR$(141);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option        ";CHR$(156);
 
@@ -250,21 +256,21 @@ PRINT TAB(10,3);"Editor Instructions";
 
 PRINT TAB(13,5);CHR$(130);"Control Keys";
 
-PRINT TAB(3,7);CHR$(135);"123";CHR$(129);"Select current map to edit  ";
+PRINT TAB(3,7);CHR$(135);"123";CHR$(129);"Select current map to edit";
 
-PRINT TAB(3,9);CHR$(135);":/ZX";CHR$(130);"Move the editing cursor    ";
-PRINT TAB(3,10);CHR$(135);",.";CHR$(131);"Choose the current draw tile ";
+PRINT TAB(3,9);CHR$(135);":/ZX";CHR$(130);"Move the editing cursor";
+PRINT TAB(3,10);CHR$(135);",.";CHR$(131);"Choose the current draw tile";
 
-PRINT TAB(3,12);CHR$(135);"Return";CHR$(132);"draw the tile onto map   ";
-PRINT TAB(3,13);CHR$(135);"Shift";CHR$(133);"erase tile from map       ";
+PRINT TAB(3,12);CHR$(135);"Return";CHR$(132);"draw the tile onto map";
+PRINT TAB(3,13);CHR$(135);"Shift";CHR$(133);"erase tile from map";
 
-PRINT TAB(3,15);CHR$(135);"E";CHR$(134);"Erase map with dots + home box";
+PRINT TAB(3,15);CHR$(135);"E";CHR$(134);"Erase map";
 
-PRINT TAB(3,17);CHR$(135);"L";CHR$(129);"Load map file from disk       ";
-PRINT TAB(3,18);CHR$(135);"S";CHR$(130);"Save map file to disk         ";
-PRINT TAB(3,19);CHR$(135);"C";CHR$(131);"Catalogue disk                ";
+PRINT TAB(3,17);CHR$(135);"L";CHR$(129);"Load map file from disk";
+PRINT TAB(3,18);CHR$(135);"S";CHR$(130);"Save map file to disk";
+PRINT TAB(3,19);CHR$(135);"C";CHR$(131);"Catalogue disk";
 
-PRINT TAB(3,21);CHR$(135);"B";CHR$(133);"Boot disk                     ";
+PRINT TAB(3,21);CHR$(135);"B";CHR$(133);"Boot disk";
 
 
 
