@@ -16,8 +16,6 @@ pixels				img-tiles.raw									6		8		img-tiles.bin
 echo.
 pixels				img-extra.raw									6		8		img-extra.bin
 echo.
-pixels				img-editor.raw								6		8		img-editor.bin
-echo.
 pixels				img-ladybug.raw								10	14	img-ladybug.bin
 echo.
 pixels				img-enemy1.raw								10	14	img-enemy1.bin

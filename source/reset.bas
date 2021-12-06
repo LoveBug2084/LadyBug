@@ -92,7 +92,7 @@ IF S$="Y" THEN FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%
 
 PRINT TAB(0,16);
 
-IF M$="Y" THEN PRINT " ";CHR$(129);"Saving mazes":Z%=OPENOUT("$.Mazes"):PRINT#Z%,"D.Maze0","D.Maze1","D.Maze2":CLOSE#Z%
+IF M$="Y" THEN PRINT " ";CHR$(129);"Saving mazes":Z%=OPENOUT("$.Mazes"):PRINT#Z%,"D.Maze1","D.Maze2","D.Maze3":CLOSE#Z%
 
 IF H$<>"Y" AND S$<>"Y" THEN PRINT " ";CHR$(132);"Done":END
 

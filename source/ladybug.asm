@@ -959,7 +959,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 .initPlayfieldMiddleMazeTable
 
-	equw maze0, maze1, maze2		; list of available maze maps
+	equw maze1, maze2, maze3		; list of available maze maps
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -10129,9 +10129,9 @@ include "soundtables.asm"
 
 .mazeData					; 21 rows of 11 bytes (left half of maze only)
 
-.maze0	skip 231
 .maze1	skip 231
 .maze2	skip 231
+.maze3	skip 231
 
 
 
@@ -10155,21 +10155,20 @@ include "relocator.asm"				; append relocation code
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; create disk files
+; create disk files, keep them in loading order as far as possible to reduce floppy seek time
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	save "$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 	putbasic "boot.bas", "$.Boot"
 	save "$.Config", config, configEnd, &ffffff, &ff0000 + config
 	save "$.Mazes", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
-	save "D.Maze0", mazeDefault0, mazeDefault0end, &ffffff, 0
 	save "D.Maze1", mazeDefault1, mazeDefault1end, &ffffff, 0
 	save "D.Maze2", mazeDefault2, mazeDefault2end, &ffffff, 0
+	save "D.Maze3", mazeDefault3, mazeDefault3end, &ffffff, 0
 	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
 	putbasic "reset.bas", "$.Reset"
 	save "D.Config", config, configEnd, &ffffff, &ff0000 + config
-	putfile "img-editor.bin", "G.Tiles", 0, &ffffff
 
 	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
 	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst
@@ -10178,5 +10177,23 @@ include "relocator.asm"				; append relocation code
 	print
 	print
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;	end of lady bug
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;	start of maze editor
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+	clear &0000,&ffff			; clear the canvas
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	putfile "img-editor.bin", "E.Tiles", 0, &ffffff
+	putbasic "editor.bas", "$.Editor"
+	include "editor.asm"
+	save "E.Editor", editorStart, editorEnd, &ff0000 + editorMain, &ff0000 + editorStart
+
+	print
+	print
+	print

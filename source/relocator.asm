@@ -177,14 +177,14 @@
 	
 .relocateProgramMazeData
 
-	lda maze0Load, x
-	sta maze0, x
-
 	lda maze1Load, x
 	sta maze1, x
 
 	lda maze2Load, x
 	sta maze2, x
+
+	lda maze3Load, x
+	sta maze3, x
 
 	inx
 	cpx #21*11
