@@ -148,7 +148,7 @@ PRINT TAB(11,4);CHR$(131);"1981 arcade game";
 PRINT TAB(13,5);CHR$(131);"by";CHR$(129);"Universal";
 PRINT TAB(7,7);"Programmed by";CHR$(133);"Lovebug";CHR$(135);"2021";
 
-PRINT TAB(13,10);CHR$(129);"Menu options";
+PRINT TAB(13,10);CHR$(132);"Menu options";
 
 PRINT TAB(3,12);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
 PRINT TAB(3,13);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
@@ -252,25 +252,25 @@ CLS
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
 
-PRINT TAB(10,3);"Editor Instructions";
+PRINT TAB(11,3);"Editor Instructions";
 
 PRINT TAB(13,5);CHR$(130);"Control Keys";
 
-PRINT TAB(3,7);CHR$(135);"123";CHR$(129);"Select current map to edit";
+PRINT TAB(6, 7);CHR$(135);"123";CHR$(129);"   Select current map";
 
-PRINT TAB(3,9);CHR$(135);":/ZX";CHR$(130);"Move the editing cursor";
-PRINT TAB(3,10);CHR$(135);",.";CHR$(131);"Choose the current draw tile";
+PRINT TAB(6, 9);CHR$(135);":/ZX";CHR$(130);"  Move editing cursor";
+PRINT TAB(6,10);CHR$(135);",.";CHR$(131);"    Select tile";
 
-PRINT TAB(3,12);CHR$(135);"Return";CHR$(132);"draw the tile onto map";
-PRINT TAB(3,13);CHR$(135);"Shift";CHR$(133);"erase tile from map";
+PRINT TAB(6,12);CHR$(135);"Return";CHR$(132);"Draw tile";
+PRINT TAB(6,13);CHR$(135);"Shift";CHR$(133);" Erase tile";
 
-PRINT TAB(3,15);CHR$(135);"E";CHR$(134);"Erase map";
+PRINT TAB(6,15);CHR$(135);"E";CHR$(134);"     Erase map";
 
-PRINT TAB(3,17);CHR$(135);"L";CHR$(129);"Load map file from disk";
-PRINT TAB(3,18);CHR$(135);"S";CHR$(130);"Save map file to disk";
-PRINT TAB(3,19);CHR$(135);"C";CHR$(131);"Catalogue disk";
+PRINT TAB(6,17);CHR$(135);"L";CHR$(129);"     Load map from disk";
+PRINT TAB(6,18);CHR$(135);"S";CHR$(130);"     Save map to disk";
+PRINT TAB(6,19);CHR$(135);"C";CHR$(131);"     Catalogue disk";
 
-PRINT TAB(3,21);CHR$(135);"B";CHR$(133);"Boot disk";
+PRINT TAB(6,21);CHR$(135);"B";CHR$(133);"     Boot disk";
 
 
 
