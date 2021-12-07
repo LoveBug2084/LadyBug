@@ -143,24 +143,26 @@ PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug            ";CHR$(156);
 
 
-PRINT TAB(8,3);CHR$(131);"Remake of the original";
-PRINT TAB(11,4);CHR$(131);"1981 arcade game";
-PRINT TAB(13,5);CHR$(131);"by";CHR$(129);"Universal";
-PRINT TAB(7,7);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
 
-PRINT TAB(13,10);CHR$(132);"Menu options";
+PRINT TAB(7,5);CHR$(131);"A remake of the original";
+PRINT TAB(6,6);CHR$(129);"Universal";CHR$(131);"1981 arcade game";
 
-PRINT TAB(3,12);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
-PRINT TAB(3,13);CHR$(141);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play Lady Bug";
+PRINT TAB(7,8);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
 
-PRINT TAB(3,15);CHR$(141);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
-PRINT TAB(3,16);CHR$(141);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
 
-PRINT TAB(3,18);CHR$(141);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
-PRINT TAB(3,19);CHR$(141);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
 
-PRINT TAB(3,21);CHR$(141);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
-PRINT TAB(3,22);CHR$(141);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
+
+PRINT TAB(16,12);"Options";
+
+PRINT TAB(4,14);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play";CHR$(129);"Lady Bug";
+
+PRINT TAB(4,16);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
+
+PRINT TAB(4,18);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
+
+PRINT TAB(4,20);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
+
+
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option        ";CHR$(156);
 
@@ -211,34 +213,25 @@ IF L%>2 THEN L%=L%-3:*FX 19
 PRINT TAB(0,R%);SPC(40);
 NEXT R%
 
-PRINT TAB(34,3);CHR$(131);"2";
-*FX 19
-PRINT TAB(2,5);CHR$(130);"A special diamond bonus worth";
-*FX 19
-PRINT TAB(2,6);CHR$(133);"1000000 points";CHR$(130);"will be awarded if";
-*FX 19
-PRINT TAB(2,7);CHR$(130);"you can reach";CHR$(133);"level 6";CHR$(130);"while only";
-*FX 19
-PRINT TAB(2,8);CHR$(130);"collecting";CHR$(134);"cyan hearts and letters";
-*FX 19
-PRINT TAB(2,9);CHR$(130);"and without losing a life";
-*FX 19
-PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"and";CHR$(131);"down";CHR$(129);"controls to";
-*FX 19
-PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"return";CHR$(129);"to";
-*FX 19
-PRINT TAB(2,13);CHR$(129);"adjust the game settings or";
-*FX 19
-PRINT TAB(2,14);CHR$(129);"redefine the control keys";
-*FX 19
-PRINT TAB(2,16);CHR$(131);"During the game press";CHR$(129);"return";CHR$(131);"to"
-*FX 19
-PRINT TAB(2,17);CHR$(131);"pause, move";CHR$(129);"Lady Bug";CHR$(131);"to unpause";
-*FX 19
-PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"esc";CHR$(133);"to quit the current game";
-*FX 19
-PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";
-*FX 19
+PRINT TAB(34,3);CHR$(131);"2";:*FX 19
+
+PRINT TAB(2,5);CHR$(130);"A special diamond bonus worth";:*FX 19
+PRINT TAB(2,6);CHR$(133);"1000000 points";CHR$(130);"will be awarded if";:*FX 19
+PRINT TAB(2,7);CHR$(130);"you can reach";CHR$(133);"level 6";CHR$(130);"while only";:*FX 19
+PRINT TAB(2,8);CHR$(130);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
+PRINT TAB(2,9);CHR$(130);"and without losing a life";:*FX 19
+
+PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"and";CHR$(131);"down";CHR$(129);"controls to";:*FX 19
+PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"return";CHR$(129);"to";:*FX 19
+PRINT TAB(2,13);CHR$(129);"adjust the game settings or";:*FX 19
+PRINT TAB(2,14);CHR$(129);"redefine the control keys";:*FX 19
+
+PRINT TAB(2,16);CHR$(131);"During the game press";CHR$(129);"return";CHR$(131);"to":*FX 19
+PRINT TAB(2,17);CHR$(131);"pause, move";CHR$(129);"Lady Bug";CHR$(131);"to unpause";:*FX 19
+
+PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"esc";CHR$(133);"to quit the current game";:*FX 19
+
+PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";:*FX 19
 PRINT TAB(2,22);CHR$(134);"high scores";CHR$(132);"and";CHR$(134);"game settings";
 
 ENDPROC
@@ -252,9 +245,9 @@ CLS
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
 
-PRINT TAB(11,3);"Editor Instructions";
 
-PRINT TAB(13,5);CHR$(130);"Control Keys";
+PRINT TAB(14,4);"Editor controls";
+
 
 PRINT TAB(6, 7);CHR$(135);"123";CHR$(129);"   Select current map";
 
@@ -271,7 +264,6 @@ PRINT TAB(6,18);CHR$(135);"S";CHR$(130);"     Save map to disk";
 PRINT TAB(6,19);CHR$(135);"C";CHR$(131);"     Catalogue disk";
 
 PRINT TAB(6,21);CHR$(135);"B";CHR$(133);"     Boot disk";
-
 
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press Return            ";CHR$(156);
