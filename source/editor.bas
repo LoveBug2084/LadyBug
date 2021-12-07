@@ -97,8 +97,8 @@ IFk$="3"THENIFM%<>2 THEN M%=2:PROCdf:PROCdm:C%=1:B%=1:ENDPROC
 IFk$="L"THENPROClm:ENDPROC
 IFk$="S"THENPROCsm:ENDPROC
 IFk$="C"THENPROCc:ENDPROC
-IFk$="E"THENm$="erase maze":IFFNc THENPROCem:ENDPROC
-IFk$="B"THENm$="boot disk":IFFNc THENPROCboot
+IFk$="E"THENm$="Erase maze":IFFNc THENPROCem:ENDPROC
+IFk$="B"THENm$="Boot disk":IFFNc THENPROCboot
 
 ENDPROC
 
@@ -106,7 +106,7 @@ ENDPROC
 DEFPROCboot
 
 FORM%=0TO2
-IFM%?&2B00<>0THENPROCdf:m$="save map first":IFFNc THENPROCsm
+IFM%?&2B00<>0THENPROCdf:PROCdm:m$="Map unsaved, save it now":IFFNc THENPROCsm
 NEXT
 
 OSCLI("EXEC $.!Boot"):END
@@ -119,7 +119,7 @@ DEFPROClm
 
 COLOUR3
 
-IFM%?&2B00<>0THENm$="save map first":IFFNc THENPROCsm:ENDPROC
+IFM%?&2B00<>0THENm$="Map unsaved, save it now":IFFNc THENPROCsm:ENDPROC
 
 INPUT TAB(0,29);"Load file name ";l$
 PROCb
@@ -151,7 +151,7 @@ PROCb
 
 IFs$=""THENs$=f$(M%)
 
-f%=OPENIN(s$):IFf%<>0THENCLOSE#f%:m$="OVERWRITE FILE":IFNOTFNc THENENDPROC
+f%=OPENIN(s$):IFf%<>0THENCLOSE#f%:m$="Map exists, overwrite":IFNOTFNc THENENDPROC
 
 OSCLI("SAVE "+s$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
 f$(M%)=s$
@@ -200,7 +200,7 @@ ENDPROC
 DEFFNc
 
 COLOUR3
-PRINTTAB(0,29);"Confirm ";m$;" ? Y/N";
+PRINTTAB(0,29);m$;" ? Y/N";
 
 k$=GET$
 PROCb
