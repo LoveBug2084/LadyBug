@@ -40,6 +40,15 @@ basMaze		= &78				; maze data address
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+.editorMapDirty					; dirty flag for maps (data changed)
+
+	equb 0					; map 1
+	equb 0					; map 2
+	equb 0					; map 3
+	equb &ff				; not used but here so that editor.bas can !&2b00=0 to clear all 3 maps
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .editorTileMirror				; mirror tile id's for right hand
 
 	equb &00,&01,&02,&03,&04,&05,&07,&06,&09,&08,&0B,&0A,&0C,&0D,&0E,&0F,&11,&10

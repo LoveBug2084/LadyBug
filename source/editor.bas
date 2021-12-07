@@ -61,12 +61,12 @@ ENDPROC
 
 DEFPROCdc
 
-CC%=CC%-1
+B%=B%-1
 *FX19
 
-IFCC%>0THENENDPROC
+IFB%>0THENENDPROC
 
-CC%=10
+B%=10
 C%=C%EOR1
 
 IFC%=0THENPROCdt(V%+X%,W%+Y%,18):PROCdt(G%+T%,H%,18)ELSEPROCdmt(X%,Y%):PROCdt(G%+T%,H%,T%)
@@ -77,27 +77,39 @@ ENDPROC
 
 DEFPROCpk
 
-IFINKEY(-98)THENIFX%>0THENPROCdmt(X%,Y%):X%=X%-1:C%=1:CC%=1
-IFINKEY(-67)THENIFX%<20THENPROCdmt(X%,Y%):X%=X%+1:C%=1:CC%=1
-IFINKEY(-73)THENIFY%>0THENPROCdmt(X%,Y%):Y%=Y%-1:C%=1:CC%=1
-IFINKEY(-105)THENIFY%<20THENPROCdmt(X%,Y%):Y%=Y%+1:C%=1:CC%=1
+IFINKEY(-98)THENIFX%>0THENPROCdmt(X%,Y%):X%=X%-1:C%=1:B%=1
+IFINKEY(-67)THENIFX%<20THENPROCdmt(X%,Y%):X%=X%+1:C%=1:B%=1
+IFINKEY(-73)THENIFY%>0THENPROCdmt(X%,Y%):Y%=Y%-1:C%=1:B%=1
+IFINKEY(-105)THENIFY%<20THENPROCdmt(X%,Y%):Y%=Y%+1:C%=1:B%=1
+
 IFINKEY(-1)THENPROCpmt(X%,Y%,0):PROCdmt(X%,Y%)
 IFINKEY(-74)THENPROCpmt(X%,Y%,T%):PROCdmt(X%,Y%)
 
 k$=INKEY$(0)
 
-IFk$=","THENIFT%>0 THEN PROCdt(G%+T%,H%,T%):C%=1:CC%=1:T%=T%-1:ENDPROC
-IFk$="."THENIFT%<17 THEN PROCdt(G%+T%,H%,T%):C%=1:CC%=1:T%=T%+1:ENDPROC
+IFk$=","THENIFT%>0 THEN PROCdt(G%+T%,H%,T%):C%=1:B%=1:T%=T%-1:ENDPROC
+IFk$="."THENIFT%<17 THEN PROCdt(G%+T%,H%,T%):C%=1:B%=1:T%=T%+1:ENDPROC
 
-IFk$="1"THENIFM%<>0 THEN M%=0:PROCdf:PROCdm:C%=1:CC%=1:ENDPROC
-IFk$="2"THENIFM%<>1 THEN M%=1:PROCdf:PROCdm:C%=1:CC%=1:ENDPROC
-IFk$="3"THENIFM%<>2 THEN M%=2:PROCdf:PROCdm:C%=1:CC%=1:ENDPROC
+IFk$="1"THENIFM%<>0 THEN M%=0:PROCdf:PROCdm:C%=1:B%=1:ENDPROC
+IFk$="2"THENIFM%<>1 THEN M%=1:PROCdf:PROCdm:C%=1:B%=1:ENDPROC
+IFk$="3"THENIFM%<>2 THEN M%=2:PROCdf:PROCdm:C%=1:B%=1:ENDPROC
 
 IFk$="L"THENPROClm:ENDPROC
 IFk$="S"THENPROCsm:ENDPROC
 IFk$="C"THENPROCc:ENDPROC
 IFk$="E"THENm$="erase maze":IFFNc THENPROCem:ENDPROC
-IFk$="B"THENm$="boot disk":IFFNc THENOSCLI("EXEC !Boot"):END
+IFk$="B"THENm$="boot disk":IFFNc THENPROCboot
+
+ENDPROC
+
+
+DEFPROCboot
+
+FORM%=0TO2
+IFM%?&2B00<>0THENPROCdf:m$="Save map first":IFFNc THENPROCsm
+NEXT
+
+OSCLI("EXEC $.!Boot"):END
 
 ENDPROC
 
@@ -105,7 +117,10 @@ ENDPROC
 
 DEFPROClm
 
-COLOUR(3)
+COLOUR3
+
+IFM%?&2B00<>0THENm$="Save map first":IFFNc THENPROCsm
+
 INPUT TAB(0,29);"Load file name ";l$
 PROCb
 
@@ -114,6 +129,8 @@ CLOSE#f%
 
 OSCLI("LOAD "+l$+" "+STR$~(&2F19-M%*&E7))
 f$(M%)=l$
+
+M%?&2B00=0
 
 PROCdf
 PROCdm
@@ -128,7 +145,7 @@ ENDPROC
 
 DEFPROCsm
 
-COLOUR(3)
+COLOUR3
 INPUTTAB(0,29);"Save file name ";s$
 PROCb
 
@@ -143,6 +160,8 @@ f%=OPENOUT("$.Maps")
 PRINT#f%,f$(0),f$(1),f$(2)
 CLOSE#f%
 
+M%?&2B00=0
+
 PROCdf
 
 ENDPROC
@@ -153,7 +172,7 @@ DEFPROCc
 
 CLS
 
-COLOUR 3
+COLOUR3
 *CAT
 
 PROCa
@@ -165,10 +184,12 @@ ENDPROC
 
 DEFPROCa
 
-COLOUR 3
+COLOUR3
 PRINTTAB(0,30);"Press any key";
 
 k$=GET$
+
+REPEAT UNTIL INKEY(-1)=0 AND INKEY(-74)=0
 
 PROCb
 
@@ -178,7 +199,7 @@ ENDPROC
 
 DEFFNc
 
-COLOUR(3)
+COLOUR3
 PRINTTAB(0,29);"Confirm ";m$;" ? Y/N";
 
 k$=GET$
@@ -197,7 +218,7 @@ DRAW(V%+21)*48+24,1020-(W%+21)*32-16
 DRAWV%*48-24,1020-(W%+21)*32-16
 DRAWV%*48-24,1020-W%*32+16
 
-FORy%=0TO20:!&78=y%*11+&2F19-M%*&E7:!&74=(W%+y%)*640+V%*24+&3000:CALL&2B4F:NEXT
+FORy%=0TO20:!&78=y%*11+&2F19-M%*&E7:!&74=(W%+y%)*640+V%*24+&3000:CALL&2B53:NEXT
 
 ENDPROC
 
@@ -208,7 +229,7 @@ DEFPROCdmt(x%,y%)
 IFx%>10 THEN x%=20-x%
 
 PROCdt(V%+x%,W%+y%,?(y%*11+x%+&2F19-M%*&E7))
-PROCdt(V%+20-x%,W%+y%,?(&2B00+?(y%*11+x%+&2F19-M%*&E7)))
+PROCdt(V%+20-x%,W%+y%,?(&2B04+?(y%*11+x%+&2F19-M%*&E7)))
 
 ENDPROC
 
@@ -216,7 +237,7 @@ ENDPROC
 
 DEFPROCpmt(x%,y%,t%)
 
-IFx%>10THENx%=20-x%:t%=t%?&2B00
+IFx%>10THENx%=20-x%:t%=t%?&2B04
 
 IFt%=0THENx%?(y%*11+&2F19-M%*&E7)=t%
 IFt%=1THENIF(x% AND 1)=0THENIF(y% AND 1)=0THENx%?(y%*11+&2F19-M%*&E7)=t%
@@ -227,13 +248,15 @@ IFt%=6THENIFx%>=2THENIF(x%AND1)=0AND(y%AND1)<>0THENx%?(y%*11+&2F19-M%*&E7)=t%
 IFt%=7THENIF(x%AND1)=0AND(y%AND1)<>0THENx%?(y%*11+&2F19-M%*&E7)=t%
 IFt%>=8THENIF(x%AND1)<>0OR(y%AND1)<>0THENx%?(y%*11+&2F19-M%*&E7)=t%
 
+M%?&2B00=1
+
 ENDPROC
 
 
 
 DEFPROCdt(x%,y%,t%)
 
-!&74=y%*640+x%*24+&3000:A%=t%:CALL&2B12
+!&74=y%*640+x%*24+&3000:A%=t%:CALL&2B16
 
 ENDPROC
 
@@ -246,6 +269,8 @@ IF(x%AND1)=0AND(y%AND1)=0THEN?(y%*11+x%+&2F19-M%*&E7)=1ELSE?(y%*11+x%+&2F19-M%*&
 NEXT,
 
 ?(&2F19-M%*&E7+&6C)=&0F:?(&2F19-M%*&E7+&77)=&0C:?(&2F19-M%*&E7+&78)=&00:?(&2F19-M%*&E7+&82)=&0A:?(&2F19-M%*&E7+&83)=&0D:?(&2F19-M%*&E7+&BA)=&00:?(&2F19-M%*&E7+&D0)=&00:?(&2F19-M%*&E7+&E6)=&00
+
+M%?&2B00=1
 
 PROCdm
 
@@ -276,8 +301,8 @@ DIM f$(3)
 f%=OPENIN("$.Maps")
 INPUT#f%,f$(0),f$(1),f$(2)
 CLOSE#f%
-
 FORZ%=0TO2:OSCLI("LOAD "+f$(Z%)+" "+STR$~(&2F19-Z%*&E7)):NEXT
+!&2B00=0
 
 V%=3:W%=1
 G%=4:H%=23
@@ -285,7 +310,7 @@ G%=4:H%=23
 T%=1
 X%=0:Y%=0
 
-C%=1:CC%=1
+C%=1:B%=1
 
 M%=0
 
