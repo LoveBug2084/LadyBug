@@ -57,7 +57,7 @@
 	print "unused        ", ~page0258End, "- ", ~page0287 - 1, ", ", page0287 - page0258End, "bytes"
 	print "----------------------------------------------------"
 	print "used          ", ~page0287, "- ", ~programEnd - 1, ", ", programEnd - page0287, "bytes"
-	print "unused        ", ~programEnd, "- ", ~screenAddr - 1, ", ", screenAddr - programEnd, "bytes"
+	print "free          ", ~programEnd, "- ", ~screenAddr - 1, ", ", screenAddr - programEnd, "bytes"
 	print "----------------------------------------------------"
 	print
 	print "----------------------------------------------------"

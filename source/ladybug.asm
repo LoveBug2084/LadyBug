@@ -396,6 +396,36 @@ soundChannels		= 6			; number of software defined sound channels
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; random					generate an 8 bit random number
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		randomSeed		2 bytes used to calculate next random number
+;						total length = 65535 random bytes before pattern repeats
+;						add more seed bytes if longer run length is required
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			8 bit random number (randomSeed + 1)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.random
+
+	lda randomSeed + 1			; get hi 8 bits of seed
+	lsr a					; shift it right to put bit 0 into carry
+	lda randomSeed				; get lo 8 bits of seed
+	ror a					; shift it right putting carry into bit 7 and bit 0 into carry
+	eor randomSeed + 1			; eor with hi 8 bits
+	sta randomSeed + 1			; store in high 8 bits
+	ror a					; shift it right putting carry into bit 7
+	eor randomSeed				; eor with lo 8 bits
+	sta randomSeed				; store in lo 8 bits
+	eor randomSeed + 1			; eor with hi 8 bits
+	sta randomSeed + 1			; store in hi 8 bits
+
+	rts					; return with random number in A
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawVegetableScore				draws vegetable score in the center box if enabled
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -910,36 +940,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 .updateEnemyTimerExit
 
 	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; random					generate an 8 bit random number
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; workspace		randomSeed		2 bytes used to calculate next random number
-;						total length = 65535 random bytes before pattern repeats
-;						add more seed bytes if longer run length is required
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			8 bit random number (randomSeed + 1)
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.random
-
-	lda randomSeed + 1			; get hi 8 bits of seed
-	lsr a					; shift it right to put bit 0 into carry
-	lda randomSeed				; get lo 8 bits of seed
-	ror a					; shift it right putting carry into bit 7 and bit 0 into carry
-	eor randomSeed + 1			; eor with hi 8 bits
-	sta randomSeed + 1			; store in high 8 bits
-	ror a					; shift it right putting carry into bit 7
-	eor randomSeed				; eor with lo 8 bits
-	sta randomSeed				; store in lo 8 bits
-	eor randomSeed + 1			; eor with hi 8 bits
-	sta randomSeed + 1			; store in hi 8 bits
-
-	rts					; return with random number in A
 
 
 

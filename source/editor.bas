@@ -19,7 +19,7 @@ IFERR=201THENPRINT"Disk read only";:ENDPROC
 IFERR=204THENPRINT"Bad file name";:ENDPROC
 IFERR=214THENPRINT"File not found";:ENDPROC
 
-REPORT
+PRINTTAB(0,28);:REPORT
 
 ENDPROC
 
@@ -139,9 +139,6 @@ IFM%?&2B00<>0THENm$="Map unsaved, save it now":IFFNc THENPROCsm:ENDPROC
 VDU28,0,31,39,29:INPUTTAB(5,0);"Load file name ";l$:VDU26
 PROCb
 
-f%=OPENIN(l$):IFf%=0THENPRINTTAB(5,29);l$;" does not exist";:PROCa:ENDPROC
-CLOSE#f%
-
 OSCLI("LOAD "+l$+" "+STR$~(&2F19-M%*&E7))
 f$(M%)=l$
 
@@ -166,7 +163,7 @@ PROCb
 
 IFs$=""THENs$=f$(M%)
 
-f%=OPENIN(s$):IFf%<>0THENCLOSE#f%:m$="Map exists, overwrite":IFNOTFNc THENENDPROC
+f%=OPENIN(s$):IFf%<>0THENCLOSE#f%:m$-"File exists, overwrite":IFNOTFNc THENENDPROC
 
 OSCLI("SAVE "+s$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
 f$(M%)=s$

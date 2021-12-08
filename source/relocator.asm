@@ -110,13 +110,22 @@
 	lda #&f4				; put ula into mode 2
 	sta ulaMode
 
+	lda acccon				; disable shadow ram
+	and #%00111000
+	sta acccon
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; relocate program to runtime address
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	
-	lda acccon				; disable shadow ram
-	and #%00111000
-	sta acccon
+	lda cleanResetBank			; backup current cleanReset values into the relocation
+	sta cleanResetBank + progOffset		; in case someone presses break during relocation
+						; to prevent the next boot losing the bank,machine,validation valus
+	lda cleanResetMachine
+	sta cleanResetMachine + progOffset
+	
+	lda cleanResetValidation
+	sta cleanResetValidation + progOffset
 
 	ldx #hi(bootstrap - progReloc)		; program page length
 	ldy #0
