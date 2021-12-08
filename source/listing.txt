@@ -39,7 +39,7 @@ free          &47D6 - &47EF , 26 bytes
 ----------------------------------------------------
 destroyed on run
 ----------------------------------------------------
-bootstrap     &4800 - &48EE , 239 bytes
+bootstrap     &4800 - &48DC , 221 bytes
 ----------------------------------------------------
 
 
@@ -8777,7 +8777,7 @@ bootstrap     &4800 - &48EE , 239 bytes
      4855   A2 0D      LDX #&0D
 .bootstrapCrtc
      4857   8E 00 FE   STX &FE00
-     485A   BD E1 68   LDA &68E1,X
+     485A   BD CF 68   LDA &68CF,X
      485D   8D 01 FE   STA &FE01
      4860   CA         DEX
      4861   10 F4      BPL &4857
@@ -8786,71 +8786,65 @@ bootstrap     &4800 - &48EE , 239 bytes
      4868   AD 34 FE   LDA &FE34
      486B   29 38      AND #&38
      486D   8D 34 FE   STA &FE34
-     4870   AD 30 01   LDA &0130
-     4873   8D 30 21   STA &2130
-     4876   AD 31 01   LDA &0131
-     4879   8D 31 21   STA &2131
-     487C   AD 32 01   LDA &0132
-     487F   8D 32 21   STA &2132
-     4882   A2 48      LDX #&48
-     4884   A0 00      LDY #&00
+     4870   AD FE 7F   LDA &7FFE
+     4873   8D 30 FE   STA &FE30
+     4876   8D 30 21   STA &2130
+     4879   49 69      EOR #&69
+     487B   8D 32 21   STA &2132
+     487E   AD FD 7F   LDA &7FFD
+     4881   8D 31 21   STA &2131
+     4884   49 69      EOR #&69
+     4886   18         CLC
+     4887   6D 32 21   ADC &2132
+     488A   8D 32 21   STA &2132
+     488D   A2 48      LDX #&48
+     488F   A0 00      LDY #&00
 .relocateProgram
-     4886   B9 00 20   LDA &2000,Y
-     4889   99 00 00   STA &0000,Y
-     488C   C8         INY
-     488D   D0 F7      BNE &4886
-     488F   EE 88 68   INC &6888
-     4892   EE 8B 68   INC &688B
-     4895   CA         DEX
-     4896   D0 EE      BNE &4886
-     4898   AD FE 7F   LDA &7FFE
-     489B   8D 30 FE   STA &FE30
-     489E   8D 30 01   STA &0130
-     48A1   49 69      EOR #&69
-     48A3   8D 32 01   STA &0132
-     48A6   AD FD 7F   LDA &7FFD
-     48A9   8D 31 01   STA &0131
-     48AC   49 69      EOR #&69
-     48AE   18         CLC
-     48AF   6D 32 01   ADC &0132
-     48B2   8D 32 01   STA &0132
+     4891   B9 00 20   LDA &2000,Y
+     4894   99 00 00   STA &0000,Y
+     4897   C8         INY
+     4898   D0 F7      BNE &4891
+     489A   EE 93 68   INC &6893
+     489D   EE 96 68   INC &6896
+     48A0   CA         DEX
+     48A1   D0 EE      BNE &4891
 .relocateProgramConfig
-     48B5   BD 80 7B   LDA &7B80,X
-     48B8   9D 10 80   STA &8010,X
-     48BB   E8         INX
-     48BC   E0 7E      CPX #&7E
-     48BE   D0 F5      BNE &48B5
-     48C0   AD 82 80   LDA &8082
-     48C3   85 0D      STA &0D
-     48C5   A2 00      LDX #&00
+     48A3   BD 80 7B   LDA &7B80,X
+     48A6   9D 10 80   STA &8010,X
+     48A9   E8         INX
+     48AA   E0 7E      CPX #&7E
+     48AC   D0 F5      BNE &48A3
+     48AE   AD 82 80   LDA &8082
+     48B1   85 0D      STA &0D
+     48B3   A2 00      LDX #&00
 .relocateProgramMazeData
-     48C7   BD 00 78   LDA &7800,X
-     48CA   9D 21 45   STA &4521,X
-     48CD   BD 00 79   LDA &7900,X
-     48D0   9D 08 46   STA &4608,X
-     48D3   BD 00 7A   LDA &7A00,X
-     48D6   9D EF 46   STA &46EF,X
-     48D9   E8         INX
-     48DA   E0 E7      CPX #&E7
-     48DC   D0 E9      BNE &48C7
-     48DE   4C 2B 07   JMP &072B
+     48B5   BD 00 78   LDA &7800,X
+     48B8   9D 21 45   STA &4521,X
+     48BB   BD 00 79   LDA &7900,X
+     48BE   9D 08 46   STA &4608,X
+     48C1   BD 00 7A   LDA &7A00,X
+     48C4   9D EF 46   STA &46EF,X
+     48C7   E8         INX
+     48C8   E0 E7      CPX #&E7
+     48CA   D0 E9      BNE &48B5
+     48CC   4C 2B 07   JMP &072B
 .bootstrapCrtcData
-     48E1   7F
-     48E2   45
-     48E3   5C
-     48E4   28
-     48E5   26
-     48E6   00
-     48E7   00
-     48E8   20
-     48E9   00
-     48EA   07
-     48EB   20
-     48EC   08
-     48ED   08
-     48EE   FE
+     48CF   7F
+     48D0   45
+     48D1   5C
+     48D2   28
+     48D3   26
+     48D4   00
+     48D5   00
+     48D6   20
+     48D7   00
+     48D8   07
+     48D9   20
+     48DA   08
+     48DB   08
+     48DC   FE
 .bootstrapEnd
-     48EF
+     48DD
 
 
 

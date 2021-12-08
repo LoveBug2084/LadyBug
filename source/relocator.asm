@@ -115,18 +115,28 @@
 	sta acccon
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup reset stuff
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	lda swrBank				; select ram bank
+	sta bankSelect
+	sta cleanResetBank + progOffset		; save ram bank for clean reset code
+
+	eor #magicNumber			; calculate validation
+	sta cleanResetValidation + progOffset
+	
+	lda machineType				; save machine type index for clean reset code
+	sta cleanResetMachine + progOffset
+
+	eor #magicNumber			; calculate validation
+	clc
+	adc cleanResetValidation + progOffset
+	sta cleanResetValidation + progOffset
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; relocate program to runtime address
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	
-	lda cleanResetBank			; backup current cleanReset values into the relocation
-	sta cleanResetBank + progOffset		; in case someone presses break during relocation
-						; to prevent the next boot losing the bank,machine,validation valus
-	lda cleanResetMachine
-	sta cleanResetMachine + progOffset
-	
-	lda cleanResetValidation
-	sta cleanResetValidation + progOffset
-
 	ldx #hi(bootstrap - progReloc)		; program page length
 	ldy #0
 
@@ -144,25 +154,6 @@
 	dex					; until all pages copied
 	bne relocateProgram
 	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; setup reset stuff
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	lda swrBank				; select ram bank
-	sta bankSelect
-	sta cleanResetBank			; save ram bank for clean reset code
-
-	eor #magicNumber			; calculate validation
-	sta cleanResetValidation
-	
-	lda machineType				; save machine type index for clean reset code
-	sta cleanResetMachine
-
-	eor #magicNumber			; calculate validation
-	clc
-	adc cleanResetValidation
-	sta cleanResetValidation
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup config
 	;---------------------------------------------------------------------------------------------------------------------------------------------
