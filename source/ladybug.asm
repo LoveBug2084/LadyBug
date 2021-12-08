@@ -6543,7 +6543,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta pauseLadybug
 	sta pauseEnemy
 
-	lda soundTimers + 0			; if sound effect not playing on channel 0
+	lda soundTimers + 0			; if sound effect playing on channel 0 (music) then exit
+	bne checkBonusExit
+
+	lda soundTimers + 3			; if sound effects playing on channel 3 (object) then exit
 	bne checkBonusExit
 
 	lda #&ff				; flag special bonus as active
@@ -6573,7 +6576,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta pauseLadybug
 	sta pauseEnemy
 
-	lda soundTimers + 0			; if sound effect not playing on channel 0
+	lda soundTimers + 0			; if sound effect playing on channel 0 (music) then exit
+	bne checkBonusExit
+
+	lda soundTimers + 3			; if sound effects playing on channel 3 (object) then exit
 	bne checkBonusExit
 
 	lda #&ff				; flag special bonus as active
@@ -6601,7 +6607,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .checkBonusDiamondActive
 
-	lda soundTimers + 0			; if sound effect not playing on channel 0
+	lda soundTimers + 0			; if sound effect not playing on channel 0 (music)
+	bne checkBonusExit
+
+	lda soundTimers + 3			; and if sound effects not playing on channel 3 (object)
 	bne checkBonusExit
 
 	jsr playSoundSilence			; silence all effects and music

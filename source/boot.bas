@@ -54,17 +54,18 @@ PROCshrink
 PROCoptions
 PROCexpand
 
-k$=FNwaitKey(6000)
+k$=FNwaitKey(360000)
 
-IF k$="I" THEN PROCshrink:PROCinstructionsGame1:PROCexpand:PROCwaitReturn(6000):PROCinstructionsGame2:PROCwaitReturn(6000)
+PROCshrink
+
+IF k$="I" THEN PROCinstructionsGame1:PROCexpand:PROCwaitReturn(360000):PROCinstructionsGame2:PROCwaitReturn(360000)
 
 IF k$="E" THEN CHAIN "Editor"
 
-IF k$="R" THEN PROCshrink:PROCinstructionsEdit:PROCexpand:PROCwaitReturn(6000)
+IF k$="R" THEN PROCinstructionsEdit:PROCexpand:PROCwaitReturn(360000)
 
 UNTIL k$=CHR$(13)
 
-PROCshrink
 PROClogo
 PROCexpand
 
@@ -252,7 +253,7 @@ PRINT TAB(14,4);"Editor controls";
 PRINT TAB(6, 7);CHR$(135);"123";CHR$(129);"   Select current map";
 
 PRINT TAB(6, 9);CHR$(135);":/ZX";CHR$(130);"  Move editing cursor";
-PRINT TAB(6,10);CHR$(135);",.";CHR$(131);"    Select tile";
+PRINT TAB(6,10);CHR$(135);"QW";CHR$(131);"    Select tile";
 
 PRINT TAB(6,12);CHR$(135);"Return";CHR$(132);"Draw tile";
 PRINT TAB(6,13);CHR$(135);"Shift";CHR$(133);" Erase tile";
@@ -404,7 +405,7 @@ DEF PROCwaitReturn(T%)
 TIME=0
 
 REPEAT
-K%=INKEY(0)
+K%=INKEY0
 UNTIL K%=13 OR TIME>=T%
 
 ENDPROC
@@ -416,7 +417,7 @@ DEF FNwaitKey(T%)
 TIME=0
 
 REPEAT
-k$=INKEY$(0)
+k$=INKEY$0
 UNTIL k$=CHR$(13) OR k$="I" OR k$="E" OR k$="R" OR TIME>=T%
 
 IF k$<>"" THEN =k$
