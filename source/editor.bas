@@ -118,14 +118,14 @@ IFk$="C"ORk$="c"THENPROCc:ENDPROC
 IFk$="E"ORk$="e"THENm$="Erase map":IFFNc THENPROCem:ENDPROC
 IFk$="B"ORk$="b"THENm$="Boot disk":IFFNc THENPROCboot
 
-IFk$=""THENU%=U%+1:IFU%>=200THENPROCdf
+IFk$=""THENU%=U%+1:IFU%>=100THENPROCdf
 
 ENDPROC
 
 
 DEFPROCboot
 
-IF!&2B00<>0THENPROCdf:m$="Unsaved maps"+CHR$(13)+CHR$(10)+"     Exit without saving":IFNOTFNc THENENDPROC
+IF!&2B00<>0THENPROCdf:m$="Unsaved map data"+CHR$(13)+CHR$(10)+"     Exit without saving":IFNOTFNc THENENDPROC
 
 OSCLI("EXEC $.!Boot"):END
 

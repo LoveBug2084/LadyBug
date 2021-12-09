@@ -183,7 +183,7 @@ objectModeYellow	= 2
 
 .escCounter		skip 1			; escape key counter (times how long esc is pressed)
 
-.mazeMap		skip 1			; current maze map 0 to 2
+.mazeMap		skip 1			; current maze map 0 to 5 (01=maze1, 23=maze2, 45=maze3)
 
 .score			skip 3			; player score (BCD) last digit always 0 and not stored
 .highScore		skip 3			; highest score (BCD) last digit always 0 and not stored
@@ -968,8 +968,8 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	lda #0
 	sta levelEdibles			; initialize edibles
 
-	lda mazeMap				; get maze map number * 2
-	asl a
+	lda mazeMap				; get maze map number, drop bit 0 so we get 0,0,2,2,4,4
+	and #&fe
 	tay
 
 	lda initPlayfieldMiddleMazeTable, y	; set start address of maze data
@@ -4002,8 +4002,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	inc mazeMap				; add 1 to mazeMap
 
-	lda mazeMap				; if mazeMap >= 3
-	cmp #3
+	lda mazeMap				; if mazeMap >= 6
+	cmp #6
 	bcc levelAdvanceExit
 	
 	lda #0					; then mazeMap = 0
