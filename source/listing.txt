@@ -8876,7 +8876,7 @@ Saving file 'D.Config'
      2B00   00
      2B01   00
      2B02   00
-     2B03   FF
+     2B03   00
 .editorTileMirror
      2B04   00
      2B05   01

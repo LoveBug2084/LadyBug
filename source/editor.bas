@@ -64,11 +64,14 @@ DEFPROCdf
 FORI%=0TO2
 
 IFI%=M%THENCOLOUR129ELSECOLOUR128
-COLOUR2:PRINTTAB(5,25+I%);1+I%;SPC(19);TAB(7,25+I%);:COLOUR3:PRINTf$(I%);
+COLOUR2:PRINTTAB(4,25+I%);:IFI%?&2B00<>0THENPRINT"*";ELSEPRINT" ";
+PRINT;1+I%;SPC(19);TAB(7,25+I%);:COLOUR3:PRINTf$(I%);
 
 NEXT
 
 COLOUR128
+
+U%=0
 
 ENDPROC
 
@@ -112,15 +115,17 @@ IFk$="3"THENIFM%<>2 THEN M%=2:PROCdf:PROCdm:C%=1:B%=1:ENDPROC
 IFk$="L"ORk$="l"THENPROClm:ENDPROC
 IFk$="S"ORk$="s"THENPROCsm:ENDPROC
 IFk$="C"ORk$="c"THENPROCc:ENDPROC
-IFk$="E"ORk$="e"THENm$="Erase maze":IFFNc THENPROCem:ENDPROC
+IFk$="E"ORk$="e"THENm$="Erase map":IFFNc THENPROCem:ENDPROC
 IFk$="B"ORk$="b"THENm$="Boot disk":IFFNc THENPROCboot
+
+IFk$=""THENU%=U%+1:IFU%>=200THENPROCdf
 
 ENDPROC
 
 
 DEFPROCboot
 
-IF?&2B00+?&2B01+?&2B02<>0THENm$="Unsaved maps"+CHR$(13)+CHR$(10)+"     Exit without saving":IFFNc=0 THENENDPROC
+IF!&2B00<>0THENPROCdf:m$="Unsaved maps"+CHR$(13)+CHR$(10)+"     Exit without saving":IFNOTFNc THENENDPROC
 
 OSCLI("EXEC $.!Boot"):END
 
@@ -161,7 +166,7 @@ PROCb
 
 IFs$=""THENs$=f$(M%)
 
-f%=OPENIN(s$):IFf%<>0THENCLOSE#f%:m$="File exists, overwrite":IFNOTFNc THENENDPROC
+f%=OPENIN(s$):IFf%<>0THENCLOSE#f%:m$=s$+" exists,overwrite":IFNOTFNc THENENDPROC
 
 OSCLI("SAVE "+s$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
 f$(M%)=s$
@@ -283,6 +288,7 @@ NEXT,
 
 M%?&2B00=1
 
+PROCdf
 PROCdm
 
 ENDPROC
@@ -326,6 +332,8 @@ C%=1:B%=1
 M%=0
 
 m$=""
+
+U%=0
 
 ENDPROC
 

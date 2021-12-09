@@ -45,7 +45,7 @@ basMaze		= &78				; maze data address
 	equb 0					; map 1
 	equb 0					; map 2
 	equb 0					; map 3
-	equb &ff				; not used but here so that editor.bas can !&2b00=0 to clear all 3 maps
+	equb 0					; not used but here so that editor.bas can !&2b00 to clear or test all maps at same time
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ basMaze		= &78				; maze data address
 	
 	sta basTile + 2				; save it
 
-	clc					; add to tile set address 3 times
+	clc					; add to tile set address 3 times (3*8=24 bytes per tile)
 	adc #lo(basTileSet)
 	sta basTile + 0
 	lda #0
@@ -151,4 +151,3 @@ basMaze		= &78				; maze data address
 	print
 	print
 
-	
