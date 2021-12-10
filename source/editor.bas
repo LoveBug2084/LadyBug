@@ -199,7 +199,7 @@ ENDPROC
 
 DEFPROCa
 
-COLOUR3
+COLOUR2
 PRINTTAB(5,30);"Press any key";
 
 k$=GET$
