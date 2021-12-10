@@ -250,18 +250,18 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(14,4);"Editor controls";
 
 
-PRINT TAB(6, 7);CHR$(135);"123";CHR$(129);"   Select current map";
+PRINT TAB(6, 7);CHR$(135);"123";CHR$(129);"   Select map";
 
-PRINT TAB(6, 9);CHR$(135);":/ZX";CHR$(130);"  Move editing cursor";
-PRINT TAB(6,10);CHR$(135);"QW";CHR$(131);"    Select tile";
+PRINT TAB(6, 9);CHR$(135);":/ZX";CHR$(130);"  Move cursor";
+PRINT TAB(6,10);CHR$(135);"Return";CHR$(132);"Draw tile";
+PRINT TAB(6,11);CHR$(135);"Shift";CHR$(133);" Erase tile";
+PRINT TAB(6,12);CHR$(135);"QW";CHR$(131);"    Select tile";
 
-PRINT TAB(6,12);CHR$(135);"Return";CHR$(132);"Draw tile";
-PRINT TAB(6,13);CHR$(135);"Shift";CHR$(133);" Erase tile";
+PRINT TAB(6,14);CHR$(135);"E";CHR$(134);"     Erase map";
 
-PRINT TAB(6,15);CHR$(135);"E";CHR$(134);"     Erase map";
+PRINT TAB(6,16);CHR$(135);"L";CHR$(129);"     Load map from disk";
+PRINT TAB(6,17);CHR$(135);"S";CHR$(130);"     Save map to disk";
 
-PRINT TAB(6,17);CHR$(135);"L";CHR$(129);"     Load map from disk";
-PRINT TAB(6,18);CHR$(135);"S";CHR$(130);"     Save map to disk";
 PRINT TAB(6,19);CHR$(135);"C";CHR$(131);"     Catalogue disk";
 
 PRINT TAB(6,21);CHR$(135);"B";CHR$(133);"     Boot disk";
