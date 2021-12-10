@@ -3,7 +3,7 @@ A remake of [Universals Lady Bug arcade game from 1981](https://en.wikipedia.org
 
 I've included fontmaker and pixels written in c ( source code and compiled .exe's ) for converting the gimp/photoshop font, sprites and tile image files from .raw to the .bin format required during assembly ( see asm.bat for details )
 
-**Recently added maze map editor, maps can be saved onto disk and any 3 may be selected for use in the game**
+**I've recently added a map editor, maps can be saved to disk and any 3 may be selected for use in the game**
 
 **Tested on the following computer models:**\
 B OS 1.20 using 12K of sideways ram\
