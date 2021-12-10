@@ -183,7 +183,7 @@ objectModeYellow	= 2
 
 .escCounter		skip 1			; escape key counter (times how long esc is pressed)
 
-.mazeMap		skip 1			; current maze map 0 to 5 (01=maze1, 23=maze2, 45=maze3)
+.mazeMap		skip 1			; current maze map value 0-5   0,1=maze1 2,3=maze2 4,5=maze3
 
 .score			skip 3			; player score (BCD) last digit always 0 and not stored
 .highScore		skip 3			; highest score (BCD) last digit always 0 and not stored
@@ -968,7 +968,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	lda #0
 	sta levelEdibles			; initialize edibles
 
-	lda mazeMap				; get maze map number, drop bit 0 so we get 0,0,2,2,4,4
+	lda mazeMap				; get maze map number, drop bit 0 so we get 0,0,2,2,4,4 and use as index into MazeTable
 	and #&fe
 	tay
 
