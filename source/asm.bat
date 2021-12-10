@@ -2,9 +2,7 @@
 echo.
 fontmaker  		img-font.raw													img-font.bin
 echo.
-pixels				img-minifont-decimal.raw			4		8		img-minifont-decimal.bin
-echo.
-pixels				img-minifont-hexadecimal.raw	4		8		img-minifont-hexadecimal.bin
+pixels				img-font-vegetable.raw				4		8		img-font-vegetable.bin
 echo.
 pixels				img-points.raw								10	10	img-points.bin
 echo.

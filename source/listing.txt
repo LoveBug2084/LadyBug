@@ -922,12 +922,10 @@ bootstrap     &4800 - &48DC , 221 bytes
      01A2   8D 40 FE   STA &FE40
      01A5   60         RTS
 .waitVsyncUpper
-.waitVsyncUpperTest
      01A6   24 02      BIT &02
      01A8   10 FC      BPL &01A6
      01AA   60         RTS
 .waitVsyncLower
-.waitVsyncLowerTest
      01AB   24 02      BIT &02
      01AD   30 FC      BMI &01AB
      01AF   60         RTS

@@ -84,36 +84,6 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; debugging stuff
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-debugRaster		= false
-;debugRaster		= true			; enable raster timing bars
-
-debugCoordinates	= false
-;debugCoordinates	= true			; display ladybug coordinates
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-debugLevel		= false
-;debugLevel		= &18			; start on this level
-
-debugInvulnerable	= false
-;debugInvulnerable	= true			; ladybug is invulnerable to harm
-
-debugInstantHighScore	= false
-;debugInstantHighScore	= true			; end the game instantly with a high score to quicky test name registration
-
-debugDiamondOverride	= false
-;debugDiamondOverride	= 1			; override level of diamond bonus or 0 to use the default value
-
-debugDiamondBonus	= false
-;debugDiamondBonus	= true			; enable instant diamond bonus garden for quick testing
-
-debugBonus		= false
-;debugBonus		= true			; enable all special and extra letters for quick testing of gardens
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; page0000 variables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -204,12 +174,7 @@ objectModeYellow	= 2
 .bonusDiamondActive	skip 1			; diamond bonus is active if != 0
 .bonusDiamondEnable	skip 1			; diamond bonus is enabled if != 0
 bonusDiamondImg		= 18			; diamond image number
-
-if debugDiamondOverride == false
 bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
-else
-bonusDiamondLevel 	= debugDiamondOverride	; use debugDiamondOverride level if enabled
-endif
 
 .scoreMultiplier	skip 1			; multiplier 0=x1, 1=x2, 2=x3, 3=x5
 
@@ -643,17 +608,8 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 .waitVsyncUpper
 
-	if debugRaster				; if debug then set background color
-
-	lda #palBlack
-	sta ulaPalette
-
-	endif
-
-.waitVsyncUpperTest
-
 	bit screenHalf				; wait until upper arena
-	bpl waitVsyncUpperTest
+	bpl waitVsyncUpper
 	
 	rts					; return
 
@@ -669,17 +625,8 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 .waitVsyncLower
 
-	if debugRaster				; if debug then set background color
-
-	lda #palBlack
-	sta ulaPalette
-
-	endif
-
-.waitVsyncLowerTest
-
 	bit screenHalf				; wait until lower area
-	bmi waitVsyncLowerTest
+	bmi waitVsyncLower
 	
 	rts					; return
 
@@ -1421,13 +1368,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 .drawScore
 
-	if debugRaster				; if debug set background color
-
-	lda #palRed
-	sta ulaPalette
-
-	endif
-
 	lda #score				; set address for score display
 	sta drawScoreDigitRead + 1
 
@@ -1501,13 +1441,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 .drawHighScore
 
-	if debugRaster				; if debug set background color
-
-	lda #palGreen
-	sta ulaPalette
-
-	endif
-
 	lda #highScore				; set address for highScore display
 	sta drawScoreDigitRead + 1
 
@@ -1559,13 +1492,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	stx eraseSpriteSaveX			; preserve registers
 	sty eraseSpriteSaveY
 	
-	if debugRaster				; if debug then set background color
-
-	lda #palMagenta
-	sta ulaPalette
-
-	endif
-
 	lda spritesEraseX, x			; erase 10x14 pixel area at coordinates
 	sta drawSpriteX
 	lda spritesEraseY, x
@@ -2169,8 +2095,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	if debugLevel == 0
-
 	lda #&01				; start game on level 1
 	sta level
 
@@ -2181,21 +2105,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	sta shield				; no shield at start, ladybug is vulnerable to skulls
 
-	else
-	
-	lda #debugLevel				; start game on debugLevel
-	sta level
-
-	lda #&95				; start with a horseradish at 9500 points
-	sta vegetableScore
-	lda #17
-	sta vegetableImg
-
-	lda #0
-	sta shield				; no shield at start, ladybug is vulnerable to skulls
-
-	endif
-
 	sta score				; zero the player score
 	sta score + 1
 	sta score + 2
@@ -2205,63 +2114,17 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda optionLives				; initialize player lives
 	sta lives
 
-
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	if debugInstantHighScore		; if debugInstantHighScore == true then
-
-	sed
-	clc					; score = highScore + 100000
-	lda highScore + 2
-	adc #1
-	sta score + 2
-	cld
-
-	lda #0					; lives = 0
-	sta lives
-	
-	endif
-
-
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	if debugBonus = false
-
 	lda #&ff				; clear the bonus bits
 	sta bonusBits
 	sta bonusBits + 1
 
-	else
-
-	lda #&00				; set the bonus bits
-	sta bonusBits
-	sta bonusBits + 1
-
-	lda #&ff
-
-	endif
-	
 	sta ladybugEntryEnable			; enable ladybug entry animation
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	if debugDiamondBonus			; if debugDiamondBonus then
-
-	lda #&ff				; enable diamond bonus
-	sta bonusDiamondActive
-
-	endif
-
-
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup level here too so that instructions page shows correct settings
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 
 	jsr initLevelSettings			; setup skulls, letters, enemy settings etc for current level
 
@@ -2427,20 +2290,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr updatePauseTimers			; update ladybug and enemy pause timers
 
-	if debugCoordinates			; if debugCoordinates == true
-	
-	lda #lo(screenAddr)			; then display lady coordinates
-	sta drawChrMiniAddr
-	lda #hi(screenAddr)
-	sta drawChrMiniAddr + 1
-	lda spritesX + 0
-	jsr drawHexMini
-	lda spritesY + 0
-	jsr drawHexMini
-
-	endif					; endif
-
-	jmp gameLoopUpper
+	jmp gameLoopUpper			; loop back to game main loop
 
 
 
@@ -2760,13 +2610,6 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .moveSprites
 
-	if debugRaster				; if debug then set background color
-
-	lda #palGreen
-	sta ulaPalette
-
-	endif
-
 	ldx #0					; move sprites 0 to max 1 pixel (ladybug and enemies)
 	jsr moveSpritesPixel
 	
@@ -2863,11 +2706,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	cmp #ladybugEnemyRange
 	bcs moveSpritesCheckAlignmentX
 
-	if debugInvulnerable == false
-
 	jsr ladybugKill				; then kill ladybug
-
-	endif
 
 .moveSpritesCheckAlignmentX
 
@@ -3011,13 +2850,6 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	jmp moveSpritesLoop
 
 .moveSpritesExit
-
-	if debugRaster				; if debug then set background color
-
-	lda #palBlack
-	sta ulaPalette
-
-	endif
 
 	rts					; return
 
@@ -3543,13 +3375,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	sta drawSpriteRead + 1
 	lda spriteImgAddrHi, y
 	sta drawSpriteRead + 2
-
-	if debugRaster				; if debug set background color
-
-	lda #palCyan
-	sta ulaPalette
-
-	endif
 
 .drawSpriteColumn
 
@@ -4790,11 +4615,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	sta bonusExtraActive			; extra bonus deactivated
 
-	if debugDiamondBonus == false
-
 	sta bonusDiamondActive			; diamond bonus deactivated
-
-	endif
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; level not ended yet
@@ -6624,13 +6445,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #sfxExtraLife			; play the extra life sound
 	jsr playSound
 
-	if debugDiamondBonus
-	
-	lda #0					; disable diamond bonus
-	sta bonusDiamondActive
-	
-	endif
-
 	sec					; end the current level and return
 	rts
 
@@ -6739,13 +6553,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .changeTimerTile
 
-	if debugRaster				; if debug set background color
-
-	lda #palYellow
-	sta ulaPalette
-
-	endif
-
 	lda enemyTimer				; get current timer tick * 2
 	asl a
 
@@ -6814,7 +6621,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 ; exit			A			destroyed
 ;			X			preserved
 ;			Y			preserved
-;			carry			set if sprite is onscreen, clear if sprite was offcreen (only if debug protection enabled)
+;			carry			set if sprite is onscreen
 ;			drawSpriteScreenAddr	screen address to the nearest row
 ;			drawSpriteX		adjusted for offset
 ;			drawSpriteY		adjusted for offset
@@ -8542,13 +8349,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .processSound
 
-	if debugRaster				; if debug then set background color
-
-	lda #palWhite
-	sta ulaPalette
-
-	endif
-
 	ldy #soundChannels - 1			; process from soundChannels - 1 to 0
 	ldx #2 * (soundChannels - 1)		; offset to pointers
 
@@ -8971,8 +8771,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .checkForObjectsSkull
 
-	if debugInvulnerable == false
-
 	lda shield				; if we are vulnerable
 	bne checkForObjectSkullExit
 
@@ -8983,8 +8781,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 	jsr drawMapTile
 
 	jsr ladybugKill				; kill ladybug
-
-	endif
 
 .checkForObjectSkullExit
 
@@ -9836,7 +9632,7 @@ spriteToAddrOffset	= 4			; correction factor
 .fontBin
 	skip 0
 
-	incbin "img-font.bin"			; load font table into memory
+	incbin "img-font.bin"			; load main font into memory
 
 .fontBinEnd
 	skip 0
@@ -9861,13 +9657,13 @@ chrHeart		= '*'
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; minifont used for vegetable bonus (and debugging info)
+; minifont used for vegetable bonus
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .miniFontBin
 	skip 0
 	
-	incbin "img-minifont-decimal.bin"	; load minifont into memory
+	incbin "img-font-vegetable.bin"		; load vegetable font into memory
 
 
 
