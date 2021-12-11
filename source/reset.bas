@@ -99,6 +99,10 @@ IF S$="Y" THEN PRINT " ";CHR$(129);"Saving settings"
 
 IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("SAVE $.Config " + STR$~(&FF0000 + H%) + " +7E"):F%?0=0:F%?1=0:F%?2=0
 
-PRINT:PRINT " ";CHR$(132);"Done"
+PRINT:PRINT " ";CHR$(132);
+
+IF M$="Y" OR H$="Y" OR S$="Y" THEN PRINT "Done" ELSE PRINT "No changes were made"
+
+PRINT
 
 END
