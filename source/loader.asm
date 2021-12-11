@@ -457,7 +457,7 @@ masterMos350 = &e374
 	equb &a0 + palRed			; color 10 special flashing red/magenta
 	equb &b0 + palMagenta			; color 11 special flashing magenta/red
 	equb &c0 + palYellow			; color 12 extra flashing yellow/green
-	equb &d0 + palGreen			; color 13 extra flashing green/red
+	equb &d0 + palGreen			; color 13 extra flashing green/yellow
 	equb &e0 + palWhite			; color 14 skull fade effect or red when shield is active
 	equb &f0 + palCyan			; color 15 object changes red,yellow,cyan
 

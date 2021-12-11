@@ -54,15 +54,17 @@ PROCshrink
 PROCoptions
 PROCexpand
 
-k$=FNwaitKey(360000)
+k$=FNwaitKey
 
 PROCshrink
 
 IF k$="I" THEN PROCinstructionsGame1:PROCexpand:PROCwaitReturn(360000):PROCinstructionsGame2:PROCwaitReturn(360000)
 
-IF k$="E" THEN CHAIN "Editor"
+IF k$="E" THEN CHAIN"$.Editor"
 
-IF k$="R" THEN PROCinstructionsEdit:PROCexpand:PROCwaitReturn(360000)
+IF k$="W" THEN PROCinstructionsEdit:PROCexpand:PROCwaitReturn(360000)
+
+IF k$="R" THEN CHAIN"$.Reset"
 
 UNTIL k$=CHR$(13)
 
@@ -144,25 +146,24 @@ PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug            ";CHR$(156);
 
 
+PRINT TAB(7,4);CHR$(131);"A remake of the original";
+PRINT TAB(6,5);CHR$(129);"Universal";CHR$(131);"1981 arcade game";
 
-PRINT TAB(7,5);CHR$(131);"A remake of the original";
-PRINT TAB(6,6);CHR$(129);"Universal";CHR$(131);"1981 arcade game";
-
-PRINT TAB(7,8);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
-
+PRINT TAB(7,7);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
 
 
 
-PRINT TAB(16,12);"Options";
+PRINT TAB(16,10);"Options";
 
-PRINT TAB(4,14);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play";CHR$(129);"Lady Bug";
+PRINT TAB(4,13);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play";CHR$(129);"Lady Bug";
 
-PRINT TAB(4,16);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
+PRINT TAB(4,15);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
 
-PRINT TAB(4,18);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
+PRINT TAB(4,17);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
 
-PRINT TAB(4,20);CHR$(132);"Press";CHR$(131);"R";CHR$(132);"for edit instructions";
+PRINT TAB(4,19);CHR$(132);"Press";CHR$(131);"W";CHR$(132);"for edit instructions";
 
+PRINT TAB(4,21);CHR$(133);"Press";CHR$(130);"R";CHR$(133);"to reset the settings";
 
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option        ";CHR$(156);
@@ -412,13 +413,11 @@ ENDPROC
 
 
 
-DEF FNwaitKey(T%)
-
-TIME=0
+DEF FNwaitKey
 
 REPEAT
 k$=INKEY$0
-UNTIL k$=CHR$(13) OR k$="I" OR k$="E" OR k$="R" OR TIME>=T%
+UNTIL k$=CHR$(13) OR k$="I" OR k$="E" OR k$="W" OR k$="R"
 
 IF k$<>"" THEN =k$
 
