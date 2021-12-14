@@ -32,14 +32,6 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-basTileSet	= &2b83				; start address of editor mode 1 tile set
-
-basTile		= &70				; calculated address of tile
-basScreen	= &74				; screen address to write tile
-basMaze		= &78				; maze data address
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
 .editorMapDirty					; dirty flag for maps (data changed)
 
 	equb 0					; map 1
@@ -47,11 +39,26 @@ basMaze		= &78				; maze data address
 	equb 0					; map 3
 	equb 0					; not used but here so that editor.bas can !&2b00 to clear or test all maps at same time
 
+.editorMapDirtyOld				; old copy so that editor.bas can display on change
+
+	equb 0
+	equb 0
+	equb 0
+	equb 0
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .editorTileMirror				; mirror tile id's for right hand
 
 	equb &00,&01,&02,&03,&04,&05,&07,&06,&09,&08,&0B,&0A,&0C,&0D,&0E,&0F,&11,&10
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+basTileSet	= &2b83				; start address of editor mode 1 tile set
+
+basTile		= &70				; calculated address of tile
+basScreen	= &74				; screen address to write tile
+basMaze		= &78				; maze data address
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

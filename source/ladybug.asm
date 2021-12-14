@@ -994,7 +994,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	cpy #11
 	bne initPlayfieldMiddleRead
 	
-	tya					; move read address forward 11 bytes
+	tya					; move map address forward 11 bytes
 	clc
 	adc initPlayfieldMiddleRead + 1
 	sta initPlayfieldMiddleRead + 1
@@ -1002,7 +1002,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	adc initPlayfieldMiddleRead + 2
 	sta initPlayfieldMiddleRead + 2
 	
-	clc					; move map address forward 23 bytes
+	clc					; move buffer address forward 23 bytes
 	lda initPlayfieldMiddleWriteLeft + 1
 	adc #23
 	sta initPlayfieldMiddleWriteLeft + 1
@@ -9997,7 +9997,7 @@ include "relocator.asm"				; append relocation code
 	putfile "img-editor.bin", "E.Tiles", 0, &ffffff
 	putbasic "editor.bas", "$.Editor"
 	include "editor.asm"
-	save "E.Editor", editorStart, editorEnd, &ffffff, &ff0000 + editorStart
+	save "E.Code", editorStart, editorEnd, &ffffff, &ff0000 + editorStart
 
 	print
 	print

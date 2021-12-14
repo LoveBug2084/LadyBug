@@ -8875,90 +8875,95 @@ Saving file 'D.Config'
      2B01   00
      2B02   00
      2B03   00
-.editorTileMirror
+.editorMapDirtyOld
      2B04   00
-     2B05   01
-     2B06   02
-     2B07   03
-     2B08   04
-     2B09   05
-     2B0A   07
-     2B0B   06
-     2B0C   09
-     2B0D   08
-     2B0E   0B
-     2B0F   0A
-     2B10   0C
-     2B11   0D
-     2B12   0E
-     2B13   0F
-     2B14   11
-     2B15   10
+     2B05   00
+     2B06   00
+     2B07   00
+.editorTileMirror
+     2B08   00
+     2B09   01
+     2B0A   02
+     2B0B   03
+     2B0C   04
+     2B0D   05
+     2B0E   07
+     2B0F   06
+     2B10   09
+     2B11   08
+     2B12   0B
+     2B13   0A
+     2B14   0C
+     2B15   0D
+     2B16   0E
+     2B17   0F
+     2B18   11
+     2B19   10
 .editorDrawTile
-     2B16   0A         ASL A
-     2B17   0A         ASL A
-     2B18   0A         ASL A
-     2B19   85 72      STA &72
-     2B1B   18         CLC
-     2B1C   69 83      ADC #&83
-     2B1E   85 70      STA &70
-     2B20   A9 00      LDA #&00
-     2B22   69 2B      ADC #&2B
-     2B24   85 71      STA &71
-     2B26   A5 72      LDA &72
-     2B28   18         CLC
-     2B29   65 70      ADC &70
-     2B2B   85 70      STA &70
-     2B2D   90 02      BCC &2B31
-     2B2F   E6 71      INC &71
-     2B31   A5 72      LDA &72
-     2B33   18         CLC
-     2B34   65 70      ADC &70
-     2B36   85 70      STA &70
-     2B38   90 02      BCC &2B3C
-     2B3A   E6 71      INC &71
-     2B3C   A0 17      LDY #&17
+     2B1A   0A         ASL A
+     2B1B   0A         ASL A
+     2B1C   0A         ASL A
+     2B1D   85 72      STA &72
+     2B1F   18         CLC
+     2B20   69 83      ADC #&83
+     2B22   85 70      STA &70
+     2B24   A9 00      LDA #&00
+     2B26   69 2B      ADC #&2B
+     2B28   85 71      STA &71
+     2B2A   A5 72      LDA &72
+     2B2C   18         CLC
+     2B2D   65 70      ADC &70
+     2B2F   85 70      STA &70
+     2B31   90 02      BCC &2B35
+     2B33   E6 71      INC &71
+     2B35   A5 72      LDA &72
+     2B37   18         CLC
+     2B38   65 70      ADC &70
+     2B3A   85 70      STA &70
+     2B3C   90 02      BCC &2B40
+     2B3E   E6 71      INC &71
+     2B40   A0 17      LDY #&17
 .editorDrawTileLoop
-     2B3E   B1 70      LDA (&70),Y
-     2B40   91 74      STA (&74),Y
-     2B42   88         DEY
-     2B43   10 F9      BPL &2B3E
-     2B45   18         CLC
-     2B46   A9 18      LDA #&18
-     2B48   65 74      ADC &74
-     2B4A   85 74      STA &74
-     2B4C   A9 00      LDA #&00
-     2B4E   65 75      ADC &75
-     2B50   85 75      STA &75
-     2B52   60         RTS
+     2B42   B1 70      LDA (&70),Y
+     2B44   91 74      STA (&74),Y
+     2B46   88         DEY
+     2B47   10 F9      BPL &2B42
+     2B49   18         CLC
+     2B4A   A9 18      LDA #&18
+     2B4C   65 74      ADC &74
+     2B4E   85 74      STA &74
+     2B50   A9 00      LDA #&00
+     2B52   65 75      ADC &75
+     2B54   85 75      STA &75
+     2B56   60         RTS
 .editorDrawLine
-     2B53   A5 78      LDA &78
-     2B55   8D 66 2B   STA &2B66
-     2B58   8D 73 2B   STA &2B73
-     2B5B   A5 79      LDA &79
-     2B5D   8D 67 2B   STA &2B67
-     2B60   8D 74 2B   STA &2B74
-     2B63   A2 00      LDX #&00
+     2B57   A5 78      LDA &78
+     2B59   8D 6A 2B   STA &2B6A
+     2B5C   8D 77 2B   STA &2B77
+     2B5F   A5 79      LDA &79
+     2B61   8D 6B 2B   STA &2B6B
+     2B64   8D 78 2B   STA &2B78
+     2B67   A2 00      LDX #&00
 .editorDrawLineLeft
-     2B65   BD 00 FF   LDA &FF00,X
-     2B68   20 16 2B   JSR &2B16
-     2B6B   E8         INX
-     2B6C   E0 0B      CPX #&0B
-     2B6E   D0 F5      BNE &2B65
-     2B70   A2 09      LDX #&09
+     2B69   BD 00 FF   LDA &FF00,X
+     2B6C   20 1A 2B   JSR &2B1A
+     2B6F   E8         INX
+     2B70   E0 0B      CPX #&0B
+     2B72   D0 F5      BNE &2B69
+     2B74   A2 09      LDX #&09
 .editorDrawLineRight
-     2B72   BC 00 FF   LDY &FF00,X
-     2B75   B9 04 2B   LDA &2B04,Y
-     2B78   20 16 2B   JSR &2B16
-     2B7B   CA         DEX
-     2B7C   10 F4      BPL &2B72
-     2B7E   60         RTS
+     2B76   BC 00 FF   LDY &FF00,X
+     2B79   B9 08 2B   LDA &2B08,Y
+     2B7C   20 1A 2B   JSR &2B1A
+     2B7F   CA         DEX
+     2B80   10 F4      BPL &2B76
+     2B82   60         RTS
 .editorEnd
-     2B7F
+     2B83
 
 
 
-Saving file 'E.Editor'
+Saving file 'E.Code'
 
 
 
