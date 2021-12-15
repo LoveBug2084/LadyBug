@@ -128,7 +128,7 @@ DEFPROCx
 
 IF!&2B00<>0THEN!&2B04=-1:PROCdf:m$="Unsaved map data"+CHR$(13)+CHR$(10)+"     Exit without saving":IFNOTFNc THENENDPROC
 
-OSCLI("EXEC $.!Boot"):END
+OSCLI("EXEC !Boot"):END
 
 ENDPROC
 
@@ -151,7 +151,7 @@ M%?&2B00=0
 !&2B04=-1:PROCdf
 PROCdm
 
-f%=OPENOUT("$.Maps")
+f%=OPENOUT("E.Maps")
 PRINT#f%,f$(0),f$(1),f$(2)
 CLOSE#f%
 
@@ -172,7 +172,7 @@ f%=OPENIN(s$):IFf%<>0THENCLOSE#f%:m$=s$+" exists,overwrite":IFNOTFNc THENENDPROC
 OSCLI("SAVE "+s$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
 f$(M%)=s$
 
-f%=OPENOUT("$.Maps")
+f%=OPENOUT("E.Maps")
 PRINT#f%,f$(0),f$(1),f$(2)
 CLOSE#f%
 
@@ -316,7 +316,7 @@ VDU19,1,4;0;19,2,5;0;19,3,2;0;
 
 DIM f$(3)
 
-f%=OPENIN("$.Maps")
+f%=OPENIN("E.Maps")
 INPUT#f%,f$(0),f$(1),f$(2)
 CLOSE#f%
 FORZ%=0TO2:OSCLI("LOAD "+f$(Z%)+" "+STR$~(&2F19-Z%*&E7)):NEXT

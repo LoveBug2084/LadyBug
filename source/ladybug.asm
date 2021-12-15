@@ -9962,7 +9962,7 @@ include "relocator.asm"				; append relocation code
 	save "$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 	putbasic "boot.bas", "$.Boot"
 	save "$.Config", config, configEnd, &ffffff, &ff0000 + config
-	save "$.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
+	save "E.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 	save "D.Maze1", mazeDefault1, mazeDefault1end, &ffffff, 0
 	save "D.Maze2", mazeDefault2, mazeDefault2end, &ffffff, 0
 	save "D.Maze3", mazeDefault3, mazeDefault3end, &ffffff, 0

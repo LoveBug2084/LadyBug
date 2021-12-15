@@ -71,10 +71,10 @@ RTS
 ]
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-IF F%?2 = V% THEN CALL HIMEM ELSE OSCLI("LOAD $.Config")
+IF F%?2 = V% THEN CALL HIMEM ELSE OSCLI("LOAD Config")
 
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%
-IF V% <> H%?&7D THEN OSCLI("LOAD $.Config")
+IF V% <> H%?&7D THEN OSCLI("LOAD Config")
 
 PRINT TAB(1,7);CHR$(132);"Do you wish to reset the maps";
 PRINT TAB(1,8);CHR$(132);"to default Y/N";CHR$(135);"?";CHR$(131);
@@ -92,12 +92,12 @@ IF S$="Y" THEN FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%
 
 PRINT TAB(0,16);
 
-IF M$="Y" THEN PRINT " ";CHR$(129);"Saving maps":Z%=OPENOUT("$.Maps"):PRINT#Z%,"D.Maze1","D.Maze2","D.Maze3":CLOSE#Z%
+IF M$="Y" THEN PRINT " ";CHR$(129);"Saving maps":Z%=OPENOUT("E.Maps"):PRINT#Z%,"D.Maze1","D.Maze2","D.Maze3":CLOSE#Z%
 
 IF H$="Y" THEN PRINT " ";CHR$(129);"Saving high scores"
 IF S$="Y" THEN PRINT " ";CHR$(129);"Saving settings"
 
-IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("SAVE $.Config " + STR$~(&FF0000 + H%) + " +7E"):F%?0=0:F%?1=0:F%?2=0
+IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("SAVE Config " + STR$~(&FF0000 + H%) + " +7E"):F%?0=0:F%?1=0:F%?2=0
 
 PRINT:PRINT " ";CHR$(132);
 

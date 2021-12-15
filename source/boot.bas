@@ -60,25 +60,25 @@ PROCshrink
 
 IF k$="I" THEN PROCinstructionsGame1:PROCexpand:PROCwaitReturn(360000):PROCinstructionsGame2:PROCwaitReturn(360000)
 
-IF k$="E" THEN CHAIN"$.Editor"
+IF k$="E" THEN CHAIN"Editor"
 
 IF k$="W" THEN PROCinstructionsEdit:PROCexpand:PROCwaitReturn(360000)
 
-IF k$="R" THEN CHAIN"$.Reset"
+IF k$="R" THEN CHAIN"Reset"
 
 UNTIL k$=CHR$(13)
 
 PROClogo
 PROCexpand
 
-Z%=OPENIN("$.Maps")
+Z%=OPENIN("E.Maps")
 INPUT#Z%,maze1$,maze2$,maze3$
 CLOSE#Z%
 
 OSCLI("LOAD "+maze1$+" 7800")
 OSCLI("LOAD "+maze2$+" 7900")
 OSCLI("LOAD "+maze3$+" 7A00")
-*/$.Loader
+*/Loader
 
 END
 
@@ -371,9 +371,9 @@ FOR Z%=&00 TO &7C
 V%=(V%+(Z%?C% EOR M%)) AND &FF
 NEXT Z%
 
-IF V%<>C%?&7D THEN OSCLI("LOAD $.Config"):ENDPROC
+IF V%<>C%?&7D THEN OSCLI("LOAD Config"):ENDPROC
 
-OSCLI("SAVE $.Config " + STR$~(&FF0000 + C%) + " +7E")
+OSCLI("SAVE Config " + STR$~(&FF0000 + C%) + " +7E")
 
 PROCeraseCenter
 PRINT TAB(5,11);CHR$(135);"High scores";CHR$(132);"and";CHR$(135);"game settings";

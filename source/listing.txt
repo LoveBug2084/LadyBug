@@ -8850,7 +8850,7 @@ bootstrap     &4800 - &48DC , 221 bytes
 
 Saving file '$.!Boot'
 Saving file '$.Config'
-Saving file '$.Maps'
+Saving file 'E.Maps'
 Saving file 'D.Maze1'
 Saving file 'D.Maze2'
 Saving file 'D.Maze3'
