@@ -2610,19 +2610,19 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .moveSprites
 
-	ldx #0					; move sprites 0 to max 1 pixel (ladybug and enemies)
+	ldx #0					; move ladybug and enemies if required
 	jsr moveSpritesPixel
 	
-	clc					; do the speed fraction counter see if we need to move enemies another pixel
+	clc					; do the speed fraction counter see if we need to move the enemies again
 	lda enemySpeedCounter
 	adc enemySpeed
 	sta enemySpeedCounter
-	bcs moveSpritesEnemy			; if carry generated then move enemies 1 extra pixel
+	bcs moveSpritesEnemy			; if carry generated
 	jmp moveSpritesExit
 	
 .moveSpritesEnemy
 
-	ldx #1					; else move sprites 1 to max 1 pixel (enemies only, not ladybug sprite 0)
+	ldx #1					; then move enemies again
 
 .moveSpritesPixel	
 
@@ -2676,11 +2676,11 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .moveSpritesCollision
 
-	lda spritesDir + 0			; if ladybug is not blanked
+	lda spritesDir + 0			; if ladybug is not blanked then
 	and #spriteBlanking
 	bne moveSpritesCheckAlignmentX
 
-	lda spritesX, x				; if abs(enemyX - ladybugX) < ladybugEnemyRange
+	lda spritesX, x				; if abs(enemyX - ladybugX) < ladybugEnemyRange and if abs(enemyY - ladybugY) < ladyBugEnemyRange
 	sec
 	sbc spritesX + 0
 	bcs moveSpritesCollisionX
@@ -2693,7 +2693,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	cmp #ladybugEnemyRange
 	bcs moveSpritesCheckAlignmentX
 
-	lda spritesY, x				; if abs(enemyY - ladybugY) < ladyBugEnemyRange
+	lda spritesY, x
 	sec
 	sbc spritesY + 0
 	bcs moveSpritesCollisionY
@@ -2760,7 +2760,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	ora spritesDir, x
 	sta spritesDir, x
 
-	jsr enemySpawn				; spawn enemy
+	jsr enemySpawn				; spawn enemy in center box
 
 	jmp moveSpritesNext			; skip to next sprite
 
@@ -2816,17 +2816,17 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	
 .moveSpritesAttack
 
-	jsr random				; else choose random attack check order, either up/down/left/right or left/right/up/down
+	jsr random				; else choose random attack check order, either vertical/horizontal or horizontal/vertical
 	bmi moveSpritesAttackReversedOrder
 
-	jsr moveSpritesCheckRightLeft		; first check right and left
-	jsr moveSpritesCheckUpDown		; second check up and down
+	jsr moveSpritesCheckHorizontal		; check horizontal
+	jsr moveSpritesCheckVertical		; check vertical
 	jmp moveSpritesFindPath
 	
 .moveSpritesAttackReversedOrder
 
-	jsr moveSpritesCheckUpDown		; first check up and down
-	jsr moveSpritesCheckRightLeft		; second check right and left
+	jsr moveSpritesCheckVertical		; check vertical
+	jsr moveSpritesCheckHorizontal		; check horizontal
 
 .moveSpritesFindPath
 
@@ -2855,31 +2855,33 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.moveSpritesCheckUpDown
+.moveSpritesCheckVertical
 
 	lda spritesY, x
 	cmp spritesY + 0
-	beq moveSpritesCheckUpDownExit		; if enemyY = ladybugY then return with current direction unchanged
+	beq moveSpritesCheckVerticalExit	; if enemyY = ladybugY then return with current direction unchanged
 
 	ldy #moveDown				; else choose down or up
-	bcc moveSpritesCheckUpDownExit
+	bcc moveSpritesCheckVerticalExit
 	ldy #moveUp
 
-.moveSpritesCheckUpDownExit
+.moveSpritesCheckVerticalExit
 
 	rts
 
-.moveSpritesCheckRightLeft
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.moveSpritesCheckHorizontal
 
 	lda spritesX, x
 	cmp spritesX + 0
-	beq moveSpritesCheckRightLeftExit	; if enemyX = ladybugX then return with current direction
+	beq moveSpritesCheckHorizontalExit	; if enemyX = ladybugX then return with current direction
 
 	ldy #moveRight				; else choose right or left
-	bcc moveSpritesCheckRightLeftExit
+	bcc moveSpritesCheckHorizontalExit
 	ldy #moveLeft
 
-.moveSpritesCheckRightLeftExit
+.moveSpritesCheckHorizontalExit
 
 	rts
 

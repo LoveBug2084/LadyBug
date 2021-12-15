@@ -2084,23 +2084,23 @@ bootstrap     &4800 - &48DC , 221 bytes
      0A5E   4C 4E 09   JMP &094E
 .moveSpritesExit
      0A61   60         RTS
-.moveSpritesCheckUpDown
+.moveSpritesCheckVertical
      0A62   B5 69      LDA &69,X
      0A64   C5 69      CMP &69
      0A66   F0 06      BEQ &0A6E
      0A68   A0 01      LDY #&01
      0A6A   90 02      BCC &0A6E
      0A6C   A0 00      LDY #&00
-.moveSpritesCheckUpDownExit
+.moveSpritesCheckVerticalExit
      0A6E   60         RTS
-.moveSpritesCheckRightLeft
+.moveSpritesCheckHorizontal
      0A6F   B5 64      LDA &64,X
      0A71   C5 64      CMP &64
      0A73   F0 06      BEQ &0A7B
      0A75   A0 03      LDY #&03
      0A77   90 02      BCC &0A7B
      0A79   A0 02      LDY #&02
-.moveSpritesCheckRightLeftExit
+.moveSpritesCheckHorizontalExit
      0A7B   60         RTS
 .drawPlayfieldUpperBoxData
      0A7C   F0 47
