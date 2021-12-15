@@ -2210,7 +2210,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr waitVsyncUpper			; wait for vsync interrupt for upper area
 
-	jsr ladybugEntryAnimation		; ladybug entry movement if enabled
+	jsr ladybugEntryAnimation		; do ladybug entry movement if enabled
 
 	jsr checkLevelEnd			; check if current level has ended (object count == 0)
 	bcs gameLevelStart			; if level has ended then start new level
@@ -2218,7 +2218,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr checkBonus				; check if a special, extra or diamond bonus screen is required
 	bcs gameLevelStart			; if bonus was awarded then start a new level
 
-	jsr drawVegetableCenter			; draw the vegetable in the center bug box (if active)
+	jsr drawVegetableCenter			; draw the vegetable/diamond in the center bug box (if active)
 
 	jsr redrawSprites			; erase and redraw sprites in upper area
 
@@ -3238,17 +3238,11 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .drawVegetableCenter
 
-	lda vegetableActive			; if the vegetable not active
-	beq drawVegetableCenterExit		; then exit
-
-	lda enemiesActive			; if maximum number of enemies are active
-	cmp #spritesTotal - 1
-	beq drawVegetableCenterActive
-
-.drawVegetableCenterExit
+	lda vegetableActive			; if vegetable not active then return
+	bne drawVegetableCenterActive
 
 	rts
-	
+
 .drawVegetableCenterActive
 
 	lda #centerBoxX				; then we can draw vegetable at the center
