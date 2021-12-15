@@ -9990,10 +9990,10 @@ include "relocator.asm"				; append relocation code
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	putfile "img-editor.bin", "E.Tiles", 0, &ffffff
 	putbasic "editor.bas", "$.Editor"
 	include "editor.asm"
 	save "E.Code", editorStart, editorEnd, &ffffff, &ff0000 + editorStart
+	putfile "img-editor.bin", "E.Tiles", 0, &ffffff
 
 	print
 	print
