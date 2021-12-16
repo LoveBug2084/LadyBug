@@ -23,7 +23,7 @@
 	print "----------------------------------------------------"
 	print
 
-	org &f000				; temporary address for !Boot data
+	org &f000				; temporary canvas address for !Boot data
 
 .bootasmStart
 
@@ -33,7 +33,7 @@
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
 	equb 23,0,6,0,0,0,0,0,0,0		; disable display
 
-	equs "*SHADOW 1", 13			; disable shadow ram
+	equs "*SHADOW 1", 13			; disable shadow ram (generates an error on model B but screen is disabled so it does'nt show)
 	equs "*FX 200 1",13			; disable ESC
 	equs "*FX 4 1",13			; disable cursor editing
 
@@ -43,7 +43,7 @@
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
 	equb 23,0,6,0,0,0,0,0,0,0		; disable display
 
-	equs "CLOSE#0:CHAIN",34,"Boot",34,13	; close !Boot and CHAIN"Boot"
+	equs "CHAIN",34,"Boot",34,13		; CHAIN"Boot"
 
 .bootasmEnd
 	skip 0

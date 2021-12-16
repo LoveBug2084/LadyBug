@@ -5300,7 +5300,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs "START GAME", &ff
 
 	jsr drawString
-	equb pixels3
+	equb pixelsExtra1
 	equw screenAddr + 2 + 4 * chrColumn + 14 * chrRow
 	equs "HIGH SCORES", &ff
 
