@@ -3,8 +3,8 @@ REM Lady Bug arcade style
 REM video game for the
 REM BBC Computer range
 REM based on the original
-REM arcade game by
-REM universal 1981
+REM 1981 arcade game
+REM by Universal
 REM ---------------------------
 REM Copyright (C) 2021
 REM LoveBug https://lovebug.ml
@@ -142,8 +142,9 @@ DEF PROCoptions
 
 CLS
 
-PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug            ";CHR$(156);
-PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug            ";CHR$(156);
+PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+
 
 
 PRINT TAB(7,4);CHR$(131);"A remake of the original";
@@ -166,7 +167,7 @@ PRINT TAB(4,19);CHR$(132);"Press";CHR$(131);"W";CHR$(132);"for edit instructions
 PRINT TAB(4,21);CHR$(133);"Press";CHR$(130);"R";CHR$(133);"to reset the settings";
 
 
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option        ";CHR$(156);
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option          ";CHR$(156);
 
 ENDPROC
 

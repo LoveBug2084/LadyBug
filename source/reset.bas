@@ -3,8 +3,8 @@ REM Lady Bug arcade style
 REM video game for the
 REM BBC Computer range
 REM based on the original
-REM arcade game by
-REM universal 1981
+REM 1981 arcade game
+REM by Universal
 REM ---------------------------
 REM Copyright (C) 2021
 REM LoveBug https://lovebug.ml

@@ -1,5 +1,5 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Lady Bug arcade style video game for the BBC Computer range based on the original arcade game by universal 1981
+; Lady Bug arcade style video game for the BBC Computer range based on the original 1981 arcade game by Universal
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; Copyright (C) 2021 LoveBug https://lovebug.ml
 ;
