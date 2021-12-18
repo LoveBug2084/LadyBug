@@ -9489,9 +9489,9 @@ spriteToAddrOffset	= 4			; correction factor
 
 	equs "CUCUMBER", &ff
 
-.vegetableEggPlant
+.vegetableEggplant
 
-	equs "EGG PLANT", &ff
+	equs "EGGPLANT", &ff
 
 .vegetableCarrot
 
@@ -9568,8 +9568,8 @@ spriteToAddrOffset	= 4			; correction factor
 	equw screenAddr + 2 + 8 * chrRow + ((((23 - 8) * chrColumn) / 2) and &fff8)
 	equw vegetableCucumber;, 8
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 9) * chrColumn) / 2) and &fff8)
-	equw vegetableEggPlant;, 9
+	equw screenAddr + 2 + 8 * chrRow + ((((23 - 8) * chrColumn) / 2) and &fff8)
+	equw vegetableEggplant;, 8
 
 	equw screenAddr + 2 + 8 * chrRow + ((((23 - 6) * chrColumn) / 2) and &fff8)
 	equw vegetableCarrot;, 6
