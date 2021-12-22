@@ -484,7 +484,7 @@ align &100
 
 	equb 31,9,11				; position cursor
 	equs 129,"Lady Bug ",132,"Build",135
-	incbin "build-padded.txt"
+	incbin "build-text.txt"
 	equb &ff				; end
 
 .loaderUsingBank

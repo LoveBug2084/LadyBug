@@ -35,14 +35,14 @@ utils\pixels				img-enemy8.raw								10	14	img-enemy8.bin
 echo.
 utils\pixels				img-angel.raw									10	14	img-angel.bin
 set /p build=<build.txt
-set "buildPadded=00000%build%"
-set "buildPadded=%buildPadded:~-6%"
-echo %buildPadded%>build-padded.txt
+set "buildText=00000%build%"
+set "buildText=%buildText:~-6%"
+echo %buildText%>build-text.txt
 echo.
 beebasm -title %gameName% -v -i build.asm -do %gameName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 echo.
-echo build %buildPadded%
+echo build %buildText%
 echo.
 set /a build+=1
 echo %build%>build.txt

@@ -2148,15 +2148,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #escTime				; reset esc counter
 	sta escCounter
 
-; debug
-
-	lda #1
-	sta lives
-	
-	lda #&99
-	sta score + 2
-
-; debug end
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
