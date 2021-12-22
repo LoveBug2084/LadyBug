@@ -223,7 +223,7 @@ zpAddr 			= 0
 .swrCleanReset
 
 	lda #opcodeRTI				; disable nmi
-	sta page0d00 
+	sta pageNmi 
 
 	lda swrCleanResetJmp, x			; get function address for machine type
 	sta zpAddr
@@ -266,7 +266,7 @@ continueBplus		= &d973			; os rom reset code
 	pha
 
 .swrCleanResetBplusLoop
-	sta page0000, x				; fill 0000-00ff with 0
+	sta pageZero, x				; fill 0000-00ff with 0
 	inx
 	bne swrCleanResetBplusLoop
 
@@ -355,7 +355,7 @@ masterMos350 = &e374
 
 	tya
 
-	sta zpAddr + 1				; start at page0000
+	sta zpAddr + 1				; start at pageZero
 	sta zpAddr
 
 .swrCleanResetWipe
@@ -365,7 +365,7 @@ masterMos350 = &e374
 	bne swrCleanResetWipe
 
 	ldx #opcodeRTI				; disable nmi
-	stx page0d00
+	stx pageNmi
 
 .swrCleanResetNext
 
@@ -638,12 +638,12 @@ screenCenterY	= &7e71
 ; check system for sideways ram
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-swrTestCopyright	= page8000 + 7		; memory location for copyright offset
-swrTestLocation		= page8000 + 8		; memory location for write test
+swrTestCopyright	= pageHigh + 7		; memory location for copyright offset
+swrTestLocation		= pageHigh + 8		; memory location for write test
 
-swrBankOriginal		= page8000 - 1		; storage for original system bank number
-swrBank			= page8000 - 2		; storage for bank number of swram
-machineType		= page8000 - 3		; storage for machine type
+swrBankOriginal		= pageHigh - 1		; storage for original system bank number
+swrBank			= pageHigh - 2		; storage for bank number of swram
+machineType		= pageHigh - 3		; storage for machine type
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -678,18 +678,18 @@ machineType		= page8000 - 3		; storage for machine type
 	
 	ldx swrTestCopyright			; skip bank if in use ( contains &00,"(C)" at copyright offset )
 
-	lda page8000 + 0, x
+	lda pageHigh + 0, x
 	bne swrTestByteWrite
 	
-	lda page8000 + 1, x
+	lda pageHigh + 1, x
 	cmp #'('
 	bne swrTestByteWrite
 	
-	lda page8000 + 2, x
+	lda pageHigh + 2, x
 	cmp #'C'
 	bne swrTestByteWrite
 	
-	lda page8000 + 3, x
+	lda pageHigh + 3, x
 	cmp #')'
 	beq swrTestFailed
 
@@ -749,7 +749,7 @@ machineType		= page8000 - 3		; storage for machine type
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-loaderPage = page2000				; load address
+loaderPage = progLoad				; load address
 
 loaderReloc = swramStart - loaderPage		; relocation
 loaderStartReloc = loaderStart - loaderReloc

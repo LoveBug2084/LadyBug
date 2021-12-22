@@ -1,1 +1,1 @@
-@start /b beebem.lnk "%CD%\ladybug.ssd"
+@start /b beebem.lnk "%CD%\%gameName%.ssd"

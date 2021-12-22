@@ -339,26 +339,37 @@ oswrch			= &ffee			; os function
 ; define program addresses
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-page0000		= &0000
-page0100		= &0100
-page0130		= &0130
-page0200		= &0200
-page0258		= &0258
-page0287		= &0287
-page0d00		= &0d00
-page2000		= &2000
-page8000		= &8000
-pageB000		= &b000
-pageC000		= &c000
+pageZero		= &0000			; all variables here
+page0100		= &0100			; page 1 functions
+page0130		= &0130			; reset code
+pageVectors		= &0200			; os vector redirect
+pagefx200		= &0258			; os fx 200
+pageBreak		= &0287			; os break key intercept
+pageNmi			= &0d00			; os nmi
+pageConfig		= &7b80			; config / high score table load address
+pageHigh		= &8000			; high ram
 
-progReloc		= page0000		; relocation address of program
-progLoad		= page2000		; load address of program
+progReloc		= &0000			; relocation address of program
+progLoad		= &2000			; load address of program
+progOffset		= progLoad - progReloc	; relocation offset
 
-						; relocation offset
-progOffset		= progLoad - progReloc
+swramStart		= pageHigh		; high/sideways ram, keep it b+ compatible (12K)
+swramEnd		= pageHigh + &3000
 
-swramStart		= page8000		; side ways ram, keep it b+ compatible (12K)
-swramEnd		= pageB000
+pageBoot		= &f000			; temporary canvas address for !Boot file generation
+
+mazeNames		= &f100			; temporary canvas address for Maps file generation
+
+maze1Load		= &7800			; maze addresses used by boot.bas to load the 3 maps before running lady bug
+maze2Load		= &7900
+maze3Load		= &7a00
+
+pageEditor		= &2b00			; editor code runs at this address
+pageEditorCanvas	= &f200			; temporary canvas address to assemble code
+						; offset
+pageEditorOffset	= pageEditorCanvas - pageEditor
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; 6522 via

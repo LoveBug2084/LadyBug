@@ -25,54 +25,6 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; show memory usage
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	include "memoryusage.asm"
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; game constants
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	include "constants.asm"
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; generate !boot file
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	include "!boot.asm"
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; initial config file
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	include "config.asm"
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; game loader
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	include "loader.asm"
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; generate the 3 default mazes
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	include "maze.asm"
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ladybug main program
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -84,10 +36,10 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; page0000 variables
+; pageZero variables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org page0000
+	org pageZero
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -344,9 +296,9 @@ soundChannels		= 6			; number of software defined sound channels
 			skip 1			; row counter for maze initialization
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; end of page0000
+; end of pageZero
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-.page0000End
+.pageZeroEnd
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -700,10 +652,10 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; page0200 irq vector, functions, break key vector
+; pageVectors irq vector, functions, break key vector
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org page0200
+	org pageVectors
 
 						; 4 spare memory locations, can be used if needed
 
@@ -782,19 +734,19 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; end of page0200 functions
+; end of pageVectors functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-.page0200End
+.pageVectorsEnd
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; page0258					*fx 200 0 to make sure the ram is not erased by the os
+; pagefx200					*fx 200 0 to make sure the ram is not erased by the os
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org page0258
+	org pagefx200
 	
 	equb 0
 
@@ -823,9 +775,9 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; end of page0258
+; end of pagefx200
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-.page0258End
+.pagefx200End
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -835,7 +787,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 ; set the break key jump vector
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org page0287				; set the break jump vector to the clean reset function
+	org pageBreak				; set the break jump vector to the clean reset function
 
 	jmp cleanReset
 
@@ -2196,6 +2148,15 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #escTime				; reset esc counter
 	sta escCounter
 
+; debug
+
+	lda #1
+	sta lives
+	
+	lda #&99
+	sta score + 2
+
+; debug end
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5819,7 +5780,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta enemiesActive
 	sta enemyReleaseEnable			; disable enemy release flag (used later in timeout test)
 
-	jsr drawString
+	jsr drawFlowers				; draw two random flowers
+
+	jsr drawString				; draw text and entry characters
 	equb pixels1
 	equw screenAddr + 2 + 16 + 4 * chrRow + 3 * chrColumn
 	equs "CONGRATULATIONS!", &ff
@@ -7957,42 +7920,43 @@ ladybugBonusY		= 11
 .animateLadybugNameRegTable
 
 ladybugHighScoreX	= 96			; starting position
-ladybugHighScoreY	= 12
+; ladybugHighScoreY	= 12
+ladybugHighScoreY	= 69
 
 	equb 65, moveRight
-	equb 56, moveDown
+	equb 98, moveDown
 	equb 145, moveLeft
-	equb 56, moveUp
+	equb 98, moveUp
 	equb 145, moveRight
-	equb 56, moveDown
+	equb 98, moveDown
 	equb 145, moveLeft
-	equb 56, moveUp
+	equb 98, moveUp
 	equb 145, moveRight
-	equb 56, moveDown
+	equb 98, moveDown
 	equb 145, moveLeft
-	equb 56, moveUp
+	equb 98, moveUp
 	equb 145, moveRight
-	equb 56, moveDown
+	equb 98, moveDown
 	equb 145, moveLeft
-	equb 56, moveUp
+	equb 98, moveUp
 	equb 145, moveRight
-	equb 56, moveDown
+	equb 98, moveDown
 	equb 145, moveLeft
-	equb 56, moveUp
+	equb 98, moveUp
 	equb 145, moveRight
-	equb 56, moveDown
+	equb 98, moveDown
 	equb 145, moveLeft
-	equb 56, moveUp
+	equb 98, moveUp
 	equb 145, moveRight
-	equb 56, moveDown
+	equb 98, moveDown
 	equb 145, moveLeft
-	equb 56, moveUp
+	equb 98, moveUp
 	equb 145, moveRight
-	equb 56, moveDown
+	equb 98, moveDown
 	equb 145, moveLeft
-	equb 56, moveUp
+	equb 98, moveUp
 	equb 145, moveRight
-	equb 68, moveDown
+	equb 11, moveDown
 	equb 16, moveLeft
 	equb 1, moveLeft + moveStop
 	equb 0
@@ -9947,54 +9911,3 @@ include "soundtables.asm"
 
 
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; relocator 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-include "relocator.asm"				; append relocation code
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; create disk files, keep them in loading order as far as possible to reduce floppy seek time
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	save "$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
-	putbasic "boot.bas", "$.Boot"
-	save "$.Config", config, configEnd, &ffffff, &ff0000 + config
-	save "E.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
-	save "D.Maze1", mazeDefault1, mazeDefault1end, &ffffff, 0
-	save "D.Maze2", mazeDefault2, mazeDefault2end, &ffffff, 0
-	save "D.Maze3", mazeDefault3, mazeDefault3end, &ffffff, 0
-	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
-	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
-	putbasic "reset.bas", "$.Reset"
-	save "D.Config", config, configEnd, &ffffff, &ff0000 + config
-
-	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
-	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst
-
-	print
-	print
-	print
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;	end of lady bug
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;	start of maze editor
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	clear &0000,&ffff			; clear the canvas
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-	putbasic "editor.bas", "$.Editor"
-	include "editor.asm"
-	save "E.Code", editorStart, editorEnd, &ffffff, &ff0000 + editorStart
-	putfile "img-editor.bin", "E.Tiles", 0, &ffffff
-
-	print
-	print
-	print

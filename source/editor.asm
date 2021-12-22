@@ -25,7 +25,7 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org &2b00
+	org pageEditorCanvas
 
 .editorStart
 	skip 0
@@ -48,13 +48,14 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.editorTileMirror				; mirror tile id's for right hand side
+.editorTileMirror				; mirror tile id's for right hand side of maze
 
 	equb &00,&01,&02,&03,&04,&05,&07,&06,&09,&08,&0B,&0A,&0C,&0D,&0E,&0F,&11,&10
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-basTileSet	= &2b83				; start address of editor mode 1 tile set
+						; start address of editor mode 1 tile set
+basTileSet	= pageEditor + &83
 
 basTile		= &70				; calculated address of tile
 basScreen	= &74				; screen address to write tile
@@ -117,18 +118,18 @@ basMaze		= &78				; maze data address
 .editorDrawLine
 
 	lda basMaze + 0				; store maze data adress into loop
-	sta editorDrawLineLeft + 1
-	sta editorDrawLineRight + 1
+	sta editorDrawLineLeft + 1 - pageEditorOffset
+	sta editorDrawLineRight + 1 - pageEditorOffset
 	lda basMaze + 1
-	sta editorDrawLineLeft + 2
-	sta editorDrawLineRight + 2
+	sta editorDrawLineLeft + 2 - pageEditorOffset
+	sta editorDrawLineRight + 2 - pageEditorOffset
 
 	ldx #0					; draw 11 bytes from maze (left half)
 
 .editorDrawLineLeft
 
 	lda addr16, x				; get byte from maze and draw tile on screen
-	jsr editorDrawTile
+	jsr editorDrawTile - pageEditorOffset
 	
 	inx
 	cpx #11
@@ -139,8 +140,10 @@ basMaze		= &78				; maze data address
 .editorDrawLineRight
 
 	ldy addr16, x				; get byte from maze
-	lda editorTileMirror, y			; get mirrored tile id and draw it
-	jsr editorDrawTile
+
+						; get mirrored tile id and draw it
+	lda editorTileMirror - pageEditorOffset, y
+	jsr editorDrawTile - pageEditorOffset
 	
 	dex
 	bpl editorDrawLineRight

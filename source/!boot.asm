@@ -23,7 +23,7 @@
 	print "----------------------------------------------------"
 	print
 
-	org &f000				; temporary canvas address for !Boot data
+	org pageBoot				; temporary canvas address for !Boot data
 
 .bootasmStart
 
