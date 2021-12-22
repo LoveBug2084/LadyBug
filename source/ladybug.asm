@@ -5438,7 +5438,57 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 20 * chrColumn + 3 * chrRow)
 	sta drawMapTileAddr + 1
-	jmp drawRandomFlower
+
+	; continue down to drawRandomFlower
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; .drawRandomFlower				; draw a single random flower from the current drawMapTileAddr
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawRandomFlower
+
+	jsr random				; pick random number 0,4,8,12
+	and #12
+	tay
+
+	lda drawBonusGraphicsTile, y		; draw top left
+	jsr drawExtraTile
+	iny
+
+	lda drawBonusGraphicsTile,y		; draw top right
+	jsr drawExtraTile
+	iny
+
+	clc					; move to next row
+	lda drawMapTileAddr
+	adc #lo(chrRow - 2 * chrColumn)
+	sta drawMapTileAddr
+	lda drawMapTileAddr + 1
+	adc #hi(chrRow - 2 * chrColumn)
+	sta drawMapTileAddr + 1
+
+	lda drawBonusGraphicsTile, y		; draw bottom left
+	jsr drawExtraTile
+	iny
+	
+	lda drawBonusGraphicsTile, y		; draw bottom right
+	jsr drawExtraTile
+
+	clc					; move to next row
+	lda drawMapTileAddr
+	adc #lo(chrRow - 2 * chrColumn)
+	sta drawMapTileAddr
+	lda drawMapTileAddr + 1
+	adc #hi(chrRow - 2 * chrColumn)
+	sta drawMapTileAddr + 1
+
+	lda #extraTileLeavesL			; draw leaves and return
+	jsr drawExtraTile
+
+	lda #extraTileLeavesR
+	jmp drawExtraTile
 
 
 
@@ -7538,58 +7588,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 .drawBonusGraphicsExit
 
 	rts
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .drawRandomFlower				; draw a single random flower from the current drawMapTileAddr
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.drawRandomFlower
-
-	jsr random				; pick random number 0 to 3
-	and #3
-	
-	asl a					; make index for flower tile table
-	asl a
-	tay
-
-	lda drawBonusGraphicsTile, y		; draw top left
-	jsr drawExtraTile
-	iny
-
-	lda drawBonusGraphicsTile,y		; draw top right
-	jsr drawExtraTile
-	iny
-
-	clc					; move to next row
-	lda drawMapTileAddr
-	adc #lo(chrRow - 2 * chrColumn)
-	sta drawMapTileAddr
-	lda drawMapTileAddr + 1
-	adc #hi(chrRow - 2 * chrColumn)
-	sta drawMapTileAddr + 1
-
-	lda drawBonusGraphicsTile, y		; draw bottom left
-	jsr drawExtraTile
-	iny
-	
-	lda drawBonusGraphicsTile, y		; draw bottom right
-	jsr drawExtraTile
-
-	clc					; move to next row
-	lda drawMapTileAddr
-	adc #lo(chrRow - 2 * chrColumn)
-	sta drawMapTileAddr
-	lda drawMapTileAddr + 1
-	adc #hi(chrRow - 2 * chrColumn)
-	sta drawMapTileAddr + 1
-
-	lda #extraTileLeavesL			; draw leaves and return
-	jsr drawExtraTile
-
-	lda #extraTileLeavesR
-	jmp drawExtraTile
 
 
 
