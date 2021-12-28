@@ -37,7 +37,7 @@ utils\pixels				img-angel.raw									10	14	img-angel.bin
 set /p build=<build.txt
 set "buildText=00000%build%"
 set "buildText=%buildText:~-6%"
-echo %buildText%>build-text.txt
+echo %buildText%>build.bin
 echo.
 beebasm -title %gameName% -v -i build.asm -do %gameName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
