@@ -58,11 +58,11 @@ k$=FNwaitKey
 
 PROCshrink
 
-IF k$="I" THEN PROCinstructionsGame1:PROCexpand:PROCwaitReturn(360000):PROCinstructionsGame2:PROCwaitReturn(360000)
+IF k$="I" THEN PROCinstructionsGame
 
 IF k$="E" THEN CHAIN"Editor"
 
-IF k$="W" THEN PROCinstructionsEdit:PROCexpand:PROCwaitReturn(360000)
+IF k$="W" THEN PROCinstructionsEditor
 
 IF k$="R" THEN CHAIN"Reset"
 
@@ -173,7 +173,7 @@ ENDPROC
 
 
 
-DEF PROCinstructionsGame1
+DEF PROCinstructionsGame
 
 CLS
 
@@ -203,11 +203,8 @@ PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press Return            ";CHR$(156);
 
-ENDPROC
-
-
-
-DEF PROCinstructionsGame2
+PROCexpand
+PROCwaitReturn(360000)
 
 L%=0
 FOR R%=22 TO 5 STEP -1
@@ -237,11 +234,13 @@ PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"esc";CHR$(133);"to quit the current 
 PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";:*FX 19
 PRINT TAB(2,22);CHR$(134);"high scores";CHR$(132);"and";CHR$(134);"game settings";
 
+PROCwaitReturn(360000)
+
 ENDPROC
 
 
 
-DEF PROCinstructionsEdit
+DEF PROCinstructionsEditor
 
 CLS
 
@@ -270,6 +269,9 @@ PRINT TAB(6,21);CHR$(135);"B";CHR$(133);"     Boot disk";
 
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press Return            ";CHR$(156);
+
+PROCexpand
+PROCwaitReturn(360000)
 
 ENDPROC
 
