@@ -679,6 +679,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			playerInput		bit 0=up 1=down 2=left 3=right 4=start 5=esc
 ;			A			destroyed
+;			X			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .keyboardScan
@@ -698,17 +699,16 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	lda #keyReturn				; check start key
 	jsr keyboardScanKey
 
-	lda optionKeys + 0			; check right key
-	jsr keyboardScanKey
+	ldx #0					; check user defined movement keys
+	
+.keyboardScanLoop
 
-	lda optionKeys + 1			; check left key
-	jsr keyboardScanKey
-
-	lda optionKeys + 2			; check down key
+	lda optionKeys, x
 	jsr keyboardScanKey
 	
-	lda optionKeys + 3			; check up key
-	jsr keyboardScanKey
+	inx
+	cpx #4
+	bne keyboardScanLoop
 	
 	lda #3 + 8				; keyboard -enable high
 	sta viaPortB
@@ -734,6 +734,28 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawObjectScore				draws object score img at xy if enabled
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawObjectScore
+
+	lda objectScoreX			; set position of object score
+	sta drawSpriteX
+	lda objectScoreY
+	sta drawSpriteY
+
+	lda objectScoreImg			; if objectScoreImg != 0 (active)
+	beq drawObjectScoreExit
+
+	jmp drawSprite10x10			; then draw it
+	
+.drawObjectScoreExit
+
+	rts					; else return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageVectors functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .pageVectorsEnd
@@ -753,24 +775,54 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawObjectScore				draws object score img at xy if enabled
+; chooseLetters					choose 3 random letters make sure there are no duplicates
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawObjectScore
+.chooseLetters
 
-	lda objectScoreX			; set position of object score
-	sta drawSpriteX
-	lda objectScoreY
-	sta drawSpriteY
-
-	lda objectScoreImg			; if objectScoreImg != 0 (active)
-	beq drawObjectScoreExit
-
-	jmp drawSprite10x10			; then draw it
+	jsr chooseLettersRandom			; pick 1st random letter
+	sta levelLetters			; and store it in 1st
 	
-.drawObjectScoreExit
+.chooseLetters2nd
 
-	rts					; else return
+	jsr chooseLettersRandom			; pick 2nd random letter
+
+	cmp levelLetters			; if its the same as 1st then try again
+	beq chooseLetters2nd
+		
+	sta levelLetters + 1			; else store it in 2nd
+	
+.chooseLetters3rd
+
+	jsr chooseLettersRandom			; pick 3rd random letter (0-9)
+	
+	cmp levelLetters			; if its the same as 1st then try again
+	beq chooseLetters3rd
+		
+	cmp levelLetters + 1			; if its the same as 2nd then try again
+	beq chooseLetters3rd
+
+	sta levelLetters + 2			; else store it in 3rd
+
+	rts					; return
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.chooseLettersRandom
+
+	jsr random				; pick a random number 0 to 9
+	and #&0f
+	cmp #&0a
+	bcs chooseLettersRandom
+	
+	clc					; add object letters index
+	adc #objectTileIndex
+
+	rts					; return
 
 
 
@@ -1130,58 +1182,6 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 .tileMapFindDotExit
 
 	rts					; return with tile address
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; chooseLetters					choose 3 random letters make sure there are no duplicates
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			destroyed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.chooseLetters
-
-	jsr chooseLettersRandom			; pick 1st random letter
-	sta levelLetters			; and store it in 1st
-	
-.chooseLetters2nd
-
-	jsr chooseLettersRandom			; pick 2nd random letter
-
-	cmp levelLetters			; if its the same as 1st then try again
-	beq chooseLetters2nd
-		
-	sta levelLetters + 1			; else store it in 2nd
-	
-.chooseLetters3rd
-
-	jsr chooseLettersRandom			; pick 3rd random letter (0-9)
-	
-	cmp levelLetters			; if its the same as 1st then try again
-	beq chooseLetters3rd
-		
-	cmp levelLetters + 1			; if its the same as 2nd then try again
-	beq chooseLetters3rd
-
-	sta levelLetters + 2			; else store it in 3rd
-
-	rts					; return
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.chooseLettersRandom
-
-	jsr random				; pick a random number 0 to 9
-	and #&0f
-	cmp #&0a
-	bcs chooseLettersRandom
-	
-	clc					; add object letters index
-	adc #objectTileIndex
-
-	rts					; return
 
 
 
@@ -5821,7 +5821,19 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta enemiesActive
 	sta enemyReleaseEnable			; disable enemy release flag (used later in timeout test)
 
-	jsr drawFlowers				; draw two random flowers
+						; draw two random flowers
+
+	lda #lo(screenAddr + 1 * chrColumn + 5 * chrRow)
+	sta drawMapTileAddr
+	lda #hi(screenAddr + 1 * chrColumn + 5 * chrRow)
+	sta drawMapTileAddr + 1
+	jsr drawRandomFlower
+
+	lda #lo(screenAddr + 20 * chrColumn + 5 * chrRow)
+	sta drawMapTileAddr
+	lda #hi(screenAddr + 20 * chrColumn + 5 * chrRow)
+	sta drawMapTileAddr + 1
+	jsr drawRandomFlower
 
 	jsr drawString				; draw text and entry characters
 	equb pixels1
