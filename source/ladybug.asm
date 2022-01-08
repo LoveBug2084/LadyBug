@@ -648,7 +648,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .stack						; stack area from here to &01ff
-
+	skip 0
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -657,7 +657,9 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 	org pageVectors
 
-						; 4 spare memory locations, can be used if needed
+.unusedMemory
+
+	equb 0,0,0,0				; 4 spare memory locations, can be used if needed
 
 
 
@@ -667,6 +669,8 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org irqVector
+
+.irqVectorAddress
 
 	equw irqInterrupt			; set bbc os irq1v interrupt vector to our irqInterrupt function
 
@@ -9886,7 +9890,6 @@ include "soundtables.asm"
 .mazeTileTableRight
 
 	equb &00,&01,&9c,&9d,&9e,&9f,&a1,&a0,&d3,&d2,&d5,&d4,&d6,&d7,&d8,&d9,&db,&da
-
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------

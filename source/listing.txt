@@ -124,7 +124,8 @@ bootstrap     &4800 - &48DC , 221 bytes
      7B80   00
      7B81   10
      7B82   00
-     7B83   4C 4F 56 ...
+     7B83   55 4E 49 ...
+     7B8C   25
      7B8D   FF
      7B8E   50
      7B8F   09
@@ -957,6 +958,13 @@ bootstrap     &4800 - &48DC , 221 bytes
 .page0100End
      01DB
 .stack
+     01DB
+.unusedMemory
+     0200   00
+     0201   00
+     0202   00
+     0203   00
+.irqVectorAddress
      0204   63 01
 .keyboardScan
      0206   A9 7F      LDA #&7F
