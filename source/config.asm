@@ -1,7 +1,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; Lady Bug arcade style video game for the BBC Computer range based on the original 1981 arcade game by Universal
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Copyright (C) 2021 LoveBug https://lovebug.ml
+; Copyright (C) 2021 LoveBug https://github.com/LoveBug2084/LadyBug
 ;
 ; This program is free software: you can redistribute it and/or modify
 ; it under the terms of the GNU General Public License as published by

@@ -6,8 +6,8 @@ REM based on the original
 REM 1981 arcade game
 REM by Universal
 REM ---------------------------
-REM Copyright (C) 2021
-REM LoveBug https://lovebug.ml
+REM Copyright (C) 2021 LoveBug
+REM https://github.com/LoveBug2084/LadyBug
 REM ---------------------------
 REM This program is free
 REM software: you can
