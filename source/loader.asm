@@ -559,14 +559,13 @@ screenCenterY	= &7e71
 	cpx #2					; if it reports back as a b+ model
 	bne loaderNotBplus
 
-	ldy #128				; then test that there really is ram at bank 128 (real b+)
-	jsr swrTestByte - loaderReloc
-	beq loaderRealBplus			; if ram found in bank 128 then its a real B+
+	jsr swrTestBplus - loaderReloc		; then test that there really is ram at bank 128 (real b+)
+	beq loaderBplus				; if ram found in bank 128 then its a real B+
 	
 	dec machineType				; else its a model b with integra
 	bne loaderNotBplus
 
-.loaderRealBplus
+.loaderBplus
 						; we got this far so its a real b+, display b+ workspace message
 	ldy #lo(loaderUsingWorkspace - loaderReloc)
 	jsr loaderPrint - loaderReloc
@@ -669,13 +668,59 @@ machineType		= pageHigh - 3		; storage for machine type
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrTestByte
+.swrTestBplus
 
-	sty swrBank				; store bank number
+	ldy #0					; save bank 0 byte
+	sty bankSelect
+	lda swrTestLocation
+	pha
+	
+	ldy #128				; test B+ workspace ram
+	jsr swrTestByte - loaderReloc
+	bne swrTestBplusFailed
+	
+	ldy #0					; ram was found at bank 128 but it could be bank 0 on model B with integra
+	sty bankSelect				; so select bank 0
 
-	sty bankSelectCopy			; select bank
+	cmp swrTestLocation			; and check if byte is different
+	beq swrTestBplusFailed
+	
+	pla					; byte was different to bank 0 so test passed, remove saved byte from stack
+
+	ldy #128				; select bank 128
 	sty bankSelect
 	
+	lda #0					; exit with passed status
+	rts
+	
+.swrTestBplusFailed
+
+	pla					; restore bank 0 byte
+	sta swrTestLocation
+	
+	ldy #128				; select bank 128
+	sty bankSelect
+
+	lda #&ff				; exit with failed status
+	rts
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrTestByte
+
+	sty bankSelectCopy			; save bank number
+	sty swrBank
+
+	tya					; select solidisk write bank
+	and #&0f
+	sta bankSelectSolidisk
+
+	tax					; select watford electronics write bank
+	sta bankSelectWatford, x
+
+	sty bankSelect				; select bank
+
 	ldx swrTestCopyright			; skip bank if in use ( contains &00,"(C)" at copyright offset )
 
 	lda pageHigh + 0, x
@@ -695,8 +740,9 @@ machineType		= pageHigh - 3		; storage for machine type
 
 .swrTestByteWrite
 
-	lda swrTestLocation			; flip bits at test location
+	tya					; flip bits at test location
 	eor #magicNumber
+	eor swrTestLocation
 	sta swrTestLocation
 	
 	ldx #0					; delay loop
@@ -706,7 +752,7 @@ machineType		= pageHigh - 3		; storage for machine type
 	dex
 	bne swrTestByteDelay
 	
-	cmp swrTestLocation			; check if ram is present (value matches) and exit with equal (passed) or not equal (failed)
+	cmp swrTestLocation			; exit with compare result
 	rts
 
 .swrTestFailed

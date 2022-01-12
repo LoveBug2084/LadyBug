@@ -309,7 +309,7 @@ PROCeraseCenter
 
 IF ERR<>201 THEN PROCunexpectedError
 
-PRINT TAB(5,11);CHR$(136);CHR$(129);"Write protected!";CHR$(132);"cannot save";
+PRINT TAB(4,11);CHR$(136);CHR$(129);"Write protected";CHR$(132);"unable to save";
 PRINT TAB(5,13);CHR$(136);CHR$(135);"high scores";CHR$(132);"or";CHR$(135);"game settings";
 
 ENDPROC

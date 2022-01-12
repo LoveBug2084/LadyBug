@@ -37,28 +37,28 @@
 ; high score table
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb &00,&10,&00
-	equs "UNIVERSAL",chrCopyright,&FF
+	equb &00,&45,&00
+	equs "UNIVERSAL",chrHeart,&FF
 
-	equb &50,&09,&00
+	equb &00,&40,&00
 	equs "ASTEROIDS ",&FF
 
-	equb &00,&09,&00
+	equb &00,&35,&00
 	equs "CENTIPEDE ",&FF
 
-	equb &50,&08,&00
+	equb &00,&30,&00
 	equs "GALAXIAN  ",&FF
 
-	equb &00,&08,&00
-	equs "ROBOTRON  ",&FF
-
-	equb &50,&07,&00
+	equb &00,&25,&00
 	equs "DEFENDER  ",&FF
 
-	equb &00,&07,&00
+	equb &00,&20,&00
+	equs "ROBOTRON  ",&FF
+
+	equb &00,&15,&00
 	equs "SCRAMBLE  ",&FF
 
-	equb &50,&06,&00
+	equb &00,&10,&00
 	equs "GAUNTLET  ",&FF
 
 

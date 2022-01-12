@@ -25,6 +25,23 @@ magicNumber		= &69			; used for random seed, validation generation, swr test
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; special ascii chr reassignment
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+chrCopyright		= '%'
+chrUp			= '<'
+chrDown			= '='
+chrLeft			= '>'
+chrRight		= '?'
+chrMultiplierX		= '&'
+chrMultiplier2		= '''
+chrMultiplier3		= '('
+chrMultiplier5		= ')'
+chrHeart		= '*'
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; object positions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -328,7 +345,10 @@ fx200			= &0258			; *fx 200 value
 breakVector		= &0287			; break key reset jump
 resetVector		= &fffc			; os reset vector
 bankSelectCopy		= &f4			; os stores current bank copy here
-bankSelect		= &fe30			; paged rom/ram bank select
+bankSelect		= &fe30			; bank select register for acorn/other
+bankSelectSolidisk	= &fe32			; bank select register for solidisk
+bankSelectWatford	= &ff30			; bank select register for watford electronics during write operations
+
 acccon			= &fe34			; access control register
 osbyte			= &fff4			; os function
 oscli			= &fff7			; os function

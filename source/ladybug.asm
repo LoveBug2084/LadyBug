@@ -3904,7 +3904,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #&f0 + palRed			; set special letters to red
 	sta ulaPalette
 
-	jsr drawFlowers				; draw two random flowers
+	lda #2					; draw two random flowers at screen row 2
+	jsr drawFlowers
 
 	jsr drawString				; draw instruction text
 	equb pixels1
@@ -5427,21 +5428,49 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; draw two random flowers
+; draw two random flowers at row y
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawFlowers
 
-	lda #lo(screenAddr + 1 * chrColumn + 3 * chrRow)
-	sta drawMapTileAddr
-	lda #hi(screenAddr + 1 * chrColumn + 3 * chrRow)
-	sta drawMapTileAddr + 1
-	jsr drawRandomFlower
+	pha					; save row position for 2nd flower
+	tay
 
-	lda #lo(screenAddr + 20 * chrColumn + 3 * chrRow)
-	sta drawMapTileAddr
-	lda #hi(screenAddr + 20 * chrColumn + 3 * chrRow)
+	lda screenRowLo, y			; calculate address
+	clc
+	adc #lo(1 * chrColumn)
+	sta drawMapTileAddr + 0
+	lda screenRowHi, y
+	adc #hi(1 * chrColumn)
 	sta drawMapTileAddr + 1
+
+	jsr drawRandomFlower			; draw a random flower
+
+	pla					; restore row position
+	tay
+
+	lda screenRowLo, y			; calculate address
+	clc
+	adc #lo(20 * chrColumn)
+	sta drawMapTileAddr + 0
+	lda screenRowHi, y
+	adc #hi(20 * chrColumn)
+	sta drawMapTileAddr + 1
+
+
+
+
+
+	; lda #lo(screenAddr + 1 * chrColumn + 3 * chrRow)
+	; sta drawMapTileAddr
+	; lda #hi(screenAddr + 1 * chrColumn + 3 * chrRow)
+	; sta drawMapTileAddr + 1
+	; jsr drawRandomFlower
+
+	; lda #lo(screenAddr + 20 * chrColumn + 3 * chrRow)
+	; sta drawMapTileAddr
+	; lda #hi(screenAddr + 20 * chrColumn + 3 * chrRow)
+	; sta drawMapTileAddr + 1
 
 	; continue down to drawRandomFlower
 
@@ -5508,7 +5537,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr mainMenuDrawLogo			; draw the ladybug logo
 
-	jsr drawFlowers				; draw the random flowers
+	lda #2					; draw two random flowers at screen row 2
+	jsr drawFlowers
 
 	jsr mainMenuDrawText			; draw the menu text
 
@@ -5528,8 +5558,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawString				; draw 2 red hearts
 	equb pixels1
-	equw screenAddr + 2 + 8 + 2 * chrColumn + 3 * chrRow
-	equs chrHeart,chrHeart,&ff
+	equw screenAddr + 2 + 8 + 1 * chrColumn + 3 * chrRow
+	equs chrHeart,chrHeart,chrHeart,&ff
 	
 	jsr drawString				; draw text in skull color
 	equb pixelsSkull
@@ -5539,7 +5569,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw 2 red hearts
 	equb pixels1
 	equw screenAddr + 2 + 8 + 18 * chrColumn + 3 * chrRow
-	equs chrHeart,chrHeart,&ff
+	equs chrHeart,chrHeart,chrHeart,&ff
 
 	jsr drawString				; position cursor
 	equb pixels0
@@ -5825,19 +5855,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta enemiesActive
 	sta enemyReleaseEnable			; disable enemy release flag (used later in timeout test)
 
-						; draw two random flowers
-
-	lda #lo(screenAddr + 1 * chrColumn + 5 * chrRow)
-	sta drawMapTileAddr
-	lda #hi(screenAddr + 1 * chrColumn + 5 * chrRow)
-	sta drawMapTileAddr + 1
-	jsr drawRandomFlower
-
-	lda #lo(screenAddr + 20 * chrColumn + 5 * chrRow)
-	sta drawMapTileAddr
-	lda #hi(screenAddr + 20 * chrColumn + 5 * chrRow)
-	sta drawMapTileAddr + 1
-	jsr drawRandomFlower
+	lda #4					; draw two random flowers at screen row 4
+	jsr drawFlowers
 
 	jsr drawString				; draw text and entry characters
 	equb pixels1
@@ -9601,23 +9620,6 @@ spriteToAddrOffset	= 4			; correction factor
 
 .fontBinEnd
 	skip 0
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; special ascii chr reassignment
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-chrCopyright		= '%'
-chrUp			= '<'
-chrDown			= '='
-chrLeft			= '>'
-chrRight		= '?'
-chrMultiplierX		= '&'
-chrMultiplier2		= '''
-chrMultiplier3		= '('
-chrMultiplier5		= ')'
-chrHeart		= '*'
 
 
 
