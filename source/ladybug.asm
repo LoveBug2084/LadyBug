@@ -594,7 +594,9 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 
 .updateObjectTimerPalette			; palette colors for letters and hearts
 
-	equb &f0 + palCyan, &f0 + palRed, &f0 + palYellow
+	equb palObject + palCyan
+	equb palObject + palRed
+	equb palObject + palYellow
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -3901,7 +3903,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr initSprites				; initialize all sprites as blanked and erased
 
-	lda #&f0 + palRed			; set special letters to red
+	lda #palObject + palRed			; set special letters to red
 	sta ulaPalette
 
 	lda #2					; draw two random flowers at screen row 2
@@ -3981,18 +3983,18 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawString
 	equb pixels5
-	equw screenAddr + 2 + 6 * chrColumn + 15 * chrRow
-	equs "DURING GAME", &ff
-
-	jsr drawString
-	equb pixels3
-	equw screenAddr + 2 + 5 * chrColumn + 16 * chrRow
+	equw screenAddr + 2 + 5 * chrColumn + 15 * chrRow
 	equs "RETURN PAUSES", &ff
 
 	jsr drawString
+	equb pixels3
+	equw screenAddr + 2 + 4 * chrColumn + 16 * chrRow
+	equs "MOVE TO UNPAUSE", &ff
+
+	jsr drawString
 	equb pixels1
-	equw screenAddr + 2 + 8 + 3 * chrColumn + 17 * chrRow
-	equs "HOLD ESC TO QUIT", &ff
+	equw screenAddr + 2 + 3 * chrColumn + 17 * chrRow
+	equs "HOLDING ESC QUITS", &ff
 
 	jsr drawString
 	equb pixelsSpecial0
@@ -6774,22 +6776,22 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .updateSkullColorTable
 
-	equb &e0 + palRed
-	equb &e0 + palMagenta
-	equb &e0 + palGreen
-	equb &e0 + palCyan
-	equb &e0 + palYellow
-	equb &e0 + palWhite
-	equb &e0 + palWhite
-	equb &e0 + palWhite
-	equb &e0 + palWhite
-	equb &e0 + palYellow
-	equb &e0 + palCyan
-	equb &e0 + palGreen
-	equb &e0 + palMagenta
-	equb &e0 + palRed
-	equb &e0 + palBlue
-	equb &e0 + palBlue
+	equb palSkull + palRed
+	equb palSkull + palMagenta
+	equb palSkull + palGreen
+	equb palSkull + palCyan
+	equb palSkull + palYellow
+	equb palSkull + palWhite
+	equb palSkull + palWhite
+	equb palSkull + palWhite
+	equb palSkull + palWhite
+	equb palSkull + palYellow
+	equb palSkull + palCyan
+	equb palSkull + palGreen
+	equb palSkull + palMagenta
+	equb palSkull + palRed
+	equb palSkull + palBlue
+	equb palSkull + palBlue
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -7330,7 +7332,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr initSprites				; initialize all sprites as blanked and erased
 
-	lda #&f0 + palCyan			; letters and hearts in cyan
+	lda #palObject + palCyan		; set letters and hearts to cyan
 	sta ulaPalette
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7655,7 +7657,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusScreenSpecialActive
 
-	lda #&e0 + palRed			; make sure skulls are red
+	lda #palSkull + palRed			; make sure skulls are red
 	sta ulaPalette
 
 	jsr drawString				; draw the bonus text
@@ -8128,8 +8130,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .animateLadybugEnd
 
-	lda #0					; deactivate animation
-	sta animateLadybugActive
+	sta animateLadybugActive		; deactivate animation
 
 	rts					; return
 
@@ -8146,35 +8147,36 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateBonusColor
 
-	lda vsyncCounter			; if vsyncCounter & 0x08 != 0
+	lda vsyncCounter			; if vsyncCounter & 0x08 == 0 then use color set 0 else use color set 1
 	and #&08
-	beq updateBonusColorOff
+	bne updateBonusColorSet1
 	
-.updateBonusColorOn
+.updateBonusColorSet0
 
-	lda #&a0 + palRed			; color set 1
+	lda #palSpecial0 + palRed		; color set 0 red magenta yellow green
 	sta ulaPalette
-	lda #&b0 + palMagenta
+	lda #palSpecial1 + palMagenta
 	sta ulaPalette
-	lda #&c0 + palYellow
+	lda #palExtra0 + palYellow
 	sta ulaPalette
-	lda #&d0 + palGreen
+	lda #palExtra1 + palGreen
+	sta ulaPalette
+	
+	rts					; return
+
+.updateBonusColorSet1
+
+	lda #palSpecial0 + palMagenta		; color set 1 magenta red green yellow
+	sta ulaPalette
+	lda #palSpecial1 + palRed
+	sta ulaPalette
+	lda #palExtra0 + palGreen
+	sta ulaPalette
+	lda #palExtra1 + palYellow
 	sta ulaPalette
 	
 	rts					; return
 	
-.updateBonusColorOff
-
-	lda #&a0 + palMagenta			; color set 0
-	sta ulaPalette
-	lda #&b0 + palRed
-	sta ulaPalette
-	lda #&c0 + palGreen
-	sta ulaPalette
-	lda #&d0 + palYellow
-	sta ulaPalette
-	
-	rts					; return
 
 
 
