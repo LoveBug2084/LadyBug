@@ -2045,13 +2045,13 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr mainMenu				; display the main menu screen
 
+
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup a new game for level 1
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameStartNew
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda #&01				; start game on level 1
 	sta level
@@ -2072,13 +2072,15 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda optionLives				; initialize player lives
 	sta lives
 
-	lda #&ff				; clear the bonus bits
+	lda #&ff				; clear the special and extra bonus flag bits
 	sta bonusBits
 	sta bonusBits + 1
 
 	sta ladybugEntryEnable			; enable ladybug entry animation
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
+
+
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup level here too so that instructions page shows correct settings
@@ -3993,8 +3995,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawString
 	equb pixels1
-	equw screenAddr + 2 + 3 * chrColumn + 17 * chrRow
-	equs "HOLDING ESC QUITS", &ff
+	equw screenAddr + 2 + 8 + 3 * chrColumn + 17 * chrRow
+	equs "HOLD ESC", &ff
+
+	jsr drawString
+	equb pixels1
+	equw screenAddr + 2 + 16 + 12 * chrColumn + 17 * chrRow
+	equs "TO QUIT", &ff
 
 	jsr drawString
 	equb pixelsSpecial0
