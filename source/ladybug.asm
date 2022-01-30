@@ -4800,11 +4800,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawScore				; draw score (1 digit per loop)
 
-	jsr random				; gaurentee that letters and layout are random when the player starts a game
+	jsr random				; guarentee that letters and layout are random when the player starts a game
 
 	jsr keyboardScan			; scan keyboard inputs
 
-	lda mainMenuCursor			; if cursor on the timer volume selection
+	lda mainMenuCursor			; if the cursor is on the timer volume selection
 	cmp #7
 	bne mainMenuFunctionsExit
 	
@@ -4886,7 +4886,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1
-	beq mainMenuProcessDown			; the increment again
+	beq mainMenuProcessDown			; then increment again
 
 	cmp #9					; if mainMenuCursor >= 9
 	bne mainMenuProcessDownExit
@@ -4914,23 +4914,19 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldx mainMenuCursor			; if mainMenuCursor = 0 then return true (start game)
 	beq mainMenuProcessReturnTrue
 	
-	cpx #2					; if mainMenuCursor = 1 then display high score table
+	cpx #2					; if mainMenuCursor = 2 then display high score table
 	beq mainMenuHighScores
 
 	cpx #8					; if mainMenuCursor == 8 then redefine the keyboard
 	beq mainMenuProcessKeyboard
 
-	; dex					; index = cursor - 3 as first adjustable setting is 3 away from the start game option 0
-	; dex
-	; dex
-
 						; x index is offset by 3 so subtract 3 from addresses
 
 	inc gameSettings - 3, x			; option[x - 3] += 1
 
-	lda gameSettings - 3, x			; if option[x - 3] == max[x - 3]
+	lda gameSettings - 3, x			; if option[x - 3] >= max[x - 3]
 	cmp optionsMax - 3, x
-	bne mainMenuProcessStartExit
+	bcc mainMenuProcessStartExit
 	
 	lda optionsMin - 3, x			; then option[x - 3] = min[x - 3]
 	sta gameSettings - 3, x
