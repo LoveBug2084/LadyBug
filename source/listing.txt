@@ -3349,7 +3349,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      12ED   FE 7D 80   INC &807D,X
      12F0   BD 7D 80   LDA &807D,X
      12F3   DD C8 11   CMP &11C8,X
-     12F6   D0 06      BNE &12FE
+     12F6   90 06      BCC &12FE
      12F8   BD C3 11   LDA &11C3,X
      12FB   9D 7D 80   STA &807D,X
 .mainMenuProcessStartExit
