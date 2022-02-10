@@ -804,7 +804,7 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	
 .chooseLetters3rd
 
-	jsr chooseLettersRandom			; pick 3rd random letter (0-9)
+	jsr chooseLettersRandom			; pick 3rd random letter
 	
 	cmp levelLetters			; if its the same as 1st then try again
 	beq chooseLetters3rd
@@ -1421,10 +1421,8 @@ rasterTimer		= (312 / 2) * 64	; vsync interupt sets timer interrupt to line 156 
 	dec drawScoreIndex			; repeat until all 6 digits done
 	bpl drawHighScoreLoop
 	
-	lda #0					; final 0 digit
-	jsr drawExtraTile
-
-	rts					; return
+	lda #0					; draw final 0 digit and return
+	jmp drawExtraTile
 
 
 
@@ -2400,10 +2398,8 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	
 	jsr updateHighScoreFirstPlace		; update lower playfield with first place high score
 
-	jsr drawScoreTable			; draw the high score page
+	jmp drawScoreTable			; draw the high score page and return to main menu
 	
-	rts					; return to main menu
-
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4602,9 +4598,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; choose random letters
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr chooseLetters			; choose 3 random letters
-
-	rts					; return
+	jmp chooseLetters			; choose 3 random letters and return
 
 
 
@@ -4678,9 +4672,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuExit
 
-	jsr generateValidation			; update the validation code
-
-	rts					; return
+	jmp generateValidation			; update the validation code and return
 
 
 
@@ -5235,6 +5227,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	rts					; return
 
 
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; draw the menu text
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5375,9 +5368,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	lda optionTimerVolume
 	ora #'0'
-	jsr drawChr
-	
-	rts					; return
+	jmp drawChr				; and return
 
 
 
@@ -8267,7 +8258,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda drawTextAddr
 	pha
 	
-	rts					; return
+	rts					; jump to terminator address + 1
 
 
 
@@ -8668,10 +8659,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta pauseLadybug
 	sta pauseEnemy
 
-	lda #sfxMusicLetters			; play bonus letters music
-	jsr playSound
+	lda #sfxMusicLetters			; play bonus letters music and return
+	jmp playSound
 
-	rts					; and return
+
 
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 	; handle vegetable score
@@ -8695,10 +8686,8 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #vegetableEnemyTime			; pause enemies
 	sta pauseEnemy
 
-	jsr addScoreVegetable			; add the vegetable bonus score
+	jmp addScoreVegetable			; add the vegetable bonus score and return
 
-	rts					; return
-	
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 	; check for object tiles (dots, hearts, letters, skulls)
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8749,10 +8738,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	dec levelEdibles			; dec edibles
 
-	lda #1					; bump score 10 points x multiplier
-	jsr addScoreMultiply
+	lda #1					; bump score 10 points x multiplier and return
+	jmp addScoreMultiply
 
-	rts					; return
+
 
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 	; handle skull tile
