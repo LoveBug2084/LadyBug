@@ -2170,11 +2170,11 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr ladybugEntryAnimation		; do ladybug entry movement if enabled
 
-	jsr checkLevelEnd			; check if current level has ended (object count == 0)
-	bcs gameLevelStart			; if level has ended then start new level
-
 	jsr checkBonus				; check if a special, extra or diamond bonus screen is required
 	bcs gameLevelStart			; if bonus was awarded then start a new level
+
+	jsr checkLevelEnd			; check if current level has ended (object count == 0)
+	bcs gameLevelStart			; if level has ended then start new level
 
 	jsr drawVegetableCenter			; draw the vegetable/diamond in the center bug box (if active)
 

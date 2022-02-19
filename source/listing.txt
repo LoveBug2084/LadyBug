@@ -1745,9 +1745,9 @@ bootstrap     &4800 - &48DC , 221 bytes
 .gameLoopUpper
      078E   20 A6 01   JSR &01A6
      0791   20 9C 08   JSR &089C
-     0794   20 C9 08   JSR &08C9
+     0794   20 14 1B   JSR &1B14
      0797   B0 BD      BCS &0756
-     0799   20 14 1B   JSR &1B14
+     0799   20 C9 08   JSR &08C9
      079C   B0 B8      BCS &0756
      079E   20 C0 0B   JSR &0BC0
      07A1   20 6D 1D   JSR &1D6D
