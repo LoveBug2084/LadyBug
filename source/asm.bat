@@ -1,5 +1,5 @@
 @echo off
-set gameName=LadyBug
+set bbcDiskName=LadyBug
 echo.
 utils\fontmaker  		img-font.raw													img-font.bin
 echo.
@@ -39,7 +39,7 @@ set "buildText=00000%build%"
 set "buildText=%buildText:~-6%"
 echo %buildText%>build.bin
 echo.
-beebasm -title %gameName% -v -i build.asm -do %gameName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
+beebasm -title %bbcDiskName% -v -i build.asm -do %bbcDiskName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 echo.
 echo build %buildText%

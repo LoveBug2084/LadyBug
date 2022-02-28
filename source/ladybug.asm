@@ -115,31 +115,34 @@ objectModeYellow	= 2
 
 .ladybugEntryEnable	skip 1			; enable ladybug entry animation
 .ladybugDeathEnable	skip 1			; enable ladybug death animation
+
 .ladybugDeathAnimationIndex
 			skip 1			; index into ladybug death animation table
 
-.bonusBits		skip 2			; special, extra, x2 x3 x5 (1 bit each)
+.bonusBits		equw 0			; special, extra, x2 x3 x5 (1 bit each) (init here for 1st run display)
 .bonusBitsTemp		skip 2			; storage for working on bonus bits
 
-.bonusSpecialActive	skip 1			; special bonus is active if != 0
-.bonusExtraActive	skip 1			; extra bonus is active if != 0
-.bonusDiamondActive	skip 1			; diamond bonus is active if != 0
-.bonusDiamondEnable	skip 1			; diamond bonus is enabled if != 0
 bonusDiamondImg		= 18			; diamond image number
 bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
 
+.bonusDiamondActive	skip 1			; diamond bonus is active if != 0
+.bonusDiamondEnable	skip 1			; diamond bonus is enabled if != 0
+
+.bonusSpecialActive	skip 1			; special bonus is active if != 0
+.bonusExtraActive	skip 1			; extra bonus is active if != 0
+
 .scoreMultiplier	skip 1			; multiplier 0=x1, 1=x2, 2=x3, 3=x5
 
-.vegetableImg		skip 1			; vegetable image number for current level
+.vegetableImg		equb 0			; vegetable image number for current level (init here for 1st run display)
 .vegetableActive	skip 1			; vegetable bonus active if != 0
-.vegetableScore		equb &10		; vegetable score value (bcd)
+.vegetableScore		equb &10		; vegetable score value (bcd) (init here for 1st run display)
 .vegetableScoreActive	skip 1			; vegetable score displayed if != 0
 
 .objectScoreImg		skip 1			; object score img active if != 0
 .objectScoreX		skip 1			; object score x position
 .objectScoreY		skip 1			; object score y position
 
-.level			equb 1			; game level (BCD)
+.level			equb 1			; game level (BCD) (init here for 1st run display)
 .levelEdibles		skip 1			; number of edible objects (dots, letters, hearts) remaining in current level
 .levelSkulls		skip 1			; number of skulls in current level
 .levelLetters		skip 3			; 3 random letters for current level
@@ -164,7 +167,7 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 .enemyTimerSpeed	skip 1			; enemy release timer speed (frames) level 1=8, level 2-4=5, level 5-99=3
 .enemyTimerSpeedCounter skip 1			; enemy release timer speed counter (frame counter)
 
-.enemySpawnSaveX	skip 1			; preserve current enemy index
+.enemySpawnSaveX	skip 1			; preserve register
 
 .playerInput		skip 1			; player input flags, bit 0=up 1=down 2=left 3=right 4=start 5=esc
 			
@@ -199,10 +202,10 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 
 .initTimerTilesAddr	skip 2			; tileMap address while initializing timer tiles
 
-.spriteToAddrSaveX	skip 1			; preserve register
-.spriteToAddrSaveY	skip 1			; preserve register
 .spriteToAddrX		skip 1			; spriteToAddr sprite x position
 .spriteToAddrY		skip 1			; spritetoAddr sprite y position
+.spriteToAddrSaveX	skip 1			; preserve register
+.spriteToAddrSaveY	skip 1			; preserve register
 
 .tileMapAddr		skip 2			; tileMap address used by various routines
 
@@ -238,9 +241,10 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 .drawSpriteX		skip 1			; drawSprite X position
 .drawSpriteY		skip 1			; drawSprite Y position
 
+.drawSpriteScreenAddr	skip 2			; calculated screen address from sprite x and y position
+
 .drawSpriteSaveX	skip 1			; preserve register
 .drawSpriteSaveY	skip 1			; preserve register
-.drawSpriteScreenAddr	skip 2			; calculated screen address from sprite x and y position
 
 .spriteToScreenSaveX	skip 1			; preserve register
 .spriteToScreenSaveY	skip 1			; preserve register
@@ -2173,7 +2177,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr checkBonus				; check if a special, extra or diamond bonus screen is required
 	bcs gameLevelStart			; if bonus was awarded then start a new level
 
-	jsr checkLevelEnd			; check if current level has ended (object count == 0)
+	jsr checkLevelEnd			; check if current level has ended
 	bcs gameLevelStart			; if level has ended then start new level
 
 	jsr drawVegetableCenter			; draw the vegetable/diamond in the center bug box (if active)
@@ -9020,29 +9024,30 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugUp
 
-	ldx #moveUp				
-	lsr playerInput				; if up was requested
+	ldx #moveUp				; set directtion to up
+
+	lsr playerInput				; if up was pressed then do it
 	bcs updateLadybugMove
 	
 .updateLadybugDown
 
-	ldx #moveDown
+	ldx #moveDown				; set direction to down
 
-	lsr playerInput				; if down was requested
+	lsr playerInput				; if down was pressed then do it
 	bcs updateLadybugMove
 	
 .updateLadybugLeft
 
-	ldx #moveLeft
+	ldx #moveLeft				; set direction to left
 
-	lsr playerInput				; if left was requested
+	lsr playerInput				; if left was pressed then do it
 	bcs updateLadybugMove
 	
 .updateLadybugRight
 
-	ldx #moveRight
+	ldx #moveRight				; set direction to right
 
-	lsr playerInput				; if right was requested
+	lsr playerInput				; if right was pressed then do it
 	bcs updateLadybugMove
 	
 .updateLadybugExit

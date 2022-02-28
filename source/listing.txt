@@ -629,21 +629,21 @@ bootstrap     &4800 - &48DC , 221 bytes
 .ladybugDeathAnimationIndex
      0010
 .bonusBits
-     0011
+     0011   00 00
 .bonusBitsTemp
      0013
-.bonusSpecialActive
-     0015
-.bonusExtraActive
-     0016
 .bonusDiamondActive
-     0017
+     0015
 .bonusDiamondEnable
+     0016
+.bonusSpecialActive
+     0017
+.bonusExtraActive
      0018
 .scoreMultiplier
      0019
 .vegetableImg
-     001A
+     001A   00
 .vegetableActive
      001B
 .vegetableScore
@@ -736,13 +736,13 @@ bootstrap     &4800 - &48DC , 221 bytes
      004D
 .initTimerTilesAddr
      004E
-.spriteToAddrSaveX
-     0050
-.spriteToAddrSaveY
-     0051
 .spriteToAddrX
-     0052
+     0050
 .spriteToAddrY
+     0051
+.spriteToAddrSaveX
+     0052
+.spriteToAddrSaveY
      0053
 .tileMapAddr
      0054
@@ -786,12 +786,12 @@ bootstrap     &4800 - &48DC , 221 bytes
      008A
 .drawSpriteY
      008B
-.drawSpriteSaveX
-     008C
-.drawSpriteSaveY
-     008D
 .drawSpriteScreenAddr
+     008C
+.drawSpriteSaveX
      008E
+.drawSpriteSaveY
+     008F
 .spriteToScreenSaveX
      0090
 .spriteToScreenSaveY
@@ -1400,11 +1400,11 @@ bootstrap     &4800 - &48DC , 221 bytes
      04F0   B5 78      LDA &78,X
      04F2   18         CLC
      04F3   79 CA 04   ADC &04CA,Y
-     04F6   85 52      STA &52
+     04F6   85 50      STA &50
      04F8   B5 7D      LDA &7D,X
      04FA   18         CLC
      04FB   79 CE 04   ADC &04CE,Y
-     04FE   85 53      STA &53
+     04FE   85 51      STA &51
      0500   20 61 27   JSR &2761
      0503   A0 00      LDY #&00
      0505   B1 54      LDA (&54),Y
@@ -1466,16 +1466,16 @@ bootstrap     &4800 - &48DC , 221 bytes
 .eraseBlockAddr
      0573   A5 8B      LDA &8B
      0575   29 07      AND #&07
-     0577   05 8E      ORA &8E
-     0579   85 8E      STA &8E
+     0577   05 8C      ORA &8C
+     0579   85 8C      STA &8C
      057B   8D 93 05   STA &0593
-     057E   A5 8F      LDA &8F
+     057E   A5 8D      LDA &8D
      0580   8D 94 05   STA &0594
      0583   A9 46      LDA #&46
      0585   85 94      STA &94
 .eraseBlockColumn
      0587   A0 0E      LDY #&0E
-     0589   A5 8E      LDA &8E
+     0589   A5 8C      LDA &8C
      058B   29 07      AND #&07
      058D   49 07      EOR #&07
      058F   AA         TAX
@@ -1504,13 +1504,13 @@ bootstrap     &4800 - &48DC , 221 bytes
      05BA   88         DEY
      05BB   D0 D5      BNE &0592
      05BD   18         CLC
-     05BE   A5 8E      LDA &8E
+     05BE   A5 8C      LDA &8C
      05C0   69 08      ADC #&08
-     05C2   85 8E      STA &8E
+     05C2   85 8C      STA &8C
      05C4   8D 93 05   STA &0593
-     05C7   A5 8F      LDA &8F
+     05C7   A5 8D      LDA &8D
      05C9   69 00      ADC #&00
-     05CB   85 8F      STA &8F
+     05CB   85 8D      STA &8D
      05CD   8D 94 05   STA &0594
      05D0   D0 B5      BNE &0587
 .drawExtraTile
@@ -1709,7 +1709,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      073B   85 11      STA &11
      073D   85 12      STA &12
      073F   85 0E      STA &0E
-     0741   85 18      STA &18
+     0741   85 16      STA &16
      0743   20 50 11   JSR &1150
      0746   20 75 0A   JSR &0A75
      0749   20 14 0B   JSR &0B14
@@ -1984,12 +1984,12 @@ bootstrap     &4800 - &48DC , 221 bytes
      0943   B5 64      LDA &64,X
      0945   79 02 09   ADC &0902,Y
      0948   95 64      STA &64,X
-     094A   85 52      STA &52
+     094A   85 50      STA &50
      094C   18         CLC
      094D   B5 69      LDA &69,X
      094F   79 06 09   ADC &0906,Y
      0952   95 69      STA &69,X
-     0954   85 53      STA &53
+     0954   85 51      STA &51
      0956   E0 00      CPX #&00
      0958   D0 03      BNE &095D
      095A   4C 2B 0A   JMP &0A2B
@@ -2359,7 +2359,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      0BC7   85 8A      STA &8A
      0BC9   A9 5A      LDA #&5A
      0BCB   85 8B      STA &8B
-     0BCD   A5 18      LDA &18
+     0BCD   A5 16      LDA &16
      0BCF   F0 0A      BEQ &0BDB
      0BD1   A5 21      LDA &21
      0BD3   C9 06      CMP #&06
@@ -2370,8 +2370,8 @@ bootstrap     &4800 - &48DC , 221 bytes
      0BDB   A5 1A      LDA &1A
 .drawSprite10x10
      0BDD   85 89      STA &89
-     0BDF   86 8C      STX &8C
-     0BE1   84 8D      STY &8D
+     0BDF   86 8E      STX &8E
+     0BE1   84 8F      STY &8F
      0BE3   A9 00      LDA #&00
      0BE5   8D 5A 0C   STA &0C5A
      0BE8   A9 0A      LDA #&0A
@@ -2383,8 +2383,8 @@ bootstrap     &4800 - &48DC , 221 bytes
      0BF7   85 4A      STA &4A
      0BF9   10 38      BPL &0C33
 .drawSprite
-     0BFB   86 8C      STX &8C
-     0BFD   84 8D      STY &8D
+     0BFB   86 8E      STX &8E
+     0BFD   84 8F      STY &8F
      0BFF   A9 00      LDA #&00
      0C01   8D 5A 0C   STA &0C5A
      0C04   A9 0E      LDA #&0E
@@ -2396,8 +2396,8 @@ bootstrap     &4800 - &48DC , 221 bytes
      0C13   85 4A      STA &4A
      0C15   D0 1C      BNE &0C33
 .drawSpriteFlipped
-     0C17   86 8C      STX &8C
-     0C19   84 8D      STY &8D
+     0C17   86 8E      STX &8E
+     0C19   84 8F      STY &8F
      0C1B   A9 0D      LDA #&0D
      0C1D   8D 5A 0C   STA &0C5A
      0C20   A9 FF      LDA #&FF
@@ -2423,9 +2423,9 @@ bootstrap     &4800 - &48DC , 221 bytes
      0C4A   A5 8B      LDA &8B
      0C4C   29 07      AND #&07
      0C4E   A8         TAY
-     0C4F   A5 8E      LDA &8E
+     0C4F   A5 8C      LDA &8C
      0C51   8D 5F 0C   STA &0C5F
-     0C54   A5 8F      LDA &8F
+     0C54   A5 8D      LDA &8D
      0C56   8D 60 0C   STA &0C60
 .drawSpriteColumnVinit
      0C59   A2 FF      LDX #&FF
@@ -2463,17 +2463,17 @@ bootstrap     &4800 - &48DC , 221 bytes
      0C8F   69 00      ADC #&00
      0C91   8D 5D 0C   STA &0C5D
      0C94   18         CLC
-     0C95   A5 8E      LDA &8E
+     0C95   A5 8C      LDA &8C
      0C97   69 08      ADC #&08
-     0C99   85 8E      STA &8E
+     0C99   85 8C      STA &8C
      0C9B   90 AD      BCC &0C4A
-     0C9D   E6 8F      INC &8F
+     0C9D   E6 8D      INC &8D
      0C9F   10 A9      BPL &0C4A
 .drawSpriteDrawn
      0CA1   38         SEC
 .drawSpriteExit
-     0CA2   A6 8C      LDX &8C
-     0CA4   A4 8D      LDY &8D
+     0CA2   A6 8E      LDX &8E
+     0CA4   A4 8F      LDY &8F
      0CA6   60         RTS
 .drawSpriteNotDrawn
      0CA7   18         CLC
@@ -2917,10 +2917,10 @@ bootstrap     &4800 - &48DC , 221 bytes
      0FE4   90 C8      BCC &0FAE
 .ladybugDeathAnimationDrawAngelOk
      0FE6   A5 64      LDA &64
-     0FE8   85 52      STA &52
+     0FE8   85 50      STA &50
      0FEA   85 8A      STA &8A
      0FEC   A5 69      LDA &69
-     0FEE   85 53      STA &53
+     0FEE   85 51      STA &51
      0FF0   85 8B      STA &8B
      0FF2   20 61 27   JSR &2761
      0FF5   A0 00      LDY #&00
@@ -3179,9 +3179,9 @@ bootstrap     &4800 - &48DC , 221 bytes
      11AC   85 11      STA &11
      11AE   A9 00      LDA #&00
      11B0   85 19      STA &19
-     11B2   85 15      STA &15
-     11B4   85 16      STA &16
-     11B6   85 17      STA &17
+     11B2   85 17      STA &17
+     11B4   85 18      STA &18
+     11B6   85 15      STA &15
      11B8   85 27      STA &27
      11BA   85 2B      STA &2B
      11BC   A9 FF      LDA #&FF
@@ -4315,10 +4315,10 @@ bootstrap     &4800 - &48DC , 221 bytes
 .checkBonus
      1B14   A5 0E      LDA &0E
      1B16   D0 49      BNE &1B61
-     1B18   A5 17      LDA &17
+     1B18   A5 15      LDA &15
      1B1A   D0 47      BNE &1B63
 .checkBonusSpecial
-     1B1C   A5 15      LDA &15
+     1B1C   A5 17      LDA &17
      1B1E   D0 5E      BNE &1B7E
      1B20   A5 12      LDA &12
      1B22   29 7F      AND #&7F
@@ -4331,12 +4331,12 @@ bootstrap     &4800 - &48DC , 221 bytes
      1B30   A5 AC      LDA &AC
      1B32   D0 2D      BNE &1B61
      1B34   A9 FF      LDA #&FF
-     1B36   85 15      STA &15
+     1B36   85 17      STA &17
      1B38   A9 0D      LDA #&0D
      1B3A   20 67 23   JSR &2367
      1B3D   4C 61 1B   JMP &1B61
 .checkBonusExtra
-     1B40   A5 16      LDA &16
+     1B40   A5 18      LDA &18
      1B42   D0 6B      BNE &1BAF
      1B44   A5 11      LDA &11
      1B46   29 F8      AND #&F8
@@ -4349,7 +4349,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      1B54   A5 AC      LDA &AC
      1B56   D0 09      BNE &1B61
      1B58   A9 FF      LDA #&FF
-     1B5A   85 16      STA &16
+     1B5A   85 18      STA &18
      1B5C   A9 0D      LDA #&0D
      1B5E   20 67 23   JSR &2367
 .checkBonusExit
@@ -4468,7 +4468,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      1C31   86 90      STX &90
      1C33   84 91      STY &91
      1C35   A9 00      LDA #&00
-     1C37   85 8F      STA &8F
+     1C37   85 8D      STA &8D
      1C39   A5 8A      LDA &8A
      1C3B   C9 03      CMP #&03
      1C3D   B0 03      BCS &1C42
@@ -4482,12 +4482,12 @@ bootstrap     &4800 - &48DC , 221 bytes
      1C4A   E9 02      SBC #&02
      1C4C   85 8A      STA &8A
      1C4E   0A         ASL A
-     1C4F   26 8F      ROL &8F
+     1C4F   26 8D      ROL &8D
      1C51   18         CLC
      1C52   65 8A      ADC &8A
-     1C54   85 8E      STA &8E
+     1C54   85 8C      STA &8C
      1C56   90 02      BCC &1C5A
-     1C58   E6 8F      INC &8F
+     1C58   E6 8D      INC &8D
 .spriteToScreenCheckOdd
      1C5A   29 04      AND #&04
      1C5C   F0 07      BEQ &1C65
@@ -4496,9 +4496,9 @@ bootstrap     &4800 - &48DC , 221 bytes
      1C61   69 03      ADC #&03
      1C63   85 89      STA &89
 .spriteToScreenTruncateX
-     1C65   A5 8E      LDA &8E
+     1C65   A5 8C      LDA &8C
      1C67   29 F8      AND #&F8
-     1C69   85 8E      STA &8E
+     1C69   85 8C      STA &8C
      1C6B   A5 8B      LDA &8B
      1C6D   C9 BF      CMP #&BF
      1C6F   90 03      BCC &1C74
@@ -4512,12 +4512,12 @@ bootstrap     &4800 - &48DC , 221 bytes
      1C7B   4A         LSR A
      1C7C   A8         TAY
      1C7D   18         CLC
-     1C7E   A5 8E      LDA &8E
+     1C7E   A5 8C      LDA &8C
      1C80   79 76 3A   ADC &3A76,Y
-     1C83   85 8E      STA &8E
-     1C85   A5 8F      LDA &8F
+     1C83   85 8C      STA &8C
+     1C85   A5 8D      LDA &8D
      1C87   79 8F 3A   ADC &3A8F,Y
-     1C8A   85 8F      STA &8F
+     1C8A   85 8D      STA &8D
 .spriteToScreenValid
      1C8C   38         SEC
 .spriteToScreenExit
@@ -4951,7 +4951,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      1F67   58
      1F68   59
 .drawBonusGraphics
-     1F69   A5 15      LDA &15
+     1F69   A5 17      LDA &17
      1F6B   F0 2E      BEQ &1F9B
      1F6D   A9 30      LDA #&30
      1F6F   8D 33 06   STA &0633
@@ -5004,7 +5004,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      1FD0   20 93 08   JSR &0893
      1FD3   20 4C 04   JSR &044C
      1FD6   20 69 1F   JSR &1F69
-     1FD9   A5 15      LDA &15
+     1FD9   A5 17      LDA &17
      1FDB   D0 03      BNE &1FE0
      1FDD   4C 68 20   JMP &2068
 .drawBonusScreenSpecialActive
@@ -5061,7 +5061,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      2062   20 67 23   JSR &2367
      2065   4C 62 21   JMP &2162
 .drawBonusScreenExtra
-     2068   A5 16      LDA &16
+     2068   A5 18      LDA &18
      206A   F0 4D      BEQ &20B9
      206C   20 AD 22   JSR &22AD
      206F   03
@@ -5086,7 +5086,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      20B3   20 67 23   JSR &2367
      20B6   4C 62 21   JMP &2162
 .drawBonusScreenDiamond
-     20B9   A5 17      LDA &17
+     20B9   A5 15      LDA &15
      20BB   D0 03      BNE &20C0
      20BD   4C 8C 21   JMP &218C
 .drawBonusScreenDiamondGraphics
@@ -5611,15 +5611,15 @@ bootstrap     &4800 - &48DC , 221 bytes
      2400   D0 3B      BNE &243D
      2402   A9 00      LDA #&00
      2404   85 1B      STA &1B
-     2406   A5 18      LDA &18
+     2406   A5 16      LDA &16
      2408   F0 19      BEQ &2423
      240A   A5 21      LDA &21
      240C   C9 06      CMP #&06
      240E   90 13      BCC &2423
      2410   A9 FF      LDA #&FF
-     2412   85 17      STA &17
+     2412   85 15      STA &15
      2414   A9 00      LDA #&00
-     2416   85 18      STA &18
+     2416   85 16      STA &16
      2418   A9 25      LDA #&25
      241A   85 2C      STA &2C
      241C   85 2D      STA &2D
@@ -5698,7 +5698,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      24AA   E0 00      CPX #&00
      24AC   F0 04      BEQ &24B2
      24AE   A9 00      LDA #&00
-     24B0   85 18      STA &18
+     24B0   85 16      STA &16
 .checkForObjectsHeartRestoreX
      24B2   A6 3C      LDX &3C
      24B4   20 3A 25   JSR &253A
@@ -5728,7 +5728,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      24DE   85 12      STA &12
      24E0   20 A3 0A   JSR &0AA3
      24E3   A9 00      LDA #&00
-     24E5   85 18      STA &18
+     24E5   85 16      STA &16
      24E7   4C FD 24   JMP &24FD
 .checkForObjectLetterYellow
      24EA   E0 02      CPX #&02
@@ -5738,7 +5738,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      24F2   25 11      AND &11
      24F4   85 11      STA &11
      24F6   A9 00      LDA #&00
-     24F8   85 18      STA &18
+     24F8   85 16      STA &16
      24FA   20 A3 0A   JSR &0AA3
 .checkForObjectLetterErase
      24FD   A9 00      LDA #&00
@@ -5807,7 +5807,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      255C   A9 FF      LDA #&FF
      255E   85 0F      STA &0F
      2560   A9 00      LDA #&00
-     2562   85 18      STA &18
+     2562   85 16      STA &16
      2564   85 1B      STA &1B
      2566   F8         SED
      2567   38         SEC
@@ -5849,19 +5849,19 @@ bootstrap     &4800 - &48DC , 221 bytes
      25A1   60         RTS
 .updateLadybugMove
      25A2   A5 64      LDA &64
-     25A4   85 52      STA &52
+     25A4   85 50      STA &50
      25A6   A5 69      LDA &69
-     25A8   85 53      STA &53
+     25A8   85 51      STA &51
      25AA   20 61 27   JSR &2761
      25AD   20 F2 23   JSR &23F2
 .updateLadybugGrid
      25B0   A5 64      LDA &64
-     25B2   85 52      STA &52
+     25B2   85 50      STA &50
      25B4   29 0F      AND #&0F
      25B6   C9 08      CMP #&08
      25B8   D0 33      BNE &25ED
      25BA   A5 69      LDA &69
-     25BC   85 53      STA &53
+     25BC   85 51      STA &51
      25BE   29 0F      AND #&0F
      25C0   C9 08      CMP #&08
      25C2   D0 29      BNE &25ED
@@ -5967,11 +5967,11 @@ bootstrap     &4800 - &48DC , 221 bytes
      264C   A5 64      LDA &64
      264E   18         CLC
      264F   79 22 26   ADC &2622,Y
-     2652   85 52      STA &52
+     2652   85 50      STA &50
      2654   A5 69      LDA &69
      2656   18         CLC
      2657   79 32 26   ADC &2632,Y
-     265A   85 53      STA &53
+     265A   85 51      STA &51
      265C   20 61 27   JSR &2761
      265F   AD 33 06   LDA &0633
      2662   85 4B      STA &4B
@@ -6093,9 +6093,9 @@ bootstrap     &4800 - &48DC , 221 bytes
      275C   A9 00      LDA #&00
      275E   4C 0D 06   JMP &060D
 .spriteToAddr
-     2761   86 50      STX &50
-     2763   84 51      STY &51
-     2765   A5 53      LDA &53
+     2761   86 52      STX &52
+     2763   84 53      STY &53
+     2765   A5 51      LDA &51
      2767   18         CLC
      2768   69 04      ADC #&04
      276A   4A         LSR A
@@ -6103,7 +6103,7 @@ bootstrap     &4800 - &48DC , 221 bytes
      276C   4A         LSR A
      276D   A8         TAY
      276E   88         DEY
-     276F   A5 52      LDA &52
+     276F   A5 50      LDA &50
      2771   18         CLC
      2772   69 04      ADC #&04
      2774   4A         LSR A
@@ -6125,8 +6125,8 @@ bootstrap     &4800 - &48DC , 221 bytes
      2792   BD BF 3A   LDA &3ABF,X
      2795   79 8F 3A   ADC &3A8F,Y
      2798   8D 34 06   STA &0634
-     279B   A4 51      LDY &51
-     279D   A6 50      LDX &50
+     279B   A4 53      LDY &53
+     279D   A6 52      LDX &52
      279F   60         RTS
 .updateHighScoreFirstPlace
      27A0   AD 10 80   LDA &8010

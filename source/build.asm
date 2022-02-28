@@ -41,29 +41,40 @@
 ; create disk files, keep them in loading order as far as possible to reduce floppy seek time
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	save "$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
+	save		"$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 
-	putbasic "boot.bas", "$.Boot"
+	putbasic	"boot.bas", "$.Boot"
 
-	save "$.Config", config, configEnd, &ffffff, &ff0000 + config
+	save		"$.Config", config, configEnd, &ffffff, &ff0000 + config
 
-	save "E.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
-	putfile "default-maze1.bin", "D.Maze1", 0, &ffffff
-	putfile "default-maze2.bin", "D.Maze2", 0, &ffffff
-	putfile "default-maze3.bin", "D.Maze3", 0, &ffffff
+	save		"E.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 
-	save "$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
-	save "$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
+	putfile		"default-maze1.bin", "D.Maze1", 0, &ffffff
+	putfile		"default-maze2.bin", "D.Maze2", 0, &ffffff
+	putfile		"default-maze3.bin", "D.Maze3", 0, &ffffff
 
-	putbasic "reset.bas", "$.Reset"
-	save "D.Config", config, configEnd, &ffffff, &ff0000 + config
+	save		"$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 
-	putbasic "editor.bas", "$.Editor"
-	save "E.Code", editorStart, editorEnd, &ffffff, &ff0000 + editorStart
-	putfile "img-editor.bin", "E.Tiles", 0, &ffffff
+	save		"$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
 
-	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.lst
-	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.lst
+	putbasic	"reset.bas", "$.Reset"
+
+	save		"D.Config", config, configEnd, &ffffff, &ff0000 + config
+
+	putbasic	"editor.bas", "$.Editor"
+
+	save		"E.Code", editorStart, editorEnd, &ffffff, &ff0000 + editorStart
+
+	putfile		"img-editor.bin", "E.Tiles", 0, &ffffff
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; check for memory overrun
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	assert programEnd <= screenAddr		; main ram limit exceeded, check ladybug.txt
+	assert loaderEnd <= swramEnd		; high ram limit exceeded, check ladybug.txt
 
 
 
