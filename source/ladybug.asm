@@ -4468,6 +4468,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equb 256 * 0.30				; level 12-17
 	equb 256 * 0.40				; level 18-99
 	
+						; enemy speed option 4
+	equb 256 * 0.15				; level 1-6
+	equb 256 * 0.30				; level 7-11
+	equb 256 * 0.45				; level 12-17
+	equb 256 * 0.60				; level 18-99
+	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .initLevelSettings
@@ -4619,7 +4625,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .optionsMax
 
-	equb  4, 10, 10,  2,  4			; maximum value + 1 for speed, attack, lives, sound, volume
+	equb  5, 10, 10,  2,  4			; maximum value + 1 for speed, attack, lives, sound, volume
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
