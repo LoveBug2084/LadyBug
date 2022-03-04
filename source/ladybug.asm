@@ -4445,34 +4445,40 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .enemySpeedTable
 
 						; enemy speed option 0
-	equb 256 * 0.00				; level 1-6
-	equb 256 * 0.05				; level 7-11
-	equb 256 * 0.10				; level 12-17
-	equb 256 * 0.15				; level 18-99
+	equb 256 * 0.00				; 1.00 level 1-6
+	equb 256 * 0.05				; 1.05 level 7-11
+	equb 256 * 0.10				; 1.10 level 12-17
+	equb 256 * 0.15				; 1.15 level 18-99
 	
 						; enemy speed option 1
-	equb 256 * 0.00				; level 1-6
-	equb 256 * 0.07				; level 7-11
-	equb 256 * 0.14				; level 12-17
-	equb 256 * 0.21				; level 18-99
+	equb 256 * 0.00				; 1.00 level 1-6
+	equb 256 * 0.07				; 1.07 level 7-11
+	equb 256 * 0.14				; 1.14 level 12-17
+	equb 256 * 0.21				; 1.21 level 18-99
 	
 						; enemy speed option 2
-	equb 256 * 0.05				; level 1-6
-	equb 256 * 0.13				; level 7-11
-	equb 256 * 0.21				; level 12-17
-	equb 256 * 0.29				; level 18-99
+	equb 256 * 0.05				; 1.05 level 1-6
+	equb 256 * 0.13				; 1.13 level 7-11
+	equb 256 * 0.21				; 1.21 level 12-17
+	equb 256 * 0.29				; 1.29 level 18-99
 
 						; enemy speed option 3
-	equb 256 * 0.10				; level 1-6
-	equb 256 * 0.20				; level 7-11
-	equb 256 * 0.30				; level 12-17
-	equb 256 * 0.40				; level 18-99
+	equb 256 * 0.10				; 1.10 level 1-6
+	equb 256 * 0.20				; 1.20 level 7-11
+	equb 256 * 0.30				; 1.30 level 12-17
+	equb 256 * 0.40				; 1.40 level 18-99
 	
 						; enemy speed option 4
-	equb 256 * 0.15				; level 1-6
-	equb 256 * 0.30				; level 7-11
-	equb 256 * 0.45				; level 12-17
-	equb 256 * 0.60				; level 18-99
+	equb 256 * 0.15				; 1.15 level 1-6
+	equb 256 * 0.30				; 1.30 level 7-11
+	equb 256 * 0.45				; 1.45 level 12-17
+	equb 256 * 0.60				; 1.60 level 18-99
+	
+						; enemy speed option 5
+	equb 256 * 0.20				; 1.20 level 1-6
+	equb 256 * 0.40				; 1.40 level 7-11
+	equb 256 * 0.60				; 1.60 level 12-17
+	equb 256 * 0.80				; 1.80 level 18-99
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4625,7 +4631,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .optionsMax
 
-	equb  5, 10, 10,  2,  4			; maximum value + 1 for speed, attack, lives, sound, volume
+	equb  6, 10, 10,  2,  4			; maximum value + 1 for speed, attack, lives, sound, volume
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
