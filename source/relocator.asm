@@ -33,13 +33,14 @@
 
 .bootstrap
 
-	lda #19					; wait vsync
-	jsr osbyte
-
 	lda #6					; disable screen
 	sta crtcAddr
 	lda #0
 	sta crtcData
+
+	lda #19					; wait 2 * vsync
+	jsr osbyte
+	jsr osbyte
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set all palette colors to black

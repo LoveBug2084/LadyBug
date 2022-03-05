@@ -1,0 +1,1 @@
+@start notepad++ build.txt listing.txt ladybug.asm boot.bas constants.asm config.asm reset.bas !boot.asm loader.asm relocator.asm soundtables.asm editor.asm editor.bas maze.asm build.asm 

@@ -220,9 +220,9 @@ mapTileBlankObj		= objectTileIndex + 18
 
 extraTileDigits		= 0			; digits 0-9
 extraTileBlank		= 10			; blank tile
-extraTileDiamond	= 11			; diamond image base
-extraTileLogo		= 27			; ladybug logo tile image base
-extraTileUpper		= 63			; upper playfield bonus holders
+extraTileDiamond	= 11			; first tile of large diamond
+extraTileLogo		= 27			; first tile of ladybug logo
+extraTileUpper		= 63			; first tile of upper playfield bonus holders
 
 extraTileLeavesL	= 72			; leaves
 extraTileLeavesR	= 73
