@@ -1929,9 +1929,9 @@ bootstrap     &4800 - &48DF , 224 bytes
      08FB   7F
      08FC   6A
      08FD   55
-     08FE   3F
-     08FF   2A
-     0900   15
+     08FE   00
+     08FF   00
+     0900   00
      0901   00
 .moveSpritesDirX
      0902   00
