@@ -5,7 +5,7 @@ I've included fontmaker and pixels utilities ( C source code and compiled .exe's
 
 **A map editor is now included allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next**
 
-**Tested on the following computer models via emulators, no fancy software/hardware tricks in this game so it should work without an issue on the real hardware**\
+**Tested on the following computer models using emulators**\
 \
 B OS 1.20 using 12K of sideways ram\
 B+ 64K/128K OS 2.00 using 12K of workspace ram ( no sideways ram required )\
