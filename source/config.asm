@@ -38,7 +38,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	equb &00,&45,&00
-	equs "UNIVERSAL",chrHeart,&FF
+	equs chrHeart,"LOVEBYTE",chrHeart,&FF
 
 	equb &00,&40,&00
 	equs "ASTEROIDS ",&FF
@@ -71,8 +71,8 @@
 	equb 1					; enemy speed 0-3 (0=slower, 1=normal, 2=faster, 3=fastest)
 	equb 4					; enemy attack 0-9 (0=more random, 4=normal, 9=more attack)
 	equb 3					; lives 1-9
-	equb 1					; sound enable 0-1 (0=off, 1=on)
 	equb 1					; timer volume 0-3 (0=off, 1=low, 2=medium, 3=high)
+	equb 1					; sound enable 0-1 (0=off, 1=on)
 
 	equb keyX				; right 'X'
 	equb keyZ				; left 'Z'

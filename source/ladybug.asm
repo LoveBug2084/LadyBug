@@ -4627,11 +4627,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .optionsMin
 
-	equb  0,  0,  1,  0,  0			; minimum value for speed, attack, lives, sound, volume
+	equb  0,  0,  1,  0,  0			; minimum value for speed, attack, lives, volume, sound
 	
 .optionsMax
 
-	equb  6, 10, 10,  2,  4			; maximum value + 1 for speed, attack, lives, sound, volume
+	equb  6, 10, 10,  4,  2			; maximum value + 1 for speed, attack, lives, volume, sound
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4813,7 +4813,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr keyboardScan			; scan keyboard inputs
 
 	lda mainMenuCursor			; if the cursor is on the timer volume selection
-	cmp #7
+	cmp #6
 	bne mainMenuFunctionsExit
 	
 	lda vsyncCounter			; if vsyncCounter & 7 == 0
@@ -5293,13 +5293,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString
 	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 18 * chrRow
-	equs "SOUND", &ff
-	
+	equs "TIMER VOLUME", &ff
+
 	jsr drawString
 	equb pixels2
 	equw screenAddr + 2 + 4 * chrColumn + 19 * chrRow
-	equs "TIMER VOLUME", &ff
-
+	equs "SOUND", &ff
+	
 	jsr drawString
 	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
@@ -5357,34 +5357,31 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ora #'0'
 	jsr drawChr
 	
-	lda optionSound				; draw sound on/off
-	beq mainMenuDrawSettingsMute
-
-	jsr drawString
-	equb pixels7
-	equw screenAddr + 2 + 16 * chrColumn + 18 * chrRow
-	equs " ON", &ff
-	jmp mainMenuDrawSettingsTimerVolume
-	
-.mainMenuDrawSettingsMute
-
-	jsr drawString
-	equb pixels7
-	equw screenAddr + 2 + 16 * chrColumn + 18 * chrRow
-	equs "OFF", &ff
-
-	jsr playSoundSilence			; also mute the psg chip
-
-.mainMenuDrawSettingsTimerVolume
-	
 	jsr drawString				; draw timer volume
 	equb pixels7
-	equw screenAddr + 2 + 18 * chrColumn + 19 * chrRow
+	equw screenAddr + 2 + 18 * chrColumn + 18 * chrRow
 	equb &ff
 	
 	lda optionTimerVolume
 	ora #'0'
-	jmp drawChr				; and return
+	jsr drawChr
+
+	lda optionSound				; if sound enabled draw "ON" and return
+	beq mainMenuDrawSettingsMute
+
+	jsr drawString
+	equb pixels7
+	equw screenAddr + 2 + 16 * chrColumn + 19 * chrRow
+	equs " ON", &ff
+	rts
+	
+.mainMenuDrawSettingsMute
+
+	jsr drawString				; else draw "OFF"
+	equb pixels7
+	equw screenAddr + 2 + 16 * chrColumn + 19 * chrRow
+	equs "OFF", &ff
+	jmp playSoundSilence			; mute the sound and return
 
 
 
@@ -5468,21 +5465,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda screenRowHi, y
 	adc #hi(20 * chrColumn)
 	sta drawMapTileAddr + 1
-
-
-
-
-
-	; lda #lo(screenAddr + 1 * chrColumn + 3 * chrRow)
-	; sta drawMapTileAddr
-	; lda #hi(screenAddr + 1 * chrColumn + 3 * chrRow)
-	; sta drawMapTileAddr + 1
-	; jsr drawRandomFlower
-
-	; lda #lo(screenAddr + 20 * chrColumn + 3 * chrRow)
-	; sta drawMapTileAddr
-	; lda #hi(screenAddr + 20 * chrColumn + 3 * chrRow)
-	; sta drawMapTileAddr + 1
 
 	; continue down to drawRandomFlower
 

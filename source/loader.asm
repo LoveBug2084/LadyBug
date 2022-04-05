@@ -80,13 +80,13 @@
 
 	skip 1					; reserve space for ladybug lives
 	
-.optionSound
-
-	skip 1					; reserve space for sound off/on
-	
 .optionTimerVolume
 
 	skip 1					; reserve space for timer volume
+	
+.optionSound
+
+	skip 1					; reserve space for sound off/on
 	
 .optionKeys
 
