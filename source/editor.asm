@@ -117,7 +117,7 @@ basMaze		= &78				; maze data address
 
 .editorDrawLine
 
-	lda basMaze + 0				; store maze data adress into loop
+	lda basMaze + 0				; store maze data address into loop
 	sta editorDrawLineLeft + 1 - pageEditorOffset
 	sta editorDrawLineRight + 1 - pageEditorOffset
 	lda basMaze + 1

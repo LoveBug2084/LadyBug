@@ -9625,6 +9625,9 @@ spriteToAddrOffset	= 4			; correction factor
 	
 	incbin "img-font-vegetable.bin"		; load vegetable font into memory
 
+.miniFontBinEnd
+	skip 0
+
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------

@@ -124,8 +124,7 @@ bootstrap     &4800 - &48DF , 224 bytes
      7B80   00
      7B81   45
      7B82   00
-     7B83   2A
-     7B84   4C 4F 56 ...
+     7B83   55 4E 49 ...
      7B8C   2A
      7B8D   FF
      7B8E   00
@@ -6241,6 +6240,8 @@ bootstrap     &4800 - &48DF , 224 bytes
      29EE
 .miniFontBin
      29EE
+.miniFontBinEnd
+     2A8E
 .mapTileBin
      2A8E
 .mapTileBinEnd
