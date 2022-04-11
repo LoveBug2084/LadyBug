@@ -148,7 +148,7 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 
 
 PRINT TAB(7,4);CHR$(131);"A remake of the original";
-PRINT TAB(6,5);CHR$(129);"Universal";CHR$(131);"1981 arcade game";
+PRINT TAB(6,5);CHR$(129);"Universal 1981 arcade game";
 
 PRINT TAB(7,7);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
 
