@@ -34,9 +34,9 @@ REM ---------------------------
 
 
 
-ON ERROR PRINT TAB(0,20);:REPORT:PRINT:PRINT:CLOSE#0:END
+ON ERROR PRINT TAB(0,22);:REPORT:PRINT'"Press any key ";:K%=GET:RUN
 
-MODE 7
+MODE 7:VDU23,1,0;0;0;0;
 
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);SPC(12);"Lady Bug";SPC(14);CHR$(156)
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);SPC(12);"Lady Bug";SPC(14);CHR$(156)
@@ -103,6 +103,8 @@ PRINT:PRINT " ";CHR$(132);
 
 IF M$="Y" OR H$="Y" OR S$="Y" THEN PRINT "Done" ELSE PRINT "No changes were made"
 
-PRINT
+PRINT TAB(2,23);"Press any key ";:K%=GET:PRINT
+
+*EXEC !Boot
 
 END
