@@ -71,9 +71,9 @@
 ; settings					default settings
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb 1					; enemy speed 0-3 (0=slower, 1=normal, 2=faster, 3=fastest)
-	equb 4					; enemy attack 0-9 (0=more random, 4=normal, 9=more attack)
-	equb 3					; lives 1-9
+	equb 3					; lady bugs (lives) 1-9
+	equb 1					; enemy speed 0-5 (0=slower, 1=normal, 2=fast, 3=faster, 4=even faster, 5=crazy fast)
+	equb 4					; enemy attack 0-9 (0=more random, 4=normal, 9=more aim)
 	equb 1					; timer volume 0-3 (0=off, 1=low, 2=medium, 3=high)
 	equb 1					; sound enable 0-1 (0=off, 1=on)
 
@@ -85,7 +85,7 @@
 	equs "XZ/:"				; ascii text for keys
 
 	equb &00				; validation code, no need to calculate it here
-						; it is calculated by boot.bas and reset.bas
+						; it is calculated in game and by boot.bas, reset.bas
 
 
 

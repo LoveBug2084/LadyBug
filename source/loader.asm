@@ -68,6 +68,10 @@
 .gameSettings					; start of game settings
 	skip 0
 
+.optionLives
+
+	skip 1					; reserve space for ladybug lives
+	
 .optionEnemySpeed
 
 	skip 1					; reserve space for enemy speed
@@ -75,10 +79,6 @@
 .optionEnemyAttack
 
 	skip 1					; reserve space for enemy attack
-	
-.optionLives
-
-	skip 1					; reserve space for ladybug lives
 	
 .optionTimerVolume
 
