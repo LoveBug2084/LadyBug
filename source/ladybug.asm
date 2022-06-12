@@ -1469,10 +1469,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	sta drawSpriteY
 	jsr eraseBlock
 
-	bcc eraseSpriteExit			; exit now if coordinates were invalid
-
-.eraseSpriteTile
-
 	ldx eraseSpriteSaveX			; get sprite index
 
 	lda spritesEraseDir, x			; if sprite was moving
@@ -1578,13 +1574,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 .eraseBlock
 
 	jsr spriteToScreen			; convert sprite xy to screen address
-	bcs eraseBlockAddr
-
-.eraseBlockExit
-
-	rts					; exit if coordinates were invalid
-
-.eraseBlockAddr
 
 	lda drawSpriteY				; setup screen address
 	and #7
@@ -1653,6 +1642,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	sta eraseBlockWrite + 2
 
 	bne eraseBlockColumn			; and do it again (bne used as branch always, high byte of addr is never 0)
+
+.eraseBlockExit
+
+	rts					; return
 
 
 
@@ -3327,11 +3320,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .drawSpriteGetX
 
 	jsr spriteToScreen			; convert sprite XY to screen address
-	bcs drawSpriteGetIdAddr
-
-	jmp drawSpriteNotDrawn
-
-.drawSpriteGetIdAddr
 
 	lda drawSpriteImg			; get sprite data address from spriteImg address table
 
@@ -3449,13 +3437,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	ldy drawSpriteSaveY
 
 	rts					; return
-
-
-.drawSpriteNotDrawn
-
-	clc					; exit with not drawn status
-	bcc drawSpriteExit
-
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4063,7 +4044,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr playSoundSilence			; kill any current sounds
 
-	lda #sfxTurnstile			; play sound effect
+	lda #sfxSkull				; play sound effect
 	jsr playSound
 
 	clc					; return false
@@ -4239,7 +4220,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr spriteToAddr			; convert xy to tile map address and screen tile address
 	
-	ldy #0					; redraw 9 tile background
+	ldy #0					; redraw 9 background tiles
 	lda (tileMapAddr), y
 	jsr drawMapTile
 	iny
@@ -6682,21 +6663,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda drawSpriteX				; get X position
 
-	cmp #spriteToAddrOffset - 1		; if X >= spriteToAddrOffset - 1
-	bcs spriteToScreenCheckLower
-	
-	jmp spriteToScreenNotValid
-	
-.spriteToScreenCheckLower
-						; if X < max then continue to calcX
-						; max x position is unscaled so we need to scale up screen/sprite pixels for the test 4/3 or 1.333333333
-	cmp #(((screenWidth * 2 - spriteTileWidth + 1) * 4) / 3) + spriteToAddrOffset
-	bcc spriteToScreenCalcX
-
-	jmp spriteToScreenNotValid		; else exit
-
-.spriteToScreenCalcX
-
 	sec					; x offset correction to place sprite center at center of tileMap location
 	sbc #4 - ((16 - ((spriteTileWidth * 4) / 3)) / 2)
 
@@ -6729,13 +6695,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda drawSpriteY				; get Y coodinate
 
-						; if Y position >= max + 3 + spriteToAddrOffset then exit
-	cmp #23 * 8 + 3 + spriteToAddrOffset
-	bcc spriteToScreenCalcY
-	jmp spriteToScreenNotValid
-
-.spriteToScreenCalcY
-	
 	sec					; y offset correction to place sprite center at center of tileMap location
 	sbc #4 - ((16 - spriteTileHeight) / 2)
 	sta drawSpriteY
@@ -7269,15 +7228,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr drawSprite				; draw the sprite
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if sprite was actually drawn (not blanked or off screen)
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 .redrawSpritesGetEraseInfo
 
-	bcc redrawSpritesNext			; if result of drawSprite/drawSpriteFlipped was not drawn then skip to next sprite
-
-	lda spritesX, x				; else copy sprite info into erase list
+	lda spritesX, x				; copy sprite info into erase list
 	sta spritesEraseX, x
 	lda spritesY, x
 	sta spritesEraseY, x

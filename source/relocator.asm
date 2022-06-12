@@ -101,7 +101,7 @@
 
 .bootstrapCrtc
 
-	stx crtcAddr				; copy data to crtc
+	stx crtcAddr				; copy register values to crtc
 	lda bootstrapCrtcData + progOffset, x
 	sta crtcData
 
