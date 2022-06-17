@@ -88,6 +88,8 @@ objectModeCyan		= 0			; object modes
 objectModeRed		= 1
 objectModeYellow	= 2
 
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; pageZero game variables, flags, counters etc
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -833,7 +835,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	cmp #&0a
 	bcs chooseLettersRandom
 	
-	clc					; add object letters index
+	clc					; add object tile index (letters)
 	adc #objectTileIndex
 
 	rts					; return
@@ -2101,7 +2103,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda #sfxExtraLife			; play extra life sound effect for first level
+	lda #sfxTwinkle				; play twinkle sound effect for first level
 	jsr playSound
 
 
@@ -2702,13 +2704,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	lda #mapTileBlank			; erase skull from map
 	sta (tileMapAddr), y
 
-	lda #lo(chrRow + chrColumn)		; adjust drawMapTileAddr to skull screen address
-	clc
-	adc drawMapTileAddr
-	sta drawMapTileAddr
-	lda #hi(chrRow + chrColumn)
-	adc drawMapTileAddr + 1
-	sta drawMapTileAddr + 1
+	jsr offsetDrawMapTileAddr		; adjust mapTileAddress to be location underneath sprite center
 
 	lda #mapTileBlankObj			; erase skull from screen
 	jsr drawMapTile
@@ -4383,8 +4379,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .keyboardScanFullLoop
 
-	lda keyScanCodes, x			; get key scan code from table and check key is pressed
-	jsr keyboardScanFullKey
+	lda keyScanCodes, x			; get key scan code from table
+
+	sta viaPortA				; select key in keyboard matrix
+
+	lda viaPortA				; read key status
 
 	bmi keyboardScanFullPressed		; if pressed then exit with scancode
 
@@ -4409,15 +4408,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldx keyboardScanFullSaveX		; restore register
 
 	sec					; return true
-	rts
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.keyboardScanFullKey
-
-	sta viaPortA				; select key
-
-	lda viaPortA				; read key status and return
 	rts
 
 
@@ -5605,7 +5595,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc #hi((46 - 18) * chrColumn)
 	sta drawChrAddr + 1
 
-	lda highScorePtr			; advance to next score
+	lda highScorePtr			; advance to next score (3 bytes score, 10 bytes name, 1 byte terminator)
 	clc
 	adc #14
 	sta highScorePtr
@@ -5613,7 +5603,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	dex					; repeat until all 8 processed
 	bne drawScoreTableLoop
 
-	jsr drawString				; draw "MENU"
+	jsr drawString				; draw ">MENU<"
 	equb pixelsSpecial0
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 21 * chrRow
 	equs chrRight, &ff
@@ -5695,7 +5685,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	dey					; repeat until all pairs displayed
 	bpl drawScoreTableBlankingPrint
 	
-	lda #'0'				; draw final digit
+	lda #'0'				; draw final 0 digit
 	jsr drawChr
 
 	lda drawScoreTableBlankingColor + 1	; alternate score color
@@ -5712,21 +5702,22 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .drawScoreTableBlankingDigit
 
-	bne drawScoreTableBlankingDigitNotZero
+	bne drawScoreTableBlankingDigitNotZero	; if digit is a zero and if leading zero blanking is enabled
 	bit drawScoreTableZero
 	bmi drawScoreTableBlankingDigitNotZero
 	
-	lda #' '
+	lda #' '				; then draw a space and return
 	jmp drawChr
 
 .drawScoreTableBlankingDigitNotZero
 
-	ora #'0'
+	ora #'0'				; else draw the digit
 	jsr drawChr
 
-	lda #&ff
+	lda #&ff				; disable leading zero blanking
 	sta drawScoreTableZero
-	rts
+
+	rts					; return
 
 
 
@@ -5806,7 +5797,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #0					; deactivate game pause
 	sta pauseGame
 	
-	jsr drawHighScoreName			; draw the high score name in red
+	jsr drawHighScoreName			; redraw the high score name to replace the paused text
 
 	clc					; return false
 	rts
@@ -5817,7 +5808,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 ; nameReg				draw the name registration screen and get high score name
 ;
 ;					this is a huge mess and needs rewriting much smaller
-;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegText
@@ -6029,21 +6019,21 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegProcessAdd32
 
-	clc
+	clc					; add 32 to cursor position
 	lda nameRegCursor
 	adc #32
 	sta nameRegCursor
-	bpl nameRegProcessCursor
+	bpl nameRegProcessCursor		; branch always to processCursor
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessSub32
 
-	sec
+	sec					; sub 32 from cursor position
 	lda nameRegCursor
 	sbc #32
 	sta nameRegCursor
-	bpl nameRegProcessCursor
+	bpl nameRegProcessCursor		; branch always to processCursor
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -6063,8 +6053,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda nameRegCursor
 	sbc #8
 	sta nameRegCursor
-	bpl nameRegProcessCursor		; handle wrap around
 
+	bpl nameRegProcessCursor		; handle wrap around
 	bmi nameRegProcessAdd32
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6083,9 +6073,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta nameRegCursor
 
 	cmp #32					; handle wrap around
-	bcc nameRegProcessCursor
-
 	bcs nameRegProcessSub32
+	bcc nameRegProcessCursor
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -6101,8 +6090,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda nameRegCursor
 	sbc #1
 	sta nameRegCursor
-	bpl nameRegProcessCursor		; handle wrap around
 
+	bpl nameRegProcessCursor		; handle wrap around
 	bmi nameRegProcessAdd32
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6122,7 +6111,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	cmp #32					; handle wrap around
 	bcc nameRegProcessCursor
-
 	bcs nameRegProcessSub32
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6132,18 +6120,18 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lsr playerInput				; if start pressed
 	bcc nameRegProcessCursor
 
-	lda nameRegCursor			; if cursor = 31 (end)
+	lda nameRegCursor			; if cursor = 31 (enter name)
 	cmp #31
 	bne nameRegProcessDelete
 
-	sec					; exit with carry set (end)
+	sec					; exit with carry set (enter name)
 	rts
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessCursor
 
-	jsr nameRegCursorUpdate
+	jsr nameRegCursorUpdate			; update new cursor position
 
 	clc
 	rts
@@ -6468,7 +6456,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr addScoreDiamond			; add the diamond bonus score (bcd)
 
-	lda #sfxExtraLife			; play the extra life sound
+	lda #sfxTwinkle				; play the twinkle sound
 	jsr playSound
 
 	sec					; end the current level and return
@@ -6512,7 +6500,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ora bonusBits + 1
 	sta bonusBits + 1
 
-	lda #sfxExtraLife			; play the extra life sound
+	lda #sfxTwinkle				; play the twinkle sound
 	jsr playSound
 
 	sec					; end the current level and return
@@ -6555,7 +6543,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ora bonusBits + 0
 	sta bonusBits + 0
 
-	lda #sfxExtraLife			; play the extra life sound
+	lda #sfxTwinkle				; play the twinkle sound
 	jsr playSound
 
 	sec					; end the current level and return
@@ -8305,7 +8293,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sec					; timer = timer - 1
 	sbc #1
 	sta soundTimers, y
-	bne processSoundNext			; if timer > 0 then skip it
+	bne processSoundNext			; if timer != 0 then skip it
 	
 .processSoundGetData
 
@@ -8326,7 +8314,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	inc soundAddrPtrs, x			; inc pointer and get another byte from table
 	bne processSoundGetData
 	inc soundAddrPtrs + 1, x
-	bne processSoundGetData
+	bne processSoundGetData			; bne used here as branch always
 
 .processSoundGetTimer
 
@@ -8345,7 +8333,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	dex
 	dey
 
-	bpl processSoundLoop			; continue until all 4 channels processed
+	bpl processSoundLoop			; continue until all channels processed
 
 .processSoundExit
 
@@ -8359,7 +8347,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .playSoundSilence
 
-	lda #0					; shut down all software channels
+	lda #0					; shut down all software sound channels
 	sta soundTimers + 0
 	sta soundTimers + 1
 	sta soundTimers + 2
@@ -8387,13 +8375,14 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .playSoundTimer				play the timer sound at the correct volume
+; .playSoundTimer				play the enemy timer sound at the correct volume
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundTimer
 
 	lda optionTimerVolume			; if optionTimerVolume != 0
 	bne playSoundTimerVolume
+
 	rts
 	
 .playSoundTimerVolume
@@ -8472,7 +8461,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	jmp playSoundNow			; finally play the sound
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; channels 1 to 5 low priorty
+	; channels 1 to 5 low priorty (sound effects)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundLowPriority				; channels 1 to 5 (sound effects)
@@ -8659,13 +8648,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .checkForObjectsTile
 
-	lda #lo(chrRow + chrColumn)		; adjust drawMapTileAddr to be under ladybug
-	clc
-	adc drawMapTileAddr
-	sta drawMapTileAddr
-	lda #hi(chrRow + chrColumn)
-	adc drawMapTileAddr + 1
-	sta drawMapTileAddr + 1
+	jsr offsetDrawMapTileAddr		; adjust drawMapTileAddress to be location underneath sprite center
 
 	ldy #24					; read tile at ladybug location
 	lda (tileMapAddr), y
@@ -8679,7 +8662,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	cmp #mapTileHeart			; if tile = heart then use heart function
 	beq checkForObjectsHeart
 
-	cmp #mapTileS				; if tile >= mapTileS and < mapTileR + 1
+	cmp #mapTileS				; if tile >= mapTileS and < mapTileR + 1 (letter tiles SPECIALEXTR)
 	bcc checkForObjectTileExit
 	
 	cmp #mapTileR + 1
@@ -8714,7 +8697,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .checkForObjectsSkull
 
-	lda shield				; if we are vulnerable
+	lda shield				; if we are vulnerable (skull shield = 0)
 	bne checkForObjectSkullExit
 
 	lda #mapTileBlank			; replace skull with blank tile
@@ -8953,7 +8936,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta pauseLadybug
 	sta pauseEnemy
 
-	rts
+	rts					; return
 
 
 
@@ -9346,6 +9329,24 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	lda #mapTileBlank			; draw blank tile
 	jmp drawMapTile				; and exit
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; offsetDrawMapTileAddr				add offset to drawMapTileAddr to 1 character and 1 row to be under center of sprite
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.offsetDrawMapTileAddr
+
+	lda #lo(chrRow + chrColumn)		; offset drawMapTileAddr to be under sprite
+	clc
+	adc drawMapTileAddr
+	sta drawMapTileAddr
+	lda #hi(chrRow + chrColumn)
+	adc drawMapTileAddr + 1
+	sta drawMapTileAddr + 1
+
+	rts					; return
 
 
 

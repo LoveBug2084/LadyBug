@@ -32,7 +32,7 @@
 ; game sound effects and music tables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	sfxExtraLife		= 0
+	sfxTwinkle		= 0
 	sfxEndLevel		= 1
 	sfxTimerLow		= 2
 	sfxTimerMedium		= 3
@@ -53,7 +53,7 @@
 
 .sfxAddrTable
 
-	equw sfxDataExtraLife
+	equw sfxDataTwinkle
 	equw sfxDataEndLevel
 	equw sfxDataTimerLow
 	equw sfxDataTimerMedium
@@ -72,7 +72,7 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.sfxDataExtraLife
+.sfxDataTwinkle
 
 	; sfx channel 0, psg channel 0
 	

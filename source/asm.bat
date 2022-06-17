@@ -1,5 +1,4 @@
 @echo off
-set bbcDiskName=LadyBug
 echo.
 utils\fontmaker  		img-font.raw													img-font.bin
 echo.
@@ -38,8 +37,9 @@ set /p build=<build.txt
 set "buildText=00000%build%"
 set "buildText=%buildText:~-6%"
 echo %buildText%>build.bin
+set /p projectName=<projectname.txt
 echo.
-beebasm -title %bbcDiskName% -v -i build.asm -do %bbcDiskName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
+beebasm -title %projectName% -v -i build.asm -do %projectName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 echo.
 echo build %buildText%

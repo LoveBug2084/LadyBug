@@ -191,11 +191,11 @@ PRINT TAB(2,9);CHR$(132);"the enemy attack paths";
 PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply";
 PRINT TAB(2,12);CHR$(133);"an items score value by";CHR$(134);"x2 x3 x5";
 
-PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"spelling";
-PRINT TAB(2,15);CHR$(131);"""EXTRA""";CHR$(129);"for 2 extra lives";
+PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow";CHR$(129);"letters to spell";
+PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for 2 extra lives";
 
-PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"spelling";
-PRINT TAB(2,18);CHR$(129);"""SPECIAL""";CHR$(134);"for 200000 points plus a";
+PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red";CHR$(134);"letters to spell";
+PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(134);"for 200000 points plus a";
 PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds";
 
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
@@ -215,11 +215,11 @@ NEXT R%
 
 PRINT TAB(34,3);CHR$(131);"2";:*FX 19
 
-PRINT TAB(2,5);CHR$(130);"A special diamond bonus worth";:*FX 19
-PRINT TAB(2,6);CHR$(133);"1000000 points";CHR$(130);"will be awarded if";:*FX 19
-PRINT TAB(2,7);CHR$(130);"you can reach";CHR$(133);"level 6";CHR$(130);"while only";:*FX 19
-PRINT TAB(2,8);CHR$(130);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
-PRINT TAB(2,9);CHR$(130);"and without losing a life";:*FX 19
+PRINT TAB(2,5);CHR$(133);"A special diamond bonus worth";:*FX 19
+PRINT TAB(2,6);CHR$(131);"1 Million points";CHR$(133);"will be awarded if";:*FX 19
+PRINT TAB(2,7);CHR$(133);"you can reach";CHR$(131);"level 6";CHR$(133);"while only";:*FX 19
+PRINT TAB(2,8);CHR$(133);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
+PRINT TAB(2,9);CHR$(133);"and";CHR$(131);"without losing a life";:*FX 19
 
 PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);"up";CHR$(129);"and";CHR$(131);"down";CHR$(129);"controls to";:*FX 19
 PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"return";CHR$(129);"to";:*FX 19
