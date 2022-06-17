@@ -2566,10 +2566,6 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 	equb -1, 1, 0, 0			; Y up down left right
 	
-.moveSpritesAvoidSkull
-
-	equb 1, 47, 23, 25			; direction offset for avoiding skulls
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSprites
