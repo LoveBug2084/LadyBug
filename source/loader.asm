@@ -248,7 +248,7 @@ zpAddr 			= 0
 	lda #&7f				; disable all via interrupts (simulate power on state)
 	sta viaIer
 	
-	jmp (resetVector)			; reboot the beeb
+	jmp (resetVector)			; run the regular reset code
 
 
 
@@ -274,7 +274,7 @@ continueBplus		= &d973			; os rom reset code
 	sta zpAddr + 1
 	stx zpAddr
 	txa
-	jmp continueBplus
+	jmp continueBplus			; run B+ reset code
 
 
 
@@ -282,7 +282,7 @@ continueBplus		= &d973			; os rom reset code
 ; Master reset clear 0000-00ff, 0200-7fff, c000-dfff (twice, once with shadow ram selected and then with main ram selected)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-masterMos320 = &e364				; reset vector @ fffc
+masterMos320 = &e364				; reset vector @ fffc (used to check mos version number)
 masterMos350 = &e374
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -383,7 +383,7 @@ masterMos350 = &e374
 
 .swrCleanResetEnd
 
-	cpx #&e0				; if page != &e0 then wipe page
+	cpx #&e0				; repeat until we get to &e000
 	bne swrCleanResetWipe
 
 	lda acccon				; test bit 2 of acccon and save test result (shadow ram select)
@@ -519,8 +519,8 @@ align &100
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-screenCenter	= &7d90
-screenCenterY	= &7e71
+screenCenter	= &7d90				; start address of center block to erase for messages
+screenCenterY	= &7e71				; address of tail of the 'y' below the center block that also needs to be erased
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

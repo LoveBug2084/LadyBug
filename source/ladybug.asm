@@ -419,13 +419,13 @@ soundChannels		= 6			; number of software defined sound channels
 ; cleanResetMaster320				page in bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-continueMaster320	= &8073			; mos 3.20 entry point
+continueMaster320	= &8073			; master 3.20 entry point
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .cleanResetMaster320
 
-	lda #&0f				; page in extra os code
+	lda #&0f				; page in extra os code at 8000
 	sta bankSelectCopy
 	sta bankSelect
 	
@@ -437,7 +437,7 @@ continueMaster320	= &8073			; mos 3.20 entry point
 ; cleanResetMaster350				page in extra mos code at fc00, page in bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-continueMaster350	= &fc76			; mos 3.50 entry point
+continueMaster350	= &fc76			; master 3.50 entry point
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -458,13 +458,13 @@ continueMaster350	= &fc76			; mos 3.50 entry point
 ; cleanResetCompact				page in bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-continueCompact		= &8068			; os rom reset code
+continueCompact		= &8068			; master compact entry point
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .cleanResetCompact
 
-	lda #&0f				; page in extra os code
+	lda #&0f				; page in extra os code at 8000
 	sta bankSelectCopy
 	sta bankSelect
 	
