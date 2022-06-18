@@ -1014,7 +1014,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	cpy #11
 	bne initPlayfieldMiddleRead
 	
-	tya					; move map address forward 11 bytes
+	tya					; move maze address forward 11 bytes to next row
 	clc
 	adc initPlayfieldMiddleRead + 1
 	sta initPlayfieldMiddleRead + 1
@@ -1022,7 +1022,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	adc initPlayfieldMiddleRead + 2
 	sta initPlayfieldMiddleRead + 2
 	
-	clc					; move buffer address forward 23 bytes
+	clc					; move map address forward 23 bytes to next row
 	lda initPlayfieldMiddleWriteLeft + 1
 	adc #23
 	sta initPlayfieldMiddleWriteLeft + 1
@@ -1124,6 +1124,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; tileMapfindDot				find a random tileMap location that contains a dot and isnt near a turnstile
+;						if location hasnt been found within 1 second then timeout and display an error
+;						(bad maze data, user has created a maze that doesnt contain enough spaces for objects)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1132,12 +1134,20 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.tileMapfindDot
+.tileMapFindDot
+
+	lda #1 * pause				; set timeout for 1 second (bad maze data)
+	sta pauseCounter
+
+.tileMapFindDotLoop
+
+	lda pauseCounter			; if timed out then display the error message
+	beq tileMapFindDotError
 
 	jsr random				; get random value 0-255 and mask to become 0-28 in steps of 4
 	and #&1c
 	cmp #21					; if its higher than 20 then try again
-	bcs tileMapfindDot
+	bcs tileMapFindDotLoop
 	
 	tay					; convert to tileMap row address
 	lda tileMapRowsLo, y
@@ -1162,31 +1172,31 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	ldy #24					; if center tile does not contain a dot then try again
 	lda (tileMapAddr), y
 	cmp #mapTileDot
-	bne tileMapfindDot
+	bne tileMapFindDotLoop
 
 	ldy #1					; if center top tile contains turnstile then try again
 	lda (tileMapAddr), y
 	and #&c0
 	eor #&80
-	beq tileMapfindDot
+	beq tileMapFindDotLoop
 	
 	ldy #47					; if center bottom tile contains turnstile then try again
 	lda (tileMapAddr), y
 	and #&c0
 	eor #&80
-	beq tileMapfindDot
+	beq tileMapFindDotLoop
 	
 	ldy #23					; if center left tile contains turnstile then try again
 	lda (tileMapAddr), y
 	and #&c0
 	eor #&80
-	beq tileMapfindDot
+	beq tileMapFindDotLoop
 
 	ldy #25					; if right center tile contains turnstile then try again
 	lda (tileMapAddr), y
 	and #&c0
 	eor #&80
-	beq tileMapfindDot
+	beq tileMapFindDotLoop
 	
 	clc					; location found so adjust address to center tile that contained the dot
 	lda #24
@@ -1198,6 +1208,26 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 .tileMapFindDotExit
 
 	rts					; return with tile address
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.tileMapFindDotError
+
+	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
+
+	jsr drawString				; display error message
+	equb pixels1
+	equw screenAddr + 2 + 4 * chrColumn + 11 * chrRow
+	equs "BAD MAZE LAYOUT", &ff
+
+	jsr drawString
+	equb pixels1
+	equw screenAddr + 2 + 2 * chrColumn + 13 * chrRow
+	equs "NO ROOM FOR OBJECTS", &ff
+
+.tileMapFindDotErrorLoop
+
+	jmp tileMapFindDotErrorLoop
 
 
 
@@ -1217,7 +1247,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .placeTileMapHeartsLoop
 
-	jsr tileMapfindDot			; pick a random tileMap location containing a dot and isnt near a turnstile
+	jsr tileMapFindDot			; pick a random tileMap location containing a dot and isnt near a turnstile
 
 	lda #mapTileHeart			; replace it with a heart
 	ldy #0
@@ -1246,7 +1276,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .placeTileMapLettersLoop
 
-	jsr tileMapfindDot			; pick a random tileMap location containing a dot and isnt near a turnstile
+	jsr tileMapFindDot			; pick a random tileMap location containing a dot and isnt near a turnstile
 
 	lda levelLetters - 1, x			; replace dot with a letter from the levelLetters table
 	ldy #0					; use levelLetters - 1 address because x index is 3,2,1 not 2,1,0
@@ -1275,7 +1305,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .placeTileMapSkullsLoop
 
-	jsr tileMapfindDot			; pick a random tileMap location containing a dot thats not next to a turnstile
+	jsr tileMapFindDot			; pick a random tileMap location containing a dot thats not next to a turnstile
 
 	lda #mapTileSkull			; replace it with a skull
 	ldy #0
@@ -2000,23 +2030,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; pauseWait					; wait n * 25th's of a second
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.pauseWait
-
-	sta pauseCounter			; setup wait time
-	
-.pauseWaitLoop
-
-	bit pauseCounter			; wait until counter hits 0
-	bne pauseWaitLoop
-
-	rts
-
-
-
 ;*****************************************************************************************************************************************************
 ;
 ; main						entry point to program
@@ -2030,8 +2043,13 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr swrInitScreen			; erase screen, setup colors
 	
 	lda #pause * 0.5			; wait 0.5 seconds
-	jsr pauseWait
+	sta pauseCounter
 	
+.mainPauseLoop
+
+	lda pauseCounter			; wait until counter hits 0
+	bne mainPauseLoop
+
 	lda #6					; enable display
 	sta crtcAddr
 	lda #screenHeight
