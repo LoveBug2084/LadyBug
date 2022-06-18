@@ -1041,11 +1041,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	jsr placeTileMapSkulls			; place the correct number of skull at random positions in the tileMap (replacing dots)
 
-	sec					; levelEdibles -= levelSkulls (skulls replaced dots but are not edible so subtract them from the total)
-	lda levelEdibles
-	sbc levelSkulls
-	sta levelEdibles
-
 	; continue on to initTimerTiles below
 
 
@@ -1124,25 +1119,26 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; tileMapfindDot				find a random tileMap location that contains a dot and isnt near a turnstile
-;						if location hasnt been found within 1 second then timeout and display an error
+;						if location hasnt been found within 0.1 second then timeout
 ;						(bad maze data, user has created a maze that doesnt contain enough spaces for objects)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			tileMapAddr		contains the address of the dot in the tileMap
+;			carry			set if location found, clear if not found (timed out)
 ;			A			destroyed
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .tileMapFindDot
 
-	lda #1 * pause				; set timeout for 1 second (bad maze data)
+	lda #0.1 * pause			; set timeout for 0.1 seconds (bad maze data)
 	sta pauseCounter
 
 .tileMapFindDotLoop
 
-	lda pauseCounter			; if timed out then display the error message
-	beq tileMapFindDotError
+	lda pauseCounter			; if timed out then exit with failed status
+	beq tileMapFindDotFailed
 
 	jsr random				; get random value 0-255 and mask to become 0-28 in steps of 4
 	and #&1c
@@ -1207,27 +1203,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .tileMapFindDotExit
 
-	rts					; return with tile address
+	sec					; return with location found status and tile address
+	rts					; and tile address
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+.tileMapFindDotFailed
 
-.tileMapFindDotError
-
-	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
-
-	jsr drawString				; display error message
-	equb pixels1
-	equw screenAddr + 2 + 4 * chrColumn + 11 * chrRow
-	equs "BAD MAZE LAYOUT", &ff
-
-	jsr drawString
-	equb pixels1
-	equw screenAddr + 2 + 2 * chrColumn + 13 * chrRow
-	equs "NO ROOM FOR OBJECTS", &ff
-
-.tileMapFindDotErrorLoop
-
-	jmp tileMapFindDotErrorLoop
+	clc					; return with location failed status
+	rts
 
 
 
@@ -1249,6 +1231,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot and isnt near a turnstile
 
+	bcc placeTileMapHeartsExit		; if location not found (bad maze design) then exit
+
 	lda #mapTileHeart			; replace it with a heart
 	ldy #0
 	sta (tileMapAddr), y
@@ -1256,6 +1240,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	dex					; repeat until all hearts placed
 	bne placeTileMapHeartsLoop
 	
+.placeTileMapHeartsExit
+
 	rts					; return
 
 
@@ -1278,12 +1264,16 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot and isnt near a turnstile
 
+	bcc placeTileMapLettersExit		; if location not found (bad maze design) then exit
+
 	lda levelLetters - 1, x			; replace dot with a letter from the levelLetters table
 	ldy #0					; use levelLetters - 1 address because x index is 3,2,1 not 2,1,0
 	sta (tileMapAddr), y
 	
 	dex					; repeat until all letters placed
 	bne placeTileMapLettersLoop
+
+.placeTileMapLettersExit
 
 	rts					; return
 
@@ -1307,13 +1297,21 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot thats not next to a turnstile
 
+	bcc placeTileMapSkullsExit		; if location not found (bad maze design) then exit
+
 	lda #mapTileSkull			; replace it with a skull
 	ldy #0
 	sta (tileMapAddr), y
 	
+	dec levelEdibles			; and decrement number of edible objects
+
+.placeTileMapSkullsNext
+
 	dex					; repeat until all skulls placed
 	bne placeTileMapSkullsLoop
 	
+.placeTileMapSkullsExit
+
 	rts					; return
 
 
