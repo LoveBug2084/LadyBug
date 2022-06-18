@@ -156,7 +156,7 @@ PRINT TAB(7,7);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
 
 PRINT TAB(16,10);"Options";
 
-PRINT TAB(4,13);CHR$(130);"Press";CHR$(133);"Return";CHR$(130);"to play";CHR$(129);"Lady Bug";
+PRINT TAB(4,13);CHR$(130);"Press";CHR$(129);"RETURN";CHR$(130);"to play";CHR$(129);"Lady Bug";
 
 PRINT TAB(4,15);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
 
@@ -232,7 +232,7 @@ PRINT TAB(2,17);CHR$(131);"pause, move";CHR$(129);"Lady Bug";CHR$(131);"to unpau
 PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"ESC";CHR$(133);"to quit the current game";:*FX 19
 
 PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";:*FX 19
-PRINT TAB(2,22);CHR$(134);"high scores";CHR$(132);"and";CHR$(134);"game settings";
+PRINT TAB(2,22);CHR$(135);"high scores";CHR$(132);"and";CHR$(135);"game settings";
 
 PROCwaitReturn(360000)
 

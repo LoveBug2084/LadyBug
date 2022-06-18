@@ -5461,7 +5461,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr random				; pick random number 0,4,8,12
 	and #12
-	tay
+
+	tay					; use as index for flower tile
 
 	lda drawBonusGraphicsTile, y		; draw top left
 	jsr drawExtraTile
