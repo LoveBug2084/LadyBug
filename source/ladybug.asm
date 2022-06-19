@@ -1120,7 +1120,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; tileMapfindDot				find a random tileMap location that contains a dot and isnt near a turnstile
 ;						if location hasnt been found within 0.1 second then timeout
-;						(bad maze data, user has created a maze that doesnt contain enough spaces for objects)
+;						(bad maze design, not enough spaces for objects)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1132,7 +1132,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .tileMapFindDot
 
-	lda #0.1 * pause			; set timeout for 0.1 seconds (bad maze data)
+	lda #0.1 * pause			; set timeout for 0.1 seconds (bad maze design)
 	sta pauseCounter
 
 .tileMapFindDotLoop
