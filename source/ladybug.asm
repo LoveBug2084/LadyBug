@@ -7137,13 +7137,13 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	beq redrawSpritesEraseSprite		; then we must ignore the sprite y and do an emergency erase
 						; otherwise part of the sprite will be left on screen just below the boundary crossing
 
-	lda spritesX, x				; store sprite x for drawing
+	lda spritesX, x				; store sprite x for drawing and erasing
 	sta drawSpriteX
-	sta spritesEraseX, x			; also store into list for later erasure
+	sta spritesEraseX, x
 	
-	lda spritesY, x				; store sprite y for drawing
+	lda spritesY, x				; store sprite y for drawing and erasing
 	sta drawSpriteY
-	sta spritesEraseY, x			; also store into list for later erasure
+	sta spritesEraseY, x
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; calculate animation img offset

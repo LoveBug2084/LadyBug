@@ -1,7 +1,7 @@
 @echo off
-set /p projectName=<projectname.txt
-set /p backupDir=<build.bin
-echo creating \backup\%projectName%\%backupDir%
-mkdir \backup\%projectName%\%backupDir% > nul
-echo copying project to \backup\%projectName%\%backupDir%
-xcopy *.* \backup\%projectName%\%backupDir% /y /h /s /e > nul
+set /p bbcProjectName=<projectname.txt
+set /p bbcProjectBuildBin=<build.bin
+echo creating \backup\%bbcProjectName%\%bbcProjectBuildBin%
+mkdir \backup\%bbcProjectName%\%bbcProjectBuildBin% > nul
+echo copying project to \backup\%bbcProjectName%\%bbcProjectBuildBin%
+xcopy *.* \backup\%bbcProjectName%\%bbcProjectBuildBin% /y /h /s /e > nul

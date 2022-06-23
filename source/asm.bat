@@ -33,16 +33,16 @@ echo.
 utils\pixels				img-enemy8.raw								10	14	img-enemy8.bin
 echo.
 utils\pixels				img-angel.raw									10	14	img-angel.bin
-set /p build=<build.txt
-set "buildText=00000%build%"
-set "buildText=%buildText:~-6%"
-echo %buildText%>build.bin
-set /p projectName=<projectname.txt
+set /p bbcProjectBuildText=<build.txt
+set "bbcProjectBuildBin=00000%bbcProjectBuildText%"
+set "bbcProjectBuildBin=%bbcProjectBuildBin:~-6%"
+echo %bbcProjectBuildBin%>build.bin
+set /p bbcProjectName=<projectname.txt
 echo.
-beebasm -title %projectName% -v -i build.asm -do %projectName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
+beebasm -title %bbcProjectName% -v -i build.asm -do %bbcProjectName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 echo.
-echo build %buildText%
+echo build %bbcProjectBuildBin%
 echo.
-set /a build+=1
-echo %build%>build.txt
+set /a bbcProjectBuildText+=1
+echo %bbcProjectBuildText%>build.txt
