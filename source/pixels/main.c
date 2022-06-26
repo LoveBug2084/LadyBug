@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 // Lady Bug arcade style video game for the BBC Computer range based on the original arcade game by universal 1981
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
-// Copyright (C) 2021 LoveBug https://lovebug.ml
+// Copyright (C) 2021 LoveBug https://lovebyte.eu.org
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	// check for duplicate file names
 	if(strcmp(argv[1], argv[4]) == 0)
 	{
-		fprintf(stderr, "**** issue **** duplicate file names\n");
+		fprintf(stderr, "\n**** issue **** duplicate file names\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 	FILE *rawInputFile = fopen(rawInputName, "rb");
 	if(rawInputFile == NULL)
 	{
-		fprintf(stderr, "**** issue **** error opening %s\n", rawInputName);
+		fprintf(stderr, "\n**** issue **** error opening %s\n", rawInputName);
 		exit(EXIT_FAILURE);
 	}
 
@@ -85,13 +85,13 @@ int main(int argc, char *argv[])
 	int rawImages = rawInputSize / (imageWidth * imageHeight);
 
 	// display info
-	printf("%d Images read from %s\n", rawImages, rawInputName);
+	printf("%d Images read from %s, ", rawImages, rawInputName);
 
 	// open binOutputName for writing
 	FILE *binOutputFile = fopen(binOutputName, "wb");
 	if(binOutputFile == NULL)
 	{
-		fprintf(stderr, "**** issue **** error creating %s\n", binOutputName);
+		fprintf(stderr, "\n**** issue **** error creating %s\n", binOutputName);
 		exit(EXIT_FAILURE);
 	}
 
