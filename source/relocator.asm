@@ -108,7 +108,7 @@
 	dex					; until done
 	bpl bootstrapCrtc
 
-	lda #&f4				; put ula into mode 2
+	lda #&f4				; put ula into 16 color mode
 	sta ulaMode
 
 	lda acccon				; disable shadow ram

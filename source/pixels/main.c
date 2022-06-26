@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 	int rawImages = rawInputSize / (imageWidth * imageHeight);
 
 	// display info
-	printf("%d Images read from %s, ", rawImages, rawInputName);
+	printf("%d Images %s -> ", rawImages, rawInputName);
 
 	// open binOutputName for writing
 	FILE *binOutputFile = fopen(binOutputName, "wb");
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 	fclose(binOutputFile);
 
 	// were done
-	printf("%s Created\n", binOutputName);
+	printf("%s\n", binOutputName);
 
 	// exit
 	exit(EXIT_SUCCESS);
