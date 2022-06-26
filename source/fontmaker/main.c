@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 		printf("----------------------------------------------------------\n");
 		printf(" fontmaker by LoveBug\n");
 		printf("----------------------------------------------------------\n\n");
-		printf("Usage: fontmaker rawInput fontOutput\n\n");
+		printf("Usage: fontmaker rawInputName binOutputName\n\n");
 		exit(EXIT_FAILURE);
 	}
 

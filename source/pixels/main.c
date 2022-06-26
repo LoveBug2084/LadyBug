@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 		printf("----------------------------------------------------------\n");
 		printf(" pixels by LoveBug\n");
 		printf("----------------------------------------------------------\n\n");
-		printf("Usage: pixels rawInput imageWidth imageHeight binOutput\n\n");
+		printf("Usage: pixels rawInputName imageWidth imageHeight binOutputName\n\n");
 		exit(EXIT_FAILURE);
 	}
 
