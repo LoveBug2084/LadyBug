@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 	int rawImages = rawInputSize / (imageWidth * imageHeight);
 
 	// display info
-	printf("%d Images %s -> ", rawImages, rawInputName);
+	printf("%d images %s -> ", rawImages, rawInputName);
 
 	// open binOutputName for writing
 	FILE *binOutputFile = fopen(binOutputName, "wb");

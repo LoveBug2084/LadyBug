@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 	int rawCharacters = rawInputSize / 36;
 
 	// display info
-	printf("%d Characters %s -> ", rawCharacters, rawInputName);
+	printf("%d images %s -> ", rawCharacters, rawInputName);
 
 	// open fontOutputName for writing
 	FILE *fontOutputFile = fopen(fontOutputName, "wb");
