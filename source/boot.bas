@@ -45,6 +45,8 @@ M%=&69
 ON ERROR PROCerror
 
 PROCreadConfig
+up$=FNkey(CHR$(C%?&7C))
+down$=FNkey(CHR$(C%?&7B))
 
 PROCintro
 
@@ -221,7 +223,7 @@ PRINT TAB(2,7);CHR$(133);"you can reach";CHR$(131);"level 6";CHR$(133);"while on
 PRINT TAB(2,8);CHR$(133);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
 PRINT TAB(2,9);CHR$(133);"and";CHR$(131);"without losing a life";:*FX 19
 
-PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);": UP";CHR$(129);"and";CHR$(131);"/ DOWN";CHR$(129);"keys to";:*FX 19
+PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);up$;CHR$(129);"and";CHR$(131);down$;CHR$(129);"keys to";:*FX 19
 PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"RETURN";CHR$(129);"to";:*FX 19
 PRINT TAB(2,13);CHR$(129);"adjust the game settings or";:*FX 19
 PRINT TAB(2,14);CHR$(129);"redefine the keys";:*FX 19
@@ -340,8 +342,7 @@ ENDPROC
 DEF PROCreadConfig
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-
-IF F%?2<>V% THEN FOR Z%=&00 TO &7D:Z%?C%=0:NEXT Z%:ENDPROC
+IF F%?2<>V% THEN OSCLI("LOAD Config"):ENDPROC
 
 P%=&7B00
 [OPT 0
@@ -369,12 +370,8 @@ ENDPROC
 
 DEF PROCsaveConfig
 
-V%=0
-FOR Z%=&00 TO &7C
-V%=(V%+(Z%?C% EOR M%)) AND &FF
-NEXT Z%
-
-IF V%<>C%?&7D THEN OSCLI("LOAD Config"):ENDPROC
+V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
+IF F%?2<>V% THEN ENDPROC
 
 OSCLI("SAVE Config " + STR$~(&FF0000 + C%) + " +7E")
 
@@ -425,3 +422,14 @@ UNTIL k$=CHR$(13) OR k$="I" OR k$="E" OR k$="W" OR k$="R"
 IF k$<>"" THEN =k$
 
 =CHR$(13)
+
+
+
+DEF FNkey(k$)
+
+IF k$="<" THEN ="UP"
+IF k$="=" THEN ="DOWN"
+IF k$=">" THEN ="LEFT"
+IF k$="?" THEN ="RIGHT"
+
+=k$
