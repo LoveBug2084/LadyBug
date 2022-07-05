@@ -22,6 +22,8 @@
 
 	include "constants.asm"			; global constants
 
+	include "variables.asm"			; zero page variables, counters, flags etc
+
 	include "!boot.asm"			; generate the !Boot file
 
 	include "config.asm"			; default game configs and high score table
@@ -64,7 +66,7 @@
 
 	putbasic	"editor.bas", "$.Editor"
 
-	save		"E.Code", editorStart, editorEnd, &ffffff, &ff0000 + editorStart
+	save		"E.Code", editorStart, editorEnd, &ffffff, 0
 
 	putfile		"img-editor.bin", "E.Tiles", 0, &ffffff
 

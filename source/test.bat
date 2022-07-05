@@ -26,7 +26,7 @@ echo %bbcProjectBuildBin%>build.bin
 beebasm -title %bbcProjectName% -v -i build.asm -do %bbcProjectName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 echo.
-set /a bbcProjectBuildText+=1
-echo %bbcProjectBuildText%>build.txt
+rem set /a bbcProjectBuildText+=1
+rem echo %bbcProjectBuildText%>build.txt
 echo %bbcProjectName% build %bbcProjectBuildBin%
 call run.bat

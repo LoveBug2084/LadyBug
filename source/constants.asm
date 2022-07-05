@@ -25,6 +25,61 @@ magicNumber		= &69			; used for random seed, validation generation, swr test
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; game constants
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+spritesTotal		= 5			; total number of sprites in game (1 for lady bug and 4 for enemies)
+
+spritesAnimationSpeed	= 8			; number of vsyncs per animation frame (6.25Hz)
+
+ladybugEnemyRange	= 6			; range allowed between enemy and ladybug to detect as a hit
+
+frame			= 50			; 1 second = 50 * 50Hz vsync frames
+pause			= 25			; 1 second pause = 25 * 25Hz
+
+escTime			= frame * 2.00		; hold esc for 2.00 seconds to quit game
+
+levelIntroTime		= pause * 3.00		; 3.00 seconds level intro screen time
+
+ladybugEntryTime	= pause * 2.40		; 2.40 seconds timer pause while ladybug enters the game
+
+ladybugDeathTime	= 255			; maximum pause time, ladybug is unpaused at end of death sequence/intro
+ladybugDeathFlashTime	= frame * 0.50		; ladybug flashes for 0.50 seconds during death
+ladybugDeathWaitTime	= frame * 0.80		; ladybug waits as an angel 0.80 seconds before floating
+
+endLevelTime		= pause * 1.00		; 1.00 seconds pause during end of level sound
+
+vegetableLadybugTime	= pause * 0.60		; 0.60 second ladybug pause when ladybug collects vegetable
+vegetableEnemyTime	= pause * 6.50		; 6.50 second enemy pause when ladybug collects vegetable
+
+objectTime		= pause * 0.64		; 0.64 second ladybug and enemy pause while collecting letter and heart object
+
+gameOverTime		= pause * 3.00		; 3.00 seconds game over screen
+
+nameRegTimer		= frame * 1.00		; 1.00 second timer tick speed during name entry
+
+letterBonusTime		= pause * 1.50		; 1.50 seconds pause during letter bonus sound
+
+bonusTime		= pause * 7.00		; 7.00 seconds special/extra/diamond bonus screen time
+
+specialBonusScore	= &02			; special bonus 200,000 points
+specialBonusShield	= &06			; special bonus skull shield for 6 levels
+
+extraBonusLives		= &02			; extra bonus 2 more lives
+
+diamondBonusScore	= &10			; diamond bonus score 1,000,000 points
+
+objectModeCyanTime	= pause * 7.00		; 7.00 second cyan objects
+objectModeRedTime	= pause * 0.60		; 0.60 second red objects
+objectModeYellowTime	= pause * 2.50		; 2.50 second yellow objects
+
+objectModeCyan		= 0			; object modes
+objectModeRed		= 1
+objectModeYellow	= 2
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; special ascii chr reassignment
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -434,6 +489,27 @@ crtcAddr		= &fe00			; 6845 address
 crtcData		= &fe01			; 6845 data
 ulaMode			= &fe20			; ula video mode
 ulaPalette		= &fe21			; ula color palette
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; analogue and digital joystick
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+adcControlB		= &fec0			; udp 7002 control register (model b/b+)
+adcHighB		= &fec1			; udp 7002 high byte of analogue data (model b/b+)
+adcLowB			= &fec2			; udp 7002 low byte of analogue data (model b/b+)
+
+adcControlM		= &fe18			; udp 7002 control register (master 128)
+adcHighM		= &fe19			; udp 7002 high byte of analogue data (master 128)
+adcLowM			= &fe1a			; udp 7002 low byte of analogue data (master 128)
+
+joystickFire		= &01			; analogue and digital joystick fire button
+
+joystickDigitalLeft	= &02			; digital joystick left
+joystickDigitalDown	= &04			; digital joystick down
+joystickDigitalUp	= &08			; digital joystick up
+joystickDigitalRight	= &10			; digital joystick right
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

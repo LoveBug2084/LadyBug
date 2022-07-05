@@ -135,8 +135,75 @@
 	sta cleanResetValidation + progOffset
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup joystick stuff
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	lda joystickEnable			; save joystick enable flag for relocation
+	sta joystickEnable + progOffset
+
+	beq bootstrapRelocate			; if its keyboard only then skip joystick setup
+
+	lda viaPortDdrB				; set joystick digital inputs
+	and #&e0
+	sta viaPortDdrB
+
+	lda joystickEnable			; if analogue joystick was selected then set that up
+	cmp #1
+	beq bootstrapJoystickAnalogue
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup digital joystick
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.bootstrapJoystickDigital
+
+	jmp bootstrapRelocate			; no digital joystick code written yet, skip it
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup analogue joystick addresses for b/b+ or master
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.bootstrapJoystickAnalogue
+
+	lda machineType				; check if its a master 128
+	cmp #6
+	beq bootstrapJoystickAnalogueMaster
+	
+	lda #lo(adcHighB)			; setup b/b+ adc addresses
+	sta joystickAnalogueChannelRead + 1 + progOffset
+	lda #hi(adcHighB)
+	sta joystickAnalogueChannelRead + 2 + progOffset
+	
+	lda #lo(adcControlB)
+	sta joystickAnalogueControlRead + 1 + progOffset
+	sta joystickAnalogueControlWrite + 1 + progOffset
+	lda #hi(adcControlB)
+	sta joystickAnalogueControlRead + 2 + progOffset
+	sta joystickAnalogueControlWrite + 2 + progOffset
+
+	bne bootstrapRelocate			; done, do relocation (bne used as branch always)
+
+.bootstrapJoystickAnalogueMaster
+
+	lda #lo(adcHighM)			; setup master adc addresses
+	sta joystickAnalogueChannelRead + 1 + progOffset
+	lda #hi(adcHighM)
+	sta joystickAnalogueChannelRead + 2 + progOffset
+	
+	lda #lo(adcControlM)
+	sta joystickAnalogueControlRead + 1 + progOffset
+	sta joystickAnalogueControlWrite + 1 + progOffset
+	lda #hi(adcControlM)
+	sta joystickAnalogueControlRead + 2 + progOffset
+	sta joystickAnalogueControlWrite + 2 + progOffset
+
+						; done, do relocation
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; relocate program to runtime address
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.bootstrapRelocate
 	
 	ldx #hi(bootstrap - progReloc)		; program page length
 	ldy #0

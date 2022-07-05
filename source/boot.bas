@@ -40,13 +40,14 @@ C%=&7B80
 S%=&8010
 E%=PAGE+5
 F%=&130
+J%=&133
 M%=&69
 
 ON ERROR PROCerror
 
 PROCreadConfig
-up$=FNkey(CHR$(C%?&7C))
-down$=FNkey(CHR$(C%?&7B))
+up$=FNconfigKey(CHR$(C%?&7C))
+down$=FNconfigKey(CHR$(C%?&7B))
 
 PROCintro
 
@@ -68,7 +69,13 @@ IF k$="W" THEN PROCinstructionsEditor
 
 IF k$="R" THEN CHAIN"Reset"
 
-UNTIL k$=CHR$(13)
+IF k$="K" THEN ?J%=0
+
+IF k$="J" THEN ?J%=1
+
+IF k$="U" THEN ?J%=2
+
+UNTIL k$="K" OR k$="J" OR k$="U"
 
 PROClogo
 PROCexpand
@@ -147,26 +154,26 @@ CLS
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
 
-
-
 PRINT TAB(7,3);CHR$(131);"A remake of the original";
 PRINT TAB(6,4);CHR$(129);"Universal 1981 arcade game";
 
-PRINT TAB(7,7);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
+PRINT TAB(6,6);CHR$(135);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
 
+PRINT TAB(15,9);CHR$(135);"Options";
 
+PRINT TAB(4,12);CHR$(129);"K";CHR$(135);"-";CHR$(131);"Start (Keyboard   Control)";
 
-PRINT TAB(16,10);"Options";
+PRINT TAB(4,13);CHR$(130);"J";CHR$(135);"-";CHR$(133);"Start (Joystick  Analogue)";
 
-PRINT TAB(4,13);CHR$(130);"Press";CHR$(129);"RETURN";CHR$(130);"to play";CHR$(129);"Lady Bug";
+PRINT TAB(4,14);CHR$(132);"U";CHR$(135);"-";CHR$(134);"Start (Joystick User Port)";
 
-PRINT TAB(4,15);CHR$(131);"Press";CHR$(132);"I";CHR$(131);"for game instructions";
+PRINT TAB(4,16);CHR$(131);"I";CHR$(135);"-";CHR$(129);"View Lady Bug instructions";
 
-PRINT TAB(4,17);CHR$(129);"Press";CHR$(134);"E";CHR$(129);"to edit the game maps";
+PRINT TAB(4,18);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Edit/Create new game mazes";
 
-PRINT TAB(4,19);CHR$(132);"Press";CHR$(131);"W";CHR$(132);"for edit instructions";
+PRINT TAB(4,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"View   Editor control keys";
 
-PRINT TAB(4,21);CHR$(133);"Press";CHR$(130);"R";CHR$(133);"to reset the settings";
+PRINT TAB(4,21);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset  settings to default";
 
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option          ";CHR$(156);
@@ -416,16 +423,16 @@ ENDPROC
 DEF FNwaitKey
 
 REPEAT
+
 k$=INKEY$0
-UNTIL k$=CHR$(13) OR k$="I" OR k$="E" OR k$="W" OR k$="R"
 
-IF k$<>"" THEN =k$
+UNTIL k$="K" OR k$="J" OR k$="U" OR k$="I" OR k$="E" OR k$="W" OR k$="R"
 
-=CHR$(13)
-
+=k$
 
 
-DEF FNkey(k$)
+
+DEF FNconfigKey(k$)
 
 IF k$="<" THEN ="UP"
 IF k$="=" THEN ="DOWN"
