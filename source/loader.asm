@@ -246,7 +246,7 @@ zpAddr 			= 0
 .swrCleanResetB
 
 	lda #&7f				; disable all via interrupts (simulate power on state)
-	sta viaIer
+	sta via1Ier
 	
 	jmp (resetVector)			; run the regular reset code
 
@@ -460,6 +460,49 @@ masterMos350 = &e374
 	equb palExtra1 + palGreen		; color 13 extra flashing green/yellow
 	equb palSkull + palWhite		; color 14 skull fade effect or red when shield is active
 	equb palObject + palCyan		; color 15 object changes red,yellow,cyan
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrJoystickControl				combine playerInput with joystickInput
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrJoystickControl
+
+	lda joystickEnable			; if userport joystick enabled
+	cmp #2
+	bne swrJoystickControlAnalogueFire
+	
+	lda via2PortB				; read digital joystick port, invert bits and store into joystickInput
+	and #joystickFire + joystickLeft + joystickDown + joystickUp + joystickRight
+	eor #joystickFire + joystickLeft + joystickDown + joystickUp + joystickRight
+	sta joystickInput
+
+.swrJoystickControlAnalogueFire
+
+	lda joystickEnable			; if analogue joystick enabled
+	cmp #1
+	bne swrJoystickControlCombine
+
+	lda joystickInput			; clear joystickInput fire button bit
+	and #&ff eor keyBitStart
+	sta joystickInput
+
+	lda via1PortB				; if analogue joystick fire button pressed
+	and #joystickFireAnalogue
+	bne swrJoystickControlCombine
+
+	lda #keyBitStart			; then set joystickInput fire button bit
+	ora joystickInput
+	sta joystickInput
+
+.swrJoystickControlCombine
+
+	lda playerInput				; combine playerInput (keyboard) with joystickInput
+	ora joystickInput
+	sta playerInput
+
+	rts					; return
 
 
 

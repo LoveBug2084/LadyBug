@@ -75,23 +75,23 @@
 	sta randomSeed + 1 + progOffset
 
 	lda #0					; timer 1 timed interupt mode
-	sta viaAcr
+	sta via1Acr
 
-	lda #&7f				; disable all interrupts
-	sta viaIer
+	lda #%01111111				; disable all interrupts
+	sta via1Ier
 	sta via2Ier
 
-	sta viaIfr				; clear all interrupt flags
+	sta via1Ifr				; clear all interrupt flags
 	sta via2Ifr
 	
-	lda #&c2				; enable vsync and timer 1 interrupts
-	sta viaIer
+	lda #%11000010				; enable vsync and timer 1 interrupts
+	sta via1Ier
 
-	lda #&0b				; disable keyboard output that drives bit 7 of via port A
-	sta viaPortB
+	lda #sbKeyboard + sbHigh		; disable keyboard output that drives bit 7 of via port A
+	sta via1PortB
 
-	lda #&ff				; via port A bits 0 - 7 output
-	sta viaPortDdrA
+	lda #%11111111				; via port A bits 0 - 7 output
+	sta via1PortDdrA
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup custom graphics mode
@@ -143,10 +143,6 @@
 
 	beq bootstrapRelocate			; if its keyboard only then skip joystick setup
 
-	lda viaPortDdrB				; set joystick digital inputs
-	and #&e0
-	sta viaPortDdrB
-
 	lda joystickEnable			; if analogue joystick was selected then set that up
 	cmp #1
 	beq bootstrapJoystickAnalogue
@@ -157,7 +153,10 @@
 
 .bootstrapJoystickDigital
 
-	jmp bootstrapRelocate			; no digital joystick code written yet, skip it
+	lda via2PortDdrB			; set digital joystick inputs
+	and #&ff eor (joystickFire + joystickLeft + joystickDown + joystickUp + joystickRight)
+	sta via2PortDdrB
+	jmp bootstrapRelocate + progOffset
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup analogue joystick addresses for b/b+ or master
@@ -165,7 +164,7 @@
 
 .bootstrapJoystickAnalogue
 
-	lda machineType				; check if its a master 128
+	lda machineType				; choose master or b/b+ adc addresses
 	cmp #6
 	beq bootstrapJoystickAnalogueMaster
 	
@@ -205,7 +204,7 @@
 
 .bootstrapRelocate
 	
-	ldx #hi(bootstrap - progReloc)		; program page length
+	ldx #hi(bootstrap - progReloc)		; number of 256 byte pages to relocate
 	ldy #0
 
 .relocateProgram

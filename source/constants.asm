@@ -23,7 +23,6 @@ false			= FALSE
 
 magicNumber		= &69			; used for random seed, validation generation, swr test
 
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; game constants
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -112,15 +111,35 @@ vegetableScoreY		= 12
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; analogue and digital joystick
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+adcControlB		= &fec0			; model b/b+ udp 7002 control register
+adcHighB		= &fec1			; model b/b+ udp 7002 high byte of analogue data
+adcLowB			= &fec2			; model b/b+ udp 7002 low byte of analogue data
+
+adcControlM		= &fe18			; master 128 udp 7002 control register
+adcHighM		= &fe19			; master 128 udp 7002 high byte of analogue data
+adcLowM			= &fe1a			; master 128 udp 7002 low byte of analogue data
+
+joystickFireAnalogue	= %00010000		; analogue joystick fire
+
+joystickFire		= %00000001		; digital joystick fire
+joystickLeft		= %00000010		; digital joystick left
+joystickDown		= %00000100		; digital joystick down
+joystickUp		= %00001000		; digital joystick up
+joystickRight		= %00010000		; digital joystick right
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; playerInput bit assignments
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-keyBitUp		= &01
-keyBitDown		= &02
-keyBitLeft		= &04
-keyBitRight		= &08
-keyBitStart		= &10
-keyBitEsc		= &20
+keyBitStart		= %00000001
+keyBitLeft		= %00000010
+keyBitDown		= %00000100
+keyBitUp		= %00001000
+keyBitRight		= %00010000
+keyBitEsc		= %00100000
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -211,13 +230,13 @@ addr16			= &ff00
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-moveUp			= 0			; bits 0 and 1 control the direction
-moveDown		= 1
-moveLeft		= 2
-moveRight		= 3
+moveUp			= %0000			; bits 0 and 1 control the direction
+moveDown		= %0001
+moveLeft		= %0010
+moveRight		= %0011
 
-moveStop		= &04			; bit 2 when set stops the sprite moving
-spriteBlanking		= &08			; bit 3 when set prevents the sprite being drawn although movement is still processed unless moveStop is set
+moveStop		= %0100			; bit 2 when set stops the sprite moving
+spriteBlanking		= %1000			; bit 3 when set prevents the sprite being drawn (movement is still processed unless moveStop is also set)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -456,33 +475,41 @@ pageEditorOffset	= pageEditorCanvas - pageEditor
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; 6522 via
+; 6522 via 1
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-viaPortB		= &fe40			; via port B data
-viaPortDdrB		= &fe42			; via port B io control
+via1PortB		= &fe40			; via port B data
+via1PortDdrB		= &fe42			; via port B io control
 
-viaPortDdrA		= &fe43			; via Port A io control
+via1PortDdrA		= &fe43			; via Port A io control
 
-viaT1CounterLo		= &fe44			; via timer 1 low counter
-viaT1CounterHi		= &fe45			; via timer 1 high counter
-viaT1LatchLo		= &fe46			; via timer 1 low latch
-viaT1LatchHi		= &fe47			; via timer 1 high latch
+via1T1CounterLo		= &fe44			; via timer 1 low counter
+via1T1CounterHi		= &fe45			; via timer 1 high counter
+via1T1LatchLo		= &fe46			; via timer 1 low latch
+via1T1LatchHi		= &fe47			; via timer 1 high latch
 
-viaT2CounterLo		= &fe48			; via timer 2 counter low
-viaT2CounterHi		= &fe49			; via timer 2 counter high
+via1T2CounterLo		= &fe48			; via timer 2 counter low
+via1T2CounterHi		= &fe49			; via timer 2 counter high
 
-viaAcr			= &fe4b			; via auxiliary control register
+via1Acr			= &fe4b			; via auxiliary control register
 
-viaIfr			= &fe4d			; via interrupt flags
+via1Ifr			= &fe4d			; via interrupt flags
+via1Ier			= &fe4e			; via interrupt enable
+
+via1PortA		= &fe4f			; via Port A data (no handshake)
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; 6522 via 2
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+via2PortB		= &fe60			; via port B data
+via2PortDdrB		= &fe62			; via port B io control
+
 via2Ifr			= &fe6d			; via interrupt flags
-viaIer			= &fe4e			; via interrupt enable (via #1)
-via2Ier			= &fe6e			; via interrupt enable (via #2)
-
-viaPortA		= &fe4f			; via Port A data (no handshake)
+via2Ier			= &fe6e			; via interrupt enable
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; video chips
+; video control
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 crtcAddr		= &fe00			; 6845 address
@@ -491,25 +518,14 @@ ulaMode			= &fe20			; ula video mode
 ulaPalette		= &fe21			; ula color palette
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; analogue and digital joystick
+; psg and keyboard connected to slow bus
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-adcControlB		= &fec0			; udp 7002 control register (model b/b+)
-adcHighB		= &fec1			; udp 7002 high byte of analogue data (model b/b+)
-adcLowB			= &fec2			; udp 7002 low byte of analogue data (model b/b+)
+sbPsg			= 0			; output line 0 connected to psg
+sbKeyboard		= 3			; output line 3 connected to keyboard
 
-adcControlM		= &fe18			; udp 7002 control register (master 128)
-adcHighM		= &fe19			; udp 7002 high byte of analogue data (master 128)
-adcLowM			= &fe1a			; udp 7002 low byte of analogue data (master 128)
-
-joystickFire		= &01			; analogue and digital joystick fire button
-
-joystickDigitalLeft	= &02			; digital joystick left
-joystickDigitalDown	= &04			; digital joystick down
-joystickDigitalUp	= &08			; digital joystick up
-joystickDigitalRight	= &10			; digital joystick right
-
-
+sbHigh			= 8			; high low values for output lines
+sbLow			= 0
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

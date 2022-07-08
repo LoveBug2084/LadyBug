@@ -96,8 +96,6 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 
 .enemySpawnSaveX	skip 1			; preserve register
 
-.playerInput		skip 1			; player input flags, bit 0=up 1=down 2=left 3=right 4=start 5=esc
-			
 .randomSeed		skip 2			; random number generator seed
 
 .addScoreMultiplySaveA	skip 1			; preserve register
@@ -228,8 +226,7 @@ soundChannels		= 6			; number of software defined sound channels
 
 .joystickAnalogueSave	skip 1			; preserve analogue joystick value
 .joystickInput		skip 1			; analogue / digital joystick bits defined same as key inputBits 0=up 1=down 2=left 3=right 4=fire
-
-
+.playerInput		skip 1			; player input flags, bit 0=up 1=down 2=left 3=right 4=start 5=esc
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero
@@ -237,6 +234,8 @@ soundChannels		= 6			; number of software defined sound channels
 .pageZeroEnd
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 print
 print

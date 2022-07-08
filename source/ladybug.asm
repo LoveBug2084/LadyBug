@@ -210,7 +210,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .irqInterrupt
 
-	lda viaIfr				; if interrupt flag = vsync
+	lda via1Ifr				; if interrupt flag = vsync
 	and #2
 	bne irqVsync				; then go do the upper vsync interrupt
 	
@@ -219,7 +219,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 .irqTimer					; else its a timer interrupt so do the lower interrupt
 
 	lda #&40				; clear timer interrupt flag
-	sta viaIfr
+	sta via1Ifr
 
 	lda #&ff				; screenHalf = lower
 	sta screenHalf
@@ -232,12 +232,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .irqVsync					; upper interrupt
 
-	sta viaIfr				; clear vsync interrupt flag
+	sta via1Ifr				; clear vsync interrupt flag
 
 	lda #lo(rasterTimer)			; set timer 1 for lower interrupt
-	sta viaT1CounterLo
+	sta via1T1CounterLo
 	lda #hi(rasterTimer)
-	sta viaT1CounterHi
+	sta via1T1CounterHi
 
 	lda #&00				; screenHalf = upper
 	sta screenHalf
@@ -270,25 +270,25 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .psgWrite
 
-	sta viaPortA				; place psg data on port a
+	sta via1PortA				; place psg data on port a
 	
-	lda #0 + 0				; psg -we low
-	sta viaPortB
+	lda #sbPsg + sbLow			; slow bus psg -we low
+	sta via1PortB
 	
 	pha					; 5uS delay
 	pla
 	nop
 	nop
 	
-	lda #0 + 8				; psg -we high
-	sta viaPortB
+	lda #sbPsg + sbHigh			; psg -we high
+	sta via1PortB
 
 	rts					; return
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; waitVsyncUpper				wait for next vsync to upper area
+; waitVsyncUpper				wait for next vsync to upper area and read analogue joystick (if enabled)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -300,12 +300,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	bit screenHalf				; wait until upper area
 	bpl waitVsyncUpper
 	
-	rts					; return
+	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; waitVsyncLower				wait for next vsync to lower area
+; waitVsyncLower				wait for next vsync to lower area and read analogue joystick (if enabled)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -317,7 +317,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	bit screenHalf				; wait until lower area
 	bmi waitVsyncLower
 	
-	rts					; return
+	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
 
 
 
@@ -397,11 +397,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	org pageVectors
 
-.unusedMemory
+.keyReorder
 
-	equb 0,0,0,0				; 4 spare memory locations, can be used if needed
-
-
+	equb 0, 3, 2, 1				; reorder keys from up down left right to left down up right to match digital joystick input
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -418,11 +416,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; keyboardScan					check up down left right start and esc keys
-;						combine with joystickBits so either keyboard or joystick can control the game
+;						combine with joystickInput so either keyboard or joystick can control the game
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			playerInput		bit 0=up 1=down 2=left 3=right 4=start 5=esc
+; exit			playerInput		bit 0=start 1=left 2=down 3=up 4=right 5=esc
 ;			A			destroyed
 ;			X			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -430,10 +428,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 .keyboardScan
 
 	lda #&7f				; set port A bit 7 as input ( from keyboard output )
-	sta viaPortDdrA
+	sta via1PortDdrA
 	
-	lda #3 + 0				; keyboard -enable low
-	sta viaPortB
+	lda #sbKeyboard + sbLow			; keyboard -enable low
+	sta via1PortB
 	
 	lda #0					; clear player input flags
 	sta playerInput
@@ -441,39 +439,36 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda #keyEsc				; check esc key
 	jsr keyboardScanKey
 
-	lda #keyReturn				; check start key
-	jsr keyboardScanKey
-
 	ldx #0					; check user defined movement keys
 	
 .keyboardScanLoop
 
-	lda optionKeys, x
+	ldy keyReorder, x			; reorder keys to match digital joystick layout
+	lda optionKeys, y
 	jsr keyboardScanKey
 	
 	inx
 	cpx #4
 	bne keyboardScanLoop
 	
-	lda #3 + 8				; keyboard -enable high
-	sta viaPortB
+	lda #keyReturn				; check start key
+	jsr keyboardScanKey
+
+	lda #sbKeyboard + sbHigh		; slow bus keyboard -enable high
+	sta via1PortB
 	
 	lda #&ff				; set port A all bits output
-	sta viaPortDdrA
+	sta via1PortDdrA
 
-	lda joystickInput			; combine joystick and keyboard bits
-	ora playerInput
-	sta playerInput
-
-	rts					; return
+	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .keyboardScanKey
 
-	sta viaPortA				; select key
+	sta via1PortA				; select key
 
-	lda viaPortA				; read key status
+	lda via1PortA				; read key status
 
 	asl a					; shift key status into player input bits
 	rol playerInput
@@ -514,7 +509,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; pagefx200					*fx 200 0 to make sure the ram is not erased by the os
+; pagefx200					os location for *fx 200 value, set to 0 to make sure the ram is not erased by the os on break
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org pagefx200
@@ -758,10 +753,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda initPlayfieldMiddleWriteLeft + 1
 	adc #23
 	sta initPlayfieldMiddleWriteLeft + 1
-	lda initPlayfieldMiddleWriteLeft + 2
-	adc #0
-	sta initPlayfieldMiddleWriteLeft + 2
+	bcc initPlayfieldMiddleRightNext
+	inc initPlayfieldMiddleWriteLeft + 2
 	
+.initPlayfieldMiddleRightNext
+
 	dec initPlayfieldMiddleRows		; repeat until all rows done
 	bne initPlayfieldMiddleLoop
 
@@ -1924,8 +1920,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr waitVsyncUpper			; wait for vsync interrupt for upper area (6845 vsync interrupt)
 
-	jsr joystickAnalogue			; read analogue joystick if enabled
-
 	jsr ladybugEntryAnimation		; do ladybug entry movement if enabled
 
 	jsr checkBonus				; check if special, extra or diamond bonus screens are required
@@ -1972,8 +1966,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr waitVsyncLower			; wait for vsync interrupt for lower area (6522 timer1 interrupt)
 	
-	jsr joystickAnalogue			; read analogue joystick if enabled
-
 	jsr processSound			; process sound effects and music
 
 	jsr redrawSprites			; erase and redraw sprites in lower area
@@ -2284,11 +2276,11 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 ;						temporary storage for sprite direction
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; enemy control table
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; enemy control table
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid location to be valid junction
+moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid location to be valid junction
 						; at a valid junction an enemy will either turn to ladybugs direction (attack)
 						; or will choose a random available direction
 						; if the attack direction is not available then a random available direction is chosen
@@ -2303,10 +2295,10 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	equb (49.98 * 256) / 100
 	equb (41.65 * 256) / 100
 	equb (33.32 * 256) / 100
-	equb (00.00 * 256) / 100
-	equb (00.00 * 256) / 100
-	equb (00.00 * 256) / 100
-	equb (00.00 * 256) / 100
+	equb (20.00 * 256) / 100
+	equb (15.00 * 256) / 100
+	equb (10.00 * 256) / 100
+	equb (05.00 * 256) / 100
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2322,10 +2314,10 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .moveSprites
 
-	ldx #0					; move ladybug and enemies if required
-	jsr moveSpritesPixel
+	ldx #0					; start at sprite index 0 (ladybug)
+	jsr moveSpritesPixel			; move ladybug and enemies (if they're enabled to move)
 	
-	clc					; do the speed fraction counter see if we need to move the enemies again
+	clc					; do the speed fraction counter see if we need to move the enemies another pixel
 	lda enemySpeedCounter
 	adc enemySpeed
 	sta enemySpeedCounter
@@ -2334,7 +2326,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	
 .moveSpritesEnemy
 
-	ldx #1					; then move enemies again
+	ldx #1					; start at sprite index 1 (enemies) and move them again
 
 .moveSpritesPixel	
 
@@ -2354,9 +2346,9 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	
 .moveSpritesIsEnemyEnabled
 
-	lda pauseEnemy				; if index > 0 (enemies) and enemies are paused then skip them
+	lda pauseEnemy				; else if enemies are paused then skip them all
 	beq moveSpritesGetDirection
-	jmp moveSpritesNext
+	jmp moveSpritesExit
 
 .moveSpritesGetDirection
 
@@ -2388,11 +2380,11 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .moveSpritesCollision
 
-	lda spritesDir + 0			; if ladybug is not blanked then
+	lda spritesDir + 0			; if ladybug is active (not blanked) then
 	and #spriteBlanking
 	bne moveSpritesCheckAlignmentX
 
-	lda spritesX, x				; if abs(enemyX - ladybugX) < ladybugEnemyRange and if abs(enemyY - ladybugY) < ladyBugEnemyRange
+	lda spritesX, x				; if ladybugX is close enough to enemyX .. abs(enemyX - ladybugX) < ladybugEnemyRange
 	sec
 	sbc spritesX + 0
 	bcs moveSpritesCollisionX
@@ -2405,7 +2397,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	cmp #ladybugEnemyRange
 	bcs moveSpritesCheckAlignmentX
 
-	lda spritesY, x
+	lda spritesY, x				; and if ladybugY is close enough to enemyY .. abs(enemyY - ladybugY) < ladyBugEnemyRange
 	sec
 	sbc spritesY + 0
 	bcs moveSpritesCollisionY
@@ -2418,11 +2410,11 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	cmp #ladybugEnemyRange
 	bcs moveSpritesCheckAlignmentX
 
-	jsr ladybugKill				; then kill ladybug
+	jsr ladybugKill				; then ladybug has collided with the enemy so kill ladybug
 
 .moveSpritesCheckAlignmentX
 
-	lda spritesX, x				; if spriteX not on grid (spriteX & 15 != 8) then skip to next sprite
+	lda spritesX, x				; if spriteX not on grid then skip to next sprite .. spriteX & 15 != 8
 	and #&0f
 	cmp #8
 	beq moveSpritesCheckAlignmentY
@@ -2430,7 +2422,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .moveSpritesCheckAlignmentY
 
-	lda spritesY, x				; if spriteY not on grid (spriteY & 15 != 8) then skip to next sprite
+	lda spritesY, x				; if spriteY not on grid then skip to next sprite .. spriteY & 15 != 8)
 	and #&0f
 	cmp #8
 	beq moveSpritesGetMapAddr
@@ -2438,7 +2430,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .moveSpritesGetMapAddr
 
-	jsr spriteToAddr			; convert sprite XY to tileMapAddr
+	jsr spriteToAddr			; sprite is grid aligned so convert sprite XY to tileMapAddr
 
 .moveSpritesCheckSkull
 
@@ -2470,6 +2462,10 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 	jmp moveSpritesNext			; skip to next sprite
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; enemy ai, check for valid number of paths
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .moveSpritesCheckValidJunction
 
 	lda #moveSpritesJunctionPaths - 1	; set the number of paths for a valid junction
@@ -2495,6 +2491,10 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	bit moveSpritesPathCounter		; if not a valid junction (not enough paths)
 	bpl moveSpritesFindPath			; then go check current direction is a path
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; enemy ai, choose attack direction or random direction
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .moveSpritesRandomOrAttack
 
 	stx moveSpritesSaveX			; preserve X
@@ -2518,7 +2518,7 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	and #&03
 	tay
 
-	bpl moveSpritesFindPath			; go check if this direction is a path
+	bpl moveSpritesFindPath			; go check if this direction is a path (bpl use as branch always)
 	
 .moveSpritesAttack
 
@@ -2536,15 +2536,15 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 .moveSpritesFindPath
 
-	sty moveSpritesSaveDirection		; save current direction
+	sty moveSpritesSaveDirection		; save the chosen direction
 	
 	lda moveDirMap, y			; get direction offset for tile map
 
-	tay					; if tileMap is a wall then try again
+	tay					; if theres a wall at the chosen direction then choose a random direction instead
 	lda (tileMapAddr), y
 	bmi moveSpritesRandom
 
-	lda moveSpritesSaveDirection		; get saved direction
+	lda moveSpritesSaveDirection		; get the saved chosen direction
 	sta spritesDir, x			; set sprite direction
 
 .moveSpritesNext
@@ -2559,6 +2559,8 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 	rts					; return
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; if enemy is lower than ladybug then return with up direction, if higher then return down direction else no change in direction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesCheckVertical
@@ -2575,6 +2577,8 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 
 	rts
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; if enemy is left of ladybug then return right direction, if right of ladybug then return left direction else no change in direction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesCheckHorizontal
@@ -2719,10 +2723,11 @@ moveSpritesJunctionPaths= 3			; must be at least this number of paths at a grid 
 	clc
 	adc drawChrAddr
 	sta drawChrAddr
-	lda #0
-	adc drawChrAddr + 1
-	sta drawChrAddr + 1
+	bcc drawPlayfieldUpperTextShiftBits
+	inc drawChrAddr + 1
 	
+.drawPlayfieldUpperTextShiftBits
+
 	asl bonusBitsTemp			; shift to next bonus bit
 	rol bonusBitsTemp + 1
 
@@ -3159,9 +3164,10 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 	adc #spriteTileHeight
 	sta drawSpriteRead + 1
-	lda drawSpriteRead + 2
-	adc #0
-	sta drawSpriteRead + 2
+	bcc drawSpriteColumnTileHeightNext
+	inc drawSpriteRead + 2
+
+.drawSpriteColumnTileHeightNext
 
 	clc					; adjust screen address for next column
 	lda drawSpriteScreenAddr
@@ -4118,10 +4124,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	stx keyboardScanFullSaveX		; save register
 
 	lda #&7f				; set port A bit 7 as input ( from keyboard output )
-	sta viaPortDdrA
+	sta via1PortDdrA
 	
 	lda #3 + 0				; keyboard -enable low
-	sta viaPortB
+	sta via1PortB
 	
 	ldx #(keyScanCodesEnd - keyScanCodes) - 1; start at end of table
 	
@@ -4129,9 +4135,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda keyScanCodes, x			; get key scan code from table
 
-	sta viaPortA				; select key in keyboard matrix
+	sta via1PortA				; select key in keyboard matrix
 
-	lda viaPortA				; read key status
+	lda via1PortA				; read key status
 
 	bmi keyboardScanFullPressed		; if pressed then exit with scancode
 
@@ -4139,7 +4145,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bpl keyboardScanFullLoop
 
 	lda #3 + 8				; keyboard -enable high
-	sta viaPortB
+	sta via1PortB
 	
 	ldx keyboardScanFullSaveX		; restore register
 
@@ -4149,7 +4155,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .keyboardScanFullPressed
 
 	lda #3 + 8				; keyboard -enable high
-	sta viaPortB
+	sta via1PortB
 	
 	txa					; A = scan index
 	
@@ -5788,19 +5794,29 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegProcess
 
+	lsr playerInput				; if start pressed
+	bcc nameRegProcessLeft
+
+	lda nameRegCursor			; if cursor = 31 (enter name)
+	cmp #31
+	bne nameRegProcessDelete
+
+	sec					; exit with carry set (enter name)
+	rts
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.nameRegProcessUp
+.nameRegProcessLeft
 
-	lsr playerInput				; if up pressed
+	lsr playerInput				; if left pressed
 	bcc nameRegProcessDown
 	
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	sec					; move back 8 positions
+	sec					; move back 1 position
 	lda nameRegCursor
-	sbc #8
+	sbc #1
 	sta nameRegCursor
 
 	bpl nameRegProcessCursor		; handle wrap around
@@ -5811,7 +5827,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .nameRegProcessDown
 
 	lsr playerInput				; if down pressed
-	bcc nameRegProcessLeft
+	bcc nameRegProcessUp
 	
 	lda #sfxMunch				; play sound effect
 	jsr playSound
@@ -5827,17 +5843,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.nameRegProcessLeft
+.nameRegProcessUp
 
-	lsr playerInput				; if left pressed
+	lsr playerInput				; if up pressed
 	bcc nameRegProcessRight
 	
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	sec					; move back 1 position
+	sec					; move back 8 positions
 	lda nameRegCursor
-	sbc #1
+	sbc #8
 	sta nameRegCursor
 
 	bpl nameRegProcessCursor		; handle wrap around
@@ -5848,7 +5864,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .nameRegProcessRight
 
 	lsr playerInput				; if right pressed
-	bcc nameRegProcessStart
+	bcc nameRegProcessCursor
 	
 	lda #sfxMunch				; play sound effect
 	jsr playSound
@@ -5861,20 +5877,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #32					; handle wrap around
 	bcc nameRegProcessCursor
 	bcs nameRegProcessSub32
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.nameRegProcessStart
-
-	lsr playerInput				; if start pressed
-	bcc nameRegProcessCursor
-
-	lda nameRegCursor			; if cursor = 31 (enter name)
-	cmp #31
-	bne nameRegProcessDelete
-
-	sec					; exit with carry set (enter name)
-	rts
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -8266,7 +8268,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .playSoundNow
 
-	clc					; copy sound data address to soundAddr
+	clc					; copy sound data address to channel soundPtrs
 	lda playSoundAddr
 	adc #1
 	sta soundAddrPtrs, x
@@ -8719,11 +8721,13 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ora #moveStop
 	sta spritesDir + 0
 
-.updateLadybugUp
+	lsr playerInput				; shift input bits to remove start bit
 
-	ldx #moveUp				; set directtion to up
+.updateLadybugLeft
 
-	lsr playerInput				; if up was pressed then do it
+	ldx #moveLeft				; set direction to left
+
+	lsr playerInput				; if left was pressed then do it
 	bcs updateLadybugMove
 	
 .updateLadybugDown
@@ -8733,11 +8737,11 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lsr playerInput				; if down was pressed then do it
 	bcs updateLadybugMove
 	
-.updateLadybugLeft
+.updateLadybugUp
 
-	ldx #moveLeft				; set direction to left
+	ldx #moveUp				; set directtion to up
 
-	lsr playerInput				; if left was pressed then do it
+	lsr playerInput				; if up was pressed then do it
 	bcs updateLadybugMove
 	
 .updateLadybugRight
@@ -9627,29 +9631,31 @@ include "soundtables.asm"
 ; joystickAnalogue				read analogue joystick values, convert to player input bits
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+; note change these to joystick up down etc once the key bits have been rearranged
+
 .joystickBitSet
 
-	equb keyBitDown				; adc channel 1 bits 7,6 valid states are 00 = down, 11 = up
+	equb keyBitDown				; y channel bit set mask
 	equb 0
 	equb 0
 	equb keyBitUp
 
-	equb keyBitRight			; adc channel 0 bits 7,6 valid states are 00 = right, 11 = left
+	equb keyBitRight			; x channel bit set mask
 	equb 0
 	equb 0
 	equb keyBitLeft
 
 .joystickBitClear
 
-	equb not(keyBitUp + keyBitDown)		; channel 1 bit mask for input bits
-	equb not(keyBitUp + keyBitDown)
-	equb not(keyBitUp + keyBitDown)
-	equb not(keyBitUp + keyBitDown)
+	equb &ff eor (keyBitUp + keyBitDown)	; y channel bit clear mask
+	equb &ff eor (keyBitUp + keyBitDown)
+	equb &ff eor (keyBitUp + keyBitDown)
+	equb &ff eor (keyBitUp + keyBitDown)
 
-	equb not(keyBitLeft + keyBitRight)	; channel 0 bit mask for input bits
-	equb not(keyBitLeft + keyBitRight)
-	equb not(keyBitLeft + keyBitRight)
-	equb not(keyBitLeft + keyBitRight)
+	equb &ff eor (keyBitLeft + keyBitRight)	; x channel bit clear mask
+	equb &ff eor (keyBitLeft + keyBitRight)
+	equb &ff eor (keyBitLeft + keyBitRight)
+	equb &ff eor (keyBitLeft + keyBitRight)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

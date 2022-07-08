@@ -1,4 +1,8 @@
 @echo off
+
+rem --------------------------------
+rem  convert raw image files to bin
+rem --------------------------------
 echo.
 utils\fontmaker  		img-font.raw													img-font.bin
 utils\pixels				img-font-vegetable.raw				4		8		img-font-vegetable.bin
@@ -17,16 +21,26 @@ utils\pixels				img-enemy6.raw								10	14	img-enemy6.bin
 utils\pixels				img-enemy7.raw								10	14	img-enemy7.bin
 utils\pixels				img-enemy8.raw								10	14	img-enemy8.bin
 utils\pixels				img-angel.raw									10	14	img-angel.bin
-echo.
+
+rem -----------------------------------------------------------------------------------------
+rem  read project name and current build number, create build number text with leading zeros
+rem -----------------------------------------------------------------------------------------
 set /p bbcProjectName=<projectname.txt
 set /p bbcProjectBuildText=<build.txt
 set "bbcProjectBuildBin=00000%bbcProjectBuildText%"
 set "bbcProjectBuildBin=%bbcProjectBuildBin:~-6%"
+
+rem ---------------
+rem  build project
+rem ---------------
+echo.
 echo %bbcProjectBuildBin%>build.bin
 beebasm -title %bbcProjectName% -v -i build.asm -do %bbcProjectName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
+
+rem -----------------------
+rem  run project in beebem
+rem -----------------------
 echo.
-rem set /a bbcProjectBuildText+=1
-rem echo %bbcProjectBuildText%>build.txt
 echo %bbcProjectName% build %bbcProjectBuildBin%
 call run.bat

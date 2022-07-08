@@ -159,21 +159,21 @@ PRINT TAB(6,4);CHR$(129);"Universal 1981 arcade game";
 
 PRINT TAB(6,6);CHR$(135);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
 
-PRINT TAB(15,9);CHR$(135);"Options";
+PRINT TAB(16,9);CHR$(135);"Options";
 
-PRINT TAB(4,12);CHR$(129);"K";CHR$(135);"-";CHR$(131);"Start (Keyboard   Control)";
+PRINT TAB(6,12);CHR$(129);"K";CHR$(135);"-";CHR$(131);"Play";CHR$(129);"Keyboard";
 
-PRINT TAB(4,13);CHR$(130);"J";CHR$(135);"-";CHR$(133);"Start (Joystick  Analogue)";
+PRINT TAB(6,13);CHR$(130);"J";CHR$(135);"-";CHR$(133);"Play";CHR$(130);"Joystick Analogue";
 
-PRINT TAB(4,14);CHR$(132);"U";CHR$(135);"-";CHR$(134);"Start (Joystick User Port)";
+PRINT TAB(6,14);CHR$(132);"U";CHR$(135);"-";CHR$(134);"Play";CHR$(132);"Joystick User Port";
 
-PRINT TAB(4,16);CHR$(131);"I";CHR$(135);"-";CHR$(129);"View Lady Bug instructions";
+PRINT TAB(6,16);CHR$(131);"I";CHR$(135);"-";CHR$(129);"Instructions";
 
-PRINT TAB(4,18);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Edit/Create new game mazes";
+PRINT TAB(6,18);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Map Editor";
 
-PRINT TAB(4,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"View   Editor control keys";
+PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Editor keys";
 
-PRINT TAB(4,21);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset  settings to default";
+PRINT TAB(6,21);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset settings";
 
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option          ";CHR$(156);
