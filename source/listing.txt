@@ -293,11 +293,11 @@ bootstrap     &4800 - &4936 , 311 bytes
      00BD
 .initPlayfieldMiddleRows
      00BE
-.joystickAnalogueSave
+.playerInput
      00BF
 .joystickInput
      00C0
-.playerInput
+.joystickAnalogueSave
      00C1
 .pageZeroEnd
      00C2
@@ -671,9 +671,9 @@ bootstrap     &4800 - &4936 , 311 bytes
      ADDD   05 C0      ORA &C0
      ADDF   85 C0      STA &C0
 .swrJoystickControlCombine
-     ADE1   A5 C1      LDA &C1
+     ADE1   A5 BF      LDA &BF
      ADE3   05 C0      ORA &C0
-     ADE5   85 C1      STA &C1
+     ADE5   85 BF      STA &BF
      ADE7   60         RTS
 .swramLastAddr
      AE00
@@ -1036,7 +1036,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      020B   A9 03      LDA #&03
      020D   8D 40 FE   STA &FE40
      0210   A9 00      LDA #&00
-     0212   85 C1      STA &C1
+     0212   85 BF      STA &BF
      0214   A9 70      LDA #&70
      0216   20 3B 02   JSR &023B
      0219   A2 00      LDX #&00
@@ -1058,7 +1058,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      023B   8D 4F FE   STA &FE4F
      023E   AD 4F FE   LDA &FE4F
      0241   0A         ASL A
-     0242   26 C1      ROL &C1
+     0242   26 BF      ROL &BF
      0244   60         RTS
 .drawObjectScore
      0245   A5 1F      LDA &1F
@@ -1822,7 +1822,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      07EA   20 71 0D   JSR &0D71
      07ED   4C 82 07   JMP &0782
 .checkEsc
-     07F0   A5 C1      LDA &C1
+     07F0   A5 BF      LDA &BF
      07F2   C9 20      CMP #&20
      07F4   F0 06      BEQ &07FC
      07F6   A9 64      LDA #&64
@@ -2859,7 +2859,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      0F3F   20 29 22   JSR &2229
      0F42   20 5C 04   JSR &045C
      0F45   20 06 02   JSR &0206
-     0F48   A5 C1      LDA &C1
+     0F48   A5 BF      LDA &BF
      0F4A   60         RTS
 .instructionsLadybugAnimation
      0F4B   A5 B3      LDA &B3
@@ -3236,7 +3236,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      11B5   20 D4 0C   JSR &0CD4
 .mainMenuWaitRelease
      11B8   20 3B 12   JSR &123B
-     11BB   A5 C1      LDA &C1
+     11BB   A5 BF      LDA &BF
      11BD   D0 F9      BNE &11B8
 .mainMenuWaitPress
      11BF   20 3B 12   JSR &123B
@@ -3319,10 +3319,10 @@ bootstrap     &4800 - &4936 , 311 bytes
      126F   D0 03      BNE &1274
      1271   20 1B 23   JSR &231B
 .mainMenuFunctionsExit
-     1274   A5 C1      LDA &C1
+     1274   A5 BF      LDA &BF
      1276   60         RTS
 .mainMenuProcess
-     1277   A5 C1      LDA &C1
+     1277   A5 BF      LDA &BF
      1279   C9 08      CMP #&08
      127B   F0 0A      BEQ &1287
      127D   C9 04      CMP #&04
@@ -3943,7 +3943,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      1761   20 64 1C   JSR &1C64
      1764   20 29 22   JSR &2229
      1767   20 06 02   JSR &0206
-     176A   A5 C1      LDA &C1
+     176A   A5 BF      LDA &BF
      176C   60         RTS
 .checkPauseGame
      176D   A5 0E      LDA &0E
@@ -3952,7 +3952,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      1773   D0 0A      BNE &177F
      1775   A5 2B      LDA &2B
      1777   D0 1F      BNE &1798
-     1779   A5 C1      LDA &C1
+     1779   A5 BF      LDA &BF
      177B   C9 01      CMP #&01
      177D   F0 02      BEQ &1781
 .checkPauseGameReturnFalse
@@ -3970,10 +3970,10 @@ bootstrap     &4800 - &4936 , 311 bytes
      1796   38         SEC
      1797   60         RTS
 .checkPauseGameTrue
-     1798   A5 C1      LDA &C1
+     1798   A5 BF      LDA &BF
      179A   29 01      AND #&01
      179C   D0 F8      BNE &1796
-     179E   A5 C1      LDA &C1
+     179E   A5 BF      LDA &BF
      17A0   29 1E      AND #&1E
      17A2   F0 F2      BEQ &1796
      17A4   A9 00      LDA #&00
@@ -4108,11 +4108,11 @@ bootstrap     &4800 - &4936 , 311 bytes
      1916   C9 01      CMP #&01
      1918   F0 04      BEQ &191E
 .nameRegTimerActive
-     191A   A5 C1      LDA &C1
+     191A   A5 BF      LDA &BF
      191C   18         CLC
      191D   60         RTS
 .nameRegTimerTimeout
-     191E   A5 C1      LDA &C1
+     191E   A5 BF      LDA &BF
      1920   38         SEC
      1921   60         RTS
 .nameRegProcessAdd32
@@ -4128,7 +4128,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      1930   85 B7      STA &B7
      1932   10 60      BPL &1994
 .nameRegProcess
-     1934   46 C1      LSR &C1
+     1934   46 BF      LSR &BF
      1936   90 08      BCC &1940
      1938   A5 B7      LDA &B7
      193A   C9 1F      CMP #&1F
@@ -4136,7 +4136,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      193E   38         SEC
      193F   60         RTS
 .nameRegProcessLeft
-     1940   46 C1      LSR &C1
+     1940   46 BF      LSR &BF
      1942   90 10      BCC &1954
      1944   A9 06      LDA #&06
      1946   20 24 23   JSR &2324
@@ -4147,7 +4147,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      1950   10 42      BPL &1994
      1952   30 CE      BMI &1922
 .nameRegProcessDown
-     1954   46 C1      LSR &C1
+     1954   46 BF      LSR &BF
      1956   90 12      BCC &196A
      1958   A9 06      LDA #&06
      195A   20 24 23   JSR &2324
@@ -4159,7 +4159,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      1966   B0 C3      BCS &192B
      1968   90 2A      BCC &1994
 .nameRegProcessUp
-     196A   46 C1      LSR &C1
+     196A   46 BF      LSR &BF
      196C   90 10      BCC &197E
      196E   A9 06      LDA #&06
      1970   20 24 23   JSR &2324
@@ -4170,7 +4170,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      197A   10 18      BPL &1994
      197C   30 A4      BMI &1922
 .nameRegProcessRight
-     197E   46 C1      LSR &C1
+     197E   46 BF      LSR &BF
      1980   90 12      BCC &1994
      1982   A9 06      LDA #&06
      1984   20 24 23   JSR &2324
@@ -5833,22 +5833,22 @@ bootstrap     &4800 - &4936 , 311 bytes
      2532   A5 6D      LDA &6D
      2534   09 04      ORA #&04
      2536   85 6D      STA &6D
-     2538   46 C1      LSR &C1
+     2538   46 BF      LSR &BF
 .updateLadybugLeft
      253A   A2 02      LDX #&02
-     253C   46 C1      LSR &C1
+     253C   46 BF      LSR &BF
      253E   B0 13      BCS &2553
 .updateLadybugDown
      2540   A2 01      LDX #&01
-     2542   46 C1      LSR &C1
+     2542   46 BF      LSR &BF
      2544   B0 0D      BCS &2553
 .updateLadybugUp
      2546   A2 00      LDX #&00
-     2548   46 C1      LSR &C1
+     2548   46 BF      LSR &BF
      254A   B0 07      BCS &2553
 .updateLadybugRight
      254C   A2 03      LDX #&03
-     254E   46 C1      LSR &C1
+     254E   46 BF      LSR &BF
      2550   B0 01      BCS &2553
 .updateLadybugExit
      2552   60         RTS
@@ -8809,7 +8809,7 @@ bootstrap     &4800 - &4936 , 311 bytes
      47A3   D0 25      BNE &47CA
 .joystickAnalogueChannelRead
      47A5   AD 00 FF   LDA &FF00
-     47A8   85 BF      STA &BF
+     47A8   85 C1      STA &C1
 .joystickAnalogueControlRead
      47AA   AD 00 FF   LDA &FF00
      47AD   29 01      AND #&01
@@ -8817,10 +8817,10 @@ bootstrap     &4800 - &4936 , 311 bytes
 .joystickAnalogueControlWrite
      47B1   8D 00 FF   STA &FF00
      47B4   4A         LSR A
-     47B5   26 BF      ROL &BF
-     47B7   26 BF      ROL &BF
-     47B9   26 BF      ROL &BF
-     47BB   A5 BF      LDA &BF
+     47B5   26 C1      ROL &C1
+     47B7   26 C1      ROL &C1
+     47B9   26 C1      ROL &C1
+     47BB   A5 C1      LDA &C1
      47BD   29 07      AND #&07
      47BF   AA         TAX
      47C0   A5 C0      LDA &C0

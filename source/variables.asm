@@ -224,9 +224,9 @@ soundChannels		= 6			; number of software defined sound channels
 
 			skip 1			; row counter for maze initialization
 
+.playerInput		skip 1			; player input bits (see constants.asm)
+.joystickInput		skip 1			; joystick input bits (see constants.asm)
 .joystickAnalogueSave	skip 1			; preserve analogue joystick value
-.joystickInput		skip 1			; analogue / digital joystick bits defined same as key inputBits 0=up 1=down 2=left 3=right 4=fire
-.playerInput		skip 1			; player input flags, bit 0=up 1=down 2=left 3=right 4=start 5=esc
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero
