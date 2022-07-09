@@ -210,7 +210,7 @@ PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds";
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
 PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
 
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press Return            ";CHR$(156);
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press RETURN            ";CHR$(156);
 
 PROCexpand
 PROCwaitReturn(360000)
@@ -277,7 +277,7 @@ PRINT TAB(6,19);CHR$(135);"C";CHR$(131);"     Catalogue disk";
 PRINT TAB(6,21);CHR$(135);"B";CHR$(133);"     Boot disk";
 
 
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press Return            ";CHR$(156);
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press RETURN            ";CHR$(156);
 
 PROCexpand
 PROCwaitReturn(360000)
@@ -424,7 +424,9 @@ DEF FNwaitKey
 
 REPEAT
 
-k$=INKEY$0
+K%=INKEY0
+IF K%>=96 THEN K%=K%-32
+k$=CHR$(K%)
 
 UNTIL k$="K" OR k$="J" OR k$="U" OR k$="I" OR k$="E" OR k$="W" OR k$="R"
 

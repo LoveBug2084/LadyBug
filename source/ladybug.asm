@@ -397,10 +397,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	org pageVectors
 
-.keyReorder
+.keyOrder					; squeeze this in the previously unused 4 bytes here
 
-	equb 0, 3, 2, 1				; reorder keys from up down left right to left down up right to match digital joystick input
-
+	equb 1, 2, 3, 0				; change key order from the config's right, left, down, up
+						; to the digital joystick order of left, down, up, right
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; set irq interrupt vector
@@ -439,17 +439,16 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda #keyEsc				; check esc key
 	jsr keyboardScanKey
 
-	ldx #0					; check user defined movement keys
+	ldx #3					; check user defined movement keys
 	
 .keyboardScanLoop
 
-	ldy keyReorder, x			; reorder keys to match digital joystick layout
+	ldy keyOrder, x				; change order of config keys to match digital joystick layout
 	lda optionKeys, y
 	jsr keyboardScanKey
 	
-	inx
-	cpx #4
-	bne keyboardScanLoop
+	dex
+	bpl keyboardScanLoop
 	
 	lda #keyReturn				; check start key
 	jsr keyboardScanKey
@@ -4399,7 +4398,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
-	lda playerInput				; get keyboard input data
 	bne mainMenuWaitRelease			; if key is pressed then loop back and wait for release
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8721,7 +8719,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ora #moveStop
 	sta spritesDir + 0
 
-	lsr playerInput				; shift input bits to remove start bit
+	lsr playerInput				; discard start (fire) bit
 
 .updateLadybugLeft
 
