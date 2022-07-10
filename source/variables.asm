@@ -228,8 +228,6 @@ soundChannels		= 6			; number of software defined sound channels
 
 .updateLadybugSaveDir	skip 1			; preserve current ladybug direction while calculating new direction
 
-
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
