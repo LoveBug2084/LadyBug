@@ -189,15 +189,13 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 .redrawSpritesIndexLower			; index to current sprite in list for lower half
 			equb 0
 
-.updateLadybugSaveDir	skip 1			; preserve current ladybug direction while calculating new direction
-
 .updateObjectTimerSaveX	skip 1			; preserve register
 
 .drawMapTileSaveA	skip 1			; preserve register
 .drawMapTileSaveY	skip 1			; preserve register
 
 soundChannels		= 6			; number of software defined sound channels
-.soundAddrPtrs		skip soundChannels * 2	; pointers to sound effect data
+.soundAddrPtr		skip soundChannels * 2	; pointers to sound effect data
 .soundTimers		skip soundChannels	; timers for sound effect data
 
 .playSoundAddr		skip 2			; storage for sound table address
@@ -227,6 +225,10 @@ soundChannels		= 6			; number of software defined sound channels
 .playerInput		skip 1			; player input bits (see constants.asm)
 .joystickInput		skip 1			; joystick input bits (see constants.asm)
 .joystickAnalogueSave	skip 1			; preserve analogue joystick value
+
+.updateLadybugSaveDir	skip 1			; preserve current ladybug direction while calculating new direction
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero

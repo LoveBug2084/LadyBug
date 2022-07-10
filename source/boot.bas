@@ -171,7 +171,7 @@ PRINT TAB(6,16);CHR$(131);"I";CHR$(135);"-";CHR$(129);"Instructions";
 
 PRINT TAB(6,18);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Map Editor";
 
-PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Editor keys";
+PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Editor control keys";
 
 PRINT TAB(6,21);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset settings";
 
@@ -200,10 +200,10 @@ PRINT TAB(2,9);CHR$(132);"the enemy attack paths";
 PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply";
 PRINT TAB(2,12);CHR$(133);"an items score value by";CHR$(134);"x2 x3 x5";
 
-PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow";CHR$(129);"letters to spell";
+PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"to spell";
 PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for 2 extra lives";
 
-PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red";CHR$(134);"letters to spell";
+PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"to spell";
 PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(134);"for 200000 points plus a";
 PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds";
 

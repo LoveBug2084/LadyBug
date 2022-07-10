@@ -3734,13 +3734,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawString
 	equb pixels1
-	equw screenAddr + 2 + 8 + 3 * chrColumn + 17 * chrRow
-	equs "HOLD ESC", &ff
-
-	jsr drawString
-	equb pixels1
-	equw screenAddr + 2 + 16 + 12 * chrColumn + 17 * chrRow
-	equs "TO QUIT", &ff
+	equw screenAddr + 2 + 3 * chrColumn + 17 * chrRow
+	equs "HOLD ESC TO QUIT!", &ff
 
 	jsr drawString
 	equb pixelsSpecial0
@@ -8046,7 +8041,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .processSoundGetData
 
-	lda (soundAddrPtrs, x)			; get byte from sound table
+	lda (soundAddrPtr, x)			; get byte from sound table
 
 	and #&c0				; if its timer data then do the timer stuff
 	cmp #&40
@@ -8055,26 +8050,26 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda optionSound				; else if sound enabled
 	beq processSoundNextByte
 
-	lda (soundAddrPtrs, x)			; write data to psg chip
+	lda (soundAddrPtr, x)			; write data to psg chip
 	jsr psgWrite
 
 .processSoundNextByte
 
-	inc soundAddrPtrs, x			; inc pointer and get another byte from table
+	inc soundAddrPtr, x			; inc pointer and get another byte from table
 	bne processSoundGetData
-	inc soundAddrPtrs + 1, x
+	inc soundAddrPtr + 1, x
 	bne processSoundGetData			; bne used here as branch always
 
 .processSoundGetTimer
 
-	lda (soundAddrPtrs, x)			; get new timer value
+	lda (soundAddrPtr, x)			; get new timer value
 	and #&3f
 
 	sta soundTimers, y			; store new timer value
 
-	inc soundAddrPtrs, x			; inc pointer
+	inc soundAddrPtr, x			; inc pointer
 	bne processSoundNext
-	inc soundAddrPtrs + 1, x
+	inc soundAddrPtr + 1, x
 
 .processSoundNext
 
@@ -8269,10 +8264,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	clc					; copy sound data address to channel soundPtrs
 	lda playSoundAddr
 	adc #1
-	sta soundAddrPtrs, x
+	sta soundAddrPtr, x
 	lda playSoundAddr + 1
 	adc #0
-	sta soundAddrPtrs + 1, x
+	sta soundAddrPtr + 1, x
 
 	lda #1					; set channel soundTimer to 1 to trigger sound on the next game loop
 	sta soundTimers, y
@@ -8965,6 +8960,267 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta drawTurnstileDir
 
 	jmp updateLadybugMoveCheckXY
+
+
+
+; .updateLadybug
+
+	; lda pauseLadybug			; if ladybug movement is paused then exit
+	; bne updateLadybugExit
+
+	; lda ladybugEntryEnable			; if ladybug entry animation is enabled then exit
+	; bne updateLadybugExit
+
+	; lda spritesDir + 0			; stop ladybug moving
+	; ora #moveStop
+	; sta spritesDir + 0
+
+	; lsr playerInput				; discard start (fire) bit
+
+; .updateLadybugLeft
+
+	; ldx #moveLeft				; set direction to left
+
+	; lsr playerInput				; if left was pressed then do it
+	; bcs updateLadybugMove
+	
+; .updateLadybugDown
+
+	; ldx #moveDown				; set direction to down
+
+	; lsr playerInput				; if down was pressed then do it
+	; bcs updateLadybugMove
+	
+; .updateLadybugUp
+
+	; ldx #moveUp				; set directtion to up
+
+	; lsr playerInput				; if up was pressed then do it
+	; bcs updateLadybugMove
+	
+; .updateLadybugRight
+
+	; ldx #moveRight				; set direction to right
+
+	; lsr playerInput				; if right was pressed then do it
+	; bcs updateLadybugMove
+	
+; .updateLadybugExit
+
+	; rts					; return
+
+; ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; .updateLadybugMove
+
+	; lda spritesX + 0			; convert ladybug XY to tileMapAddr
+	; sta spriteToAddrX
+	; lda spritesY + 0
+	; sta spriteToAddrY
+	; jsr spriteToAddr
+
+	; jsr checkForObjects			; handle object tile under ladybug
+
+; .updateLadybugGrid
+
+	; lda spritesX + 0			; if sprite is at exact grid
+	; sta spriteToAddrX
+	; and #&0f
+	; cmp #&08
+	; bne updateLadybugMoveCheckXY
+	
+	; lda spritesY + 0
+	; sta spriteToAddrY
+	; and #&0f
+	; cmp #&08
+	; bne updateLadybugMoveCheckXY
+	
+	; ldy moveDirMap, x			; get tile in front of ladybug
+	; lda (tileMapAddr), y
+
+	; bpl updateLadybugMoveCheckXY		; if its a path then move ladybug in direction
+
+	; and #&40				; if its a turnstile then push it
+	; beq updateLadybugTurnstile
+
+	; rts					; else its a wall so exit without moving
+
+; ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; .updateLadybugTurnstile
+
+	; lda #sfxTurnstile			; play turnstile sound
+	; jsr playSound
+
+	; lda (tileMapAddr), y			; get tile from movement direction
+	; and #&3f				; extract the tile number and check for which direction
+	
+	; ldy #0					; check direction
+
+	; cmp #mapTileTurnstileU
+	; beq updateLadybugTurnstilePush
+
+	; iny
+	; cmp #mapTileTurnstileD
+	; beq updateLadybugTurnstilePush
+
+	; iny
+	; cmp #mapTileTurnstileL
+	; beq updateLadybugTurnstilePush
+
+	; iny
+	; cmp #mapTileTurnstileR
+	; beq updateLadybugTurnstilePush
+
+; ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; .updateLadybugMoveCheckXY
+
+	; cpx #moveUp				; if up/down pressed
+	; beq updateLadybugMoveCheckX		; then check if sprite X is aligned
+	; cpx #moveDown
+	; beq updateLadybugMoveCheckX
+	
+; .updateLadybugMoveCheckY			; else left/right was pressed so check if sprite Y is aligned
+
+	; lda spritesY + 0			; if sprite Y is aligned with junction then move horizontally
+	; and #&0f
+	; cmp #8
+	; beq updateLadybugMoveExit
+
+	; bcs updateLadybugMoveCheckY2		; if sprite Y is above the junction then move down
+	; ldx #moveDown
+
+; .updateLadybugMoveCheckY2
+
+	; bcc updateLadybugMoveExit		; if sprite Y is below the junction then move up
+	; ldx #moveUp
+
+; .updateLadybugMoveExit
+
+	; lda spritesDir + 0			; combine the new direction with the original blanking
+	; and #spriteBlanking
+	; stx spritesDir + 0
+	; ora spritesDir + 0
+	; sta spritesDir + 0
+
+; .updateLadyBugReturn
+
+	; rts					; return
+
+; ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; .updateLadybugMoveCheckX			; up/down was pressed so check if sprite X is aligned
+
+	; lda spritesX + 0			; if sprite X is aligned with junction then move vertically
+	; and #&0f
+	; cmp #8
+	; beq updateLadybugMoveExit
+
+	; bcs updateLadybugMoveCheckX2		; if sprite X is left of the junction then move right
+	; ldx #moveRight
+
+; .updateLadybugMoveCheckX2
+
+	; bcc updateLadybugMoveExit		; if sprite X is right of the junction then move left
+	; ldx #moveLeft
+	; bcs updateLadybugMoveExit
+
+; ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; .updateLadybugTurnstileX
+
+	; equb 0,0,8,-8,0,0,8,-8,-8,-8,0,0,8,8,0,0
+	
+; .updateLadybugTurnstileY
+
+	; equb 0,0,-8,-8,0,0,8,8,8,-8,0,0,8,-8,0,0
+
+; ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; .updateLadybugTurnstilePush
+
+	; sty updateLadybugSaveDir		; save the tileDir
+	
+	; txa					; index = dir * 4 + tileDir
+	; and #&03
+	; asl a
+	; asl a
+	; ora updateLadybugSaveDir
+	; tay
+
+	; lda spritesX + 0			; calculate address for turnstile tileMap alteration (vertical or horizontal)
+	; clc
+	; adc updateLadybugTurnstileX, y
+	; sta spriteToAddrX
+	; lda spritesY + 0
+	; clc
+	; adc updateLadybugTurnstileY, y
+	; sta spriteToAddrY
+	; jsr spriteToAddr
+
+	; lda drawMapTileAddr			; copy screen tile address to turnstile screen address
+	; sta drawTurnstileAddr
+	; lda drawMapTileAddr + 1
+	; sta drawTurnstileAddr + 1
+
+	; txa					; choose horizontal or vertical from direction
+	; and #&02
+	; bne updateLadybugTurnstileHorizontal
+	
+; ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; .updateLadybugTurnstileVertical
+
+	; lda #mapTileTurnstileU + wallTurnstile	; place vertical turnStile into tileMap
+	; ldy #1
+	; sta (tileMapAddr), y
+
+	; lda #mapTileTurnstileCV + wallTurnstile
+	; ldy #24
+	; sta (tileMapAddr), y
+
+	; lda #mapTileTurnstileD + wallTurnstile
+	; ldy #47
+	; sta (tileMapAddr), y
+
+	; lda #mapTileBlank			; remove horizontal turnstile from tileMap
+	; ldy #23
+	; sta (tileMapAddr), y
+	; ldy #25
+	; sta (tileMapAddr), y
+
+	; lda #0					; set turnstile direction to vertical for drawTurnstile
+	; sta drawTurnstileDir
+
+	; jmp updateLadybugMoveCheckXY
+
+; ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; .updateLadybugTurnstileHorizontal
+
+	; lda #mapTileTurnstileL + wallTurnstile	; place horizontal turnstile into tileMap
+	; ldy #23
+	; sta (tileMapAddr), y
+
+	; lda #mapTileTurnstileCH + wallTurnstile
+	; ldy #24
+	; sta (tileMapAddr), y
+
+	; lda #mapTileTurnstileR + wallTurnstile
+	; ldy #25
+	; sta (tileMapAddr), y
+
+	; lda #mapTileBlank			; remove vertical turnstile from tileMap
+	; ldy #1
+	; sta (tileMapAddr), y
+	; ldy #47
+	; sta (tileMapAddr), y
+
+	; lda #1					; set turnstile direction to horizontal for drawTurnstile
+	; sta drawTurnstileDir
+
+	; jmp updateLadybugMoveCheckXY
 
 
 

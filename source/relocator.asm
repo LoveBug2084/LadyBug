@@ -33,10 +33,27 @@
 
 .bootstrap
 
-	lda #6					; disable screen
+	ldx #24					; disable display by setting rows starting at 24 and reducing to 0
+
+.bootstrapDisableDisplay
+
+	txa					; save x
+	pha
+
+	lda #19					; wait vsync
+	jsr osbyte
+
+.bootstrapDisableDisplayStore
+
+	lda #6					; get saved x and set number of rows
 	sta crtcAddr
-	lda #0
+	pla
 	sta crtcData
+
+	tax					; reduce row count by two
+	dex
+	dex
+	bpl bootstrapDisableDisplay		; repeat until all rows done
 
 	lda #19					; wait 2 * vsync
 	jsr osbyte
