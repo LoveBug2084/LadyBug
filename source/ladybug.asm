@@ -110,15 +110,15 @@
 
 .cleanResetBank
 
-	skip 1					; storage for ram bank
+	skip 1					; swr bank number for program and data
 	
 .cleanResetMachine
 
-	skip 1					; storage for machine index
+	skip 1					; machine type index
 
 .cleanResetValidation
 
-	skip 1					; storage for validation of cleanResetBank and cleanResetMachine
+	skip 1					; validation of cleanResetBank and cleanResetMachine
 
 .joystickEnable
 
@@ -162,7 +162,7 @@ continueMaster320	= &8073			; master 3.20 entry point
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; cleanResetMaster350				page in extra mos code at fc00, page in bank 15, jump into mos to continue
+; cleanResetMaster350				page in extra mos code at fc00 and bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 continueMaster350	= &fc76			; master 3.50 entry point
@@ -196,7 +196,7 @@ continueCompact		= &8068			; master compact entry point
 	sta bankSelectCopy
 	sta bankSelect
 	
-	jmp continueCompact			; continue with master os reset code
+	jmp continueCompact			; continue with compact os reset code
 
 
 
@@ -270,7 +270,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .psgWrite
 
-	sta via1PortA				; place psg data on port a
+	sta via1PortA				; place psg data on port a slow bus
 	
 	lda #sbPsg + sbLow			; slow bus psg -we low
 	sta via1PortB
@@ -280,7 +280,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	nop
 	nop
 	
-	lda #sbPsg + sbHigh			; psg -we high
+	lda #sbPsg + sbHigh			; slow bus psg -we high
 	sta via1PortB
 
 	rts					; return
@@ -7008,9 +7008,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; initialize the vsyncCounter and playfieldMiddle
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda #levelIntroTime			; set screen timeout
-	sta pauseCounter
-
 	jsr playfieldMiddleWithTimer		; initialize and draw empty middle playfield with timer
 
 	jsr initSprites				; initialize all sprites as blanked and erased
@@ -7199,8 +7196,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equs "GOOD LUCK", &ff
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; process some color stuff and wait for the timer to expire
+	; process sound and colors until timer expires
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	lda #levelIntroTime			; set screen timeout
+	sta pauseCounter
 
 .drawLevelIntroWait
 
@@ -7251,11 +7251,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #hi(screenAddr + 9 * chrRow + 9 * chrColumn)
 	sta drawMapTileAddr + 1
 
-	lda #mapTileSkull
-	jsr drawMapTile
-
-	lda #chrColumn
-	jsr drawMapTileAddrAdvance
+	ldx #3
+	
+.drawBonusGraphicsSkulls
 
 	lda #mapTileSkull
 	jsr drawMapTile
@@ -7263,8 +7261,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #chrColumn
 	jsr drawMapTileAddrAdvance
 
-	lda #mapTileSkull
-	jsr drawMapTile
+	dex
+	bne drawBonusGraphicsSkulls
 
 	lda #mapTileSkull			; and place them in the tile map so ladybug can pass over and redraw them
 	sta tileMap + 8 * 23 + 9
