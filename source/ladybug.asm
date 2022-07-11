@@ -859,7 +859,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .tileMapFindDot
 
-	lda #0.1 * pause			; set timeout for 0.1 seconds (bad maze design)
+	lda #0.1 * pause			; set timeout for 0.1 seconds (bad maze design, not enough room for objects)
 	sta pauseCounter
 
 .tileMapFindDotLoop
@@ -885,8 +885,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	cmp #21					; if its higher than 20 then try again
 	bcs tileMapfindDotX
 	
-	; clc					; add to tileMapAddr so that it points to the top left of the 3x3 tile cube to investigate
-	; adc tileMapAddr
 	adc tileMapAddr				; add to tileMapAddr so that it points to the top left of the 3x3 tile cube to investigate
 	sta tileMapAddr				; carry is clear so no need to use clc before adc
 	lda #0
@@ -1768,7 +1766,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	
 .mainPauseLoop
 
-	lda pauseCounter			; wait until counter hits 0
+	lda pauseCounter			; wait until pause time has expired
 	bne mainPauseLoop
 
 	lda #6					; enable display
@@ -2043,7 +2041,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameOver
 
-	lda #gameOverTime			; set the screen timeout
+	lda #gameOverTime			; set display time
 	sta pauseCounter
 
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer
@@ -7004,8 +7002,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawLevelIntro
 
+	lda #levelIntroTime			; set display time
+	sta pauseCounter
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; initialize the vsyncCounter and playfieldMiddle
+	; initialize screen, sprites and palette
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr playfieldMiddleWithTimer		; initialize and draw empty middle playfield with timer
@@ -7099,10 +7100,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	dex					; until all skulls done
 	bne drawLevelIntroSkullAddr
-
-	lda drawMapTileAddr			; fix up lsb of addr to a multiple of 8
-	and #&f8
-	sta drawMapTileAddr
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; draw the skulls
@@ -7198,9 +7195,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process sound and colors until timer expires
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	lda #levelIntroTime			; set screen timeout
-	sta pauseCounter
 
 .drawLevelIntroWait
 
@@ -7315,12 +7309,12 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusScreen
 
+	lda #bonusTime				; set display time
+	sta pauseCounter
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; initialize playfieldMiddle
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	lda #bonusTime				; set timeout
-	sta pauseCounter
 
 	jsr playfieldMiddleWithTimer		; initialize and draw empty middle playfield with timer
 
