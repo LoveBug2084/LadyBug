@@ -880,18 +880,19 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda tileMapRowsHi, y
 	sta tileMapAddr + 1
 	
-.tileMapfindDotX
+.tileMapFindDotX
 
 	jsr random				; get random value 0-255 and mask it to become 0-28 in steps of 4
 	and #&1c
 	cmp #21					; if its higher than 20 then try again
-	bcs tileMapfindDotX
+	bcs tileMapFindDotX
 	
 	adc tileMapAddr				; add to tileMapAddr so that it points to the top left of the 3x3 tile cube to investigate
 	sta tileMapAddr				; (carry is clear so no need to use clc before adc)
-	lda #0
-	adc tileMapAddr + 1
-	sta tileMapAddr + 1
+	bcc tileMapFindDotCheck
+	inc tileMapAddr + 1
+
+.tileMapFindDotCheck
 
 	ldy #24					; if center tile does not contain a dot then try again
 	lda (tileMapAddr), y
