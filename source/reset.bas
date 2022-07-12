@@ -84,8 +84,8 @@ PRINT TAB(1,10);CHR$(133);"Do you wish to reset the high score";
 PRINT TAB(1,11);CHR$(133);"table to default Y/N";CHR$(135);"?";CHR$(131);
 INPUT "" H$:IF H$="y" THEN H$="Y"
 
-PRINT TAB(1,13);CHR$(130);"Do you wish to reset the game";
-PRINT TAB(1,14);CHR$(130);"settings to default Y/N";CHR$(135);"?";CHR$(131);
+PRINT TAB(1,13);CHR$(130);"Do you wish to reset the controls and";
+PRINT TAB(1,14);CHR$(130);"game settings to default Y/N";CHR$(135);"?";CHR$(131);
 INPUT "" S$:IF S$="y" THEN S$="Y"
 
 PRINT TAB(0,16);
