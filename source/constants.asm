@@ -18,8 +18,8 @@
 ; important constants
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-true			= TRUE			; because caps burn the eyes !
-false			= FALSE
+true			= &00			; true and false used for enable flags
+false			= &ff
 
 magicNumber		= &69			; used for random seed, validation generation, swr test
 

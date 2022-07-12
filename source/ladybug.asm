@@ -670,7 +670,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda initPlayfieldMiddleMazeTable + 1, y
 	sta initPlayfieldMiddleRead + 2
 	
-	lda #lo(tileMap + 24)			; set start address of tile map
+	lda #lo(tileMap + 24)			; set start address of tile map (inside outer timer tiles)
 	sta initPlayfieldMiddleWriteLeft + 1
 	lda #hi(tileMap + 24)
 	sta initPlayfieldMiddleWriteLeft + 2
@@ -711,7 +711,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	inc levelEdibles			; then increment levelEdibles (count the dots)
 
-	cpy #10					; if not middle tile
+	cpy #10					; if not middle column (we dont want to count the middle column dot twice)
 	beq initPlayfieldMiddleRight
 	
 	inc levelEdibles			; then increment levelEdibles
@@ -728,7 +728,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	sta addr16				; store tile in map
 
-	sec
+	sec					; decrement right side address as we are filling from right most column to center
 	lda initPlayfieldMiddleWriteRight + 1
 	sbc #1
 	sta initPlayfieldMiddleWriteRight + 1
@@ -744,10 +744,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	clc
 	adc initPlayfieldMiddleRead + 1
 	sta initPlayfieldMiddleRead + 1
-	lda #0
-	adc initPlayfieldMiddleRead + 2
-	sta initPlayfieldMiddleRead + 2
+	bcc initPlayfieldMiddleWriteNextRow
+	inc initPlayfieldMiddleRead + 2
 	
+.initPlayfieldMiddleWriteNextRow
+
 	clc					; move map address forward 23 bytes to next row
 	lda initPlayfieldMiddleWriteLeft + 1
 	adc #23
@@ -784,45 +785,45 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .initTimerTiles
 
-	lda #mapTileTimerTopLeft + wallSolid	; top left tile
+	lda #mapTileTimerTopLeft + wallSolid	; store top left timer tile in tileMap
 	sta tileMap
 
-	lda #mapTileTimerTopRight + wallSolid	; top right tile
+	lda #mapTileTimerTopRight + wallSolid	; store top right timer tile in tileMap
 	sta tileMap + 22
 	
-	lda #mapTileTimerBottomLeft + wallSolid	; bottom left tile
+	lda #mapTileTimerBottomLeft + wallSolid	; bottom left timer tile in tileMap
 	sta tileMap + 22 * 23
 	
-	lda #mapTileTimerBottomRight + wallSolid; bottom right tile
+	lda #mapTileTimerBottomRight + wallSolid; bottom right timer tile in tilemap
 	sta tileMap + 22 * 23 + 22
 	
 	ldx #21					; do 21 copies of
 	
 .initTimerTilesHorizontal
 
-	lda #mapTileTimerTop + wallSolid	; top tile
+	lda #mapTileTimerTop + wallSolid	; store top timer tile in top row of tileMap
 	sta tileMap, x
 	
-	lda #mapTileTimerBottom + wallSolid	; bottom tile
+	lda #mapTileTimerBottom + wallSolid	; store bottom timer tile in bottom row of timeMap
 	sta tileMap + 22 * 23, x
 	
-	dex					; until done
-	bne initTimerTilesHorizontal
+	dex					; next column
+	bne initTimerTilesHorizontal		; until all columns 21-1 are done
 
-	ldx #21					; do 21 copies of
-
-	lda #lo(tileMap + 1 * 23)
+	lda #lo(tileMap + 1 * 23)		; start at column 1 row 1 in tileMap
 	sta initTimerTilesAddr
 	lda #hi(tileMap + 1 * 23)
 	sta initTimerTilesAddr + 1
 
+	ldx #21					; do 21 copies of
+
 .initTimerTilesVertical
 
-	lda #mapTileTimerLeft + wallSolid	; left tile
+	lda #mapTileTimerLeft + wallSolid	; store left timer tile in column 1 of tileMap
 	ldy #0
 	sta (initTimerTilesAddr), y
 
-	lda #mapTileTimerRight + wallSolid	; right tile
+	lda #mapTileTimerRight + wallSolid	; store right timer tile in column 22 of tileMap
 	ldy #22
 	sta (initTimerTilesAddr), y
 
@@ -830,11 +831,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda #23
 	adc initTimerTilesAddr
 	sta initTimerTilesAddr
-	lda #0
-	adc initTimerTilesAddr + 1
-	sta initTimerTilesAddr + 1
+	bcc initTimerTilesNextRow
+	inc initTimerTilesAddr + 1
 
-	dex					; until done
+.initTimerTilesNextRow
+
+	dex					; until rows 21-1 done
 	bne initTimerTilesVertical
 	
 	lda #0					; zero enemy timer position
@@ -846,8 +848,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; tileMapfindDot				find a random tileMap location that contains a dot and isnt near a turnstile
-;						if location hasnt been found within 0.1 second then timeout
-;						(bad maze design, not enough spaces for objects)
+;						if location hasnt been found within 0.1 seconds then timeout
+;						timeout happens because of a bad maze design with not enough spaces for objects
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -886,7 +888,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	bcs tileMapfindDotX
 	
 	adc tileMapAddr				; add to tileMapAddr so that it points to the top left of the 3x3 tile cube to investigate
-	sta tileMapAddr				; carry is clear so no need to use clc before adc
+	sta tileMapAddr				; (carry is clear so no need to use clc before adc)
 	lda #0
 	adc tileMapAddr + 1
 	sta tileMapAddr + 1
@@ -929,8 +931,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .tileMapFindDotExit
 
-	sec					; return with location found status and tile address
-	rts					; and tile address
+	sec					; return with location found status and tile address in tileMapAddr
+	rts
 
 .tileMapFindDotFailed
 
@@ -955,7 +957,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .placeTileMapHeartsLoop
 
-	jsr tileMapFindDot			; pick a random tileMap location containing a dot and isnt near a turnstile
+	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
 	bcc placeTileMapHeartsExit		; if location not found (bad maze design) then exit
 
@@ -988,7 +990,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .placeTileMapLettersLoop
 
-	jsr tileMapFindDot			; pick a random tileMap location containing a dot and isnt near a turnstile
+	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
 	bcc placeTileMapLettersExit		; if location not found (bad maze design) then exit
 
@@ -1006,7 +1008,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; placeTileMapSkulls				place skulls at random locations in the map
+; placeTileMapSkulls				place skulls at random locations in the map, decrement edibles for each skull placed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1021,7 +1023,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .placeTileMapSkullsLoop
 
-	jsr tileMapFindDot			; pick a random tileMap location containing a dot thats not next to a turnstile
+	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
 	bcc placeTileMapSkullsExit		; if location not found (bad maze design) then exit
 
@@ -1077,11 +1079,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawScore					draw score with leading zero blanking (single digit at a time)
+; drawScore					draw a single score digit and allow for leading zero blanking
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawMapTileAddr		points to next tile position on screen
+;			drawScoreIndex		points to the next digit index
 ;			A			destroyed
 ;			X			destroyed
 ;			Y			destroyed
@@ -1099,7 +1102,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	
 	lda #5					; then index = 5
 	sta drawScoreIndex
-	lda #0					; leading zero blanking = true
+	lda #true				; leading zero blanking = true
 	sta drawScoreBlanking
 
 						; set screen address to lower panel for score
@@ -1173,7 +1176,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	lda #5					; index = 5
 	sta drawScoreIndex
-	lda #0					; blanking = true
+	lda #true				; blanking = true
 	sta drawScoreBlanking
 
 						; set screen address to lower panel for high score
@@ -1266,7 +1269,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	cmp #moveLeft
 	bne eraseSpriteCheckUp
 
-	ldy #1					; then check tile to the right
+	ldy #1					; then check the next tile to the right
 	lda (tileMapAddr), y
 	bmi eraseSpriteExit			; if its a maze tile then exit
 
@@ -1311,7 +1314,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda (tileMapAddr), y			; draw tile
 	jsr drawMapTile
 
-	jmp eraseSpriteExit
+	jmp eraseSpriteExit			; restore registers and return
 
 
 
@@ -1352,7 +1355,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	sta addr16				; write to screen
 
-	sec
 	dec eraseBlockBytes			; if all bytes written then exit
 	beq eraseBlockExit
 
