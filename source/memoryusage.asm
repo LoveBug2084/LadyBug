@@ -19,7 +19,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
-	print "sideways ram  ", ~swramStart, "- ", ~swramEnd - 1, ", ", swramEnd - swramStart, "bytes"
+	print "high ram      ", ~swramStart, "- ", ~swramEnd - 1, ", ", swramEnd - swramStart, "bytes"
 	print "----------------------------------------------------"
 	print "used          ", ~swramStart, "- ", ~loaderEnd - 1, ", ", loaderEnd - swramStart, " bytes"
 	print "free          ", ~loaderEnd, "- ", ~swramEnd - 1, ", ", swramEnd - loaderEnd, "bytes"
@@ -37,7 +37,7 @@
 	print "----------------------------------------------------"
 	print "used          ", ~pageZero, "- ", ~programEnd - 1, ", ", programEnd - pageZero, "bytes"
 	print "free          ", ~programEnd, "- ", ~screenAddr - 1, ", ", screenAddr - programEnd, "bytes"
-	print "unused        ", pageBreak - pagefx200End + pagefx200 - pageVectorsEnd + page0100 - pageZeroEnd, "bytes"
+	print "unused        ", pageBreak - pagefx200End + pagefx200 - page0200End + page0100 - pageZeroEnd, "bytes"
 	print "----------------------------------------------------"
 	print
 
@@ -48,10 +48,10 @@
 	print "unused        ", ~pageZeroEnd, "- ", ~page0100 - 1, ", ", page0100 - pageZeroEnd, "bytes"
 	print "----------------------------------------------------"
 	print "used          ", ~page0100, "- ", ~page0100End - 1, ", ", page0100End - page0100, "bytes"
-	print "stack         ", ~page0100End, "- ", ~pageVectors - 1, ", ", pageVectors - page0100End, "bytes"
+	print "stack         ", ~page0100End, "- ", ~page0200 - 1, ", ", page0200 - page0100End, "bytes"
 	print "----------------------------------------------------"
-	print "used          ", ~pageVectors, "- ", ~pageVectorsEnd - 1, ", ", pageVectorsEnd - pageVectors, "bytes" 
-	print "unused        ", ~pageVectorsEnd, "- ", ~pagefx200 - 1, ", ", pagefx200 - pageVectorsEnd, "bytes"
+	print "used          ", ~page0200, "- ", ~page0200End - 1, ", ", page0200End - page0200, "bytes" 
+	print "unused        ", ~page0200End, "- ", ~pagefx200 - 1, ", ", pagefx200 - page0200End, "bytes"
 	print "----------------------------------------------------"
 	print "used          ", ~pagefx200, "- ", ~pagefx200End - 1, ", ", pagefx200End - pagefx200, "bytes" 
 	print "unused        ", ~pagefx200End, "- ", ~pageBreak - 1, ", ", pageBreak - pagefx200End, "bytes"

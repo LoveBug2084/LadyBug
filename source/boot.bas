@@ -80,7 +80,7 @@ UNTIL k$="K" OR k$="J" OR k$="U"
 PROClogo
 PROCexpand
 
-Z%=OPENIN("E.Maps")
+Z%=OPENIN("Maps")
 INPUT#Z%,maze1$,maze2$,maze3$
 CLOSE#Z%
 
@@ -159,7 +159,7 @@ PRINT TAB(6,4);CHR$(129);"Universal 1981 arcade game";
 
 PRINT TAB(6,6);CHR$(135);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
 
-PRINT TAB(16,9);CHR$(135);"Options";
+PRINT TAB(15,9);CHR$(135);"Options";
 
 PRINT TAB(6,12);CHR$(129);"K";CHR$(135);"-";CHR$(131);"Play";CHR$(129);"Keyboard";
 
@@ -233,7 +233,7 @@ PRINT TAB(2,9);CHR$(133);"and";CHR$(131);"without losing a life";:*FX 19
 PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);up$;CHR$(129);"and";CHR$(131);down$;CHR$(129);"keys to";:*FX 19
 PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"RETURN";CHR$(129);"to";:*FX 19
 PRINT TAB(2,13);CHR$(129);"adjust the game settings or";:*FX 19
-PRINT TAB(2,14);CHR$(129);"redefine the keys";:*FX 19
+PRINT TAB(2,14);CHR$(129);"redefine the game controls";:*FX 19
 
 PRINT TAB(2,16);CHR$(131);"During the game press";CHR$(129);"RETURN";CHR$(131);"to":*FX 19
 PRINT TAB(2,17);CHR$(131);"pause, move";CHR$(129);"Lady Bug";CHR$(131);"to unpause";:*FX 19

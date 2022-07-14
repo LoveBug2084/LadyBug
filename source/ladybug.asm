@@ -44,7 +44,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			8 bit random number (randomSeed + 1)
+; exit			A			8 bit random number from address randomSeed + 1
 ;			X			preserved
 ;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -58,10 +58,10 @@
 	lda randomSeed + 1			; get hi 8 bits of seed
 	lsr a					; shift it right to put bit 0 into carry
 	lda randomSeed				; get lo 8 bits of seed
-	ror a					; shift it right putting carry into bit 7 and bit 0 into carry
+	ror a					; rotate it right putting carry into bit 7 and bit 0 into carry
 	eor randomSeed + 1			; eor with hi 8 bits
 	sta randomSeed + 1			; store in high 8 bits
-	ror a					; shift it right putting carry into bit 7
+	ror a					; rotate it right putting carry into bit 7
 	eor randomSeed				; eor with lo 8 bits
 	sta randomSeed				; store in lo 8 bits
 	eor randomSeed + 1			; eor with hi 8 bits
@@ -73,6 +73,12 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawVegetableScore				draws vegetable score in the center box if enabled
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawVegetableScore
@@ -91,7 +97,7 @@
 
 	lda vegetableScore			; draw the top 2 digits
 	jsr drawHexMini
-	lda #0					; draw 00
+	lda #&00				; draw 00 and return
 	jsr drawHexMini
 
 .drawVegetableScoreExit
@@ -118,23 +124,27 @@
 
 .cleanResetValidation
 
-	skip 1					; validation of cleanResetBank and cleanResetMachine
+	skip 1					; validation of cleanResetBank and cleanResetMachine (checksum)
 
 .joystickEnable
 
-	skip 1					; flag for input mode, 0 = no joystick, 1 = analogue joystick, 2 = userport joystick
-
+	skip 1					; control input mode, 0 = no joystick, 1 = analogue joystick, 2 = userport joystick
+						; note: keyboard is always active even when joystick is enabled
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;cleanReset (break key)				simulated power on reset while preserving the stack and high ram
+; cleanReset (break key)			simulated power on reset while preserving the stack and high ram
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit						jumps into os rom
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .cleanReset
 
 	sei					; disable irq interrupts
 	
-	lda cleanResetBank			; page in ram bank
+	lda cleanResetBank			; page in high ram bank
 	sta bankSelect
 	
 	ldx cleanResetMachine			; get machine index
@@ -203,6 +213,16 @@ continueCompact		= &8068			; master compact entry point
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; irq interrupt					handle vsync and timer1 interrupts, setting screenHalf upper/lower flag and bump counters
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			screenHalf		set to 00 for upper half or ff for lower half
+;			vsyncCounter		incremented every vsync (50Hz)
+;			pauseCount		decremented every 2 * vsync (25Hz)
+;			P			preserved
+;			A			preserved
+;			X			preserved
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64uS )
 
@@ -214,6 +234,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	and #2
 	bne irqVsync				; then go do the upper vsync interrupt
 	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; lower interrupt (timer 1)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .irqTimer					; else its a timer interrupt so do the lower interrupt
@@ -229,8 +251,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	rti					; return to main program
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; upper interrupt (vsync)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.irqVsync					; upper interrupt
+.irqVsync
 
 	sta via1Ifr				; clear vsync interrupt flag
 
@@ -266,6 +290,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			A			data to be written to 76489 psg
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .psgWrite
@@ -293,6 +321,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .waitVsyncUpper
@@ -310,6 +342,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .waitVsyncLower
@@ -327,6 +363,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .updateObjectTimerPalette			; palette colors for letters and hearts
@@ -392,10 +432,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; pageVectors irq vector, functions, break key vector
+; page0200 irq vector, functions, break key vector
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org pageVectors
+	org page0200
 
 .keyOrder					; squeeze this in the previously unused 4 bytes here
 
@@ -423,6 +463,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; exit			playerInput		bit 0=start 1=left 2=down 3=up 4=right 5=esc
 ;			A			destroyed
 ;			X			destroyed
+;			Y			destroyed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .keyboardScan
@@ -461,7 +504,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled)
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; keyboardScanKey			place key onto slow bus port a and read key status into player input bits
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .keyboardScanKey
 
@@ -478,6 +523,14 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawObjectScore				draws object score img at xy if enabled
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawObjectScore
@@ -499,19 +552,21 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; end of pageVectors functions
+; end of page0200 functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-.pageVectorsEnd
+.page0200End
 	skip 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; pagefx200					os location for *fx 200 value, set to 0 to make sure the ram is not erased by the os on break
+; pagefx200					os location for *fx 200 value, set to 0 to make sure the ram is not erased by the os on break key
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org pagefx200
+
+.osFx200
 	
 	equb 0
 
@@ -522,7 +577,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			destroyed
+; exit			levelLetters		random letter
+;			levelLetters + 1	random letter
+;			levelLetters + 2	random letter
+;			A			destroyed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .chooseLetters
@@ -553,7 +613,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	rts					; return
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; chooseLettersRandom			pick a random letter and return with letter tile number in A
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .chooseLettersRandom
 
@@ -582,6 +644,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org pageBreak				; set the break jump vector to the clean reset function
+
+.osBreakVector
 
 	jmp cleanReset
 
@@ -637,11 +701,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; initPlayfieldMiddle				copy maze tiles to tileMap
-;						levelEdibles = number of dots in the map
-;						place hearts in the map replacing dots (hearts are edible so no change to levelEdibles value)
-;						place letters in the map replacing dots (letters are edible so no change to levelEdibles value)
-;						place skulls in map replacing dots, subtract skulls from levelEdibles (skulls are not edible)
+; initPlayfieldMiddle				copy maze tiles to tileMap and count the number of dots and store in levelEdibles
+;						place hearts in the map replacing dots (hearts are edible so no change to levelEdibles)
+;						place letters in the map replacing dots (letters are edible so no change to levelEdibles)
+;						place skulls in map replacing dots ..
+;						(skulls are not edible so the number of skulls is subtracted from levelEdibles by placeTileMapSkulls)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -696,7 +760,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .initPlayfieldMiddleRead
 
-	ldx addr16, y				; get byte from maze
+	ldx dummy16, y				; get byte from maze (address previously setup)
 
 	lda mazeTileTableLeft, x		; convert to tile for left side
 
@@ -704,7 +768,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .initPlayfieldMiddleWriteLeft
 
-	sta addr16, y				; store tile in map
+	sta dummy16, y				; store tile in map (address previously setup)
 	
 	cmp #mapTileDot				; if its a dot
 	bne initPlayfieldMiddleRight
@@ -726,7 +790,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .initPlayfieldMiddleWriteRight
 
-	sta addr16				; store tile in map
+	sta dummy16				; store tile in map (address previously setup)
 
 	sec					; decrement right side address as we are filling from right most column to center
 	lda initPlayfieldMiddleWriteRight + 1
@@ -767,7 +831,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	jsr placeTileMapLetters			; place 3 random letters at random positions in the tileMap (replacing dots)
 
-	jsr placeTileMapSkulls			; place the correct number of skull at random positions in the tileMap (replacing dots)
+	jsr placeTileMapSkulls			; place the correct number of skulls at random positions in the tileMap (replacing dots)
 
 	; continue on to initTimerTiles below
 
@@ -856,6 +920,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; exit			tileMapAddr		contains the address of the dot in the tileMap
 ;			carry			set if location found, clear if not found (timed out)
 ;			A			destroyed
+;			X			preserved
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1052,6 +1117,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
+;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1099,11 +1165,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	sta drawScoreDigitRead + 1
 
 	dec drawScoreIndex			; move to next digit
-	bpl drawScoreDigit			; if index < 0
+	bpl drawScoreDigit			; if index < 0 (all digits drawn)
 	
-	lda #5					; then index = 5
+	lda #5					; then index = 5 (first digit again)
 	sta drawScoreIndex
-	lda #true				; leading zero blanking = true
+	lda #0					; and also enable leading zero blanking
 	sta drawScoreBlanking
 
 						; set screen address to lower panel for score
@@ -1120,13 +1186,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda drawScoreAddr + 1
 	sta drawMapTileAddr + 1
 
-	lda drawScoreIndex			; get digit index
+	lda drawScoreIndex			; get digit index and divide by two to create byte index in x (2 digits per byte)
 	lsr a					; carry now = odd (1) or even (0) digit
-	tax					; x = digit index / 2 (byte index as there are 2 digits per byte)
+	tax
 	
 .drawScoreDigitRead
 
-	lda addr8, x				; get byte from score
+	lda dummy8, x				; get byte from score  (address previously setup)
 	
 	bcc drawScoreDigitPrint			; if carry is set (odd digit) then shift bits to get the upper bcd digit
 	
@@ -1144,16 +1210,16 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .drawScoreDigitCheckBlanking
 
-	bit drawScoreBlanking			; if blanking enabled
+	bit drawScoreBlanking			; if leading zero blanking enabled (drawScoreBlanking < 0)
 	bmi drawScoreNext
 
-	lda #extraTileBlank			; print a blank tile instead of digit 0
+	lda #extraTileBlank			; then print a blank tile instead of digit 0
 
 .drawScoreNext
 
 	jsr drawExtraTile			; print digit tile
 	
-	lda drawMapTileAddr			; copy new tile address for next digit
+	lda drawMapTileAddr			; save screen address for next digit
 	sta drawScoreAddr
 	lda drawMapTileAddr + 1
 	sta drawScoreAddr + 1
@@ -1165,6 +1231,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawHighScore					draw highScore using 6 calls to drawscore
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
 ;			Y			destroyed
@@ -1175,9 +1243,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda #highScore				; set address for highScore display
 	sta drawScoreDigitRead + 1
 
-	lda #5					; index = 5
+	lda #5					; index = 5 (first digit of high score)
 	sta drawScoreIndex
-	lda #true				; blanking = true
+	lda #0					; enable leading zero blanking
 	sta drawScoreBlanking
 
 						; set screen address to lower panel for high score
@@ -1191,8 +1259,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	jsr drawScoreDigit			; print a digit of high score
 	
-	dec drawScoreIndex			; repeat until all 6 digits done
-	bpl drawHighScoreLoop
+	dec drawScoreIndex			; move to next digit
+	bpl drawHighScoreLoop			; repeat until all 6 digits done
 	
 	lda #0					; draw final 0 digit and return
 	jmp drawExtraTile
@@ -1206,6 +1274,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			X			sprite number (index into spritesErase table containing x, y, dir information)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
+;			X			preserved
+;			y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .eraseSpriteTileX
@@ -1223,13 +1293,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	stx eraseSpriteSaveX			; preserve registers
 	sty eraseSpriteSaveY
 	
-	lda spritesEraseX, x			; erase 10x14 pixel area at coordinates
+	lda spritesEraseX, x			; erase 10x14 pixel area at sprite coordinates
 	sta drawSpriteX
 	lda spritesEraseY, x
 	sta drawSpriteY
 	jsr eraseBlock
 
-	ldx eraseSpriteSaveX			; get sprite index
+	ldx eraseSpriteSaveX			; get saved sprite index
 
 	lda spritesEraseDir, x			; if sprite was moving
 	and #moveStop
@@ -1239,23 +1309,23 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	and #3
 	tay
 	
-	lda spritesEraseX, x			; calculate the address of the tile to the left/right/above/below the sprite (the tile that is behind sprite)
+	lda spritesEraseX, x			; calculate the x offset of the tile behind the sprite
 	clc
 	adc eraseSpriteTileX, y
 	sta spriteToAddrX
 	
-	lda spritesEraseY, x
+	lda spritesEraseY, x			; calculate the y offset of the tile behind the sprite
 	clc
 	adc eraseSpriteTileY, y
 	sta spriteToAddrY
-	jsr spriteToAddr
+	jsr spriteToAddr			; get screenAddr and tileMapAddr for tile behind the sprite
 
-	ldy #0					; get tile from map and if its not a blank tile then redraw it on screen
+	ldy #0					; get tile from map and if its not a blank tile
 	lda (tileMapAddr), y
 	cmp #mapTileBlank
 	beq eraseSpriteAdjustAddress
 
-	jsr drawMapTile
+	jsr drawMapTile				; then redraw it on screen
 	jmp eraseSpriteCheckLeft
 	
 .eraseSpriteAdjustAddress
@@ -1277,7 +1347,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	cmp #objectTileIndex			; if its not an object then then exit
 	bcc eraseSpriteExit
 
-	jsr drawMapTile				; else draw the tile
+	jsr drawMapTile				; else draw the object tile to prevent cropping a column on objects cause by the previous tile draw
 
 .eraseSpriteExit
 
@@ -1312,7 +1382,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	adc #hi(chrRow - chrColumn)
 	sta drawMapTileAddr + 1
 
-	lda (tileMapAddr), y			; draw tile
+	lda (tileMapAddr), y			; draw tile to prevent cropping the top of the object tile
 	jsr drawMapTile
 
 	jmp eraseSpriteExit			; restore registers and return
@@ -1324,6 +1394,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			spriteX			sprite coordinates for erasure
 ;			spriteY
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			destroyed
+;			y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .eraseBlock
@@ -1354,7 +1428,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .eraseBlockWrite
 
-	sta addr16				; write to screen
+	sta dummy16				; write to screen (address previously setup)
 
 	dec eraseBlockBytes			; if all bytes written then exit
 	beq eraseBlockExit
@@ -1420,7 +1494,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	sta drawMapTileSaveA			; preserve registers
 	sty drawMapTileSaveY
 
-	tay					; convert to mapTile index to address
+	tay					; convert tile img number to extra tile address
 	lda extraTileAddrLo, y
 	sta drawMapTileRead + 1
 	lda extraTileAddrHi, y
@@ -1446,7 +1520,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ; bits 7 and 6 have a special function
-
+;
 ; bits	76	function
 ;	00	tile 0-63 (path)
 ;	01	tile 64-127 (path)
@@ -1511,11 +1585,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	
 .drawMapTileRead
 
-	lda addr16, y				; read byte from tile
+	lda dummy16, y				; read byte from tile (address previously setup)
 	
 .drawMapTileWrite
 
-	sta addr16, y				; write byte to screen
+	sta dummy16, y				; write byte to screen (address previously setup)
 	
 .drawMapTileContinue
 
@@ -1688,7 +1762,7 @@ pixelRight		= &55			; bit mask for right pixel
 	
 .drawChrFontRead
 
-	lda addr16				; read 4 pixel pairs from font and save it
+	lda dummy16				; read 4 pixel pairs from font and save it (address previously setup)
 	sta drawChrFontData
 
 	inc drawChrFontRead + 1			; bump font read address
@@ -1710,11 +1784,11 @@ pixelRight		= &55			; bit mask for right pixel
 
 .drawChrWriteColor	
 
-	and #&ff				; mask pixels with color value previously stored here
+	and #dummy8				; mask pixels with color value previously stored here
 
 .drawChrWriteScreen
 
-	sta addr16				; write to screen
+	sta dummy16				; write to screen (address previously setup)
 
 .drawChrNextLine
 
@@ -2385,8 +2459,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	sbc spritesX + 0
 	bcs moveSpritesCollisionX
 	eor #&ff
-;	clc					; carry is clear, clc not needed
-	adc #1
+	adc #1					; carry is clear, clc not needed
 
 .moveSpritesCollisionX
 
@@ -2398,8 +2471,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	sbc spritesY + 0
 	bcs moveSpritesCollisionY
 	eor #&ff
-;	clc					; carry is clear, clc not needed
-	adc #1
+	adc #1					; carry is clear, clc not needed
 
 .moveSpritesCollisionY
 
@@ -3091,7 +3163,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	; data value of following instruction modified by drawSprite/drawSpriteVflip/drawVegetable
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx #&ff
+	ldx #dummy8
 
 .drawSpriteRead
 
@@ -3099,7 +3171,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	; sprite source address written into the following instruction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda addr16, x				; read byte from sprite
+	lda dummy16, x				; read byte from sprite (address previously setup)
 
 .drawSpriteWrite	
 
@@ -3107,7 +3179,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	; screen destination address written into the following instruction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	sta addr16, y				; write byte to screen
+	sta dummy16, y				; write byte to screen
 
 .drawSpriteNextLine
 
@@ -3146,7 +3218,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	; the value in the following instruction is replaced by drawSprite/drawSpriteVflip/drawVegetable
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	cpx #&ff
+	cpx #dummy8
 	bne drawSpriteRead			; if still processing column then continue reading and writing sprite data
 	
 	clc					; adjust sprite address for next column
@@ -3416,11 +3488,11 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	
 .drawChrMiniLoop
 
-	lda addr16, y				; get byte from minifont
+	lda dummy16, y				; get byte from minifont (address previously setup)
 	
 .drawChrMiniWrite
 
-	sta addr16, y				; store it on screen
+	sta dummy16, y				; store it on screen
 	
 	dey					; repeat until all bytes transferred
 	bpl drawChrMiniLoop
@@ -4932,7 +5004,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .mainMenuDrawLogoX
 
-	lda addr16				; get byte from logo tile data
+	lda dummy16				; get byte from logo tile data (address previously setup)
 
 	bpl mainMenuDrawLogoTile		; if tile = -1
 	
@@ -5455,7 +5527,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ora #'0'				; else draw the digit
 	jsr drawChr
 
-	lda #&ff				; disable leading zero blanking
+	lda #&ff				; digit was drawn so disable leading zero blanking
 	sta drawScoreTableZero
 
 	rts					; return
@@ -6327,8 +6399,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .changeTimerTileFlip
 
-	eor addr16
-	sta addr16
+	eor dummy16				; (address previously setup)
+	sta dummy16
 
 	sta changeTimerTileDraw + 1		; store tile number for drawing
 
@@ -6342,7 +6414,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .changeTimerTileDraw
 
-	lda #&ff				; tile number (#&ff replaced by tile number from previous code)
+	lda #dummy8				; tile number (replaced by tile number from previous code)
 
 	cpx #0					; if tile is column 0
 	bne changeTimerTileDraw6
@@ -6811,7 +6883,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; the following address is modified to point to either the upper or lower sprite index
 	; --------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx addr8				; get sprite index so we can continue
+	ldx dummy8				; get sprite index so we can continue (address previously setup)
 
 .redrawSpritesEraseLoop
 
@@ -6993,7 +7065,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; following instruction address replaced with lower/upper index address
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	stx addr8				; save current sprite index for continuation next frame
+	stx dummy8				; save current sprite index for continuation next frame
 	
 	rts					; return
 
@@ -9647,18 +9719,18 @@ include "soundtables.asm"
 
 .joystickAnalogueChannelRead
 
-	lda addr16				; read value from adc and save (addr setup by relocator.asm)
+	lda dummy16				; read value from adc and save (addr setup by relocator.asm)
 	sta joystickAnalogueSave
 	
 .joystickAnalogueControlRead
 
-	lda addr16				; flip channel and start new adc conversion (addr setup by relocator)
+	lda dummy16				; flip channel and start new adc conversion (addr setup by relocator)
 	and #1
 	eor #1
 
 .joystickAnalogueControlWrite
 
-	sta addr16				; (addr setup by relocator)
+	sta dummy16				; (addr setup by relocator)
 
 	lsr a					; put channel (0 or 1) into carry (note channel has been exored with 1 !)
 

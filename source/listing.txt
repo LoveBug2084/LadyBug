@@ -1,5 +1,5 @@
 ----------------------------------------------------
-sideways ram  &8000 - &AFFF , 12288 bytes
+high ram      &8000 - &AFFF , 12288 bytes
 ----------------------------------------------------
 used          &8000 - &AF9D , 12190  bytes
 free          &AF9E - &AFFF , 98 bytes
@@ -1069,8 +1069,9 @@ bootstrap     &4800 - &4943 , 324 bytes
      024F   4C A5 0B   JMP &0BA5
 .drawObjectScoreExit
      0252   60         RTS
-.pageVectorsEnd
+.page0200End
      0253
+.osFx200
      0258   00
 .chooseLetters
      0259   20 75 02   JSR &0275
@@ -1097,6 +1098,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      0280   60         RTS
 .pagefx200End
      0281
+.osBreakVector
      0287   4C 34 01   JMP &0134
 .updateEnemyTimer
      028A   A5 2D      LDA &2D
@@ -9075,11 +9077,11 @@ bootstrap     &4800 - &4943 , 324 bytes
 
 Saving file '$.!Boot'
 Saving file '$.Config'
-Saving file 'E.Maps'
+Saving file '$.Maps'
 Saving file '$.Loader'
 Saving file '$.LadyBug'
-Saving file 'D.Config'
-Saving file 'E.Code'
+Saving file 'Default'
+Saving file '$.EditorM'
 
 
 

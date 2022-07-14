@@ -18,9 +18,6 @@
 ; important constants
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-true			= &00			; true and false used for enable flags
-false			= &ff
-
 magicNumber		= &69			; used for random seed, validation generation, swr test
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -225,8 +222,8 @@ opcodeRTI		= &40			; 6502 opcode for RTI instruction
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-addr8			= &ff			; address place holders (used in self modifying code in multiple functions)
-addr16			= &ff00
+dummy8			= &ff			; dummy byte place holder (used in self modifying code in multiple functions)
+dummy16			= &ff00
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -445,7 +442,7 @@ oswrch			= &ffee			; os function
 pageZero		= &0000			; all variables here
 page0100		= &0100			; page 1 functions
 page0130		= &0130			; reset code
-pageVectors		= &0200			; os vector redirect
+page0200		= &0200			; os vector redirect and misc
 pagefx200		= &0258			; os fx 200
 pageBreak		= &0287			; os break key intercept
 pageNmi			= &0d00			; os nmi

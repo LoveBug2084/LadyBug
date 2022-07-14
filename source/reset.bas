@@ -34,7 +34,7 @@ REM ---------------------------
 
 
 
-ON ERROR PRINT TAB(0,22);:REPORT:PRINT'"Press any key ";:K%=GET:RUN
+ON ERROR PRINT TAB(0,21);:REPORT:PRINT'"Press any key";:K%=GET:RUN
 
 MODE 7:VDU23,1,0;0;0;0;
 
@@ -50,7 +50,7 @@ S%=&8010
 F%=&130
 M%=&69
 
-OSCLI("LOAD D.Config " + STR$~(&FF0000 + D%))
+OSCLI("LOAD Default " + STR$~(&FF0000 + D%))
 
 P%=HIMEM
 [OPT 0
@@ -90,7 +90,7 @@ INPUT "" S$:IF S$="y" THEN S$="Y"
 
 PRINT TAB(0,16);
 
-IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":Z%=OPENOUT("E.Maps"):PRINT#Z%,"D.Maze1","D.Maze2","D.Maze3":CLOSE#Z%
+IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":Z%=OPENOUT("Maps"):PRINT#Z%,"LBMaze1","LBMaze2","LBMaze3":CLOSE#Z%
 
 IF H$="Y" THEN FOR Z%=&00 TO &6F:Z%?H%=Z%?D%:NEXT Z%:PRINT " ";CHR$(129);"Resetting high scores"
 IF S$="Y" THEN FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%:PRINT " ";CHR$(129);"Resetting controls and settings"
@@ -101,7 +101,7 @@ PRINT:PRINT " ";CHR$(132);
 
 IF M$="Y" OR H$="Y" OR S$="Y" THEN PRINT "Done" ELSE PRINT "No changes were made"
 
-PRINT TAB(2,23);"Press any key ";:K%=GET:PRINT
+PRINT TAB(2,23);"Press any key";:K%=GET:PRINT
 
 *EXEC !Boot
 

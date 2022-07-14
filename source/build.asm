@@ -50,11 +50,11 @@
 
 	save		"$.Config", config, configEnd, &ffffff, &ff0000 + config
 
-	save		"E.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
+	save		"$.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 
-	putfile		"default-maze1.bin", "D.Maze1", 0, &ffffff
-	putfile		"default-maze2.bin", "D.Maze2", 0, &ffffff
-	putfile		"default-maze3.bin", "D.Maze3", 0, &ffffff
+	putfile		"default-maze1.bin", "LBMaze1", 0, &ffffff
+	putfile		"default-maze2.bin", "LBMaze2", 0, &ffffff
+	putfile		"default-maze3.bin", "LBMaze3", 0, &ffffff
 
 	save		"$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 
@@ -62,13 +62,13 @@
 
 	putbasic	"reset.bas", "$.Reset"
 
-	save		"D.Config", config, configEnd, &ffffff, &ff0000 + config
+	save		"Default", config, configEnd, &ffffff, &ff0000 + config
 
 	putbasic	"editor.bas", "$.Editor"
 
-	save		"E.Code", editorStart, editorEnd, &ffffff, 0
+	save		"$.EditorM", editorStart, editorEnd, &ffffff, 0
 
-	putfile		"img-editor.bin", "E.Tiles", 0, &ffffff
+	putfile		"img-editor.bin", "$.EditorT", 0, &ffffff
 
 
 

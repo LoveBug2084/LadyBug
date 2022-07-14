@@ -128,7 +128,7 @@ basMaze		= &78				; maze data address
 
 .editorDrawLineLeft
 
-	lda addr16, x				; get byte from maze and draw tile on screen
+	lda dummy16, x				; get byte from maze and draw tile on screen (address previously setup)
 	jsr editorDrawTile - pageEditorOffset
 	
 	inx
@@ -139,7 +139,7 @@ basMaze		= &78				; maze data address
 
 .editorDrawLineRight
 
-	ldy addr16, x				; get byte from maze
+	ldy dummy16, x				; get byte from maze (address previously setup)
 
 						; get mirrored tile id and draw it
 	lda editorTileMirror - pageEditorOffset, y
