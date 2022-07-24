@@ -214,11 +214,12 @@ keySpace		= &62
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-opcodeBCC		= &90			; 6502 opcode for BCC instruction (used for self modifying code in sprite functions)
-opcodeBCS		= &b0			; 6502 opcode for BCS instruction (used for self modifying code in sprite functions)
-opcodeDEX		= &ca			; 6502 opcode for DEX instruction (used for self modifying code in sprite functions)
-opcodeINX		= &e8			; 6502 opcode for INX instruction (used for self modifying code in sprite functions)
-opcodeRTI		= &40			; 6502 opcode for RTI instruction
+opcodeBCC		= &90			; 6502 opcode for BCC instruction (used in self modifying code for sprite functions)
+opcodeBCS		= &b0			; 6502 opcode for BCS instruction (used in self modifying code for sprite functions)
+opcodeDEX		= &ca			; 6502 opcode for DEX instruction (used in self modifying code for sprite functions)
+opcodeINX		= &e8			; 6502 opcode for INX instruction (used in self modifying code for sprite functions)
+
+opcodeRTI		= &40			; 6502 opcode for RTI instruction (used in clean reset code)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

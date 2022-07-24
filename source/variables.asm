@@ -36,15 +36,15 @@
 
 .lives			skip 1			; number of lives
 
-.ladybugEntryEnable	skip 1			; enable ladybug entry animation
-.ladybugDeathEnable	skip 1			; enable ladybug death animation
+.ladybugEntryEnable	skip 1			; enable ladybug entry movement animation
+.ladybugDeathEnable	skip 1			; enable ladybug death movement animation
 
 .ladybugDeathAnimationIndex
-			skip 1			; index into ladybug death animation table
+			skip 1			; index into ladybug death movement animation table
 
 .bonusBits		equw 0			; special, extra, x2 x3 x5 (1 bit each), initialize here for main menu first run
 
-.bonusBitsTemp		skip 2			; storage for working on bonus bits
+.bonusBitsCopy		skip 2			; storage for working on bonus bits
 
 bonusDiamondImg		= 18			; diamond image number
 bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
@@ -101,7 +101,7 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 .addScoreMultiplySaveA	skip 1			; preserve register
 .addScoreMultiplySaveX	skip 1			; preserve register
 
-.checkForObjectsSaveX	skip 1			; preserve register
+.checkForObjectSaveX	skip 1			; preserve register
 
 .drawPlayfieldUpperBonusSaveX
 			skip 1			; preserve register
@@ -203,7 +203,7 @@ soundChannels		= 6			; number of software defined sound channels
 .playSoundSaveX		skip 1			; preserve register
 .playSoundSaveY		skip 1			; preserve register
 
-.animateLadybugActive	skip 1			; ladybug animation activate when != 0
+.animateLadybugActive	skip 1			; ladybug movement animation activate when != 0
 .animateLadybugAddr	skip 2			; address pointer to ladybug animation tables
 .animateLadybugCounter	skip 1			; frame counter for ladybug animation
 
@@ -226,7 +226,18 @@ soundChannels		= 6			; number of software defined sound channels
 .joystickInput		skip 1			; joystick input bits (see constants.asm)
 .joystickAnalogueSave	skip 1			; preserve analogue joystick value
 
-.updateLadybugSaveDir	skip 1			; preserve current ladybug direction while calculating new direction
+.updateLadybugOldDir	skip 1			; copy of ladybug direction
+
+.updateLadybugNewDirX	skip 1			; new X direction for ladybug
+.updateLadybugNewDirY	skip 1			; new Y direction for ladybug
+
+.updateLadybugGridX	skip 1			; = 0 if ladybug x on exact grid
+.updateLadybugGridY	skip 1			; = 0 if ladybug y on exact grid
+
+.updateLadybugTileX	skip 1			; tile found in front of ladybug horiontally
+.updateLadybugTileY	skip 1			; tile found in front of ladybug vertically
+
+.updateLadybugSave	skip 1			; preserve tile
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero

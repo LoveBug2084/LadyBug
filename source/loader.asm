@@ -454,12 +454,12 @@ masterMos350 = &e374
 	equb &80 + palBlack			; color 8 unused
 	equb &90 + palBlack			; color 9 unused
 
-	equb palSpecial0 + palRed		; color 10 special flashing red/magenta
-	equb palSpecial1 + palMagenta		; color 11 special flashing magenta/red
-	equb palExtra0 + palYellow		; color 12 extra flashing yellow/green
-	equb palExtra1 + palGreen		; color 13 extra flashing green/yellow
-	equb palSkull + palWhite		; color 14 skull fade effect or red when shield is active
-	equb palObject + palCyan		; color 15 object changes red,yellow,cyan
+	equb palSpecial0 + palRed		; color 10 special (flashing red/magenta)
+	equb palSpecial1 + palMagenta		; color 11 special (flashing magenta/red)
+	equb palExtra0 + palYellow		; color 12 extra (flashing yellow/green)
+	equb palExtra1 + palGreen		; color 13 extra (flashing green/yellow)
+	equb palSkull + palWhite		; color 14 skull (fade effect or red when shield is active)
+	equb palObject + palCyan		; color 15 object (red,yellow,cyan)
 
 
 
