@@ -8778,13 +8778,17 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;			y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+.updateLadybugReturn
+
+	rts
+	
 .updateLadybug
 
 	lda pauseLadybug			; if ladybug movement is paused then exit
-	bne updateLadybugExit
+	bne updateLadybugReturn
 
 	lda ladybugEntryEnable			; if ladybug entry movement is enabled then exit
-	bne updateLadybugExit
+	bne updateLadybugReturn
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; initialize everything needed for direction, gridlock and tile tests
@@ -8829,13 +8833,20 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	lsr playerInput				; shift left input into carry
 
-	lda updateLadybugGridY			; if ladybug y is on exact grid (left direction allowed)
-	bne updateLadybugInputDown
-
 	bcc updateLadybugInputDown		; if left was requested then
+
+	lda updateLadybugGridY			; if ladybug y is on exact grid (left direction allowed) then
+	bne updateLadybugInputLeftAlign
 
 	lda #moveLeft				; set new x direction to left
 	sta updateLadybugNewDirX
+	bpl updateLadybugInputDown		; check for down
+	
+.updateLadybugInputLeftAlign
+
+	lda updateLadybugOldDir			; else use old direction (with stop bit removed) to align ladybug with turn
+	and #moveStop eor &ff
+	sta updateLadybugNewDirY
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -8843,27 +8854,41 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	lsr playerInput				; shift down input into carry
 
-	lda updateLadybugGridX			; if ladybug x is on exact grid (down direction allowed)
-	bne updateLadybugInputUp
-
 	bcc updateLadybugInputUp		; if down was requested then
+
+	lda updateLadybugGridX			; if ladybug x is on exact grid (down direction allowed) then
+	bne updateLadybugInputDownAlign
 
 	lda #moveDown				; set new y direction to down
 	sta updateLadybugNewDirY
+	bpl updateLadybugInputUp		; check for up
 	
+.updateLadybugInputDownAlign
+
+	lda updateLadybugOldDir			; else use old direction (with stop bit removed) to align ladybug with turn
+	and #moveStop eor &ff
+	sta updateLadybugNewDirX
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .updateLadybugInputUp
 
 	lsr playerInput				; shift up input into carry
 
-	lda updateLadybugGridX			; if ladybug y is on exact grid (up direction allowed)
-	bne updateLadybugInputRight
-
 	bcc updateLadybugInputRight		; if up was requested then
+
+	lda updateLadybugGridX			; if ladybug y is on exact grid (up direction allowed) then
+	bne updateLadybugInputUpAlign
 
 	lda #moveUp				; set new y direction to up
 	sta updateLadybugNewDirY
+	bpl updateLadybugInputRight
+
+.updateLadybugInputUpAlign
+
+	lda updateLadybugOldDir			; else use old direction (with stop bit removed) to align ladybug with turn
+	and #moveStop eor &ff
+	sta updateLadybugNewDirX
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -8871,14 +8896,21 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	lsr playerInput				; shift right input into carry
 
-	lda updateLadybugGridY			; if ladybug y is on exact grid (right direction allowed)
-	bne updateLadybugCheckGrid
-
 	bcc updateLadybugCheckGrid		; if right was requested
+
+	lda updateLadybugGridY			; if ladybug y is on exact grid (right direction allowed)
+	bne updateLadybugInputRightAlign
 
 	lda #moveRight				; set new x direction to right
 	sta updateLadybugNewDirX
-	
+	bpl updateLadybugCheckGrid
+
+.updateLadybugInputRightAlign
+
+	lda updateLadybugOldDir			; else use old direction (with stop bit removed) to align ladybug with turn
+	and #moveStop eor &ff
+	sta updateLadybugNewDirY
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if ladybug is off or on grid
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9145,7 +9177,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #0					; set turnstile direction to vertical for drawTurnstile
 	sta drawTurnstileDir
 
-	jmp updateLadybugTurnstileExit
+	bpl updateLadybugTurnstileExit		; (bpl used as branch always)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -9866,7 +9898,7 @@ include "soundtables.asm"
 	equb 0
 	equb keyBitLeft
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .joystickBitClear
 
@@ -9880,7 +9912,10 @@ include "soundtables.asm"
 	equb &ff eor (keyBitLeft + keyBitRight)
 	equb &ff eor (keyBitLeft + keyBitRight)
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; analogue joystick function, read channel and convert to input bits
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 
 .joystickAnalogue
 
@@ -9888,16 +9923,20 @@ include "soundtables.asm"
 	cmp #1
 	bne joystickAnalogueExit
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .joystickAnalogueChannelRead
 
 	lda dummy16				; read value from adc and save (addr setup by relocator.asm)
 	sta joystickAnalogueSave
 	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .joystickAnalogueControlRead
 
 	lda dummy16				; read current channel and flip bit to select other channel (addr setup by relocator)
-	and #1
-	eor #1
+	and #%00000001
+	eor #%00000001
 
 .joystickAnalogueControlWrite
 
@@ -9907,13 +9946,13 @@ include "soundtables.asm"
 
 	rol joystickAnalogueSave		; rotate analogue value so that
 	rol joystickAnalogueSave		; bit 2 contains the channel
-	rol joystickAnalogueSave		; bits 1 and 0 contain the msb's of the analogue value
+	rol joystickAnalogueSave		; bits 1,0 contain the msb's of the analogue value
 
-	lda joystickAnalogueSave		; mask bits for index value 0-7
-	and #7					; bit 2 = channel 0 or 1 (eor 1)
-	tax					; bits 1,0 = bits 7,6 from adc channel 
+	lda joystickAnalogueSave		; mask bits for index value
+	and #%00000111
+	tax
 
-	lda joystickInput			; convert joystick direction into keyboard bit flags
+	lda joystickInput			; convert joystick direction and channel index into keyboard bit flags using tables
 	and joystickBitClear, x
 	ora joystickBitSet, x
 	sta joystickInput
