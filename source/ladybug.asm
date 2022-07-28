@@ -9244,7 +9244,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ldy #1
 	sta (tileMapAddr), y
 
-	lda #mapTileTurnstileCV + wallTurnstile
+	lda #mapTileTurnstileCV + wallSolid
 	ldy #24
 	sta (tileMapAddr), y
 
@@ -9273,7 +9273,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ldy #23
 	sta (tileMapAddr), y
 
-	lda #mapTileTurnstileCH + wallTurnstile
+	lda #mapTileTurnstileCH + wallSolid
 	ldy #24
 	sta (tileMapAddr), y
 
@@ -9966,11 +9966,11 @@ include "soundtables.asm"
 
 .mazeTileTableLeft				; tile translation tables for left and right sides
 
-	equb &00,&01,&9c,&9d,&9e,&9f,&a0,&a1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&da,&db
+	equb &00,&01,&dc,&dd,&9e,&9f,&a0,&a1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&da,&db
 
 .mazeTileTableRight
 
-	equb &00,&01,&9c,&9d,&9e,&9f,&a1,&a0,&d3,&d2,&d5,&d4,&d6,&d7,&d8,&d9,&db,&da
+	equb &00,&01,&dc,&dd,&9e,&9f,&a1,&a0,&d3,&d2,&d5,&d4,&d6,&d7,&d8,&d9,&db,&da
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------

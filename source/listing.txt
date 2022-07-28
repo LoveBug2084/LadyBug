@@ -5987,7 +5987,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      260F   A9 9F      LDA #&9F
      2611   A0 01      LDY #&01
      2613   91 53      STA (&53),Y
-     2615   A9 9C      LDA #&9C
+     2615   A9 DC      LDA #&DC
      2617   A0 18      LDY #&18
      2619   91 53      STA (&53),Y
      261B   A9 9E      LDA #&9E
@@ -6005,7 +6005,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      2631   A9 A1      LDA #&A1
      2633   A0 17      LDY #&17
      2635   91 53      STA (&53),Y
-     2637   A9 9D      LDA #&9D
+     2637   A9 DD      LDA #&DD
      2639   A0 18      LDY #&18
      263B   91 53      STA (&53),Y
      263D   A9 A0      LDA #&A0
@@ -8784,8 +8784,8 @@ bootstrap     &4800 - &4943 , 324 bytes
 .mazeTileTableLeft
      44CF   00
      44D0   01
-     44D1   9C
-     44D2   9D
+     44D1   DC
+     44D2   DD
      44D3   9E
      44D4   9F
      44D5   A0
@@ -8803,8 +8803,8 @@ bootstrap     &4800 - &4943 , 324 bytes
 .mazeTileTableRight
      44E1   00
      44E2   01
-     44E3   9C
-     44E4   9D
+     44E3   DC
+     44E4   DD
      44E5   9E
      44E6   9F
      44E7   A1
