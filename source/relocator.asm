@@ -303,6 +303,8 @@
 	equb hi(screenAddr / 8)			; r12 screen start address, high
 	equb lo(screenAddr / 8)			; r13 screen start address, low
 
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .bootstrapEnd					; end of bootstrap program
 	skip 0

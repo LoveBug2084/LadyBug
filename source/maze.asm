@@ -34,7 +34,7 @@
 .mazeFilenames
 
 	equb &00,&07,"1ezaMBL"			; the 3 default mazes to load LBMaze1 LBMaze2 LBMaze3
-	equb &00,&07,"2ezaMBL"			; acorn backwards style strings for use with OPENIN#
+	equb &00,&07,"2ezaMBL"			; acorn backward strings for use with OPENIN#
 	equb &00,&07,"3ezaMBL"
 
 .mazeFilenamesEnd

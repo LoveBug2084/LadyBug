@@ -20,7 +20,7 @@
 
 	org pageZero
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .vsyncCounter		skip 1			; 50Hz vsync counter (counts up and wraps over from 255 to 0)
 .pauseCounter		skip 1			; 25Hz pause counter (counts down every 2 vsyncs)
@@ -134,7 +134,7 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 
 .tileMapAddr		skip 2			; tileMap address used by various routines
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveDirMap		equb 1, 47, 23, 25, 24	; tileMap offset from top left corner to up, down, left, right, center
 	
@@ -147,7 +147,7 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 
 .moveSpritesIndex	skip 1			; index of current sprite
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .spritesImg		skip spritesTotal	; sprite image, position and direction for drawing
 .spritesX		skip spritesTotal
