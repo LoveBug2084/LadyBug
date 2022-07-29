@@ -9140,8 +9140,8 @@ bootstrap     &4800 - &4943 , 324 bytes
 
 
 Saving file '$.!Boot'
-Saving file '$.Config'
-Saving file '$.Maps'
+Saving file '$.LBConf'
+Saving file '$.LBMaps'
 Saving file '$.Loader'
 Saving file '$.LadyBug'
 Saving file '$.Default'

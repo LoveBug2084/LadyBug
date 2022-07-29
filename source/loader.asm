@@ -40,7 +40,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .configData
-	skip 0
+	skip 0					; show this address in listing
 
 
 
@@ -49,7 +49,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .highScoreTable
-	skip 0
+	skip 0					; show this address in listing
 	
 	for i,1,8				; 8 entrys in table 1st to 8th
 	
@@ -59,7 +59,7 @@
 	next
 
 .highScoreTableEnd
-	skip 0
+	skip 0					; show this address in listing
 
 
 
@@ -68,7 +68,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameSettings					; start of game settings
-	skip 0
+	skip 0					; show this address in listing
 
 .optionLives
 
@@ -103,8 +103,7 @@
 	skip 1					; reserve space for validation code for high score table and settings
 	
 .configDataEnd
-
-	skip 0
+	skip 0					; show this address in listing
 
 
 
@@ -113,85 +112,85 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .spriteBin
-	skip 0
+	skip 0					; show this address in listing
 
 .sprite10x10Bin
-	skip 0
+	skip 0					; show this address in listing
 
 .vegetablesBin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-vegetables.bin"		; load the 10x10 pixel vegetable sprites into memory
 
 .vegetablesBinEnd
-	skip 0
+	skip 0					; show this address in listing
 
 .pointsBin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-points.bin"			; load the 10x10 pixel points sprites into memory
 
 .pointsBinEnd
-	skip 0
+	skip 0					; show this address in listing
 
 .sprite10x10BinEnd
-	skip 0
+	skip 0					; show this address in listing
 
 	sprite10x10 = (sprite10x10BinEnd - sprite10x10Bin) / sprite10x10Bytes
 	pointsBaseImg = (pointsBin - spriteBin) / sprite10x10Bytes
 
 .ladybugBin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-ladybug.bin"		; load ladybug sprite set into memory
 
 .enemy1Bin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-enemy1.bin"			; load 1st enemy sprite set into memory
 
 .enemy2Bin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-enemy2.bin"			; load 2nd enemy sprite set into memory
 
 .enemy3Bin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-enemy3.bin"			; load 3rd enemy sprite set into memory
 
 .enemy4Bin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-enemy4.bin"			; load 4th enemy sprite set into memory
 
 .enemy5Bin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-enemy5.bin"			; load 5th enemy sprite set into memory
 
 .enemy6Bin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-enemy6.bin"			; load 6th enemy sprite set into memory
 
 .enemy7Bin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-enemy7.bin"			; load 7th enemy sprite set into memory
 
 .enemy8Bin
-	skip 0
+	skip 0					; show this address in listing
 
 	incbin "img-enemy8.bin"			; load 8th enemy sprite set into memory
 
 .angelBin
-	skip 0
+	skip 0					; show this address in listing
 	
 	incbin "img-angel.bin"			; load ladybug angel sprite set into memory
 
 .spriteBinEnd
-	skip 0
+	skip 0					; show this address in listing
 
 
 
@@ -509,9 +508,9 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-align &100
+	align &100
 .swramLastAddr
-	skip 0
+	skip 0					; show this address in listing
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -521,9 +520,7 @@ align &100
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderMessages
-	skip 0
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+	skip 0					; show this address in listing
 
 .loaderBuild
 
@@ -554,7 +551,11 @@ align &100
 	equs 136,132,"Sideways ram unavailable"
 	equb &ff				; end
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; oscli command to run the main Lady Bug code
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .runLadybug
 
@@ -562,17 +563,27 @@ align &100
 
 
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; screen center for erase
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 screenCenter	= &7d90				; start address of center block to erase for messages
 screenCenterY	= &7e71				; address of tail of the 'y' below the center block that also needs to be erased
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; loader main entry point
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderStart
 
 	lda #19					; wait for vsync
 	jsr osbyte
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; clear the center of the screen for message display
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #0					; clear center section of display for messages
 	lda #' '
@@ -587,8 +598,16 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 	sta screenCenterY			; clear the tail of the 'y'
 	sta screenCenterY + 1
 	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; display the current build of Lady Bug
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	ldy #lo(loaderBuild - loaderReloc)	; display build number
 	jsr loaderPrint - loaderReloc
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; check machine type
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	sei					; disable interrupts
 
@@ -601,6 +620,10 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 
 	stx machineType				; save machine type
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; if the machine type is b+ then check its not b with integra
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	cpx #2					; if it reports back as a b+ model
 	bne loaderNotBplus
 
@@ -610,6 +633,10 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 	dec machineType				; else its a model b with integra
 	bne loaderNotBplus
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; real b+ was detected so display message and do the relocation
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .loaderBplus
 						; we got this far so its a real b+, display b+ workspace message
 	ldy #lo(loaderUsingWorkspace - loaderReloc)
@@ -618,11 +645,17 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 	jmp loaderCopyData - loaderReloc	; copy data and run ladybug
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; not a b+ so check banks for sideways ram
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderNotBplus
 
 	jsr swrTest - loaderReloc		; test for sideways ram banks
 	bne loaderFailed			; if none found then jump to failed message
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; sideways ram found so display message and bank number
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldy #lo(loaderUsingBank - loaderReloc)	; else display sideways bank message
 	jsr loaderPrint - loaderReloc
@@ -632,6 +665,8 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 	jsr oswrch
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; relocate data to sideways ram
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderCopyData
 
@@ -639,10 +674,16 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 
 	asl machineType				; convert machine type into index
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; run the Lady Bug main game code
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	ldx #lo(runLadybug - loaderReloc)	; run the main ladybug
 	ldy #hi(runLadybug - loaderReloc)
 	jmp oscli
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; sideways ram not found so display the error message
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderFailed
@@ -690,6 +731,8 @@ swrBank			= pageHigh - 2		; storage for bank number of swram
 machineType		= pageHigh - 3		; storage for machine type
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; test sideways ram bank starting at 0
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrTest
 
@@ -711,6 +754,8 @@ machineType		= pageHigh - 3		; storage for machine type
 
 	rts					; done.
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; test for b+ workspace ram
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrTestBplus
@@ -750,6 +795,8 @@ machineType		= pageHigh - 3		; storage for machine type
 	rts
 
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; select ram bank and test for ram
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrTestByte
@@ -837,7 +884,7 @@ machineType		= pageHigh - 3		; storage for machine type
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .loaderEnd
-	skip 0
+	skip 0					; show this address in listing
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 loaderPage = progLoad				; load address

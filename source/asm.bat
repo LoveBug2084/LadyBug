@@ -39,6 +39,13 @@ beebasm -title %bbcProjectName% -v -i build.asm -do %bbcProjectName%.ssd -opt 3 
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 
 rem --------------------------------------------------
+rem  lock the file names
+rem --------------------------------------------------
+echo.
+echo %bbcProjectName%.ssd locking files
+utils\filelocker %bbcProjectName%.ssd "!Boot  $" "Boot   $" "LBMaze1$" "LBMaze2$" "LBMaze3$" "Loader $" "LadyBug$" "Reset  $" "Default$" "Editor $" "EditorM$" "EditorT"
+
+rem --------------------------------------------------
 rem  increment build number and run project in beebem
 rem --------------------------------------------------
 echo.

@@ -48,9 +48,9 @@
 
 	putbasic	"boot.bas", "$.Boot"
 
-	save		"$.Config", config, configEnd, &ffffff, &ff0000 + config
+	save		"$.LBConf", config, configEnd, &ffffff, &ff0000 + config
 
-	save		"$.Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
+	save		"$.LBMaps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 
 	putfile		"default-maze1.bin", "$.LBMaze1", 0, &ffffff
 	putfile		"default-maze2.bin", "$.LBMaze2", 0, &ffffff
