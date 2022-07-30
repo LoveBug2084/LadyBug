@@ -8899,6 +8899,8 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	jsr spriteToAddr			; convert ladybug xy to tileMapAddr and drawTileAddr
 
+	jsr checkForObject			; check for object under ladybug (dots, hearts, letters, skulls) and do required action (points/death)
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check inputs and store selected directions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9039,8 +9041,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	ora spritesDir + 0			; and combine with blanking flag
 	sta spritesDir + 0
-
-	jsr checkForObject			; check for object under ladybug (dots, hearts, letters, skulls) and do required action (points/death)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 

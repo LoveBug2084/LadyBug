@@ -5814,74 +5814,74 @@ bootstrap     &4800 - &4943 , 324 bytes
      24E2   49 08      EOR #&08
      24E4   85 C5      STA &C5
      24E6   20 2B 27   JSR &272B
+     24E9   20 64 23   JSR &2364
 .updateLadybugInputStart
-     24E9   46 BE      LSR &BE
+     24EC   46 BE      LSR &BE
 .updateLadybugInputLeft
-     24EB   46 BE      LSR &BE
-     24ED   90 10      BCC &24FF
-     24EF   A2 02      LDX #&02
-     24F1   A5 C5      LDA &C5
-     24F3   D0 04      BNE &24F9
-     24F5   86 C2      STX &C2
-     24F7   F0 06      BEQ &24FF
+     24EE   46 BE      LSR &BE
+     24F0   90 10      BCC &2502
+     24F2   A2 02      LDX #&02
+     24F4   A5 C5      LDA &C5
+     24F6   D0 04      BNE &24FC
+     24F8   86 C2      STX &C2
+     24FA   F0 06      BEQ &2502
 .updateLadybugInputLeftAlign
-     24F9   A5 C1      LDA &C1
-     24FB   29 FB      AND #&FB
-     24FD   85 C3      STA &C3
+     24FC   A5 C1      LDA &C1
+     24FE   29 FB      AND #&FB
+     2500   85 C3      STA &C3
 .updateLadybugInputDown
-     24FF   46 BE      LSR &BE
-     2501   90 10      BCC &2513
-     2503   A2 01      LDX #&01
-     2505   A5 C4      LDA &C4
-     2507   D0 04      BNE &250D
-     2509   86 C3      STX &C3
-     250B   F0 06      BEQ &2513
+     2502   46 BE      LSR &BE
+     2504   90 10      BCC &2516
+     2506   A2 01      LDX #&01
+     2508   A5 C4      LDA &C4
+     250A   D0 04      BNE &2510
+     250C   86 C3      STX &C3
+     250E   F0 06      BEQ &2516
 .updateLadybugInputDownAlign
-     250D   A5 C1      LDA &C1
-     250F   29 FB      AND #&FB
-     2511   85 C2      STA &C2
+     2510   A5 C1      LDA &C1
+     2512   29 FB      AND #&FB
+     2514   85 C2      STA &C2
 .updateLadybugInputUp
-     2513   46 BE      LSR &BE
-     2515   90 10      BCC &2527
-     2517   A2 00      LDX #&00
-     2519   A5 C4      LDA &C4
-     251B   D0 04      BNE &2521
-     251D   86 C3      STX &C3
-     251F   F0 06      BEQ &2527
+     2516   46 BE      LSR &BE
+     2518   90 10      BCC &252A
+     251A   A2 00      LDX #&00
+     251C   A5 C4      LDA &C4
+     251E   D0 04      BNE &2524
+     2520   86 C3      STX &C3
+     2522   F0 06      BEQ &252A
 .updateLadybugInputUpAlign
-     2521   A5 C1      LDA &C1
-     2523   29 FB      AND #&FB
-     2525   85 C2      STA &C2
+     2524   A5 C1      LDA &C1
+     2526   29 FB      AND #&FB
+     2528   85 C2      STA &C2
 .updateLadybugInputRight
-     2527   46 BE      LSR &BE
-     2529   90 10      BCC &253B
-     252B   A2 03      LDX #&03
-     252D   A5 C5      LDA &C5
-     252F   D0 04      BNE &2535
-     2531   86 C2      STX &C2
-     2533   F0 06      BEQ &253B
+     252A   46 BE      LSR &BE
+     252C   90 10      BCC &253E
+     252E   A2 03      LDX #&03
+     2530   A5 C5      LDA &C5
+     2532   D0 04      BNE &2538
+     2534   86 C2      STX &C2
+     2536   F0 06      BEQ &253E
 .updateLadybugInputRightAlign
-     2535   A5 C1      LDA &C1
-     2537   29 FB      AND #&FB
-     2539   85 C3      STA &C3
+     2538   A5 C1      LDA &C1
+     253A   29 FB      AND #&FB
+     253C   85 C3      STA &C3
 .updateLadybugCheckGrid
-     253B   A5 C4      LDA &C4
-     253D   05 C5      ORA &C5
-     253F   F0 18      BEQ &2559
+     253E   A5 C4      LDA &C4
+     2540   05 C5      ORA &C5
+     2542   F0 15      BEQ &2559
 .updateLadybugOffGridX
-     2541   A6 C2      LDX &C2
-     2543   30 02      BMI &2547
-     2545   10 04      BPL &254B
+     2544   A6 C2      LDX &C2
+     2546   30 02      BMI &254A
+     2548   10 04      BPL &254E
 .updateLadybugOffGridY
-     2547   A6 C3      LDX &C3
-     2549   30 0D      BMI &2558
+     254A   A6 C3      LDX &C3
+     254C   30 0A      BMI &2558
 .updateLadybugNewDirection
-     254B   A5 6D      LDA &6D
-     254D   29 08      AND #&08
-     254F   86 6D      STX &6D
-     2551   05 6D      ORA &6D
-     2553   85 6D      STA &6D
-     2555   20 64 23   JSR &2364
+     254E   A5 6D      LDA &6D
+     2550   29 08      AND #&08
+     2552   86 6D      STX &6D
+     2554   05 6D      ORA &6D
+     2556   85 6D      STA &6D
 .updateLadybugExit
      2558   60         RTS
 .updateLadybugOnGrid
@@ -5926,7 +5926,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      259B   F0 0A      BEQ &25A7
      259D   85 C8      STA &C8
      259F   A6 C2      LDX &C2
-     25A1   20 4B 25   JSR &254B
+     25A1   20 4E 25   JSR &254E
      25A4   4C B4 25   JMP &25B4
 .updateLadybugCheckTileY
      25A7   A5 C7      LDA &C7
@@ -5934,7 +5934,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      25AB   F0 AB      BEQ &2558
      25AD   85 C8      STA &C8
      25AF   A6 C3      LDX &C3
-     25B1   20 4B 25   JSR &254B
+     25B1   20 4E 25   JSR &254E
 .updateLadybugTurnstile
      25B4   A5 C8      LDA &C8
      25B6   29 C0      AND #&C0
