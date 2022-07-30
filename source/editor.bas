@@ -127,7 +127,7 @@ M%?&2B00=0
 !&2B04=-1:PROCw
 PROCt
 
-F%=OPENOUT("LBMaps")
+F%=OPENOUT("[Maps]")
 PRINT#F%,f$(0),f$(1),f$(2)
 CLOSE#F%
 
@@ -147,7 +147,7 @@ F%=OPENIN(s$):IFF%<>0THENCLOSE#F%:m$=s$+" exists,overwrite":IFNOTFNc THENENDPROC
 OSCLI("SAVE "+s$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
 f$(M%)=s$
 
-F%=OPENOUT("LBMaps")
+F%=OPENOUT("[Maps]")
 PRINT#F%,f$(0),f$(1),f$(2)
 CLOSE#F%
 
@@ -275,7 +275,7 @@ VDU23,1,0;0;0;0;19,1,4;0;19,2,5;0;
 
 DIM f$(3)
 
-F%=OPENIN("LBMaps")
+F%=OPENIN("[Maps]")
 INPUT#F%,f$(0),f$(1),f$(2)
 CLOSE#F%
 FORZ%=0TO2:OSCLI("LOAD "+f$(Z%)+" "+STR$~(&2F19-Z%*&E7)):NEXT

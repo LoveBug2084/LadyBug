@@ -48,13 +48,13 @@
 
 	putbasic	"boot.bas", "$.Boot"
 
-	save		"$.LBConf", config, configEnd, &ffffff, &ff0000 + config
+	save		"$.[Conf]", config, configEnd, &ffffff, &ff0000 + config
 
-	save		"$.LBMaps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
+	save		"$.[Maps]", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 
-	putfile		"default-maze1.bin", "$.LBMaze1", 0, &ffffff
-	putfile		"default-maze2.bin", "$.LBMaze2", 0, &ffffff
-	putfile		"default-maze3.bin", "$.LBMaze3", 0, &ffffff
+	putfile		"default-maze1.bin", "$.[Maze1]", 0, &ffffff
+	putfile		"default-maze2.bin", "$.[Maze2]", 0, &ffffff
+	putfile		"default-maze3.bin", "$.[Maze3]", 0, &ffffff
 
 	save		"$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 
@@ -62,7 +62,7 @@
 
 	putbasic	"reset.bas", "$.Reset"
 
-	save		"$.Default", config, configEnd, &ffffff, &ff0000 + config
+	save		"$.[Def]", config, configEnd, &ffffff, &ff0000 + config
 
 	putbasic	"editor.bas", "$.Editor"
 

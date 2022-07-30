@@ -8899,8 +8899,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	jsr spriteToAddr			; convert ladybug xy to tileMapAddr and drawTileAddr
 
-	jsr checkForObject			; check for object under ladybug (dots, hearts, letters, skulls) and do required action (points/death)
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check inputs and store selected directions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8927,9 +8925,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .updateLadybugInputLeftAlign
 
-	jsr updateLadybugCheckPath		; else check tile left, if a possible path then
-	beq updateLadybugInputDown
-	
 	lda updateLadybugOldDir			; use old direction (with stop bit removed) to align ladybug with turn
 	and #moveStop eor &ff
 	sta updateLadybugNewDirY
@@ -8951,9 +8946,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 	beq updateLadybugInputUp		; check for up
 
 .updateLadybugInputDownAlign
-
-	jsr updateLadybugCheckPath		; else check tile down, if a possible path then
-	beq updateLadybugInputUp
 
 	lda updateLadybugOldDir			; use old direction (with stop bit removed) to align ladybug with turn
 	and #moveStop eor &ff
@@ -8977,9 +8969,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInputUpAlign
 
-	jsr updateLadybugCheckPath		; else check tile up, if a possible path then
-	beq updateLadybugInputRight
-
 	lda updateLadybugOldDir			; else use old direction (with stop bit removed) to align ladybug with turn
 	and #moveStop eor &ff
 	sta updateLadybugNewDirX
@@ -9001,9 +8990,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 	beq updateLadybugCheckGrid		; go check for grid alignment
 
 .updateLadybugInputRightAlign
-
-	jsr updateLadybugCheckPath		; else check tile right, if a possible path then
-	beq updateLadybugCheckGrid
 
 	lda updateLadybugOldDir			; else use old direction (with stop bit removed) to align ladybug with turn
 	and #moveStop eor &ff
@@ -9053,6 +9039,8 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	ora spritesDir + 0			; and combine with blanking flag
 	sta spritesDir + 0
+
+	jsr checkForObject			; check for object under ladybug (dots, hearts, letters, skulls) and do required action (points/death)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 

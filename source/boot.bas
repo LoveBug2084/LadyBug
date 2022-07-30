@@ -80,7 +80,7 @@ UNTIL k$="K" OR k$="J" OR k$="U"
 PROClogo
 PROCexpand
 
-Z%=OPENIN("LBMaps")
+Z%=OPENIN("[Maps]")
 INPUT#Z%,maze1$,maze2$,maze3$
 CLOSE#Z%
 
@@ -349,7 +349,7 @@ ENDPROC
 DEF PROCreadConfig
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-IF F%?2<>V% THEN OSCLI("LOAD LBConf"):ENDPROC
+IF F%?2<>V% THEN OSCLI("LOAD [Conf]"):ENDPROC
 
 P%=&7B00
 [OPT 0
@@ -380,7 +380,7 @@ DEF PROCsaveConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
 IF F%?2<>V% THEN ENDPROC
 
-OSCLI("SAVE LBConf " + STR$~(&FF0000 + C%) + " +7E")
+OSCLI("SAVE [Conf] " + STR$~(&FF0000 + C%) + " +7E")
 
 PROCeraseCenter
 PRINT TAB(5,11);CHR$(135);"High scores";CHR$(132);"and";CHR$(135);"game settings";
