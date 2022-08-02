@@ -50,7 +50,7 @@ S%=&8010
 F%=&130
 M%=&69
 
-OSCLI("LOAD [Def] " + STR$~(&FF0000 + D%))
+OSCLI("LOAD [ConfR] " + STR$~(&FF0000 + D%))
 
 P%=HIMEM
 [OPT 0

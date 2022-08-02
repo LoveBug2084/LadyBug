@@ -66,26 +66,35 @@ int main(int argc, char *argv[])
 	fclose(ssdInput);
 
 	// process filenames
-	for(int ptr = 8; ptr < 256; ptr+=8)
+	for(int filenames = 2; filenames <= arguments; filenames++)
 	{
-		for(int filenames = 2; filenames <= arguments; filenames++)
-		{
-			int filefound = true;
+		printf("%s ", argv[filenames]);
 
+		int fileFound = false;
+
+		for(int ptr = 8; ptr < 256; ptr+=8)
+		{
+			int fileLock = true;
 			for(int chr = 0; chr <= 7; chr++)
 			{
 				if(argv[filenames][chr] != dfsBuffer[ptr + chr])
-				{
-					filefound = false;
-				}
+					fileLock = false;
 			}
 
 			// if file name was found then lock the file
-			if(filefound)
+			if(fileLock)
 			{
 				dfsBuffer[ptr + 7] |= 0x80;
+				fileFound = true;
+				break;
 			}
 		}
+
+		if(fileFound)
+			printf("locked\n");
+		else
+			printf("not found\n");
+
 	}
 
 	// open ssd file in binary mode for reading and writing

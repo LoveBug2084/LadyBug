@@ -2001,12 +2001,12 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr checkLevelEnd			; check if current level has ended
 	bcs gameLevelStart			; if level has ended then start new level
 
+	jsr drawVegetableCenter			; draw the vegetable/diamond in the center bug box (if active)
+
 	jsr redrawSprites			; erase and redraw sprites in upper area
 
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
 	bcs gameLevelRestart			; restart level if ladybug death movement animation has just completed
-
-	jsr drawVegetableCenter			; draw the vegetable/diamond in the center bug box (if active)
 
 	jsr drawVegetableScore			; draw the vegetable bonus score in center (if active)
 
@@ -8870,11 +8870,12 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInit
 
-	lda spritesDir + 0			; save ladybug current direction
-	sta updateLadybugOldDir
-
-	ora #moveStop				; stop ladybug moving
+	lda spritesDir + 0			; stop ladybug moving
+	ora #moveStop
 	sta spritesDir + 0
+
+	and #moveStop eor &ff			; save current direction and blanking (stop bit removed)
+	sta updateLadybugOldDir
 
 	lda #&ff				; clear new x and y directions
 	sta updateLadybugNewDirX
@@ -8927,8 +8928,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .updateLadybugInputLeftAlign
 
-	lda updateLadybugOldDir			; use old direction (with stop bit removed) to align ladybug with turn
-	and #moveStop eor &ff
+	lda updateLadybugOldDir			; use old direction to align ladybug with turn
 	sta updateLadybugNewDirY
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8949,8 +8949,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInputDownAlign
 
-	lda updateLadybugOldDir			; use old direction (with stop bit removed) to align ladybug with turn
-	and #moveStop eor &ff
+	lda updateLadybugOldDir			; use old direction to align ladybug with turn
 	sta updateLadybugNewDirX
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8971,8 +8970,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInputUpAlign
 
-	lda updateLadybugOldDir			; else use old direction (with stop bit removed) to align ladybug with turn
-	and #moveStop eor &ff
+	lda updateLadybugOldDir			; else use old direction to align ladybug with turn
 	sta updateLadybugNewDirX
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8993,8 +8991,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInputRightAlign
 
-	lda updateLadybugOldDir			; else use old direction (with stop bit removed) to align ladybug with turn
-	and #moveStop eor &ff
+	lda updateLadybugOldDir			; else use old direction to align ladybug with turn
 	sta updateLadybugNewDirY
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9034,7 +9031,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugNewDirection
 
-	lda spritesDir + 0			; get blanking flag
+	lda spritesDir + 0			; get blanking bit
 	and #spriteBlanking
 	
 	stx spritesDir + 0			; save new direction
@@ -9083,7 +9080,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	jsr updateLadybugCheckPath		; check tile in front of ladybug
 	sty updateLadybugTileY
 
-	bne updateLadybugCheckDualTile
+	bne updateLadybugCheckDualTile		; if tile was not a path/turnstile then
 	
 	lda #&ff				; remove y tile (cannot turn this direction)
 	sta updateLadybugTileY

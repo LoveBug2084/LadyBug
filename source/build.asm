@@ -62,7 +62,7 @@
 
 	putbasic	"reset.bas", "$.Reset"
 
-	save		"$.[Def]", config, configEnd, &ffffff, &ff0000 + config
+	save		"$.[ConfR]", config, configEnd, &ffffff, &ff0000 + config
 
 	putbasic	"editor.bas", "$.Editor"
 
