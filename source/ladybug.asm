@@ -1941,6 +1941,10 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr initPlayfieldMiddle			; initialize playfield middle section tileMap and count number of dots
 
+	lda levelEdibles			; if user created a maze with with no edible objects
+	bne gameLevelRestart
+	jmp gameOver				; then end the game
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; restart current level
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2293,21 +2297,23 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .checkLevelEnd
 
-	lda levelEnd				; if level not ended
+	lda levelEnd				; if level has ended then exit with true status
 	bne checkLevelEndTrue
 
-	lda levelEdibles			; if theres still edible objects then exit
-	bne checkLevelEndExit
-	
+	lda levelEdibles			; if theres still edible objects then exit with false status
+	bne checkLevelEndFalse
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	lda #endLevelTime			; pause ladybug and enemies
 	sta pauseLadybug
 	sta pauseEnemy
 
 	lda soundTimers + 0			; if sound effect not playing on channel 0 (music)
-	bne checkLevelEndExit
+	bne checkLevelEndFalse
 
 	lda soundTimers + 3			; and if sound effects not playing on channel 3 (object)
-	bne checkLevelEndExit
+	bne checkLevelEndFalse
 
 	lda #&ff				; flag level as ended
 	sta levelEnd
@@ -2315,16 +2321,20 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #sfxEndLevel			; play end of level sound
 	jsr playSound
 
-.checkLevelEndExit
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.checkLevelEndFalse
 
 	clc					; flag end level as false and return
 	rts
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkLevelEndTrue
 
 	lda pauseLadybug			; if pause is over (ladybug and enemy unpaused)
 	ora pauseEnemy
-	bne checkLevelEndExit
+	bne checkLevelEndFalse
 
 	jsr levelAdvance			; advance game to next level
 
