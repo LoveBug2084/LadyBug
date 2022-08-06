@@ -264,8 +264,8 @@ PRINT TAB(6, 7);CHR$(135);"123";CHR$(129);"   Select map";
 
 PRINT TAB(6, 9);CHR$(135);":/ZX";CHR$(130);"  Move cursor";
 PRINT TAB(6,10);CHR$(135);"QW";CHR$(131);"    Select tile";
-PRINT TAB(6,11);CHR$(135);"Shift";CHR$(133);" Erase tile";
-PRINT TAB(6,12);CHR$(135);"Return";CHR$(132);"Draw tile";
+PRINT TAB(6,11);CHR$(135);"SHIFT";CHR$(133);" Erase tile";
+PRINT TAB(6,12);CHR$(135);"RETURN";CHR$(132);"Draw tile";
 
 PRINT TAB(6,14);CHR$(135);"E";CHR$(134);"     Erase map";
 
