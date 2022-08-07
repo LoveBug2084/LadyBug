@@ -90,7 +90,7 @@ INPUT "" S$:IF S$="y" THEN S$="Y"
 
 PRINT TAB(0,16);
 
-IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":Z%=OPENOUT("Maps"):PRINT#Z%,"[Maze1]","[Maze2]","[Maze3]":CLOSE#Z%
+IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":Z%=OPENOUT("[Maps]"):PRINT#Z%,"[Maze1]","[Maze2]","[Maze3]":CLOSE#Z%
 
 IF H$="Y" THEN FOR Z%=&00 TO &6F:Z%?H%=Z%?D%:NEXT Z%:PRINT " ";CHR$(129);"Resetting high scores"
 IF S$="Y" THEN FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%:PRINT " ";CHR$(129);"Resetting controls and settings"
