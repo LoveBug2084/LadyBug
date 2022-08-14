@@ -22,8 +22,8 @@
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.vsyncCounter		skip 1			; 50Hz vsync counter (counts up and wraps over from 255 to 0)
-.pauseCounter		skip 1			; 25Hz pause counter (counts down every 2 vsyncs)
+.vsyncCounter		skip 1			; 50Hz vsync counter (counts up and wraps around)
+.pauseCounter		skip 1			; 25Hz pause counter (counts down every 2 vsyncs and wraps around)
 .screenHalf		skip 1			; &00 = upper scanlines 0 to 155, &ff = lower scanlines 156 to 311
 
 .escCounter		skip 1			; escape key counter (times how long esc is pressed)
@@ -42,11 +42,10 @@
 .ladybugDeathAnimationIndex
 			skip 1			; index into ladybug death movement animation table
 
-.bonusBits		equw 0			; special, extra, x2 x3 x5 (1 bit each), initialize here for main menu first run
+.bonusBits		equw 0			; special, extra, x2 x3 x5 (1 bit each), initialize here for main menu first run all illuminated
 
 .bonusBitsCopy		skip 2			; storage for working on bonus bits
 
-bonusDiamondImg		= 18			; diamond image number
 bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
 
 .bonusDiamondEnable	skip 1			; diamond bonus is enabled if != 0
@@ -56,9 +55,10 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 
 .scoreMultiplier	skip 1			; multiplier 0=x1, 1=x2, 2=x3, 3=x5
 
-.vegetableImg		equb 0			; vegetable image number for current level, , initialize here for main menu first run
+.vegetableImg		equb centerCucumber	; vegetable image number for current level, , initialize here for main menu first run
 
-.vegetableActive	skip 1			; vegetable bonus active if != 0
+.bonusItemActive	skip 1			; center bonus item active if != 0
+
 .vegetableScore		equb &10		; vegetable score value (bcd), initialize here for main menu first run
 
 .vegetableScoreActive	skip 1			; vegetable score displayed if != 0
@@ -124,8 +124,6 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 
 .drawTurnstileAddr	skip 2			; drawTurnstile screen address
 .drawTurnstileDir	skip 1			; drawTurnstile direction (vertical or horizontal)
-
-.initTimerTilesAddr	skip 2			; tileMap address while initializing timer tiles
 
 .spriteToAddrX		skip 1			; spriteToAddr sprite x position
 .spriteToAddrY		skip 1			; spritetoAddr sprite y position
@@ -214,7 +212,7 @@ soundChannels		= 6			; number of software defined sound channels
 .mainMenuCursor		skip 1			; main menu cursor position
 .mainMenuCursorOld	skip 1			; main menu previous cursor position
 
-.keyboardScanFullSaveX	skip 1			; preserve register
+.keyboardScanSaveX	skip 1			; preserve register
 
 .drawScoreTableZero	skip 1			; leading zero blanking flag for drawing score table
 

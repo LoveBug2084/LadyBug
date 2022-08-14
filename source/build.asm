@@ -76,7 +76,9 @@
 ; check for memory overrun
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+
 	assert programEnd <= screenAddr		; main ram limit exceeded, check listing.txt
+
 	assert loaderEnd <= swramEnd		; high ram limit exceeded, check listing.txt
 
 

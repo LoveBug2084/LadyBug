@@ -95,14 +95,14 @@ END
 
 DEF PROCintro
 
-IF ?E%<>32 THEN PROCwaitReturn(400):ENDPROC
+IF ?E%<>32 THEN PROCanyKey(400):ENDPROC
 
 PROClogo
 PROCexpand
 
 PROCsaveConfig
 
-PROCwaitReturn(200)
+PROCanyKey(200)
 
 ENDPROC
 
@@ -210,10 +210,10 @@ PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds";
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
 PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
 
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press RETURN            ";CHR$(156);
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
 PROCexpand
-PROCwaitReturn(360000)
+PROCanyKey(360000)
 
 L%=0
 FOR R%=22 TO 5 STEP -1
@@ -243,7 +243,7 @@ PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"ESC";CHR$(133);"to quit the current 
 PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";:*FX 19
 PRINT TAB(2,22);CHR$(135);"high scores";CHR$(132);"and";CHR$(135);"game settings";
 
-PROCwaitReturn(360000)
+PROCanyKey(360000)
 
 ENDPROC
 
@@ -257,30 +257,30 @@ PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
 
 
-PRINT TAB(14,4);"Editor controls";
+PRINT TAB(11,4);"Editor control keys";
 
 
-PRINT TAB(6, 7);CHR$(135);"123";CHR$(129);"   Select map";
+PRINT TAB(5, 7);CHR$(134);"123   ";CHR$(135);"-";CHR$(129);"Select map";
 
-PRINT TAB(6, 9);CHR$(135);":/ZX";CHR$(130);"  Move cursor";
-PRINT TAB(6,10);CHR$(135);"QW";CHR$(131);"    Select tile";
-PRINT TAB(6,11);CHR$(135);"SHIFT";CHR$(133);" Erase tile";
-PRINT TAB(6,12);CHR$(135);"RETURN";CHR$(132);"Draw tile";
+PRINT TAB(5, 9);CHR$(133);":/ZX  ";CHR$(135);"-";CHR$(130);"Move cursor";
+PRINT TAB(5,10);CHR$(132);"QW    ";CHR$(135);"-";CHR$(131);"Select tile";
+PRINT TAB(5,11);CHR$(130);"SHIFT ";CHR$(135);"-";CHR$(133);"Erase tile";
+PRINT TAB(5,12);CHR$(131);"RETURN";CHR$(135);"-";CHR$(132);"Draw tile";
 
-PRINT TAB(6,14);CHR$(135);"E";CHR$(134);"     Erase map";
+PRINT TAB(5,14);CHR$(129);"E     ";CHR$(135);"-";CHR$(134);"Erase map";
 
-PRINT TAB(6,16);CHR$(135);"L";CHR$(129);"     Load map from disk";
-PRINT TAB(6,17);CHR$(135);"S";CHR$(130);"     Save map to disk";
+PRINT TAB(5,16);CHR$(134);"L     ";CHR$(135);"-";CHR$(129);"Load map from disk";
+PRINT TAB(5,17);CHR$(133);"S     ";CHR$(135);"-";CHR$(130);"Save map to disk";
 
-PRINT TAB(6,19);CHR$(135);"C";CHR$(131);"     Catalogue disk";
+PRINT TAB(5,19);CHR$(132);"C     ";CHR$(135);"-";CHR$(131);"Catalogue disk";
 
-PRINT TAB(6,21);CHR$(135);"B";CHR$(133);"     Boot disk";
+PRINT TAB(5,21);CHR$(130);"B     ";CHR$(135);"-";CHR$(133);"Boot disk";
 
 
-PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"          Press RETURN            ";CHR$(156);
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
 PROCexpand
-PROCwaitReturn(360000)
+PROCanyKey(360000)
 
 ENDPROC
 
@@ -408,13 +408,17 @@ NEXT R%
 ENDPROC
 
 
-DEF PROCwaitReturn(T%)
+DEF PROCanyKey(T%)
+
+REPEAT
+K%=INKEY0
+UNTIL K%=-1
 
 TIME=0
 
 REPEAT
 K%=INKEY0
-UNTIL K%=13 OR TIME>=T%
+UNTIL K%<>-1 OR TIME>=T%
 
 ENDPROC
 

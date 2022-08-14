@@ -249,6 +249,32 @@ spriteBlanking		= %1000			; bit 3 when set prevents the sprite being drawn (move
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; center bonus vegetable and diamond image tiles
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+centerCucumber		= 0
+centerEggplant		= 1
+centerCarrot		= 2
+centerRadish		= 3
+centerParsley		= 4
+centerTomato		= 5
+centerPumpkin		= 6
+centerBambooShoot	= 7
+centerJapaneseRadish	= 8
+centerMushroom		= 9
+centerPotato		= 10
+centerOnion		= 11
+centerChineseCabbage	= 12
+centerTurnip		= 13
+centerGreenChilli	= 14
+centerCelery		= 15
+centerSweetPotato	= 16
+centerHorseradish	= 17
+centerDiamond		= 18
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; maze tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -483,7 +509,7 @@ resetVector		= &fffc			; os reset vector
 bankSelectCopy		= &f4			; os stores current bank copy here
 bankSelect		= &fe30			; bank select register for acorn/other
 bankSelectSolidisk	= &fe32			; bank select register for solidisk
-bankSelectWatford	= &ff30			; bank select register for watford electronics during write operations
+bankSelectWatford	= &ff30			; bank select register for watford electronics during write operations (ff30 to ffef)
 
 acccon			= &fe34			; access control register
 osbyte			= &fff4			; os function
