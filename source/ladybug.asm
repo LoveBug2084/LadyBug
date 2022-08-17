@@ -138,7 +138,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit						jumps into os rom
+; exit			jumps into high ram to select one of the following clean reset functions for each machine
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .cleanReset
@@ -150,12 +150,17 @@
 	
 	ldx cleanResetMachine			; get machine index
 
-	jmp swrCleanReset			; continue with reset code in high ram
+	jmp swrCleanReset			; continue with reset code in high ram to clear memory (in loader.asm) which then jumps back to
+						; continue with original os reset setup code
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; cleanResetMaster320				page in bank 15, jump into mos to continue
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			jumps into os rom to continue with mchine setup
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 continueMaster320	= &8073			; master 3.20 entry point
@@ -174,6 +179,10 @@ continueMaster320	= &8073			; master 3.20 entry point
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; cleanResetMaster350				page in extra mos code at fc00 and bank 15, jump into mos to continue
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			jumps into os rom to continue with mchine setup
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 continueMaster350	= &fc76			; master 3.50 entry point
@@ -195,6 +204,10 @@ continueMaster350	= &fc76			; master 3.50 entry point
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; cleanResetCompact				page in bank 15, jump into mos to continue
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			jumps into os rom to continue with mchine setup
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 continueCompact		= &8068			; master compact entry point
@@ -322,7 +335,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
-;			X			preserved
+;			X			destroyed (by .joytickAnalogue)
 ;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
@@ -343,7 +356,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
-;			X			preserved
+;			X			destroyed (by .joystickAnalog)
 ;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
@@ -505,7 +518,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda #&ff				; set port A all bits output
 	sta via1PortDdrA
 
-	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled)
+	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled) (in loader.asm)
 
 
 
@@ -592,9 +605,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			levelLetters		random letter
-;			levelLetters + 1	random letter
-;			levelLetters + 2	random letter
+; exit			levelLetters		random letter tile id
+;			levelLetters + 1	random letter tile id
+;			levelLetters + 2	random letter tile id
 ;			A			destroyed
 ;			X			preserved
 ;			Y			preserved
@@ -604,12 +617,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .chooseLetters
 
-	jsr chooseLettersRandom			; pick 1st random letter
+	jsr chooseLetterRandom			; pick 1st random letter
 	sta levelLetters			; and store it in 1st
 	
 .chooseLetters2nd
 
-	jsr chooseLettersRandom			; pick 2nd random letter
+	jsr chooseLetterRandom			; pick 2nd random letter
 
 	cmp levelLetters			; if its the same as 1st then try again
 	beq chooseLetters2nd
@@ -618,7 +631,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	
 .chooseLetters3rd
 
-	jsr chooseLettersRandom			; pick 3rd random letter
+	jsr chooseLetterRandom			; pick 3rd random letter
 	
 	cmp levelLetters			; if its the same as 1st then try again
 	beq chooseLetters3rd
@@ -633,7 +646,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; chooseLettersRandom				pick a random number (0-9) and return with one of the 10 letter tile id's in A
+; chooseLetterRandom				pick a random number (0-9) and return with one of the 10 letter tile id's in A
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -644,12 +657,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.chooseLettersRandom
+.chooseLetterRandom
 
 	jsr random				; pick a random number 0-15
 	and #15
 	cmp #10					; if its >= 10 then pick another
-	bcs chooseLettersRandom
+	bcs chooseLetterRandom
 	
 	adc #objectTileIndex			; add object tile index for letters (carry is clear here so no need for clc)
 
@@ -1927,7 +1940,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	cli					; enable interrupts
 
-	jsr swrInitScreen			; full screen erase, setup palette colors
+	jsr swrInitScreen			; full screen erase, setup palette colors (in loader.asm)
 	
 	lda #pause * 0.5			; wait 0.5 seconds
 	sta pauseCounter

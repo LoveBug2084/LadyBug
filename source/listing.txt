@@ -1101,7 +1101,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      0270   F0 F5      BEQ &0267
      0272   85 27      STA &27
      0274   60         RTS
-.chooseLettersRandom
+.chooseLetterRandom
      0275   20 00 01   JSR &0100
      0278   29 0F      AND #&0F
      027A   C9 0A      CMP #&0A
