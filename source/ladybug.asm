@@ -95,10 +95,10 @@
 
 	
 
-	lda vegetableScore			; draw the top 2 digits
+	lda vegetableScore			; draw the top 2 digits of vegetable bonus
 	jsr drawBcdMini
 
-	lda #&00				; draw 00 and return
+	lda #&00				; draw "00"
 	jsr drawBcdMini
 
 .drawVegetableScoreExit
@@ -2080,7 +2080,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameLoopUpper
 
-	jsr waitVsyncUpper			; wait for vsync interrupt for upper area (6845 vsync interrupt)
+	jsr waitVsyncUpper			; wait for vsync interrupt for upper area (6845 vsync interrupt), read analogue joystick (if enabled)
 
 	jsr ladybugEntryAnimation		; draw ladybug entry movement animation if enabled
 
@@ -2122,7 +2122,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameLoopLower
 
-	jsr waitVsyncLower			; wait for vsync interrupt for lower area (6522 timer1 interrupt)
+	jsr waitVsyncLower			; wait for vsync interrupt for lower area (6522 timer1 interrupt), read analogue joystick (if enabled)
 	
 	jsr processSound			; process sound effects and music
 
@@ -2224,8 +2224,8 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameOverLoop
 
-	jsr waitVsyncUpper			; wait upper half
-	jsr waitVsyncLower			; wait lower half
+	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
+	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
 
 	jsr updateBonusColor			; update the bonus letters palette colors
 
@@ -4077,7 +4077,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; upper sync
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitVsyncUpper			; wait upper half
+	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update lady bug direction and frame counter
 	
@@ -4089,7 +4089,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; lower sync
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitVsyncLower			; wait lower half
+	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -4788,7 +4788,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; wait for upper sync and process
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitVsyncUpper			; wait upper half
+	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -4800,7 +4800,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; wait for lower sync and process
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitVsyncLower			; wait lower half
+	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -5793,9 +5793,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .drawScoreTableFunctions
 
-	jsr waitVsyncUpper			; wait upper half
+	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
 
-	jsr waitVsyncLower			; wait lower half
+	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -6033,7 +6033,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegFunctions
 
-	jsr waitVsyncUpper			; wait upper half
+	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -6041,7 +6041,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr moveSprites				; move ladybug
 
-	jsr waitVsyncLower			; wait lower half
+	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -7532,8 +7532,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawLevelIntroWait
 
-	jsr waitVsyncUpper			; wait upper half
-	jsr waitVsyncLower			; wait lower half
+	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
+	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -7879,7 +7879,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusScreenWaitUpper
 
-	jsr waitVsyncUpper			; wait upper half
+	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -7893,7 +7893,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusScreenWaitLower
 
-	jsr waitVsyncLower			; wait lower half
+	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -10135,6 +10135,13 @@ include "soundtables.asm"
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; joystickAnalogue				read analogue joystick values, convert to player input bits
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+; exit			A			destroyed
+;			X			destroyed
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		joystickAnalogueSave	temporary storage for value read from analogue register
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .joystickBitSet
 
@@ -10165,7 +10172,6 @@ include "soundtables.asm"
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; analogue joystick function, read channel and convert to input bits
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 
 .joystickAnalogue
 
