@@ -994,11 +994,11 @@ bootstrap     &4800 - &4943 , 324 bytes
      01A1   A9 08      LDA #&08
      01A3   8D 40 FE   STA &FE40
      01A6   60         RTS
-.waitVsyncUpper
+.waitIntVsync
      01A7   24 02      BIT &02
      01A9   10 FC      BPL &01A7
      01AB   4C 98 47   JMP &4798
-.waitVsyncLower
+.waitIntTimer
      01AE   24 02      BIT &02
      01B0   30 FC      BMI &01AE
      01B2   4C 98 47   JMP &4798
@@ -1802,13 +1802,13 @@ bootstrap     &4800 - &4943 , 324 bytes
      075E   A5 23      LDA &23
      0760   D0 03      BNE &0765
      0762   4C 16 08   JMP &0816
-.gameLevelRestart
+.gameLevelContinue
      0765   20 70 0B   JSR &0B70
      0768   20 64 04   JSR &0464
      076B   A5 0D      LDA &0D
      076D   D0 03      BNE &0772
      076F   4C 16 08   JMP &0816
-.gameLevelRestartDrawMiddle
+.gameLevelContinueDrawMiddle
      0772   20 77 03   JSR &0377
      0775   20 7C 0B   JSR &0B7C
      0778   20 A6 1C   JSR &1CA6
@@ -1821,7 +1821,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      0788   85 30      STA &30
      078A   A9 64      LDA #&64
      078C   85 03      STA &03
-.gameLoopUpper
+.gameLoop
      078E   20 A7 01   JSR &01A7
      0791   20 9C 08   JSR &089C
      0794   20 D5 1A   JSR &1AD5
@@ -1842,7 +1842,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      07BD   20 D5 24   JSR &24D5
      07C0   20 0A 09   JSR &090A
      07C3   20 BB 01   JSR &01BB
-.gameLoopLower
+.gameLoopWaitIntTimer
      07C6   20 AE 01   JSR &01AE
      07C9   20 95 22   JSR &2295
      07CC   20 17 1D   JSR &1D17
@@ -1856,7 +1856,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      07E3   20 FC 07   JSR &07FC
      07E6   90 03      BCC &07EB
      07E8   4C 0F 07   JMP &070F
-.gameLoopLowerCheckPause
+.gameLoopCheckPause
      07EB   20 5D 17   JSR &175D
      07EE   B0 9E      BCS &078E
      07F0   20 8A 02   JSR &028A
@@ -5185,12 +5185,11 @@ bootstrap     &4800 - &4943 , 324 bytes
 .drawBonusScreenAnimation
      20F2   A9 01      LDA #&01
      20F4   20 AC 21   JSR &21AC
-.drawBonusScreenWaitUpper
+.drawBonusScreenWaitVsync
      20F7   20 A7 01   JSR &01A7
      20FA   20 D4 21   JSR &21D4
      20FD   20 17 1D   JSR &1D17
      2100   20 0A 09   JSR &090A
-.drawBonusScreenWaitLower
      2103   20 AE 01   JSR &01AE
      2106   20 95 22   JSR &2295
      2109   20 17 1D   JSR &1D17

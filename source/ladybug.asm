@@ -229,7 +229,7 @@ continueCompact		= &8068			; master compact entry point
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			screenHalf		set to 00 for upper half or ff for lower half
 ;			vsyncCounter		incremented every vsync (50Hz)
-;			pauseCount		decremented every 2 * vsync (25Hz)
+;			pauseCounter		decremented every 2 * vsync (25Hz)
 ;			P			preserved
 ;			A			preserved
 ;			X			preserved
@@ -249,7 +249,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	bne irqVsync				; then go do the upper vsync interrupt
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; lower interrupt (timer 1)
+	; interrupt (timer 1)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .irqTimer					; else its a timer interrupt so do the lower interrupt
@@ -257,7 +257,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda #&40				; clear timer interrupt flag
 	sta via1Ifr
 
-	lda #&ff				; screenHalf = lower
+	lda #&ff				; screenHalf = lower (raster now at line 156)
 	sta screenHalf
 
 	lda irqAcc				; restore A
@@ -265,7 +265,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	rti					; return to main program
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; upper interrupt (vsync)
+	; interrupt (vsync)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .irqVsync
@@ -277,7 +277,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda #hi(rasterTimer)
 	sta via1T1CounterHi
 
-	lda #&00				; screenHalf = upper
+	lda #&00				; screenHalf = upper (raster now at line 0)
 	sta screenHalf
 
 	inc vsyncCounter			; bump vsync counter
@@ -330,7 +330,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; waitVsyncUpper				wait for next vsync to upper area and read analogue joystick (if enabled)
+; waitIntVsync					wait for next vsync interrupt read analogue joystick (if enabled)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -341,17 +341,17 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.waitVsyncUpper
+.waitIntVsync
 
-	bit screenHalf				; wait until upper area
-	bpl waitVsyncUpper
+	bit screenHalf				; wait until raster is in upper area line 0
+	bpl waitIntVsync
 	
 	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; waitVsyncLower				wait for next vsync to lower area and read analogue joystick (if enabled)
+; waitIntTimer					wait for next timer interrupt and read analogue joystick (if enabled)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -362,10 +362,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.waitVsyncLower
+.waitIntTimer
 
-	bit screenHalf				; wait until lower area
-	bmi waitVsyncLower
+	bit screenHalf				; wait until raster is in lower area line 156
+	bmi waitIntTimer
 	
 	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
 
@@ -1968,7 +1968,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #screenHeight
 	sta crtcData
 
-	jsr drawPlayfieldUpper			; display the upper playfield
+	jsr drawPlayfieldUpper			; display the upper playfield bonus letters and multipliers
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; display the main screen with player options, wait for start to be pressed
@@ -1976,9 +1976,9 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameIntroScreen
 
-	jsr updateHighScoreFirstPlace		; copy first place high score from table and display it
+	jsr updateHighScoreFirstPlace		; copy first place high score from table to lower panel and display it
 
-	jsr mainMenu				; display the main menu screen
+	jsr mainMenu				; display the main menu screen, handle game setting adjustments and return when start game is selected
 
 
 
@@ -2028,8 +2028,8 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr drawPlayfieldLower			; draw playfield lower section (info panel)
 
-	jsr instructions			; display the game instructions
-	bcc gameIntroScreen			; return to intro screen if esc was pressed
+	jsr instructions			; display the game instructions and wait for return or esc to be pressed
+	bcc gameIntroScreen			; if esc was pressed then return to intro
 
 	lda #sfxTwinkle				; play twinkle sound effect for first level
 	jsr playSound
@@ -2053,24 +2053,24 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr initPlayfieldMiddle			; initialize playfield middle section tileMap and count number of edible items (dots, hearts, letters)
 
 	lda levelEdibles			; if there are no edible objects (bad maze design)
-	bne gameLevelRestart
+	bne gameLevelContinue
 	jmp gameOver				; then end the game
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; restart current level
+; continue current level
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.gameLevelRestart
+.gameLevelContinue
 
 	jsr drawPlayfieldLowerLives		; update the lives value on screen
 
 	jsr initSprites				; disable all sprites and mark all erased
 
 	lda lives				; if lives = 0 then its game over
-	bne gameLevelRestartDrawMiddle
+	bne gameLevelContinueDrawMiddle
 	jmp gameOver
 
-.gameLevelRestartDrawMiddle
+.gameLevelContinueDrawMiddle
 
 	jsr initTimerTiles			; fill tileMap edges with timer tiles
 	
@@ -2101,27 +2101,27 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for timer middle interrupt then process stuff for upper half of screen
+	; wait for vsync interrupt then process game functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.gameLoopUpper
+.gameLoop
 
-	jsr waitVsyncUpper			; wait for vsync interrupt for upper area (6845 vsync interrupt), read analogue joystick (if enabled)
+	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr ladybugEntryAnimation		; draw ladybug entry movement animation if enabled
 
 	jsr checkBonus				; check if special, extra or diamond bonus screens are required
-	bcs gameLevelStart			; if bonus was awarded then start a new level
+	bcs gameLevelStart			; if bonus was awarded then start a new level (level was advanced by checkBonus)
 
 	jsr checkLevelEnd			; check if current level has ended
-	bcs gameLevelStart			; if level has ended then start new level
+	bcs gameLevelStart			; if level has ended then start new level (level was advanced by checkLevelEnd)
 
 	jsr drawBonusItemCenter			; draw the vegetable/diamond in the center bug box (if active)
 
-	jsr redrawSprites			; erase and redraw sprites in upper area
+	jsr redrawSprites			; erase and redraw sprites
 
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
-	bcs gameLevelRestart			; restart level if ladybug death movement animation has just completed
+	bcs gameLevelContinue			; continue current level if ladybug death movement animation has just completed
 
 	jsr drawVegetableScore			; draw the vegetable bonus score in center (if active)
 
@@ -2134,7 +2134,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr updateBonusColor			; update the bonus letters palette colors
 
 	jsr checkPauseGame			; if game is paused then skip sprite movement and timer stuff
-	bcs gameLoopLower
+	bcs gameLoopWaitIntTimer
 
 	jsr updateLadybug			; update ladybug direction, handle turnstile and object detection
 
@@ -2143,19 +2143,19 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr updateObjectTimer			; update object timer, object mode and palette
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for vsync top interrupt and process stuff for lower half of screen
+	; wait for timer1 interrupt then process game functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.gameLoopLower
+.gameLoopWaitIntTimer
 
-	jsr waitVsyncLower			; wait for vsync interrupt for lower area (6522 timer1 interrupt), read analogue joystick (if enabled)
+	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
 	
 	jsr processSound			; process sound effects and music
 
 	jsr redrawSprites			; erase and redraw sprites in lower area
 	
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
-	bcs gameLevelRestart			; restart level if ladbug death animation has just completed
+	bcs gameLevelContinue			; continue current level if ladbug death animation has just completed
 
 	jsr drawVegetableScore			; draw the vegetable bonus score in center (if active)
 
@@ -2168,15 +2168,15 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr inputScan				; read keyboard input and joystick (if enabled)
 
 	jsr checkEsc				; if we need to quit the game (esc held)
-	bcc gameLoopLowerCheckPause
+	bcc gameLoopCheckPause
 	jmp gameIntroScreen			; then jump back to the game intro screen
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.gameLoopLowerCheckPause
+.gameLoopCheckPause
 
 	jsr checkPauseGame			; if game is paused then skip enemy timer, enemy release, enemy/ladybug pause timers
-	bcs gameLoopUpper
+	bcs gameLoop
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2186,7 +2186,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr updatePauseTimers			; update ladybug and enemy pause timers, also handles erasure of object score and bonus item score
 
-	jmp gameLoopUpper			; loop back to game main loop
+	jmp gameLoop				; loop back to game main loop
 
 
 
@@ -2250,8 +2250,8 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameOverLoop
 
-	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
-	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
+	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
+	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr updateBonusColor			; update the bonus letters palette colors
 
@@ -4100,10 +4100,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr instructionsLadybugAnimation	; do the lady bug walking animation
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; upper sync
+	; wait for vsync interrupt and process functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
+	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update lady bug direction and frame counter
 	
@@ -4112,10 +4112,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr moveSprites				; move lady bug sprite
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; lower sync
+	; wait for timer1 interrupt and process functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
+	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -4811,10 +4811,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr mainMenuLadybugAnimation		; check and initialise ladybug animation if needed
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for upper sync and process
+	; wait for vsync interrupt and process functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
+	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -4823,10 +4823,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr moveSprites				; move sprites
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for lower sync and process
+	; wait for timer1 interrupt and process functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
+	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -5695,7 +5695,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	dex					; repeat until all 8 processed
 	bne drawScoreTableLoop
 
-	jsr drawString				; draw ">MENU<"
+	jsr drawString				; draw ">MAIN MENU<"
 	equb pixelsSpecial0
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 21 * chrRow
 	equs chrRight, &ff
@@ -5819,9 +5819,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .drawScoreTableFunctions
 
-	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
+	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
-	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
+	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -6059,7 +6059,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegFunctions
 
-	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
+	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -6067,7 +6067,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr moveSprites				; move ladybug
 
-	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
+	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -7106,7 +7106,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-						; lines 0-91 upper, lines 92-183 lower
+						; lines 0-91 upper, lines 92-183 lower (visible display area for screen middle section)
+						; actual raster lines upper = 64-155, lower = 156-247
 
 						; if sprite is 1/2 across then switch to other side
 upperLowerThreshold	= 92 - (spriteTileHeight / 2)
@@ -7558,8 +7559,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawLevelIntroWait
 
-	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
-	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
+	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
+	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -7888,7 +7889,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #sfxMusicExtra			; play extra bonus music
 	jsr playSound
 
-	jmp drawBonusScreenWaitUpper		; skip the animation
+	jmp drawBonusScreenWaitVsync		; skip the animation
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup animation for ladybug
@@ -7900,12 +7901,12 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr animateLadybugInitialize
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for upper sync and process
+	; wait for vsync interrupt and process
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawBonusScreenWaitUpper
+.drawBonusScreenWaitVsync
 
-	jsr waitVsyncUpper			; wait upper half, read analogue joystick (if enabled)
+	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -7914,12 +7915,12 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr moveSprites				; move ladybug
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for lower sync and process
+	; wait for timer1 interrupt and process
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawBonusScreenWaitLower
+;.drawBonusScreenWaitTimer1
 
-	jsr waitVsyncLower			; wait lower half, read analogue joystick (if enabled)
+	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -7934,7 +7935,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawScore				; draw score (1 digit per loop)
 
 	lda pauseCounter			; repeat until time expires
-	bne drawBonusScreenWaitUpper
+	bne drawBonusScreenWaitVsync
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
