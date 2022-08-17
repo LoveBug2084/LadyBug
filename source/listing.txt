@@ -1636,7 +1636,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      0623   A9 17      LDA #&17
      0625   8D 29 06   STA &0629
 .drawMapTileTransfer
-     0628   A0 00      LDY #&00
+     0628   A0 FF      LDY #&FF
 .drawMapTileRead
      062A   B9 00 FF   LDA &FF00,Y
 .drawMapTileWrite
