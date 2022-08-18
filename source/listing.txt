@@ -1293,7 +1293,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      03C0   85 33      STA &33
      03C2   60         RTS
 .tileMapFindDot
-     03C3   A9 02      LDA #&02
+     03C3   A9 04      LDA #&04
      03C5   85 01      STA &01
 .tileMapFindDotY
      03C7   A5 01      LDA &01

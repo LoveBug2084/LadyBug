@@ -50,7 +50,6 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		randomSeed		2 bytes used to calculate next random number
 ;						total length = 65535 random bytes before pattern repeats
-;						add more seed bytes if longer run length is required
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .random
@@ -60,7 +59,7 @@
 	lda randomSeed				; get lo 8 bits of seed
 	ror a					; rotate it right putting carry into bit 7 and bit 0 into carry
 	eor randomSeed + 1			; eor with hi 8 bits
-	sta randomSeed + 1			; store in high 8 bits
+	sta randomSeed + 1			; store in hi 8 bits
 	ror a					; rotate it right putting carry into bit 7
 	eor randomSeed				; eor with lo 8 bits
 	sta randomSeed				; store in lo 8 bits
@@ -138,7 +137,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			jumps into high ram to select one of the following clean reset functions for each machine
+; exit			jumps into high ram to select one of the following clean reset functions for each machine (see loader.asm)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .cleanReset
@@ -227,7 +226,7 @@ continueCompact		= &8068			; master compact entry point
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; irq interrupt					handle vsync and timer1 interrupts, setting screenHalf upper/lower flag and bump counters
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			screenHalf		set to 00 for upper half or ff for lower half
+; exit			screenHalf		set to 00 for upper half (raster lines 0-155) or ff for lower half (raster lines 156-311)
 ;			vsyncCounter		incremented every vsync (50Hz)
 ;			pauseCounter		decremented every 2 * vsync (25Hz)
 ;			P			preserved
@@ -335,7 +334,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
-;			X			destroyed (by .joytickAnalogue)
+;			X			destroyed (.joytickAnalogue function)
 ;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
@@ -356,7 +355,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
-;			X			destroyed (by .joystickAnalog)
+;			X			destroyed (.joystickAnalog function)
 ;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
@@ -391,7 +390,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateObjectTimerFrames			; duration of the colors letters and hearts
+.updateObjectTimerFrames			; duration of the colors for letters and hearts
 
 	equb objectModeCyanTime
 	equb objectModeRedTime
@@ -412,7 +411,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	
 	ldx objectMode				; get current objectMode
 
-	inx					; bump it
+	inx					; add 1
 	cpx #3					; if its >= 3 then set it back to 0
 	bne updateObjectTimerColor
 	ldx #0
@@ -421,7 +420,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	stx objectMode				; update objectMode
 	
-	lda updateObjectTimerPalette, x		; update color palette
+	lda updateObjectTimerPalette, x		; update object color palette
 	sta ulaPalette
 	
 	lda updateObjectTimerFrames, x		; update timer
@@ -486,46 +485,47 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .inputScan
 
-	lda #&7f				; set port A bit 7 as input ( from keyboard output )
+	lda #%01111111				; set port A bit 7 as input ( from keyboard output )
 	sta via1PortDdrA
 	
-	lda #sbKeyboard + sbLow			; keyboard -enable low
+	lda #sbKeyboard + sbLow			; keyboard output -enable low
 	sta via1PortB
 	
 	lda #0					; clear player input flags
 	sta playerInput
 
-	lda #keyEsc				; check esc key
+	lda #keyEsc				; read esc key into playerInput bits
 	jsr readKey
 
-	ldx #3					; check user defined movement keys
+	ldx #3					; read 4 user defined movement keys
 	
 .inputScanLoop
 
 	ldy keyOrder, x				; change order of config keys to match digital joystick layout
 	lda optionKeys, y
-	jsr readKey
+
+	jsr readKey				; read key into playerInput bits
 	
-	dex
+	dex					; repeat until all 4 keys are read in
 	bpl inputScanLoop
 	
-	lda #keyReturn				; check start key
+	lda #keyReturn				; read start key (return) into playerInput bits
 	jsr readKey
 
 	lda #sbKeyboard + sbHigh		; slow bus keyboard -enable high
 	sta via1PortB
 	
-	lda #&ff				; set port A all bits output
+	lda #%11111111				; set port A all bits output
 	sta via1PortDdrA
 
-	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled) (in loader.asm)
+	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled) (see loader.asm)
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; readKey					place key onto slow bus port a and read key status into player input bits
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			key scan code
+; entry			A			key matrix scan code
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			playerInput		shifted left and key status placed into bit 0
 ;			A			destroyed
@@ -540,17 +540,17 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	sta via1PortA				; select key
 
-	lda via1PortA				; read key status
+	lda via1PortA				; read key status (bit 7)
 
-	asl a					; shift key status into player input bits
-	rol playerInput
+	asl a					; shift bit 7 into carry
+	rol playerInput				; and shift carry into playerInput bits
 	
 	rts					; return
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawObjectScore				draws object score img at xy if enabled
+; drawObjectScore				draws objectScoreImg at objectScoreX, objectScoreY (if enabled)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -716,20 +716,20 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	jsr changeTimerTile			; change enemy timer tile color
 
-	inc enemyTimer				; bump enemy timer
+	inc enemyTimer				; bump enemy timer position
 
-	lda enemyTimer				; if enemyTimer = 88
+	lda enemyTimer				; if enemyTimer >= 88
 	cmp #88
 	bcc updateEnemyTimerSound
 
-	lda #0					; then reset enemy timer
+	lda #0					; then reset enemy timer back to 0
 	sta enemyTimer
 
 .updateEnemyTimerSound
 
 	jsr playSoundTimer			; play timer sound at selected volume
 
-	lda enemyTimer				; if enemyTimer is top left
+	lda enemyTimer				; if enemyTimer = 78 (top left)
 	cmp #78
 	bne updateEnemyTimerExit
 	
@@ -752,8 +752,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; initPlayfieldMiddle				copy maze tiles to tileMap, count the number of dots and store in levelEdibles
 ;						place hearts in the map replacing dots (hearts are edible so no change to levelEdibles)
 ;						place letters in the map replacing dots (letters are edible so no change to levelEdibles)
-;						place skulls in map replacing dots ..
-;						(skulls are not edible so the number of skulls is subtracted from levelEdibles by placeTileMapSkulls)
+;						place skulls in map replacing dots
+;						(skulls are not edible so decrease levelEdibles by the number of skulls (handled by placeTileMapSkulls)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -770,11 +770,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.initPlayfieldMiddleTilesLeft
+.initPlayfieldMiddleTilesLeft			; left side tile translation table (normal)
 
 	equb &00,&01,&dc,&dd,&9e,&9f,&a0,&a1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&da,&db
 
-.initPlayfieldMiddleTilesRight
+.initPlayfieldMiddleTilesRight			; right side tile translation table (mirrored) 
 
 	equb &00,&01,&dc,&dd,&9e,&9f,&a1,&a0,&d3,&d2,&d5,&d4,&d6,&d7,&d8,&d9,&db,&da
 
@@ -783,11 +783,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .initPlayfieldMiddle
 
-	lda #0
-	sta levelEdibles			; initialize edibles
+	lda #0					; initialize edibles to 0
+	sta levelEdibles
 
-	lda mazeMap				; get maze map number
-	and #%0110				; remove bit 0 so that 0,1,2,3,4,5 becomes 0,0,2,2,4,4
+	lda mazeMap				; get maze map number (0 to 5)
+	and #%0110				; remove bit 0 so that 0,1,2,3,4,5 becomes 0,0,2,2,4,4 (index into the 3 word maze list above)
 
 	tay					; set start address of maze data using map number as index
 	lda initPlayfieldMiddleMazeTable, y
@@ -823,7 +823,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	ldx dummy16, y				; get byte from maze (address previously setup)
 
-	lda initPlayfieldMiddleTilesLeft, x	; convert to tile for left side
+	lda initPlayfieldMiddleTilesLeft, x	; convert to tile if for left side (normal)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -839,13 +839,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	cpy #10					; if not middle column (we dont want to count the middle column dot twice)
 	beq initPlayfieldMiddleRight
 	
-	inc levelEdibles			; then increment levelEdibles
+	inc levelEdibles			; then increment levelEdibles (we count twice for left side and mirrored right side)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .initPlayfieldMiddleRight
 
-	lda initPlayfieldMiddleTilesRight, x	; convert to tile for right side
+	lda initPlayfieldMiddleTilesRight, x	; convert to tile id for right side (mirrored)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -970,7 +970,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda #0					; zero enemy timer position
+	lda #0					; set enemy timer position to 0
 	sta enemyTimer
 
 	rts					; return
@@ -979,8 +979,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; tileMapfindDot				find a random tileMap location that contains a dot and isnt near a turnstile
-;						if location hasnt been found within 0.08 seconds then timeout
-;						timeout happens because of a bad maze design with not enough spaces for objects
+;						if location hasnt been found within 0.16 seconds then timeout
+;						(timeout happens because of a bad maze design with not enough spaces for objects)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -995,7 +995,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .tileMapFindDot
 
-	lda #pause * 0.08			; set timeout for 0.08 seconds
+	lda #pause * 0.16			; set timeout for 0.16 seconds
 	sta pauseCounter
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -1092,7 +1092,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; placeTileMapHearts				place 3 hearts at random locations in the map
-;						exit if location not found within 0.08 seconds
+;						exit if location not found within 0.16 seconds
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1128,7 +1128,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; placeTileMapLetters				place 3 letters at random locations in the map
-;						exit if location not found within 0.08 seconds
+;						exit if location not found within 0.16 seconds
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1164,7 +1164,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; placeTileMapSkulls				place skulls at random locations in the map, decrement edibles for each skull placed
-;						exit if location not found within 0.08 seconds
+;						exit if location not found within 0.16 seconds
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1226,7 +1226,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	lda #spriteBlanking + moveStop		; sprite disabled (blanked and not moving)
 	sta spritesDir, x
 
-	lda #&ff				; sprite erase buffer disabled
+	lda #&ff				; sprite erase disabled
 	sta spritesErased, x
 
 	dex
@@ -1843,7 +1843,7 @@ pixelRight		= &55			; bit mask for right pixel
 	
 	stx drawChrFontRead + 2			; zero high byte of chr value
 
-	sec					; set character code origin to 0 (ascii 32-95 becomes 0-63 00-3f)
+	sec					; set character code origin to 0 (ascii 32-95 becomes 0-63)
 	sbc #' '
 
 	sta drawChrFontRead + 1			; multiply A by 5 (5 bytes per character)
@@ -1953,7 +1953,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	cli					; enable interrupts
 
-	jsr swrInitScreen			; full screen erase, setup palette colors (in loader.asm)
+	jsr swrInitScreen			; full screen erase, setup palette colors (see loader.asm)
 	
 	lda #pause * 0.5			; wait 0.5 seconds
 	sta pauseCounter
@@ -2118,7 +2118,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr drawBonusItemCenter			; draw the vegetable/diamond in the center bug box (if active)
 
-	jsr redrawSprites			; erase and redraw sprites
+	jsr redrawSprites			; erase and redraw sprites (below the center line split)
 
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
 	bcs gameLevelContinue			; continue current level if ladybug death movement animation has just completed
@@ -2152,7 +2152,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	
 	jsr processSound			; process sound effects and music
 
-	jsr redrawSprites			; erase and redraw sprites in lower area
+	jsr redrawSprites			; erase and redraw sprites (above the center line split)
 	
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
 	bcs gameLevelContinue			; continue current level if ladbug death animation has just completed
