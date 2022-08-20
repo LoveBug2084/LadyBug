@@ -43,7 +43,7 @@ rem  lock the dfs file names
 rem --------------------------------------------------
 echo.
 echo %bbcProjectName%.ssd locking files
-utils\filelocker %bbcProjectName%.ssd "!Boot  $" "Boot   $" "[Maze1]$" "[Maze2]$" "[Maze3]$" "Loader $" "LadyBug$" "Reset  $" "[ConfR]$" "Editor $" "EditorM$" "EditorT$"
+utils\filelocker %bbcProjectName%.ssd "!Boot  $" "Boot   $" "[Conf] $" "[Maps] $" "[Maze1]$" "[Maze2]$" "[Maze3]$" "Loader $" "LadyBug$" "Reset  $" "[ConfR]$" "Editor $" "EditorM$" "EditorT$"
 
 rem --------------------------------------------------
 rem  increment build number and run project in beebem

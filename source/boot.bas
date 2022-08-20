@@ -380,7 +380,9 @@ DEF PROCsaveConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
 IF F%?2<>V% THEN ENDPROC
 
+OSCLI("ACCESS [Conf]")
 OSCLI("SAVE [Conf] " + STR$~(&FF0000 + C%) + " +7E")
+OSCLI("ACCESS [Conf] L")
 
 PROCeraseCenter
 PRINT TAB(5,11);CHR$(135);"High scores";CHR$(132);"and";CHR$(135);"game settings";

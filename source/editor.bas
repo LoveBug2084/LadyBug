@@ -127,9 +127,7 @@ M%?&2B00=0
 !&2B04=-1:PROCw
 PROCt
 
-F%=OPENOUT("[Maps]")
-PRINT#F%,f$(0),f$(1),f$(2)
-CLOSE#F%
+PROCf
 
 ENDPROC
 
@@ -147,11 +145,21 @@ F%=OPENIN(s$):IFF%<>0THENCLOSE#F%:m$=s$+" exists,overwrite":IFNOTFNc THENENDPROC
 OSCLI("SAVE "+s$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
 f$(M%)=s$
 
+PROCf
+
+M%?&2B00=0:!&2B04=-1:PROCw
+
+ENDPROC
+
+
+
+DEFPROCf
+
+OSCLI("ACCESS [Maps]")
 F%=OPENOUT("[Maps]")
 PRINT#F%,f$(0),f$(1),f$(2)
 CLOSE#F%
-
-M%?&2B00=0:!&2B04=-1:PROCw
+OSCLI("ACCESS [Maps] L")
 
 ENDPROC
 
