@@ -92,11 +92,11 @@
 	
 .optionKeys
 
-	skip 4					; reserve space for control keys
+	skip 4					; reserve space for control keys scan code
 	
 .optionKeysAscii
 
-	skip 4					; reserve space for control keys ascii
+	skip 4					; reserve space for control keys ascii code
 
 .validationCode
 
