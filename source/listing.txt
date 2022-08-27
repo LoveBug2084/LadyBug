@@ -101,7 +101,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      0020
 .level
      0021   01
-.levelEnd
+.levelEndActive
      0022
 .levelEdibles
      0023

@@ -63,18 +63,18 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 
 .vegetableScoreActive	skip 1			; vegetable score displayed if != 0
 
-.objectScoreImg		skip 1			; object score img active if != 0
+.objectScoreImg		skip 1			; object score image index to display if != 0,
 .objectScoreX		skip 1			; object score x position
 .objectScoreY		skip 1			; object score y position
 
 .level			equb 1			; game level (BCD), initialize here for main menu first run
-.levelEnd		skip 1			; level is over if != 0
+.levelEndActive		skip 1			; level has ended if != 0
 
 .levelEdibles		skip 1			; number of edible objects (dots, letters, hearts) remaining in current level
 .levelSkulls		skip 1			; number of skulls in current level
 .levelLetters		skip 3			; 3 random letters for current level
 
-.shield			skip 1			; number of rounds remaining that ladybug is protected against skulls
+.shield			skip 1			; number of rounds remaining that ladybug is protected against skulls, 0 = no shield
 
 .objectModeTimer	skip 1			; timer for object mode change
 .objectMode		skip 1			; current object mode 0=cyan, 1=red, 2=yellow

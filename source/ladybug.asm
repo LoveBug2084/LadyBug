@@ -2431,7 +2431,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .checkLevelEnd
 
-	lda levelEnd				; if level has ended then advance level and exit with true status
+	lda levelEndActive			; if level has ended then advance level and exit with true status
 	bne checkLevelEndTrue
 
 	lda levelEdibles			; if theres still edible objects then exit with false status
@@ -2450,7 +2450,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	bne checkLevelEndFalse
 
 	lda #&ff				; flag level as ended
-	sta levelEnd
+	sta levelEndActive
 
 	lda #sfxEndLevel			; play end of level sound
 	jsr playSound
@@ -4646,7 +4646,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; level not ended yet
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	sta levelEnd				; disable level end flag
+	sta levelEndActive			; disable level end flag
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; game not paused
