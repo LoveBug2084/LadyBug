@@ -1,5 +1,5 @@
 # Lady Bug
-A remake of [Universals Lady Bug arcade game from 1981](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the [Acorn BBC Micro Computer range](https://en.wikipedia.org/wiki/BBC_Micro), assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler (run asm.bat from command prompt)
+A remake of [Universals Lady Bug arcade game from 1981](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the [Acorn BBC Micro Computer](https://en.wikipedia.org/wiki/BBC_Micro) systems, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler (run asm.bat from command prompt)
 
 I've included fontmaker and pixels utilities ( C source code and compiled .exe's ) for converting the gimp/photoshop font, sprites and tile image files from .raw to the .bin format required during assembly ( see asm.bat for details )
 
