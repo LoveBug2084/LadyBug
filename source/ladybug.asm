@@ -4636,17 +4636,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #0					; start with no multiplier
 	sta scoreMultiplier
 
+	sta bonusDiamondActive			; diamond bonus deactivated
+
 	sta bonusSpecialActive			; special bonus deactivated
 
 	sta bonusExtraActive			; extra bonus deactivated
-
-	sta bonusDiamondActive			; diamond bonus deactivated
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; level not ended yet
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	sta levelEndActive			; disable level end flag
+	sta levelEndActive			; level ended disabled
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; game not paused
@@ -6658,7 +6658,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; changeTimerTile				change timer tile in tileMap (eor #&01) and redraw tile on screen
+; changeTimerTile				change timer tile in tileMap (invert bit 0) and redraw tile on screen
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			A			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6692,7 +6692,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta changeTimerTileFlip + 2
 	sta changeTimerTileFlip + 5
 	
-	lda #&01				; flip bit 1 of tile in tileMap timer position
+	lda #%00000001				; invert bit 0 of tile in tileMap timer position
 
 .changeTimerTileFlip
 
@@ -8188,7 +8188,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateBonusColor				update the special/extra letter color palette
+; updateBonusColor				update the special/extra/multiplier color palette
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8202,28 +8202,48 @@ animateLadybugInstructions	= 4		; instructions animation index
 	and #%00001000
 	bne updateBonusColorSet1
 	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; color set 0 = red/magenta, yellow/green, cyan/blue
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .updateBonusColorSet0
 
-	lda #palSpecial0 + palRed		; color set 0 red magenta yellow green
+	lda #palSpecial0 + palRed		; set special colors to red/magenta
 	sta ulaPalette
 	lda #palSpecial1 + palMagenta
 	sta ulaPalette
-	lda #palExtra0 + palYellow
+
+	lda #palExtra0 + palYellow		; set extra colors to yellow/green
 	sta ulaPalette
 	lda #palExtra1 + palGreen
+	sta ulaPalette
+
+	lda #palMultiplier0 + palCyan		; set multiplier colors to cyan/blue
+	sta ulaPalette
+	lda #palMultiplier1 + palBlue
 	sta ulaPalette
 	
 	rts					; return
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; color set 1 = magenta/red, green/yellow, blue/cyan
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .updateBonusColorSet1
 
-	lda #palSpecial0 + palMagenta		; color set 1 magenta red green yellow
+	lda #palSpecial0 + palMagenta		; set special colors to magenta/red
 	sta ulaPalette
 	lda #palSpecial1 + palRed
 	sta ulaPalette
-	lda #palExtra0 + palGreen
+
+	lda #palExtra0 + palGreen		; set extra colors to green/yellow
 	sta ulaPalette
 	lda #palExtra1 + palYellow
+	sta ulaPalette
+	
+	lda #palMultiplier0 + palBlue		; set multiplier colors to blue/cyan
+	sta ulaPalette
+	lda #palMultiplier1 + palCyan
 	sta ulaPalette
 	
 	rts					; return

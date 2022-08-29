@@ -443,17 +443,17 @@ masterMos350 = &e374
 
 .swrPaletteData
 
-	equb &00 + palBlack			; colors 0-7 are regular beeb colors
-	equb &10 + palRed
-	equb &20 + palGreen
-	equb &30 + palYellow
-	equb &40 + palBlue
-	equb &50 + palMagenta
-	equb &60 + palCyan
-	equb &70 + palWhite
+	equb pal0 + palBlack			; colors 0-7 are regular beeb colors
+	equb pal1 + palRed
+	equb pal2 + palGreen
+	equb pal3 + palYellow
+	equb pal4 + palBlue
+	equb pal5 + palMagenta
+	equb pal6 + palCyan
+	equb pal7 + palWhite
 
-	equb &80 + palBlack			; color 8 unused
-	equb &90 + palBlack			; color 9 unused
+	equb palMultiplier0 + palCyan		; color 8 multiplier (flashing cyan/blue)
+	equb palMultiplier1 + palBlue		; color 9 multiplier (flashing blue/cyan)
 
 	equb palSpecial0 + palRed		; color 10 special (flashing red/magenta)
 	equb palSpecial1 + palMagenta		; color 11 special (flashing magenta/red)

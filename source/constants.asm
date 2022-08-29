@@ -462,10 +462,21 @@ palWhite		= 7 eor 7
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; ula palette index to changing colors
+; ula palette register index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-palSpecial0		= &a0			; palette color change indexs
+pal0			= &00			; palette register index for regular colors
+pal1			= &10
+pal2			= &20
+pal3			= &30
+pal4			= &40
+pal5			= &50
+pal6			= &60
+pal7			= &70
+
+palMultiplier0		= &80			; palette register index for flashing colors
+palMultiplier1		= &90
+palSpecial0		= &a0
 palSpecial1		= &b0
 palExtra0		= &c0
 palExtra1		= &d0
@@ -486,8 +497,8 @@ pixels4			= &30
 pixels5			= &33
 pixels6			= &3c
 pixels7			= &3f
-pixelsUnused0		= &c0
-pixelsUnused1		= &c3
+pixelsMultiplier0	= &c0
+pixelsMultiplier1	= &c3
 pixelsSpecial0		= &cc
 pixelsSpecial1		= &cf
 pixelsExtra0		= &f0
