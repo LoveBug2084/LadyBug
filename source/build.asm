@@ -44,31 +44,31 @@
 ; create disk files, keep them in loading order as far as possible to reduce floppy seek time
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	save		"$.!Boot", bootasmStart, bootasmEnd, &ffffff, 0
+	save		"!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 
-	putbasic	"boot.bas", "$.Boot"
+	putbasic	"boot.bas", "Boot"
 
-	save		"$.[Conf]", config, configEnd, &ffffff, &ff0000 + config
+	save		"[Conf]", config, configEnd, &ffffff, &ff0000 + config
 
-	save		"$.[Maps]", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
+	save		"[Maps]", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 
-	putfile		"default-maze1.bin", "$.[Maze1]", 0, &ffffff
-	putfile		"default-maze2.bin", "$.[Maze2]", 0, &ffffff
-	putfile		"default-maze3.bin", "$.[Maze3]", 0, &ffffff
+	putfile		"default-maze1.bin", "[Maze1]", 0, &ffffff
+	putfile		"default-maze2.bin", "[Maze2]", 0, &ffffff
+	putfile		"default-maze3.bin", "[Maze3]", 0, &ffffff
 
-	save		"$.Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
+	save		"Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 
-	save		"$.LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
+	save		"LadyBug", progReloc, bootstrapEnd, &ff0000 + bootstrap + progOffset, &ff0000 + progLoad
 
-	putbasic	"reset.bas", "$.Reset"
+	putbasic	"reset.bas", "Reset"
 
-	save		"$.[ConfR]", config, configEnd, &ffffff, &ff0000 + config
+	save		"[ConfR]", config, configEnd, &ffffff, &ff0000 + config
 
-	putbasic	"editor.bas", "$.Editor"
+	putbasic	"editor.bas", "Editor"
 
-	save		"$.EditorM", editorStart, editorEnd, &ffffff, 0
+	save		"EditorM", editorStart, editorEnd, &ffffff, 0
 
-	putfile		"img-editor.bin", "$.EditorT", 0, &ffffff
+	putfile		"img-editor.bin", "EditorT", 0, &ffffff
 
 
 

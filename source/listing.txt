@@ -9133,13 +9133,13 @@ bootstrap     &4800 - &4943 , 324 bytes
 
 
 
-Saving file '$.!Boot'
-Saving file '$.[Conf]'
-Saving file '$.[Maps]'
-Saving file '$.Loader'
-Saving file '$.LadyBug'
-Saving file '$.[ConfR]'
-Saving file '$.EditorM'
+Saving file '!Boot'
+Saving file '[Conf]'
+Saving file '[Maps]'
+Saving file 'Loader'
+Saving file 'LadyBug'
+Saving file '[ConfR]'
+Saving file 'EditorM'
 
 
 
