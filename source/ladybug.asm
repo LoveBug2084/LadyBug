@@ -4629,7 +4629,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; clear the x2 x3 x5 flags, clear the score multiplier and the special/extra/diamond active flags
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda bonusBits				; clear the x2 x3 x5 bits bits 0,1,2 of bonusBits
+	lda bonusBits				; clear the x2 x3 x5 bits 0,1,2 of bonusBits
 	ora #bonusBitsMultiplier
 	sta bonusBits
 
