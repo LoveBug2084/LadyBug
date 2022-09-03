@@ -3534,10 +3534,9 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .addScoreBottom
 
-	sed					; bcd mode
+	sed					; bcd mode, clear carry
 
-	clc					; add A to score LSB
-	adc score
+	adc score				; add A to score LSB
 	sta score
 
 	lda #0					; add carry if any
@@ -3563,7 +3562,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .addScoreExit
 
-	cld					; back to binary mode
+	cld					; binary mode
 
 	rts					; return
 
@@ -3592,8 +3591,8 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	lsr a
 	lsr a
 	
-	sed					; select bcd mode as we are jumping into the middle of addScore to do the hundreds
-	clc					; no carry
+	sed					; bcd mode, clear carry
+
 	bcc addScoreMiddle			; add hundreds
 
 
@@ -3604,9 +3603,9 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .addScoreDiamond
 
-	lda #diamondBonusScore			; add the diamond bonus score to the top 2 digits of score (bcd)
-	sed
-	clc
+	sed					; bcd mode, clear carry
+
+	lda #diamondBonusScore			; add the diamond bonus score to the top 2 digits of score
 	bcc addScoreTop
 
 
@@ -3617,9 +3616,9 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .addScoreSpecial
 
-	lda #specialBonusScore			; add the special bonus score to the top 2 digits of score (bcd)
-	sed
-	clc
+	sed					; bcd mode, clear carry
+
+	lda #specialBonusScore			; add the special bonus score to the top 2 digits of score
 	bcc addScoreTop
 
 
@@ -3777,7 +3776,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .levelAdvance
 
-	sed					; switch to bcd mode
+	sed					; bcd mode, clear carry
 
 	lda level				; if level < &99
 	cmp #&99
@@ -4629,7 +4628,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; clear the x2 x3 x5 flags, clear the score multiplier and the special/extra/diamond active flags
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda bonusBits				; clear the x2 x3 x5 bits 0,1,2 of bonusBits
+	lda bonusBits				; clear the x2 x3 x5 bits of bonusBits
 	ora #bonusBitsMultiplier
 	sta bonusBits
 
@@ -6580,15 +6579,16 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawBonusScreen			; draw the special bonus screen
 
-	lda shield				; if theres currently shield active
+	lda shield				; if theres currently shield active then
 	beq checkBonusSpecialLevel
 	
-	sed					; then add &01 to shield (bcd) as the call to levelAdvance will reduce shield by &01
-	clc					; so the player does not lose a shield for gaining extra shields
-	lda #&01
-	adc shield
+	sed					; bcd mode, clear carry
+
+	lda #&01				; add 1 to shield (bcd) as the call to levelAdvance will reduce shield by &01
+	adc shield				; so the player does not lose a shield for gaining extra shields
 	sta shield
-	cld
+
+	cld					; binary mode
 
 .checkBonusSpecialLevel
 
@@ -6596,11 +6596,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr addScoreSpecial			; add the special bonus score (bcd)
 
-	sed					; add the shield bonus to shield (bcd)
-	lda #specialBonusShield
+	sed					; bcd mode, clear carry
+
+	lda #specialBonusShield			; add the shield bonus to shield
 	adc shield
 	sta shield
-	cld
+
+	cld					; binary mode
 
 	lda #bonusBitsSpecial			; clear the special letters
 	ora bonusBits + 1
@@ -6624,26 +6626,28 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawBonusScreen			; draw the extra bonus screen
 
-	lda shield				; if theres currently shield active
+	lda shield				; if theres currently shield active then
 	beq checkBonusExtraLevel
 	
-	sed					; then add &01 to shield (bcd) as the call to levelAdvance will reduce shield by &01
-	clc					; so the player does not lose a shield for gaining extra lives
-	lda #&01
-	adc shield
+	sed					; bcd mode, clear carry
+
+	lda #&01				; add 1 to shield (bcd) as the call to levelAdvance will reduce shield by &01
+	adc shield				; so the player does not lose a shield for gaining extra lives
 	sta shield
-	cld
+
+	cld					; binary mode
 
 .checkBonusExtraLevel
 
 	jsr levelAdvance			; advance game to next level
 
-	sed					; add bonus lives (bcd)
-	clc
-	lda #extraBonusLives
+	sed					; bcd mode, clear carry
+
+	lda #extraBonusLives			; add bonus lives
 	adc lives
 	sta lives
-	cld
+
+	cld					; binary mode
 
 	lda #bonusBitsExtra			; clear the extra letters
 	ora bonusBits + 0
@@ -9063,12 +9067,14 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	sta bonusItemActive			; deactivate vegetable/diamond
 
-	sed					; reduce lives by 1 (BCD)
-	sec
+	sed					; bcd mode
+
+	sec					; reduce lives by 1
 	lda lives
 	sbc #1
 	sta lives
-	cld
+
+	cld					; binary mode
 
 	lda #ladybugDeathTime			; pause ladybug and enemies
 	sta pauseLadybug
