@@ -56,9 +56,16 @@ echo %bbcProjectBuildText%>build.txt
 rem --------------------------------------------------
 rem  generate README.md with new build number
 rem --------------------------------------------------
-echo|set /p="Build " > ..\build.tmp
-copy /y ..\build.tmp+build.bin+..\readme.txt ..\README.md > nul
-del /q ..\build.tmp
+rem echo Build %bbcProjectBuildBin%>..\readme.build
+rem setLocal enableDelayedExpansion
+rem set o=no
+rem for /f "delims=|" %%i in (..\README.md) do (
+rem   if "!o!"=="yes" echo %%i>>..\readme.build
+rem   set o=yes
+rem 	)
+rem set o=
+rem del /q ..\README.md
+rem ren ..\readme.build README.md
 
 rem --------------------------------------------------
 rem  run the new build
