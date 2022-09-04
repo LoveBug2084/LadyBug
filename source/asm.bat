@@ -46,10 +46,19 @@ echo %bbcProjectName%.ssd locking files
 utils\filelocker %bbcProjectName%.ssd "!Boot  $" "Boot   $" "[Conf] $" "[Maps] $" "[Maze1]$" "[Maze2]$" "[Maze3]$" "Loader $" "LadyBug$" "Reset  $" "[ConfR]$" "Editor $" "EditorM$" "EditorT$"
 
 rem --------------------------------------------------
-rem  increment build number and run project in beebem
+rem  increment build number
 rem --------------------------------------------------
 echo.
 echo %bbcProjectName% build %bbcProjectBuildBin%
 set /a bbcProjectBuildText+=1
 echo %bbcProjectBuildText%>build.txt
+
+rem --------------------------------------------------
+rem  generate README.md with new build number
+rem --------------------------------------------------
+copy /y build.bin+..\readme.txt ..\README.md > nul
+
+rem --------------------------------------------------
+rem  run the new build
+rem --------------------------------------------------
 call run.bat
