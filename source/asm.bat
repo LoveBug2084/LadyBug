@@ -66,12 +66,12 @@ echo %bbcProjectBuildText%>build.txt
 rem --------------------------------------------------
 rem  update README.md with new build number
 rem --------------------------------------------------
-echo Build %bbcProjectBuildBin% > ..\readme.build
-for /f "skip=1 delims=¬" %%s in (..\README.md) do (
-	echo %%s >> ..\readme.build
-	)
-del /q ..\README.md
-ren ..\readme.build README.md
+rem echo Build %bbcProjectBuildBin% > ..\readme.build
+rem for /f "skip=1 delims=¬" %%s in (..\README.md) do (
+rem 	echo %%s >> ..\readme.build
+rem 	)
+rem del /q ..\README.md
+rem ren ..\readme.build README.md
 
 
 
