@@ -56,9 +56,9 @@ echo %bbcProjectBuildText%>build.txt
 rem --------------------------------------------------
 rem  generate README.md with new build number
 rem --------------------------------------------------
-echo|set /p="Build " > ..\build.temp.txt
-copy /y ..\build.temp.txt+build.bin+..\readme.txt ..\README.md > nul
-del /q ..\build.temp.txt
+echo|set /p="Build " > ..\build.tmp
+copy /y ..\build.tmp+build.bin+..\readme.txt ..\README.md > nul
+del /q ..\build.tmp
 
 rem --------------------------------------------------
 rem  run the new build
