@@ -22,6 +22,8 @@ utils\pixels				img-enemy7.raw								10	14	img-enemy7.bin
 utils\pixels				img-enemy8.raw								10	14	img-enemy8.bin
 utils\pixels				img-angel.raw									10	14	img-angel.bin
 
+
+
 rem -----------------------------------------------------------------------------------------
 rem  read project name and current build number, create build number text with leading zeros
 rem -----------------------------------------------------------------------------------------
@@ -31,6 +33,8 @@ set "bbcProjectBuildBin=00000%bbcProjectBuildText%"
 set "bbcProjectBuildBin=%bbcProjectBuildBin:~-6%"
 echo %bbcProjectBuildBin%>build.bin
 
+
+
 rem ---------------
 rem  build project
 rem ---------------
@@ -38,12 +42,16 @@ echo.
 beebasm -title %bbcProjectName% -v -i build.asm -do %bbcProjectName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 
+
+
 rem --------------------------------------------------
 rem  lock the dfs file names
 rem --------------------------------------------------
 echo.
 echo %bbcProjectName%.ssd locking files
 utils\filelocker %bbcProjectName%.ssd "!Boot  $" "Boot   $" "[Conf] $" "[Maps] $" "[Maze1]$" "[Maze2]$" "[Maze3]$" "Loader $" "LadyBug$" "Reset  $" "[ConfR]$" "Editor $" "EditorM$" "EditorT$"
+
+
 
 rem --------------------------------------------------
 rem  increment build number
@@ -53,21 +61,23 @@ echo %bbcProjectName% build %bbcProjectBuildBin%
 set /a bbcProjectBuildText+=1
 echo %bbcProjectBuildText%>build.txt
 
+
+
 rem --------------------------------------------------
-rem  generate README.md with new build number
+rem  update README.md with new build number
 rem --------------------------------------------------
-rem echo Build %bbcProjectBuildBin%>..\readme.build
-rem setLocal enableDelayedExpansion
-rem set o=no
-rem for /f "delims=|" %%i in (..\README.md) do (
-rem   if "!o!"=="yes" echo %%i>>..\readme.build
-rem   set o=yes
-rem 	)
-rem set o=
-rem del /q ..\README.md
-rem ren ..\readme.build README.md
+echo Build %bbcProjectBuildBin% > ..\readme.build
+for /f "skip=1 delims=¬" %%s in (..\README.md) do (
+	echo %%s >> ..\readme.build
+	)
+del /q ..\README.md
+ren ..\readme.build README.md
+
+
 
 rem --------------------------------------------------
 rem  run the new build
 rem --------------------------------------------------
 call run.bat
+
+
