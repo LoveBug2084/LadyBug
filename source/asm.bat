@@ -60,13 +60,13 @@ echo.
 echo %bbcProjectName% build %bbcProjectBuildBin%
 set /a bbcProjectBuildText+=1
 echo %bbcProjectBuildText%>build.txt
-
+echo.
 
 
 rem --------------------------------------------------
 rem  update README.md with new build number
 rem --------------------------------------------------
-echo Build %bbcProjectBuildBin%> ..\readme.build.md
+echo Build %bbcProjectBuildBin% - %DATE% - %TIME%> ..\readme.build.md
 for /f "skip=1 tokens=*" %%s in (..\README.md) do (
 	echo %%s>> ..\readme.build.md
 	)
