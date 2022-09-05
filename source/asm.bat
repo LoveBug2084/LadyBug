@@ -3,6 +3,7 @@
 rem --------------------------------
 rem  convert raw image files to bin
 rem --------------------------------
+
 echo.
 utils\fontmaker  		img-font.raw													img-font.bin
 utils\pixels				img-font-vegetable.raw				4		8		img-font-vegetable.bin
@@ -27,6 +28,7 @@ utils\pixels				img-angel.raw									10	14	img-angel.bin
 rem -----------------------------------------------------------------------------------------
 rem  read project name and current build number, create build number text with leading zeros
 rem -----------------------------------------------------------------------------------------
+
 set /p bbcProjectName=<projectname.txt
 set /p bbcProjectBuildText=<build.txt
 set "bbcProjectBuildBin=00000%bbcProjectBuildText%"
@@ -38,6 +40,7 @@ echo %bbcProjectBuildBin%>build.bin
 rem ---------------
 rem  build project
 rem ---------------
+
 echo.
 beebasm -title %bbcProjectName% -v -i build.asm -do %bbcProjectName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
@@ -47,6 +50,7 @@ if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 rem --------------------------------------------------
 rem  lock the dfs file names
 rem --------------------------------------------------
+
 echo.
 echo %bbcProjectName%.ssd locking files
 utils\filelocker %bbcProjectName%.ssd "!Boot  $" "Boot   $" "[Conf] $" "[Maps] $" "[Maze1]$" "[Maze2]$" "[Maze3]$" "Loader $" "LadyBug$" "Reset  $" "[ConfR]$" "Editor $" "EditorM$" "EditorT$"
@@ -56,6 +60,7 @@ utils\filelocker %bbcProjectName%.ssd "!Boot  $" "Boot   $" "[Conf] $" "[Maps] $
 rem --------------------------------------------------
 rem  increment build number
 rem --------------------------------------------------
+
 echo.
 echo %bbcProjectName% build %bbcProjectBuildBin%
 set /a bbcProjectBuildText+=1
@@ -66,6 +71,7 @@ echo.
 rem --------------------------------------------------
 rem  update README.md with new build number
 rem --------------------------------------------------
+
 echo **Build %bbcProjectBuildBin% - %DATE%**> ..\readme.build.md
 for /f "skip=1 tokens=*" %%s in (..\README.md) do (
 	echo %%s>> ..\readme.build.md
@@ -78,6 +84,7 @@ ren ..\readme.build.md README.md
 rem --------------------------------------------------
 rem  run the new build
 rem --------------------------------------------------
+
 call run.bat
 
 
