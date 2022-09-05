@@ -59,9 +59,9 @@ letterBonusTime		= pause * 1.50		; 1.50 seconds pause during letter bonus sound
 bonusTime		= pause * 7.00		; 7.00 seconds special/extra/diamond bonus screen time
 
 specialBonusScore	= &02			; special bonus 200,000 points
-specialBonusShield	= &06			; special bonus skull shield for 6 levels
+specialBonusShield	= 6			; special bonus skull shield for 6 levels
 
-extraBonusLives		= &02			; extra bonus 2 more lives
+extraBonusLives		= 2			; extra bonus 2 lives
 
 diamondBonusScore	= &10			; diamond bonus score 1,000,000 points
 

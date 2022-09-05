@@ -6582,13 +6582,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda shield				; if theres currently shield active then
 	beq checkBonusSpecialLevel
 	
-	sed					; bcd mode, clear carry
-
-	lda #&01				; add 1 to shield (bcd) as the call to levelAdvance will reduce shield by &01
-	adc shield				; so the player does not lose a shield for gaining extra shields
-	sta shield
-
-	cld					; binary mode
+	lda #1					; add 1 to shield because levelAdvance will reduce it by 1
+	jsr addShield
 
 .checkBonusSpecialLevel
 
@@ -6596,13 +6591,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr addScoreSpecial			; add the special bonus score (bcd)
 
-	sed					; bcd mode, clear carry
-
 	lda #specialBonusShield			; add the shield bonus to shield
-	adc shield
-	sta shield
-
-	cld					; binary mode
+	jsr addShield
 
 	lda #bonusBitsSpecial			; clear the special letters
 	ora bonusBits + 1
@@ -6629,13 +6619,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda shield				; if theres currently shield active then
 	beq checkBonusExtraLevel
 	
-	sed					; bcd mode, clear carry
-
-	lda #&01				; add 1 to shield (bcd) as the call to levelAdvance will reduce shield by &01
-	adc shield				; so the player does not lose a shield for gaining extra lives
-	sta shield
-
-	cld					; binary mode
+	lda #1					; add 1 to shield because levelAdvance will reduce it by 1
+	jsr addShield
 
 .checkBonusExtraLevel
 
@@ -6645,6 +6630,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda #extraBonusLives			; add bonus lives
 	adc lives
+
+	bcc checkBonusExtraLives		; if lives > 99
+	lda #&99				; then lives = 99
+
+.checkBonusExtraLives
+
 	sta lives
 
 	cld					; binary mode
@@ -10289,6 +10280,30 @@ include "soundtables.asm"
 
 .joystickAnalogueExit
 
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; addShield					add value in A to shield
+;						prevent overflow > 99
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.addShield
+
+	sed					; bcd mode, clear carry
+
+	adc shield				; add value to shield
+
+	bcc addShieldExit			; if shield > 99
+	lda #&99				; then shield = 99
+
+.addShieldExit
+	
+	sta shield				; update shield value
+
+	cld					; binary mode
+	
 	rts					; return
 
 
