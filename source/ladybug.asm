@@ -2015,8 +2015,6 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
 
-
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup level here too so that instructions page shows correct settings
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -2471,6 +2469,19 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	bne checkLevelEndFalse
 
 	jsr levelAdvance			; advance game to next level
+
+	lda shield				; if shield != &00
+	beq checkLevelEndExit
+
+	sed					; then decimal mode
+
+	sec					; shield = shield - 1
+	sbc #1
+	sta shield
+
+	cld					; binary mode
+
+.checkLevelEndExit
 
 	sec					; flag end level as true and return
 	rts
@@ -3766,7 +3777,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 ; levelAdvance					note: !!! all values are BCD except vegetableImage and mazeMap
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ;						if level < &99 then level = level + &01
-;						if shield != &00 then shield = shield - &01
 ;						if vegetableScore < &9500 then vegetableScore = vegetableScore + &0500
 ;						vegetableImage = vegetableImage + 1
 ;						if vegetableImage >= horseradish + 1 then vegetableImage = cucumber
@@ -3780,20 +3790,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda level				; if level < &99
 	cmp #&99
-	bcs levelAdvanceShield
+	bcs levelAdvanceVegetableScore
 
 	adc #&01				; add &01 to level (carry already clear from previous cmp result)
 	sta level
 	
-.levelAdvanceShield
-
-	lda shield				; if shield != &00
-	beq levelAdvanceVegetableScore
-
-	sec					; then shield = shield - &01
-	sbc #&01
-	sta shield
-
 .levelAdvanceVegetableScore	
 
 	lda vegetableScore			; if vegetableScore < &9500
@@ -3804,7 +3805,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .levelAdvanceVegetableImage
 
-	cld					; switch to binary mode
+	cld					; binary mode
 
 	inc vegetableImg			; add 1 to vegetable image
 
@@ -5937,7 +5938,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	sta pauseLadybug			; unpause ladybug so that it will animate
 
-	sta shield				; clear shields so that skull color will sequence
+	sta shield				; make sure the "END" character is flashing (skull color) by setting shield to 0
 
 	lda #0					; enable enemy release flag usage and warning sound
 	sta enemiesActive
@@ -6579,27 +6580,30 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawBonusScreen			; draw the special bonus screen
 
-	lda shield				; if theres currently shield active then
-	beq checkBonusSpecialLevel
-	
-	lda #1					; add 1 to shield because levelAdvance will reduce it by 1
-	jsr addShield
-
-.checkBonusSpecialLevel
-
-	jsr levelAdvance			; advance game to next level
-
 	jsr addScoreSpecial			; add the special bonus score (bcd)
 
-	lda #specialBonusShield			; add the shield bonus to shield
-	jsr addShield
+	sed					; bcd mode, clear carry
 
+	lda #specialBonusShield			; add the shield bonus to shield
+	adc shield
+
+	bcc checkBonusSpecialShieldUpdate	; if shield > 99
+	lda #&99				; then shield = 99
+
+.checkBonusSpecialShieldUpdate
+	
+	sta shield				; update shield value
+
+	cld					; binary mode
+	
 	lda #bonusBitsSpecial			; clear the special letters
 	ora bonusBits + 1
 	sta bonusBits + 1
 
 	lda #sfxTwinkle				; play the twinkle sound
 	jsr playSound
+
+	jsr levelAdvance			; advance game to next level
 
 	sec					; end the current level and return
 	rts
@@ -6615,16 +6619,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bne checkBonusExit
 
 	jsr drawBonusScreen			; draw the extra bonus screen
-
-	lda shield				; if theres currently shield active then
-	beq checkBonusExtraLevel
-	
-	lda #1					; add 1 to shield because levelAdvance will reduce it by 1
-	jsr addShield
-
-.checkBonusExtraLevel
-
-	jsr levelAdvance			; advance game to next level
 
 	sed					; bcd mode, clear carry
 
@@ -6646,6 +6640,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda #sfxTwinkle				; play the twinkle sound
 	jsr playSound
+
+	jsr levelAdvance			; advance game to next level
 
 	sec					; end the current level and return
 	rts
@@ -6853,7 +6849,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .updateSkullColor
 
-	ldx #0					; if shield > 0 then use index 0 (red) for skull color
+	ldx #0					; if shield != 0 then use index 0 (red) for skull color
 	lda shield
 	bne updateSkullColorFromTable
 
@@ -7537,10 +7533,10 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	bne drawLevelIntroHeartsImg
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; draw shield and number of rounds if shield != 0
+	; if shield != 0 then draw "shield " and number of shield rounds remaining 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda shield				; draw good luck or shield text
+	lda shield
 	beq drawLevelIntroGoodLuck
 
 	jsr drawString
@@ -7556,7 +7552,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jmp drawLevelIntroWait
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; draw good luck if shield == 0
+	; else draw draw "good luck"
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawLevelIntroGoodLuck
@@ -10280,30 +10276,6 @@ include "soundtables.asm"
 
 .joystickAnalogueExit
 
-	rts					; return
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; addShield					add value in A to shield
-;						prevent overflow > 99
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.addShield
-
-	sed					; bcd mode, clear carry
-
-	adc shield				; add value to shield
-
-	bcc addShieldExit			; if shield > 99
-	lda #&99				; then shield = 99
-
-.addShieldExit
-	
-	sta shield				; update shield value
-
-	cld					; binary mode
-	
 	rts					; return
 
 
