@@ -42,7 +42,7 @@ rem  build project
 rem ---------------
 
 echo.
-beebasm -title %bbcProjectName% -v -i build.asm -do %bbcProjectName%.ssd -opt 3 -dd -labels labels.txt > listing.txt
+beebasm -title "%bbcProjectName%" -v -i build.asm -do "%bbcProjectName%.ssd" -opt 3 -dd -labels labels.txt > listing.txt
 if NOT %ERRORLEVEL% == 0 exit /b %ERRORLEVEL%
 
 
@@ -53,7 +53,7 @@ rem --------------------------------------------------
 
 echo.
 echo %bbcProjectName%.ssd locking files
-utils\filelocker %bbcProjectName%.ssd "!Boot  $" "Boot   $" "[Conf] $" "[Maps] $" "[Maze1]$" "[Maze2]$" "[Maze3]$" "Loader $" "LadyBug$" "Reset  $" "[ConfR]$" "Editor $" "EditorM$" "EditorT$"
+utils\filelocker "%bbcProjectName%.ssd" "!Boot  $" "Boot   $" "[Conf] $" "[Maps] $" "[Maze1]$" "[Maze2]$" "[Maze3]$" "Loader $" "LadyBug$" "Reset  $" "[ConfR]$" "Editor $" "EditorM$" "EditorT$"
 
 
 

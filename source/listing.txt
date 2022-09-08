@@ -1821,7 +1821,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      0788   85 30      STA &30
      078A   A9 64      LDA #&64
      078C   85 03      STA &03
-.gameLoop
+.gameLoopWaitIntVsync
      078E   20 A7 01   JSR &01A7
      0791   20 9C 08   JSR &089C
      0794   20 D3 1A   JSR &1AD3

@@ -1813,7 +1813,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 ; workspace		drawChrFontData		data read from font to be converted to pixels
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-; chrs are 6 x 6 pixels stored in pairs from top to bottom, left to right order using 5 bytes per character, the last 4 bits are unused
+; chrs are 6 x 6 pixels stored in bit pairs from top to bottom, left to right order using 5 bytes per character, the last 4 bits are unused
 ;
 ; [byte,bit]
 ;
@@ -1931,7 +1931,7 @@ pixelRight		= &55			; bit mask for right pixel
 	rts					; return
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; alias to self modifying code address
+; alias to simplify external code
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
@@ -1941,12 +1941,11 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 
 
-
-;/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ; main						main entry point to program
 ;
-;\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .main
 
@@ -1954,7 +1953,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr swrInitScreen			; full screen erase, setup palette colors (see loader.asm)
 	
-	lda #pause * 0.5			; wait 0.5 seconds
+	lda #pause * 0.5			; set pause time to 0.5 seconds
 	sta pauseCounter
 	
 .mainPauseLoop
@@ -1970,7 +1969,9 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr drawPlayfieldUpper			; display the upper playfield bonus letters and multipliers
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;
 ; display the main screen with player options, wait for start to be pressed
+;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameIntroScreen
@@ -2016,7 +2017,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; setup level here too so that instructions page shows correct settings
+	; setup level settings for level 1 so that instructions page shows correct settings
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr initLevelSettings			; setup skulls, letters, enemy settings etc for current level
@@ -2096,18 +2097,14 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; game loop					wait interrupts, draw graphics, update sprites and game data. everything !
+; gameLoopWaitIntVsync				wait for vsync interrupt then process game functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for vsync interrupt then process game functions
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.gameLoop
+.gameLoopWaitIntVsync
 
 	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
-	jsr ladybugEntryAnimation		; draw ladybug entry movement animation if enabled
+	jsr ladybugEntryAnimation		; draw ladybug entry movement animation (if enabled)
 
 	jsr checkBonus				; check if special, extra or diamond bonus screens are required
 	bcs gameLevelStart			; if bonus was awarded then start a new level (level was advanced by checkBonus)
@@ -2130,7 +2127,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr updateSkullColor			; update the skull palette color
 
-	jsr updateBonusColor			; update the bonus letters palette colors
+	jsr updateBonusColor			; update the bonus letters and object points palette colors
 
 	jsr checkPauseGame			; if game is paused then skip sprite movement and timer stuff
 	bcs gameLoopWaitIntTimer
@@ -2141,9 +2138,9 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr updateObjectTimer			; update object timer, object mode and palette
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for timer1 interrupt then process game functions
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; gameLoopWaitIntTimer				wait for timer1 interrupt then process game functions
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLoopWaitIntTimer
 
@@ -2175,7 +2172,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 .gameLoopCheckPause
 
 	jsr checkPauseGame			; if game is paused then skip enemy timer, enemy release, enemy/ladybug pause timers
-	bcs gameLoop
+	bcs gameLoopWaitIntVsync
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2185,7 +2182,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr updatePauseTimers			; update ladybug and enemy pause timers, also handles erasure of object score and bonus item score
 
-	jmp gameLoop				; loop back to game main loop
+	jmp gameLoopWaitIntVsync		; loop back to game main loop
 
 
 
@@ -2470,7 +2467,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr levelAdvance			; advance game to next level
 
-	lda shield				; if shield != &00
+	lda shield				; if shield != 0
 	beq checkLevelEndExit
 
 	sed					; then decimal mode
