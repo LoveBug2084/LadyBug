@@ -15,18 +15,16 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; sound channels
+; sound effect type	psg channels	task needed before playing sound effect type
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-; channel		psg channel	special task before playing sound
-
-; 0 music		0 1(2)-		shut down channels 1 2 3 4 and silence psg 0 1 2 before playing music
-; 1 timer		0 - - -		allowed if channel 0 and 3 are not active
-; 2 enemy warning	- - 2 -		allowed if channel 0 is not active
-; 3 object		0 1 - -		allowed if channel 0 is not active, shut down channels 1 and 4 before playing sound
-; 3 skull		0 1 - -		allowed if channel 0 is not active, shut down channels 1 and 4 before playing sound
-; 4 turnstile		- 1 - -		allowed if channels 0 and 3 are not active
-; 5 munch		- - - 3		allowed always, no conflict with other channels or psg channels
+; 0 music		0 1(2)-		shut down effects 1 2 3 4 and silence psg channels 0 1 2 before playing music
+; 1 timer		0 - - -		allowed if effect 0 and 3 are not active
+; 2 enemy warning	- - 2 -		allowed if effect 0 is not active
+; 3 object		0 1 - -		allowed if effect 0 is not active, shut down effects 1 and 4 before playing sound
+; 3 skull		0 1 - -		allowed if effect 0 is not active, shut down effects 1 and 4 before playing sound
+; 4 turnstile		- 1 - -		allowed if effect 0 and 3 are not active
+; 5 munch		- - - 3		allowed, no conflict with other effects or psg channels
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; game sound effects and music tables
@@ -74,7 +72,7 @@
 
 .sfxDataTwinkle
 
-	; sfx channel 0, psg channel 0
+	; sfx type 0, psg channel 0
 	
 	equb 0
 
@@ -100,7 +98,7 @@
 
 .sfxDataEndLevel
 
-	; sfx channel 0, psg channels 0,1
+	; sfx type 0, psg channels 0,1
 
 	equb 0
 
@@ -162,7 +160,7 @@
 
 .sfxDataTimerLow
 
-	; sfx channel 1, psg channel 0
+	; sfx type 1, psg channel 0
 
 	equb 1
 
@@ -179,7 +177,7 @@
 
 .sfxDataTimerMedium
 
-	; sfx channel 1, psg channel 0
+	; sfx type 1, psg channel 0
 
 	equb 1
 
@@ -196,7 +194,7 @@
 
 .sfxDataTimerHigh
 
-	; sfx channel 1, psg channel 0
+	; sfx type 1, psg channel 0
 
 	equb 1
 
@@ -213,7 +211,7 @@
 
 .sfxDataTurnstile
 
-	; sfx channel 4, psg channel 1
+	; sfx type 4, psg channel 1
 
 	equb 4
 
@@ -242,7 +240,7 @@
 
 .sfxDataMunch
 
-	; sfx channel 5, psg channel 3
+	; sfx type 5, psg channel 3
 
 	equb 5
 
@@ -259,7 +257,7 @@
 
 .sfxDataObject
 
-	; sfx channel 3, psg channels 0,1
+	; sfx type 3, psg channels 0,1
 
 	equb 3
 
@@ -363,7 +361,7 @@
 
 .sfxDataEnemyWarning
 
-	; sfx channel 2, psg channel 2
+	; sfx type 2, psg channel 2
 	
 	equb 2
 	
@@ -655,7 +653,7 @@
 
 .sfxDataSkull
 
-	; sfx channel 3, psg channels 0,1
+	; sfx type 3, psg channels 0,1
 
 	equb 3
 
@@ -909,7 +907,7 @@
 
 .sfxDataMusicEntry
 
-	; sfx channel 0, psg channels 0,1,2
+	; sfx type 0, psg channels 0,1,2
 	
 	equb 0
 
@@ -1018,7 +1016,7 @@
 
 .sfxDataMusicDeath
 
-	; sfx channel 0, psg channels 0,1
+	; sfx type 0, psg channels 0,1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; 1st part death music
@@ -1308,7 +1306,7 @@
 
 .sfxDataMusicVegetable
 
-	; sfx channel 0, psg channels 0,1
+	; sfx type 0, psg channels 0,1
 
 	equb 0
 
@@ -1579,7 +1577,7 @@
 
 .sfxDataMusicLetters
 
-	; sfx channel 0, psg channel 0, 1
+	; sfx type 0, psg channel 0, 1
 
 	equb 0
 	
@@ -1635,7 +1633,7 @@
 
 .sfxDataMusicExtra
 
-	; sfx channel 0, psg channel 0, 1
+	; sfx type 0, psg channel 0, 1
 
 	equb 0
 
@@ -1791,7 +1789,7 @@
 
 .sfxDataMusicSpecial
 
-	; sfx channel 0, psg channel 0, 1
+	; sfx type 0, psg channel 0, 1
 
 	equb 0
 	

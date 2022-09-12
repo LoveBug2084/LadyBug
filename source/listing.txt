@@ -5575,7 +5575,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      2336   C9 06      CMP #&06
      2338   F0 22      BEQ &235C
      233A   D0 32      BNE &236E
-.playSoundCheckChannel3
+.playSoundCheckType3
      233C   A5 A8      LDA &A8
      233E   F0 12      BEQ &2352
      2340   A5 AD      LDA &AD

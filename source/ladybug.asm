@@ -7115,12 +7115,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 						; lines 0-91 upper, lines 92-183 lower (visible display area for screen middle section)
 						; actual raster lines upper = 64-155, lower = 156-247
 
-						; if sprite is 1/2 across then switch to other side
+						; sprite vertical switching point for upper/lower half
 upperLowerThreshold	= 92 - (spriteTileHeight / 2)
 
-spritesPerFrame		= 3			; maximum number of sprites in each half of the screen that can be safely erased and drawn
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+spritesPerFrame		= 3			; maximum number of sprites in each half of the screen that can be safely
+						; erased and drawn without tearing
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup maximum number of sprites and choose upper or lower half
@@ -7312,7 +7312,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jmp redrawSpritesGetEraseInfo
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; direction = up/left/right so draw srpite normal (not flipped)
+	; direction = up/left/right so draw sprite normal (not flipped)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .redrawSpritesNormal
@@ -7344,8 +7344,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSpritesCheckDrawn
 
-	lda redrawSpritesMax			; if max sprites drawn then exit (remaining sprites will continue to be processed next frame)
-	beq redrawSpritesExit
+	lda redrawSpritesMax			; if max sprites drawn then exit and the remaining sprites will continue to be processed next frame
+	beq redrawSpritesExit			; (auto-frameskip)
 
 .redrawSpritesCheckDone	
 
@@ -8383,7 +8383,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; processSound					; process sound effect/music tables and send data to psg
+; processSound					process sound effect/music tables and send data to psg
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8457,12 +8457,12 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; playSoundSilence				; silence all psg and software channels
+; playSoundSilence				shut down all sound effecr types and psg channels
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundSilence
 
-	lda #0					; shut down all software sound channels
+	lda #0					; shut down all sound effect types
 	sta soundTimers + 0
 	sta soundTimers + 1
 	sta soundTimers + 2
@@ -8545,22 +8545,22 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda sfxAddrTable, y
 	sta playSoundAddr + 1
 
-	ldy #0					; get sound channel number from table
+	ldy #0					; get sound effect type from table
 	lda (playSoundAddr), y
 
-	tay					; y = channel number
+	tay					; y = effect type
 	
-	asl a					; x = channel index
+	asl a					; x = effect type index
 	tax
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; channel 0 high priority (music)
+	; type 0 high priority (music)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	cpy #0					; if channel = 0 (music)
+	cpy #0					; if type = 0 (music)
 	bne playSoundLowPriority
 	
-	sty soundTimers + 0			; then shut down all channels except 5 (sfxMunch)
+	sty soundTimers + 0			; then shut down all types except 5 (sfxMunch)
 	sty soundTimers + 1
 	sty soundTimers + 2
 	sty soundTimers + 3
@@ -8576,13 +8576,13 @@ animateLadybugInstructions	= 4		; instructions animation index
 	jmp playSoundNow			; play the music
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; channels 1 to 5 low priorty (sound effects)
+	; type 1 to 5 low priorty (sound effects)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.playSoundLowPriority				; channels 1 to 5 (sound effects)
+.playSoundLowPriority
 
-	lda soundTimers + 0			; if channel 0 (music) is currently active
-	beq playSoundCheckChannel3
+	lda soundTimers + 0			; if type 0 (music) is currently active
+	beq playSoundCheckType3
 
 	lda playSoundSaveA			; then only allow sfxMunch
 	cmp #sfxMunch
@@ -8590,12 +8590,12 @@ animateLadybugInstructions	= 4		; instructions animation index
 	bne playSoundExit
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; check channel 3 is active (sfxObject/sfxSkull) and if so then skip playing turnstile or timer sounds if requested
+	; check if type 3 is active (sfxObject/sfxSkull) and if so then skip playing turnstile or timer sounds if requested
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.playSoundCheckChannel3
+.playSoundCheckType3
 
-	lda soundTimers + 3			; if sound channel 3 active (sfxObject/sfxSkull)
+	lda soundTimers + 3			; if sound type 3 active (sfxObject/sfxSkull)
 	beq playSoundCheckObjectSkull
 
 	lda playSoundSaveA			; then get sound number
@@ -8620,10 +8620,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	lda playSoundSaveA			; get sound number
 	
-	cmp #sfxObject				; if sfxObject then shut down channels 1 (sfxTimer) and 4 (sfxTurnstile)
+	cmp #sfxObject				; if sfxObject then shut down types 1 (sfxTimer) and 4 (sfxTurnstile)
 	beq playSoundDisable14
 	
-	cmp #sfxSkull				; if sfxSkull then shut down channels 1 (sfxTimer) and 4 (sfxTurnstile)
+	cmp #sfxSkull				; if sfxSkull then shut down types 1 (sfxTimer) and 4 (sfxTurnstile)
 	beq playSoundDisable14
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8640,7 +8640,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	adc #0
 	sta soundAddrPtr + 1, x
 
-	lda #1					; set channel soundTimer to 1 to trigger sound on the next game loop
+	lda #1					; set sound type soundTimer to 1 to trigger sound on the next game loop
 	sta soundTimers, y
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8655,15 +8655,15 @@ animateLadybugInstructions	= 4		; instructions animation index
 	rts					; return
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; disable channel 1 (sfxTimer) and channel 4 (sfxTurnstile)
+	; disable sound types 1 (sfxTimer) and channel 4 (sfxTurnstile)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundDisable14
 
 	lda #0
 
-	sta soundTimers + 1			; disable channel 1 (sfxTimer)
-	sta soundTimers + 4			; disable channel 4 (sfxTurnstile)
+	sta soundTimers + 1			; disable type 1 (sfxTimer)
+	sta soundTimers + 4			; disable type 4 (sfxTurnstile)
 
 	beq playSoundNow			; and play sound
 
