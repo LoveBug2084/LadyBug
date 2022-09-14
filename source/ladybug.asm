@@ -9127,7 +9127,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda spritesY + 0			; store ladybug y for map and screen address conversion
 	sta spriteToAddrY
 
-	and #15				; create ladybug grid y flag, on grid = 0, off grid != 0
+	and #15					; create ladybug grid y flag, on grid = 0, off grid != 0
 	eor #8
 	sta updateLadybugGridY
 	
@@ -9135,19 +9135,21 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	jsr checkForObject			; check for object under ladybug (dots, hearts, letters, skulls) and do required action (points/death)
 
+
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check inputs and store selected directions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .updateLadybugInputStart
 
-	lsr playerInput				; shift start (fire) input into carry and discard
+	lsr playerInput				; discard start/fire input
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .updateLadybugInputLeft
 
-	lsr playerInput				; shift left input into carry
+	lsr playerInput				; get left input
 
 	bcc updateLadybugInputDown		; if left was requested then
 
@@ -9168,7 +9170,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInputDown
 
-	lsr playerInput				; shift down input into carry
+	lsr playerInput				; get down input
 
 	bcc updateLadybugInputUp		; if down was requested then
 
@@ -9189,7 +9191,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInputUp
 
-	lsr playerInput				; shift up input into carry
+	lsr playerInput				; get up input
 
 	bcc updateLadybugInputRight		; if up was requested then
 
@@ -9210,7 +9212,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInputRight
 
-	lsr playerInput				; shift right input into carry
+	lsr playerInput				; get right input
 
 	bcc updateLadybugCheckGrid		; if right was requested
 
