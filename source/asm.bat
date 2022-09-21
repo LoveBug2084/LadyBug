@@ -53,7 +53,7 @@ rem --------------------------------------------------
 
 echo.
 echo %bbcProjectName%.ssd locking files
-utils\filelocker "%bbcProjectName%.ssd" "!Boot  $" "Boot   $" "[Conf] $" "[Maps] $" "[Maze1]$" "[Maze2]$" "[Maze3]$" "Loader $" "LadyBug$" "Reset  $" "[ConfR]$" "Editor $" "EditorM$" "EditorT$"
+utils\filelocker "%bbcProjectName%.ssd" "!Boot  $" "Boot   $" "_Conf  $" "_Maps  $" "_Maze1 $" "_Maze2 $" "_Maze3 $" "Loader $" "LadyBug$" "Reset  $" "_ConfR $" "Editor $" "EditorM$" "EditorT$"
 
 
 

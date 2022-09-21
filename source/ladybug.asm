@@ -21,7 +21,7 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; lady bug main program
+; ladybug main program
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
@@ -1968,10 +1968,10 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr drawPlayfieldUpper			; display the upper playfield bonus letters and multipliers
 
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;
 ; display the main screen with player options, wait for start to be pressed
-;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameIntroScreen
@@ -2035,7 +2035,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; setup current level ready for play
+; new game level, setup level settings for current level and initialize the tileMap with current mazeMap layout
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLevelStart
@@ -2046,7 +2046,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr drawPlayfieldLower			; draw playfield lower section (info panel)
 
-	jsr drawLevelIntro			; draw the level intro screen
+	jsr drawLevelIntro			; draw the level intro screen showing information about current level
 
 	jsr initPlayfieldMiddle			; initialize playfield middle section tileMap and count number of edible items (dots, hearts, letters)
 
@@ -2091,14 +2091,20 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	sta enemyReleaseEnable			; disable enemy release
 
+	sta playerInput				; clear any pending player control inputs
+
 	lda #escTime				; reset esc key timer
 	sta escCounter
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; gameLoopWaitIntVsync				wait for vsync interrupt then process game functions
+; game main loop
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; gameLoopWaitIntVsync			wait for vsync interrupt then process game functions
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLoopWaitIntVsync
 
@@ -2138,9 +2144,9 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr updateObjectTimer			; update object timer, object mode and palette
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; gameLoopWaitIntTimer				wait for timer1 interrupt then process game functions
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; gameLoopWaitIntTimer				wait for timer1 interrupt then process game functions
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLoopWaitIntTimer
 
@@ -2324,9 +2330,9 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	cpx #0					; if the entry is last in the table then no need to shift scores, go directly to registration and exit
 	beq checkHighScoreRegister
 
-	ldy #lo(highScoreTableEnd - 15)
+	ldy #lo(highScoreTableEnd - 15)		; else we need to shift high score data down to make room for high score entry
 
-.checkHighScoreShift				; else shift high score entrys down to make room for high score entry
+.checkHighScoreShift
 
 	lda hi(highScoreTable) * 256, y		; shift memory
 	sta hi(highScoreTable) * 256 + 14, y
@@ -2366,7 +2372,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .playfieldMiddleWithTimer
 
-	jsr initSprites				; initialize all sprites and blanked and erased
+	jsr initSprites				; initialize all sprites as blanked and erased
 
 	jsr clearTileMap			; fill tilemap with blank tile
 	
@@ -3052,7 +3058,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawPlayfieldLower				draws the bottom info panel showing
-;						lady bug, lives, vegetable, vegetable score, level, score, highScore, highScore name
+;						ladybug, lives, vegetable, vegetable score, level, score, highScore, highScore name
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3132,9 +3138,9 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr drawHighScoreName			; draw the high score name in red
+	jsr drawHighScore			; draw high score points
 
-	jmp drawHighScore			; draw high score points and exit
+	; continue down to drawHighScoreName
 
 
 
@@ -4112,7 +4118,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .instructionsFunctions
 
-	jsr instructionsLadybugAnimation	; do the lady bug walking animation
+	jsr instructionsLadybugAnimation	; do the ladybug walking animation
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; wait for vsync interrupt and process functions
@@ -4120,11 +4126,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
-	jsr animateLadybug			; update lady bug direction and frame counter
+	jsr animateLadybug			; update ladybug direction and frame counter
 	
-	jsr redrawSprites			; draw lady bug and enemy sprites
+	jsr redrawSprites			; draw ladybug and enemy sprites
 
-	jsr moveSprites				; move lady bug sprite
+	jsr moveSprites				; move ladybug sprite
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; wait for timer1 interrupt and process functions
@@ -4134,7 +4140,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr processSound			; process sound effects and music
 
-	jsr redrawSprites			; draw lady bug and enemy sprites
+	jsr redrawSprites			; draw ladybug and enemy sprites
 
 	jsr updateAnimationFrame		; update the animtion frame number
 
@@ -4153,7 +4159,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; initialize lady bug walking animation
+	; initialize ladybug walking animation
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .instructionsLadybugAnimation
@@ -4981,7 +4987,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 						; x index is offset by 3
-						; first entrys in menu are "start game", "blank line", "high scores"
+						; first entrys in menu are 0:"start game", 1:"blank line", 2:"high scores"
 						; so subtract 3 from table addresses to compensate for the offset
 
 	inc gameSettings - 3, x			; gameSettings[x - 3] += 1
@@ -5093,7 +5099,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; draw text
-	equb pixelsSpecial1
+	equb pixelsMultiplier1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "UP", &ff
 	
@@ -5121,7 +5127,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelsSpecial1
+	equb pixelsMultiplier1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "DOWN", &ff
 	
@@ -5154,7 +5160,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelsSpecial1
+	equb pixelsMultiplier1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "LEFT", &ff
 	
@@ -5189,7 +5195,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelsSpecial1
+	equb pixelsMultiplier1
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "RIGHT", &ff
 	
@@ -5664,6 +5670,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 5 * chrRow
 	equb &ff
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	ldx #8					; 8 high scores and names to display
 
 	lda #lo(highScoreTable)			; start at 1st entry
@@ -5709,6 +5717,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	dex					; repeat until all 8 processed
 	bne drawScoreTableLoop
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; draw ">MAIN MENU<"
 	equb pixelsSpecial0

@@ -33,9 +33,9 @@
 
 .mazeFilenames
 
-	equb &00,&07,"]1ezaM["			; the 3 default mazes to load [Maze1] [Maze2] [Maze3]
-	equb &00,&07,"]2ezaM["			; acorn backward strings for use with OPENIN#
-	equb &00,&07,"]3ezaM["
+	equb &00,&06,"1ezaM_"			; the 3 default mazes to load _Maze1 _Maze2 _Maze3
+	equb &00,&06,"2ezaM_"			; acorns backward style strings (used by the basic programs)
+	equb &00,&06,"3ezaM_"
 
 .mazeFilenamesEnd
 

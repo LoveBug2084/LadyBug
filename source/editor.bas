@@ -155,11 +155,11 @@ ENDPROC
 
 DEFPROCf
 
-OSCLI("ACCESS [Maps]")
-F%=OPENOUT("[Maps]")
+OSCLI("ACCESS _Maps")
+F%=OPENOUT("_Maps")
 PRINT#F%,f$(0),f$(1),f$(2)
 CLOSE#F%
-OSCLI("ACCESS [Maps] L")
+OSCLI("ACCESS _Maps L")
 
 ENDPROC
 
@@ -283,7 +283,7 @@ VDU23,1,0;0;0;0;19,1,4;0;19,2,5;0;
 
 DIM f$(3)
 
-F%=OPENIN("[Maps]")
+F%=OPENIN("_Maps")
 INPUT#F%,f$(0),f$(1),f$(2)
 CLOSE#F%
 FORZ%=0TO2:OSCLI("LOAD "+f$(Z%)+" "+STR$~(&2F19-Z%*&E7)):NEXT

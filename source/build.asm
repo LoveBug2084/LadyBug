@@ -48,13 +48,13 @@
 
 	putbasic	"boot.bas", "Boot"
 
-	save		"[Conf]", config, configEnd, &ffffff, &ff0000 + config
+	save		"_Conf", config, configEnd, &ffffff, &ff0000 + config
 
-	save		"[Maps]", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
+	save		"_Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
 
-	putfile		"default-maze1.bin", "[Maze1]", 0, &ffffff
-	putfile		"default-maze2.bin", "[Maze2]", 0, &ffffff
-	putfile		"default-maze3.bin", "[Maze3]", 0, &ffffff
+	putfile		"default-maze1.bin", "_Maze1", 0, &ffffff
+	putfile		"default-maze2.bin", "_Maze2", 0, &ffffff
+	putfile		"default-maze3.bin", "_Maze3", 0, &ffffff
 
 	save		"Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 
@@ -62,7 +62,7 @@
 
 	putbasic	"reset.bas", "Reset"
 
-	save		"[ConfR]", config, configEnd, &ffffff, &ff0000 + config
+	save		"_ConfR", config, configEnd, &ffffff, &ff0000 + config
 
 	putbasic	"editor.bas", "Editor"
 
