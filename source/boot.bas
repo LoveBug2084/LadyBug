@@ -203,12 +203,12 @@ PRINT TAB(2,12);CHR$(133);"an items score value by";CHR$(134);"x2 x3 x5";
 PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"to spell";
 PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for 2 extra lives";
 
-PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"to spell";
-PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(134);"for 200000 points plus a";
-PRINT TAB(2,19);CHR$(134);"skull shield lasting 6 rounds";
+PRINT TAB(2,17);CHR$(132);"Collect";CHR$(129);"red letters";CHR$(132);"to spell";
+PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(132);"for 200000 points plus a";
+PRINT TAB(2,19);CHR$(132);"skull shield lasting 6 rounds";
 
-PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
-PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
+PRINT TAB(2,21);CHR$(131);"Collect";CHR$(130);"vegetables";CHR$(131);"to paralyse the";
+PRINT TAB(2,22);CHR$(131);"enemy and earn bonus points";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
