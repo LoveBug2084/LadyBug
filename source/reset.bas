@@ -90,7 +90,7 @@ INPUT "" S$:IF S$="y" THEN S$="Y"
 
 PRINT TAB(0,16);
 
-IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":OSCLI("ACCESS [Maps]"):Z%=OPENOUT("[Maps]"):PRINT#Z%,"_Maze1","_Maze2","_Maze3":CLOSE#Z%:OSCLI("ACCESS [Maps] L")
+IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":OSCLI("ACCESS _Maps"):Z%=OPENOUT("_Maps"):PRINT#Z%,"_Maze1","_Maze2","_Maze3":CLOSE#Z%:OSCLI("ACCESS _Maps L")
 
 IF H$="Y" THEN FOR Z%=&00 TO &6F:Z%?H%=Z%?D%:NEXT Z%:PRINT " ";CHR$(129);"Resetting high scores"
 IF S$="Y" THEN FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%:PRINT " ";CHR$(129);"Resetting controls and settings"
