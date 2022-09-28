@@ -1223,10 +1223,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .initSpritesLoop
 
-	lda #spriteBlanking + moveStop		; sprite disabled (blanked and not moving)
+	lda #spriteBlanking + moveStop		; disable sprite (blanked and not moving)
 	sta spritesDir, x
 
-	lda #&ff				; sprite erase disabled
+	lda #&ff				; disable sprite erase
 	sta spritesErased, x
 
 	dex
@@ -1416,6 +1416,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	clc
 	adc eraseSpriteTileY, y
 	sta spriteToAddrY
+
 	jsr spriteToAddr			; get screenAddr and tileMapAddr for tile behind the sprite
 
 	ldy #0					; get tile from map and if its not a blank tile
@@ -1986,7 +1987,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 ; setup a new game for level 1
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.gameStartNew
+.gameLevel1
 
 	lda #&01				; start game on level 1
 	sta level
@@ -2008,7 +2009,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda optionLives				; initialize player lives
 	sta lives
 
-	lda #&ff				; clear the special and extra bonus flag bits
+	lda #&ff				; clear the special, extra and multiplier bonus flag bits
 	sta bonusBits
 	sta bonusBits + 1
 
@@ -2035,7 +2036,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; new game level, setup level settings for current level and initialize the tileMap with current mazeMap layout
+; start current game level, setup level settings and initialize the tileMap with mazeMap layout
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLevelStart
@@ -2072,7 +2073,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 .gameLevelContinueDrawMiddle
 
-	jsr initTimerTiles			; fill tileMap edges with timer tiles
+	jsr initTimerTiles			; fill tileMap edges with timer tiles and initialize timer to starting point center top
 	
 	jsr drawPlayfieldMiddle			; draw playfield middle section from tileMap
 
@@ -2083,11 +2084,11 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda #0					; unpause ladybug
 	sta pauseLadybug
 	
-	sta bonusItemActive			; deactivate center bonus item
+	sta bonusItemActive			; disable center bonus item
 
-	sta vegetableScoreActive		; deactivate center vegetable score display
+	sta vegetableScoreActive		; disable center vegetable score display
 
-	sta objectScoreImg			; deactivate object score display
+	sta objectScoreImg			; disable object score display
 
 	sta enemyReleaseEnable			; disable enemy release
 
@@ -2118,18 +2119,18 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr checkLevelEnd			; check if current level has ended
 	bcs gameLevelStart			; if level has ended then start new level (level was advanced by checkLevelEnd)
 
-	jsr drawBonusItemCenter			; draw the vegetable/diamond in the center bug box (if active)
+	jsr drawBonusItemCenter			; draw the vegetable/diamond in the center bug box (if enabled)
 
 	jsr redrawSprites			; erase and redraw sprites (below the center line split)
 
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
 	bcs gameLevelContinue			; continue current level if ladybug death movement animation has just completed
 
-	jsr drawVegetableScore			; draw the vegetable bonus score in center (if active)
+	jsr drawVegetableScore			; draw the vegetable bonus score in center (if enabled)
 
-	jsr drawObjectScore			; draw object score (if active)
+	jsr drawObjectScore			; draw object score (if enabled)
 
-	jsr drawTurnstile			; draw new turnstile position (if active)
+	jsr drawTurnstile			; draw new turnstile position (if enabled)
 
 	jsr updateSkullColor			; update the skull palette color
 
@@ -2159,9 +2160,9 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
 	bcs gameLevelContinue			; continue current level if ladbug death animation has just completed
 
-	jsr drawVegetableScore			; draw the vegetable bonus score in center (if active)
+	jsr drawVegetableScore			; draw the vegetable bonus score in center (if enabled)
 
-	jsr drawObjectScore			; draw object score (if active)
+	jsr drawObjectScore			; draw object score (if enabled)
 
 	jsr updateAnimationFrame		; update the sprite animation frame number
 
@@ -2722,7 +2723,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	dec enemiesActive			; reduce number of active enemies
 	
-	lda #spriteBlanking			; deactivate the current enemy
+	lda #spriteBlanking			; disable the current enemy
 	ora spritesDir, x
 	sta spritesDir, x
 
@@ -3239,7 +3240,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawBonusItemCenter				draw vegetable sprite in center bug box (if active) or draw diamond sprite (if active and correct level)
+; drawBonusItemCenter				draw vegetable sprite in center bug box (if enabled) or draw diamond sprite (if enabled and correct level)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4639,17 +4640,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #0					; start with no multiplier
 	sta scoreMultiplier
 
-	sta bonusDiamondActive			; diamond bonus deactivated
+	sta bonusDiamondActive			; disable diamond bonus
 
-	sta bonusSpecialActive			; special bonus deactivated
+	sta bonusSpecialActive			; disable special bonus
 
-	sta bonusExtraActive			; extra bonus deactivated
+	sta bonusExtraActive			; disable extra bonus
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; level not ended yet
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	sta levelEndActive			; level ended disabled
+	sta levelEndActive			; disable level end (level still active)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; game not paused
@@ -5092,7 +5093,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; draw text
-	equb pixelsExtra0
+	equb pixelsSpecial1
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "PRESS          ", &ff
 
@@ -5911,7 +5912,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	and #keyBitUp + keyBitDown + keyBitLeft + keyBitRight
 	beq checkPauseGameReturnTrue
 	
-	lda #0					; deactivate game pause
+	lda #0					; disable game pause
 	sta pauseGame
 	
 	jsr drawHighScoreName			; redraw the high score name to replace the paused text
@@ -7063,7 +7064,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #moveUp + moveStop			; set enemy direction up + stopped
 	sta spritesDir, x
 
-	lda #0					; deactivate center bonus item vegetable/diamond
+	lda #0					; disable center bonus item vegetable/diamond
 	sta bonusItemActive
 
 .enemySpawnExit
@@ -7082,7 +7083,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta ladybugDeathEnable
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if entry animation disabled then spawn ladybug at regular start position
+	; if entry animation is disabled then spawn ladybug at regular start position
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda spriteBaseImg + 0			; set ladybug image
@@ -7737,6 +7738,36 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 18 * chrRow
 	equs "PTS", &ff
 
+	if specialBonusShield = 1
+
+	jsr drawString
+	equb pixels3
+	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
+	equs "AND", &ff
+
+	jsr drawString
+	equb pixels7
+	equw screenAddr + 2 + 8 + 8 * chrColumn + 20 * chrRow
+	equb &ff
+
+	lda #specialBonusShield + '0'
+	jsr drawChr
+	
+	jsr drawString
+	equb pixels3
+	equw screenAddr + 2 + 8 + 10 * chrColumn + 20 * chrRow
+	equs "SHIELD", &ff
+
+	lda #lo(screenAddr + 8 + 17 * chrColumn + 20 * chrRow)
+	sta drawMapTileAddr
+	lda #hi(screenAddr + 8 + 17 * chrColumn + 20 * chrRow)
+	sta drawMapTileAddr + 1
+
+	lda #mapTileSkull
+	jsr drawMapTile
+
+	else
+	
 	jsr drawString
 	equb pixels3
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
@@ -7762,6 +7793,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #mapTileSkull
 	jsr drawMapTile
+
+	endif
 
 	lda #sfxMusicSpecial			; play special bonus music
 	jsr playSound
@@ -7794,7 +7827,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 
 	if extraBonusLives = 1
-
+	
 	jsr drawString
 	equb pixels3
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
@@ -8179,7 +8212,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .animateLadybugEnd
 
-	sta animateLadybugActive		; deactivate animation
+	sta animateLadybugActive		; disable animation
 
 	rts					; return
 
@@ -8718,7 +8751,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	cmp #centerBoxY
 	bne checkForObjectTile
 	
-	lda #0					; deactivate the bonus item
+	lda #0					; disable the bonus item
 	sta bonusItemActive
 	
 	lda bonusDiamondEnable			; if diamond is enabled then
@@ -9059,7 +9092,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #0					; remove the possibility of getting a diamond bonus
 	sta bonusDiamondEnable
 
-	sta bonusItemActive			; deactivate vegetable/diamond
+	sta bonusItemActive			; disable vegetable/diamond
 
 	sed					; bcd mode
 

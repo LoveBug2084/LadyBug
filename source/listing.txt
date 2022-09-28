@@ -1766,7 +1766,7 @@ bootstrap     &4800 - &4943 , 324 bytes
 .gameIntroScreen
      070F   20 7F 27   JSR &277F
      0712   20 97 11   JSR &1197
-.gameStartNew
+.gameLevel1
      0715   A9 01      LDA #&01
      0717   85 21      STA &21
      0719   A9 00      LDA #&00
@@ -3440,7 +3440,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      12FE   A9 05      LDA #&05
      1300   20 F5 22   JSR &22F5
      1303   20 3B 22   JSR &223B
-     1306   F0
+     1306   CF
      1307   72 73
      1309   50 52 45 ...
      1318   FF

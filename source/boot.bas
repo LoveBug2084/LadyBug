@@ -192,7 +192,7 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(13,3);CHR$(135);"Instructions";TAB(34,3);CHR$(131);"1/2";
 
 PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maze";
-PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(133);"enemies";CHR$(130);"and";CHR$(135);"skulls";
+PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(135);"enemies";CHR$(130);"and";CHR$(135);"skulls";
 
 PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block";
 PRINT TAB(2,9);CHR$(132);"the enemy attack paths";
@@ -204,8 +204,8 @@ PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"to spe
 PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for 2 extra lives";
 
 PRINT TAB(2,17);CHR$(132);"Collect";CHR$(129);"red letters";CHR$(132);"to spell";
-PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(132);"for";CHR$(135);"200,000 points";CHR$(132);"plus a";
-PRINT TAB(2,19);CHR$(135);"skull shield";CHR$(132);"lasting 6 rounds";
+PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(132);"for";CHR$(129);"200,000 points";CHR$(132);"plus a";
+PRINT TAB(2,19);CHR$(129);"skull shield";CHR$(132);"lasting 6 rounds";
 
 PRINT TAB(2,21);CHR$(133);"Collect";CHR$(130);"vegetables";CHR$(133);"to paralyse the";
 PRINT TAB(2,22);CHR$(133);"enemy and earn bonus points";
@@ -225,7 +225,7 @@ NEXT R%
 PRINT TAB(34,3);CHR$(131);"2";:*FX 19
 
 PRINT TAB(2,5);CHR$(133);"A special diamond bonus worth";:*FX 19
-PRINT TAB(2,6);CHR$(135);"1,000,000 points";CHR$(133);"will be awarded if";:*FX 19
+PRINT TAB(2,6);CHR$(131);"1,000,000 points";CHR$(133);"will be awarded if";:*FX 19
 PRINT TAB(2,7);CHR$(133);"you can reach";CHR$(131);"level 6";CHR$(133);"while only";:*FX 19
 PRINT TAB(2,8);CHR$(133);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
 PRINT TAB(2,9);CHR$(133);"and";CHR$(131);"without losing a life";:*FX 19
