@@ -1134,7 +1134,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      02AE   A5 32      LDA &32
      02B0   C9 04      CMP #&04
      02B2   F0 09      BEQ &02BD
-     02B4   A9 08      LDA #&08
+     02B4   A9 07      LDA #&07
      02B6   20 F5 22   JSR &22F5
      02B9   A9 FF      LDA #&FF
      02BB   85 30      STA &30
@@ -2850,7 +2850,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      0EE7   B2 74
      0EE9   3E
      0EEA   FF
-     0EEB   A9 07      LDA #&07
+     0EEB   A9 08      LDA #&08
      0EED   20 F5 22   JSR &22F5
 .instructionsRelease
      0EF0   20 13 0F   JSR &0F13
@@ -4234,7 +4234,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      19B1   85 42      STA &42
      19B3   A9 2D      LDA #&2D
      19B5   20 80 06   JSR &0680
-     19B8   A9 07      LDA #&07
+     19B8   A9 08      LDA #&08
      19BA   20 F5 22   JSR &22F5
      19BD   4C 7E 19   JMP &197E
 .nameRegProcessChr
@@ -5589,7 +5589,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      234F   F0 1C      BEQ &236D
 .playSoundCheckObjectSkull
      2351   A5 AD      LDA &AD
-     2353   C9 07      CMP #&07
+     2353   C9 08      CMP #&08
      2355   F0 1B      BEQ &2372
      2357   C9 09      CMP #&09
      2359   F0 17      BEQ &2372
@@ -5724,7 +5724,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      2441   90 02      BCC &2445
      2443   85 2D      STA &2D
 .checkForObjectExit
-     2445   A9 07      LDA #&07
+     2445   A9 08      LDA #&08
      2447   20 F5 22   JSR &22F5
      244A   A6 3B      LDX &3B
      244C   60         RTS
@@ -6963,7 +6963,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      3DAE   22 3E
      3DB0   38 3E
      3DB2   40 3E
-     3DB4   91 3E
+     3DB4   16 3F
      3DB6   67 3F
      3DB8   35 40
      3DBA   9F 40
@@ -7102,302 +7102,302 @@ bootstrap     &4800 - &4943 , 324 bytes
      3E3D   42
      3E3E   FF
      3E3F   40
-.sfxDataObject
-     3E40   03
-     3E41   88
-     3E42   3F
-     3E43   92
-     3E44   A6
-     3E45   35
-     3E46   B2
-     3E47   41
-     3E48   86
-     3E49   35
-     3E4A   AE
-     3E4B   2C
-     3E4C   41
-     3E4D   8E
-     3E4E   2C
-     3E4F   AC
-     3E50   25
-     3E51   41
-     3E52   8C
-     3E53   25
-     3E54   AC
-     3E55   1F
-     3E56   41
-     3E57   8C
-     3E58   1F
-     3E59   AB
-     3E5A   1A
-     3E5B   41
-     3E5C   8B
-     3E5D   1A
-     3E5E   A7
-     3E5F   16
-     3E60   41
-     3E61   87
-     3E62   16
-     3E63   AE
-     3E64   12
-     3E65   41
-     3E66   8E
-     3E67   12
-     3E68   AE
-     3E69   0F
-     3E6A   41
-     3E6B   8E
-     3E6C   0F
-     3E6D   A6
-     3E6E   0D
-     3E6F   41
-     3E70   86
-     3E71   0D
-     3E72   A4
-     3E73   0B
-     3E74   41
-     3E75   84
-     3E76   0B
-     3E77   A7
-     3E78   09
-     3E79   41
-     3E7A   87
-     3E7B   09
-     3E7C   AF
-     3E7D   07
-     3E7E   41
-     3E7F   8F
-     3E80   07
-     3E81   AB
-     3E82   06
-     3E83   41
-     3E84   8B
-     3E85   06
-     3E86   AA
-     3E87   05
-     3E88   41
-     3E89   8A
-     3E8A   05
-     3E8B   AB
-     3E8C   04
-     3E8D   41
-     3E8E   9F
-     3E8F   BF
-     3E90   40
 .sfxDataEnemyWarning
-     3E91   02
-     3E92   C6
-     3E93   35
-     3E94   D0
+     3E40   02
+     3E41   C6
+     3E42   35
+     3E43   D0
+     3E44   41
+     3E45   CD
+     3E46   31
+     3E47   41
+     3E48   C7
+     3E49   2E
+     3E4A   41
+     3E4B   C5
+     3E4C   2B
+     3E4D   41
+     3E4E   C7
+     3E4F   28
+     3E50   41
+     3E51   CB
+     3E52   25
+     3E53   41
+     3E54   C3
+     3E55   23
+     3E56   41
+     3E57   CD
+     3E58   20
+     3E59   41
+     3E5A   C9
+     3E5B   1E
+     3E5C   41
+     3E5D   C9
+     3E5E   1C
+     3E5F   41
+     3E60   CB
+     3E61   25
+     3E62   41
+     3E63   C3
+     3E64   23
+     3E65   41
+     3E66   CD
+     3E67   20
+     3E68   41
+     3E69   CA
+     3E6A   1E
+     3E6B   41
+     3E6C   C9
+     3E6D   1C
+     3E6E   41
+     3E6F   CA
+     3E70   1A
+     3E71   41
+     3E72   CD
+     3E73   18
+     3E74   41
+     3E75   C3
+     3E76   17
+     3E77   41
+     3E78   CA
+     3E79   15
+     3E7A   41
+     3E7B   C2
+     3E7C   14
+     3E7D   41
+     3E7E   CB
+     3E7F   1A
+     3E80   41
+     3E81   CE
+     3E82   18
+     3E83   41
+     3E84   C3
+     3E85   17
+     3E86   41
+     3E87   CA
+     3E88   15
+     3E89   41
+     3E8A   C3
+     3E8B   14
+     3E8C   41
+     3E8D   CD
+     3E8E   12
+     3E8F   41
+     3E90   C9
+     3E91   11
+     3E92   41
+     3E93   C6
+     3E94   10
      3E95   41
-     3E96   CD
-     3E97   31
+     3E96   C4
+     3E97   0F
      3E98   41
-     3E99   C7
-     3E9A   2E
+     3E99   C4
+     3E9A   0E
      3E9B   41
-     3E9C   C5
-     3E9D   2B
+     3E9C   CD
+     3E9D   12
      3E9E   41
-     3E9F   C7
-     3EA0   28
+     3E9F   C9
+     3EA0   11
      3EA1   41
-     3EA2   CB
-     3EA3   25
+     3EA2   C6
+     3EA3   10
      3EA4   41
-     3EA5   C3
-     3EA6   23
+     3EA5   C5
+     3EA6   0F
      3EA7   41
-     3EA8   CD
-     3EA9   20
+     3EA8   C4
+     3EA9   0E
      3EAA   41
-     3EAB   C9
-     3EAC   1E
+     3EAB   C5
+     3EAC   0D
      3EAD   41
-     3EAE   C9
-     3EAF   1C
+     3EAE   C6
+     3EAF   0C
      3EB0   41
-     3EB1   CB
-     3EB2   25
+     3EB1   C9
+     3EB2   0B
      3EB3   41
-     3EB4   C3
-     3EB5   23
+     3EB4   CD
+     3EB5   0A
      3EB6   41
-     3EB7   CD
-     3EB8   20
+     3EB7   C1
+     3EB8   0A
      3EB9   41
-     3EBA   CA
-     3EBB   1E
+     3EBA   C5
+     3EBB   0D
      3EBC   41
-     3EBD   C9
-     3EBE   1C
+     3EBD   C7
+     3EBE   0C
      3EBF   41
      3EC0   CA
-     3EC1   1A
+     3EC1   0B
      3EC2   41
      3EC3   CD
-     3EC4   18
+     3EC4   0A
      3EC5   41
-     3EC6   C3
-     3EC7   17
+     3EC6   C2
+     3EC7   0A
      3EC8   41
-     3EC9   CA
-     3ECA   15
+     3EC9   C7
+     3ECA   09
      3ECB   41
-     3ECC   C2
-     3ECD   14
+     3ECC   CC
+     3ECD   08
      3ECE   41
-     3ECF   CB
-     3ED0   1A
+     3ECF   C3
+     3ED0   08
      3ED1   41
-     3ED2   CE
-     3ED3   18
+     3ED2   CA
+     3ED3   07
      3ED4   41
-     3ED5   C3
-     3ED6   17
+     3ED5   C2
+     3ED6   07
      3ED7   41
-     3ED8   CA
-     3ED9   15
+     3ED8   C7
+     3ED9   09
      3EDA   41
-     3EDB   C3
-     3EDC   14
+     3EDB   CD
+     3EDC   08
      3EDD   41
-     3EDE   CD
-     3EDF   12
+     3EDE   C3
+     3EDF   08
      3EE0   41
-     3EE1   C9
-     3EE2   11
+     3EE1   CA
+     3EE2   07
      3EE3   41
-     3EE4   C6
-     3EE5   10
+     3EE4   C2
+     3EE5   07
      3EE6   41
-     3EE7   C4
-     3EE8   0F
+     3EE7   CA
+     3EE8   06
      3EE9   41
-     3EEA   C4
-     3EEB   0E
+     3EEA   C3
+     3EEB   06
      3EEC   41
-     3EED   CD
-     3EEE   12
+     3EED   CC
+     3EEE   05
      3EEF   41
-     3EF0   C9
-     3EF1   11
+     3EF0   C6
+     3EF1   05
      3EF2   41
-     3EF3   C6
-     3EF4   10
+     3EF3   C0
+     3EF4   05
      3EF5   41
-     3EF6   C5
-     3EF7   0F
+     3EF6   CA
+     3EF7   06
      3EF8   41
-     3EF9   C4
-     3EFA   0E
+     3EF9   C3
+     3EFA   06
      3EFB   41
-     3EFC   C5
-     3EFD   0D
+     3EFC   CC
+     3EFD   05
      3EFE   41
      3EFF   C6
-     3F00   0C
+     3F00   05
      3F01   41
-     3F02   C9
-     3F03   0B
+     3F02   C0
+     3F03   05
      3F04   41
-     3F05   CD
-     3F06   0A
+     3F05   CB
+     3F06   04
      3F07   41
-     3F08   C1
-     3F09   0A
+     3F08   C6
+     3F09   04
      3F0A   41
-     3F0B   C5
-     3F0C   0D
+     3F0B   C1
+     3F0C   04
      3F0D   41
-     3F0E   C7
-     3F0F   0C
+     3F0E   CD
+     3F0F   03
      3F10   41
-     3F11   CA
-     3F12   0B
+     3F11   C9
+     3F12   03
      3F13   41
-     3F14   CD
-     3F15   0A
-     3F16   41
-     3F17   C2
-     3F18   0A
-     3F19   41
-     3F1A   C7
-     3F1B   09
-     3F1C   41
-     3F1D   CC
-     3F1E   08
-     3F1F   41
-     3F20   C3
-     3F21   08
+     3F14   DF
+     3F15   40
+.sfxDataObject
+     3F16   03
+     3F17   88
+     3F18   3F
+     3F19   92
+     3F1A   A6
+     3F1B   35
+     3F1C   B2
+     3F1D   41
+     3F1E   86
+     3F1F   35
+     3F20   AE
+     3F21   2C
      3F22   41
-     3F23   CA
-     3F24   07
-     3F25   41
-     3F26   C2
-     3F27   07
-     3F28   41
-     3F29   C7
-     3F2A   09
-     3F2B   41
-     3F2C   CD
-     3F2D   08
-     3F2E   41
-     3F2F   C3
-     3F30   08
+     3F23   8E
+     3F24   2C
+     3F25   AC
+     3F26   25
+     3F27   41
+     3F28   8C
+     3F29   25
+     3F2A   AC
+     3F2B   1F
+     3F2C   41
+     3F2D   8C
+     3F2E   1F
+     3F2F   AB
+     3F30   1A
      3F31   41
-     3F32   CA
-     3F33   07
-     3F34   41
-     3F35   C2
-     3F36   07
-     3F37   41
-     3F38   CA
-     3F39   06
-     3F3A   41
-     3F3B   C3
-     3F3C   06
-     3F3D   41
-     3F3E   CC
-     3F3F   05
+     3F32   8B
+     3F33   1A
+     3F34   A7
+     3F35   16
+     3F36   41
+     3F37   87
+     3F38   16
+     3F39   AE
+     3F3A   12
+     3F3B   41
+     3F3C   8E
+     3F3D   12
+     3F3E   AE
+     3F3F   0F
      3F40   41
-     3F41   C6
-     3F42   05
-     3F43   41
-     3F44   C0
-     3F45   05
-     3F46   41
-     3F47   CA
-     3F48   06
-     3F49   41
-     3F4A   C3
-     3F4B   06
-     3F4C   41
-     3F4D   CC
-     3F4E   05
+     3F41   8E
+     3F42   0F
+     3F43   A6
+     3F44   0D
+     3F45   41
+     3F46   86
+     3F47   0D
+     3F48   A4
+     3F49   0B
+     3F4A   41
+     3F4B   84
+     3F4C   0B
+     3F4D   A7
+     3F4E   09
      3F4F   41
-     3F50   C6
-     3F51   05
-     3F52   41
-     3F53   C0
-     3F54   05
-     3F55   41
-     3F56   CB
-     3F57   04
-     3F58   41
-     3F59   C6
-     3F5A   04
-     3F5B   41
-     3F5C   C1
-     3F5D   04
+     3F50   87
+     3F51   09
+     3F52   AF
+     3F53   07
+     3F54   41
+     3F55   8F
+     3F56   07
+     3F57   AB
+     3F58   06
+     3F59   41
+     3F5A   8B
+     3F5B   06
+     3F5C   AA
+     3F5D   05
      3F5E   41
-     3F5F   CD
-     3F60   03
-     3F61   41
-     3F62   C9
-     3F63   03
-     3F64   41
-     3F65   DF
+     3F5F   8A
+     3F60   05
+     3F61   AB
+     3F62   04
+     3F63   41
+     3F64   9F
+     3F65   BF
      3F66   40
 .sfxDataSkull
      3F67   03

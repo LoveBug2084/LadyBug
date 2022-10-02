@@ -42,8 +42,8 @@
 	sfxTimerHigh		= 4
 	sfxTurnstile		= 5
 	sfxMunch		= 6
-	sfxObject		= 7
-	sfxEnemyWarning		= 8
+	sfxEnemyWarning		= 7
+	sfxObject		= 8
 	sfxSkull		= 9
 	sfxMusicEntry		= 10
 	sfxMusicDeath		= 11
@@ -63,8 +63,8 @@
 	equw sfxDataTimerHigh
 	equw sfxDataTurnstile
 	equw sfxDataMunch
-	equw sfxDataObject
 	equw sfxDataEnemyWarning
+	equw sfxDataObject
 	equw sfxDataSkull
 	equw sfxDataMusicEntry
 	equw sfxDataMusicDeath
@@ -282,114 +282,6 @@
 	equb &ff
 	equb &40
 	
-
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; Object
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.sfxDataObject
-
-	; sfx type 3, psg channels 0,1
-
-	equb 3
-
-	equb &88
-	equb &3f
-	equb &92
-	equb &a6
-	equb &35
-	equb &b2
-	equb &41
-
-	equb &86
-	equb &35
-	equb &ae
-	equb &2c
-	equb &41
-
-	equb &8e
-	equb &2c
-	equb &ac
-	equb &25
-	equb &41
-
-	equb &8c
-	equb &25
-	equb &ac
-	equb &1f
-	equb &41
-
-	equb &8c
-	equb &1f
-	equb &ab
-	equb &1a
-	equb &41
-
-	equb &8b
-	equb &1a
-	equb &a7
-	equb &16
-	equb &41
-
-	equb &87
-	equb &16
-	equb &ae
-	equb &12
-	equb &41
-
-	equb &8e
-	equb &12
-	equb &ae
-	equb &0f
-	equb &41
-
-	equb &8e
-	equb &0f
-	equb &a6
-	equb &0d
-	equb &41
-
-	equb &86
-	equb &0d
-	equb &a4
-	equb &0b
-	equb &41
-
-	equb &84
-	equb &0b
-	equb &a7
-	equb &09
-	equb &41
-
-	equb &87
-	equb &09
-	equb &af
-	equb &07
-	equb &41
-
-	equb &8f
-	equb &07
-	equb &ab
-	equb &06
-	equb &41
-
-	equb &8b
-	equb &06
-	equb &aa
-	equb &05
-	equb &41
-
-	equb &8a
-	equb &05
-	equb &ab
-	equb &04
-	equb &41
-
-	equb &9f
-	equb &bf
-	equb &40
-
 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -684,6 +576,114 @@
 	equb &41
 
 	equb &df
+	equb &40
+
+
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; Object
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.sfxDataObject
+
+	; sfx type 3, psg channels 0,1
+
+	equb 3
+
+	equb &88
+	equb &3f
+	equb &92
+	equb &a6
+	equb &35
+	equb &b2
+	equb &41
+
+	equb &86
+	equb &35
+	equb &ae
+	equb &2c
+	equb &41
+
+	equb &8e
+	equb &2c
+	equb &ac
+	equb &25
+	equb &41
+
+	equb &8c
+	equb &25
+	equb &ac
+	equb &1f
+	equb &41
+
+	equb &8c
+	equb &1f
+	equb &ab
+	equb &1a
+	equb &41
+
+	equb &8b
+	equb &1a
+	equb &a7
+	equb &16
+	equb &41
+
+	equb &87
+	equb &16
+	equb &ae
+	equb &12
+	equb &41
+
+	equb &8e
+	equb &12
+	equb &ae
+	equb &0f
+	equb &41
+
+	equb &8e
+	equb &0f
+	equb &a6
+	equb &0d
+	equb &41
+
+	equb &86
+	equb &0d
+	equb &a4
+	equb &0b
+	equb &41
+
+	equb &84
+	equb &0b
+	equb &a7
+	equb &09
+	equb &41
+
+	equb &87
+	equb &09
+	equb &af
+	equb &07
+	equb &41
+
+	equb &8f
+	equb &07
+	equb &ab
+	equb &06
+	equb &41
+
+	equb &8b
+	equb &06
+	equb &aa
+	equb &05
+	equb &41
+
+	equb &8a
+	equb &05
+	equb &ab
+	equb &04
+	equb &41
+
+	equb &9f
+	equb &bf
 	equb &40
 
 
