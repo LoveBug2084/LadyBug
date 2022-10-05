@@ -1814,12 +1814,12 @@ bootstrap     &4800 - &4943 , 324 bytes
      0778   20 90 1C   JSR &1C90
      077B   20 E2 1C   JSR &1CE2
      077E   A9 00      LDA #&00
-     0780   85 2C      STA &2C
-     0782   85 1B      STA &1B
-     0784   85 1D      STA &1D
-     0786   85 1E      STA &1E
-     0788   85 30      STA &30
-     078A   85 BC      STA &BC
+     0780   85 1B      STA &1B
+     0782   85 1D      STA &1D
+     0784   85 1E      STA &1E
+     0786   85 30      STA &30
+     0788   85 BC      STA &BC
+     078A   85 2C      STA &2C
      078C   A9 64      LDA #&64
      078E   85 03      STA &03
 .gameLoopWaitIntVsync
@@ -2915,7 +2915,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      0F57   A5 2C      LDA &2C
      0F59   C9 E7      CMP #&E7
      0F5B   90 2B      BCC &0F88
-     0F5D   29 04      AND #&04
+     0F5D   29 02      AND #&02
      0F5F   D0 0D      BNE &0F6E
      0F61   A5 6B      LDA &6B
      0F63   29 F7      AND #&F7

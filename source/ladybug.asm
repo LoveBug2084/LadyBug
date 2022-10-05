@@ -2081,9 +2081,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr ladybugSpawn			; spawn ladybug
 
-	lda #0					; unpause ladybug
-	sta pauseLadybug
-	
+	lda #0
 	sta bonusItemActive			; disable center bonus item
 
 	sta vegetableScoreActive		; disable center vegetable score display
@@ -2094,6 +2092,8 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	sta playerInput				; clear any pending player control inputs
 
+	sta pauseLadybug			; unpause ladybug
+	
 	lda #escTime				; reset esc key timer
 	sta escCounter
 
@@ -4201,7 +4201,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #256 - ladybugDeathFlashTime
 	bcc ladybugDeathAnimationDrawAngel
 
-	and #4					; then flash ladybug
+	and #2					; then flash ladybug
 	bne ladybugDeathAnimationBlank
 	
 	lda spritesDir + 0
