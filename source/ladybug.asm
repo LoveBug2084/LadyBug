@@ -7139,8 +7139,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSprites
 
-	lda #spritesTotal			; get sprite list length
-	sta redrawSpritesCount			; store it in counter
+	lda #spritesTotal - 1			; set length of sprites list to parse
+	sta redrawSpritesCount
 	
 	lda #spritesPerFrame			; maximum number of sprites to process within 1 frame before using frame skip
 	sta redrawSpritesMax
@@ -7160,9 +7160,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #redrawSpritesIndexLower		; use lower index
 	sta redrawSpritesErase + 1
-	sta redrawSpritesExit + 1
+	sta redrawSpritesUpdateIndex + 1
 
-	bne redrawSpritesErase
+	bne redrawSpritesLadybug		; (bne used as branch always)
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set threshold and index for upper half
@@ -7176,10 +7176,19 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #redrawSpritesIndexUpper		; use upper index
 	sta redrawSpritesErase + 1
-	sta redrawSpritesExit + 1
+	sta redrawSpritesUpdateIndex + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; erase a sprite
+	; process ladybug first so that the sprite is always drawn at 50Hz without frame skip
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.redrawSpritesLadybug
+
+	ldx #0					; set index for sprite 0 (ladybug)
+	beq redrawSpritesEraseLoop
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; process enemy sprites
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .redrawSpritesErase
@@ -7192,16 +7201,20 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSpritesEraseLoop
 
-	lda spritesEraseY, x
-	cmp #upperLowerThreshold		; following branch is modified to test either y < upperLowerThreshold or y >= upperLowerThreshold
+	lda spritesEraseY, x			; compare sprite y coordinate with upper/lower threshold
+	cmp #upperLowerThreshold
 
 .redrawSpritesEraseThreshold
 
 	; --------------------------------------------------------------------------------------------------------------------------------------------
-	; the following branch instruction is modified into BCC for lower threshold test or BCS for upper threshold test
+	; the following BNE instruction is overwritten by redrawSpritesLower/redrawSpritesUpper (see above) and replaced with
+	; BCC for threshold test (sprite y < upperlower threshold)
+	; or
+	; BCS for threshold test (sprite y >= upperlower threshold)
 	; --------------------------------------------------------------------------------------------------------------------------------------------
 
-	bne redrawSpritesDraw			; bne instruction replaced by bcc or bcs from above code
+	bne redrawSpritesDraw			; if sprite is within the current half
+						; (bne instruction replaced by bcc or bcs from above code)
 
 	lda spritesErased, x			; and if sprite needs to be erased
 	bne redrawSpritesDraw
@@ -7223,16 +7236,20 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	and #spriteBlanking
 	bne redrawSpritesNext
 
-	lda spritesY, x				; get sprite y
-	cmp #upperLowerThreshold		; following branch is modified to test either y < upperLowerThreshold or y >= upperLowerThreshold
+	lda spritesY, x				; compare sprite y coordinate with upper/lower threshold
+	cmp #upperLowerThreshold		
 
 .redrawSpritesDrawThreshold
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; the following branch instruction is modified into BCC for lower threshold test or BCS for upper threshold test
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; --------------------------------------------------------------------------------------------------------------------------------------------
+	; the following BNE instruction is overwritten by redrawSpritesLower/redrawSpritesUpper (see above) and replaced with
+	; BCC for threshold test (sprite y < upperlower threshold)
+	; or
+	; BCS for threshold test (sprite y >= upperlower threshold)
+	; --------------------------------------------------------------------------------------------------------------------------------------------
 
-	beq redrawSpritesNext			; beq instruction replaced by bcc or bcs from code above
+	bne redrawSpritesNext			; if sprite is within the current half
+						; (bne instruction replaced by bcc or bcs from above code)
 	
 	lda spritesErased, x			; if theres still a pending erase caused by the sprite crossing upper/lower boundary
 	beq redrawSpritesEraseSprite		; then we must ignore the sprite y and do an emergency erase
@@ -7246,6 +7263,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawSpriteY
 	sta spritesEraseY, x
 
+	lda #0					; enable erasure
+	sta spritesErased, x
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; calculate animation img offset
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7257,7 +7277,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSpritesAnimation
 
-	clc					; add animation to spriteImg
+	clc					; add animation offset to spriteImg
 	adc spritesImg, x
 	sta drawSpriteImg			; store sprite image number
 
@@ -7320,7 +7340,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr drawSpriteFlipped			; if direction = down then draw sprite vertically flipped
 
-	jmp redrawSpritesGetEraseInfo
+	jmp redrawSpritesDrawn
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; direction = up/left/right so draw sprite normal (not flipped)
@@ -7330,41 +7350,39 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr drawSprite				; draw the sprite
 
-.redrawSpritesGetEraseInfo
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; sprite has been drawn so reduce counter by 1
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda spritesX, x				; copy sprite info into erase list
-	sta spritesEraseX, x
-	lda spritesY, x
-	sta spritesEraseY, x
-
-	lda #0					; and enable erasure
-	sta spritesErased, x
+.redrawSpritesDrawn
 
 	dec redrawSpritesMax			; reduce the drawn sprites counter by 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; move on to next sprite
+	; if we were processing enemies then move on to next sprite else loop back to start processing enemies
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .redrawSpritesNext
 
+	cpx #0					; if we just processed ladybug
+	beq redrawSpritesErase			; then loop back and start processing enemies
+
 	dex					; point index to next sprite
 
-	bpl redrawSpritesCheckDrawn		; if index < 0
+	bne redrawSpritesCheckDrawn		; if index has past the end of the enemy sprite list
 	ldx #spritesTotal - 1			; then index = spritesTotal - 1 (wrap around the sprite buffer)
 
 .redrawSpritesCheckDrawn
 
-	lda redrawSpritesMax			; if max sprites drawn then exit and the remaining sprites will continue to be processed next frame
-	beq redrawSpritesExit			; (auto-frameskip)
+	lda redrawSpritesMax			; if max sprites drawn then exit saving current index so that the remaining sprites will continue to be
+	beq redrawSpritesUpdateIndex		; processed next frame (frameskip)
 
 .redrawSpritesCheckDone	
 
 	dec redrawSpritesCount			; continue until all sprites processed
-	beq redrawSpritesExit
-	jmp redrawSpritesEraseLoop
+	bne redrawSpritesEraseLoop
 	
-.redrawSpritesExit
+.redrawSpritesUpdateIndex
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; following instruction address replaced with lower/upper index address

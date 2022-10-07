@@ -182,10 +182,10 @@ bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is e
 .redrawSpritesMax	skip 1			; counter for maximum number of sprites processed in 1 frame
 
 .redrawSpritesIndexUpper			; index to current sprite in list for upper sprites
-			equb 0
+			equb 1
 
 .redrawSpritesIndexLower			; index to current sprite in list for lower half
-			equb 0
+			equb 1
 
 .updateObjectTimerSaveX	skip 1			; preserve register
 

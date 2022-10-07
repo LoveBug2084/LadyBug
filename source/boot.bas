@@ -157,7 +157,7 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(7,3);CHR$(131);"A remake of the original";
 PRINT TAB(6,4);CHR$(129);"Universal 1981 arcade game";
 
-PRINT TAB(6,6);CHR$(135);"Programmed by";CHR$(133);"LoveBug";CHR$(135);"2021";
+PRINT TAB(6,6);CHR$(131);"Programmed by";CHR$(133);"LoveBug";CHR$(131);"2021";
 
 PRINT TAB(15,9);CHR$(135);"Options";
 
@@ -205,10 +205,10 @@ PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for 2 extra lives";
 
 PRINT TAB(2,17);CHR$(131);"Collect";CHR$(129);"red letters";CHR$(131);"to spell";
 PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(131);"for";CHR$(135);"200,000 points";CHR$(131);"plus a";
-PRINT TAB(2,19);CHR$(132);"skull shield";CHR$(131);"lasting 6 rounds";
+PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(131);"lasting 6 rounds";
 
-PRINT TAB(2,21);CHR$(133);"Collect";CHR$(130);"vegetables";CHR$(133);"to paralyse the";
-PRINT TAB(2,22);CHR$(133);"enemy and earn bonus points";
+PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
+PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
