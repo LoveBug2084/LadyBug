@@ -6857,17 +6857,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .updateSkullColor
 
-	ldx #0					; if shield != 0 then use index 0 (red) for skull color
+	ldx #0					; if shield is active use index 0 from color table (red) for skull color
 	lda shield
-	bne updateSkullColorFromTable
+	bne updateSkullColorPalette
 
-	lda vsyncCounter			; else use index = (vsyncCounter / 4) & 15 for flashing color sequence
+	lda vsyncCounter			; else use index = (vsyncCounter / 4) & 15 for the flashing color sequence from table
 	lsr a
 	lsr a
 	and #15
 	tax
 
-.updateSkullColorFromTable
+.updateSkullColorPalette
 
 	lda updateSkullColorTable,x		; set skull palette to color from table using index
 	sta ulaPalette
@@ -6891,12 +6891,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda enemyReleaseEnable			; if enemy release is enabled
 	beq enemyReleaseExit
 
-	lda enemyTimer				; if enemyTimer < 6 (make sure delayed frame enemy release isnt skiped)
-	cmp #6
+	lda enemiesActive			; if all enemies are not yet active (enemiesActive < spritesTotal - 1)
+	cmp #spritesTotal - 1
 	bcs enemyReleaseExit
 
-	lda enemiesActive			; if enemiesActive < spritesTotal - 1
-	cmp #spritesTotal - 1
+	lda enemyTimer				; if enemyTimer is within the first 5 blocks (make sure delayed frame enemy release isnt skiped)
+	cmp #6
 	bcs enemyReleaseExit
 
 	ldx #spritesTotal - 1			; start with last enemy in list
@@ -6953,11 +6953,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #0					; disable enemy release until timer re-enables it
 	sta enemyReleaseEnable
 
-	lda enemiesActive			; if maximum enemies not active yet
+	lda enemiesActive			; if maximum number of enemys released then activate the bonus vegetable/diamondenemies not active yet
 	cmp #spritesTotal - 1
 	beq enemyReleaseMax
 	
-	; continue down to enemySpawn
+						; else continue down to enemySpawn to place another enemy in the centerbox
 
 
 
@@ -7023,16 +7023,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	and #7
 	tay
 	iny
-	lda spriteBaseImg, y
+
+	lda spriteBaseImg, y			; get enemy sprite image id for chosen type
 	
 	ldx #spritesTotal - 1			; check all enemy sprites make sure that random enemy isnt already in list
 	
 .enemySpawnCheckImage
 
-	cmp spritesImg, x
-	beq enemySpawnRandom
+	cmp spritesImg, x			; if chosen enemy type image id is found in list
+	beq enemySpawnRandom			; then pick another random enemy type
 
-	dex
+	dex					; repeat checking all until done
 	bne enemySpawnCheckImage
 
 	ldx enemySpawnSaveX			; restore the current sprite index
@@ -7139,7 +7140,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSprites
 
-	lda #spritesTotal - 1			; set length of sprites list to parse
+	lda #spritesTotal - 2			; set length of sprites list to parse ((spritesTotal - 1) - 1 for ladybug)
 	sta redrawSpritesCount
 	
 	lda #spritesPerFrame			; maximum number of sprites to process within 1 frame before using frame skip
@@ -7411,6 +7412,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #palObject + palCyan		; set letters and hearts to cyan
 	sta ulaPalette
+
+	jsr updateSkullColor			; update the skull palette color (make sure skull is show as red when shield is enabled)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; draw the level text and number
