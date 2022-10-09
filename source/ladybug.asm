@@ -3550,6 +3550,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .addScoreBottom
 
 	sed					; bcd mode, clear carry
+	clc	
 
 	adc score				; add A to score LSB
 	sta score
@@ -3607,6 +3608,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	lsr a
 	
 	sed					; bcd mode, clear carry
+	clc
 
 	bcc addScoreMiddle			; add hundreds
 
@@ -3619,7 +3621,8 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .addScoreDiamond
 
 	sed					; bcd mode, clear carry
-
+	clc
+	
 	lda #diamondBonusScore			; add the diamond bonus score to the top 2 digits of score
 	bcc addScoreTop
 
@@ -3632,6 +3635,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .addScoreSpecial
 
 	sed					; bcd mode, clear carry
+	clc
 
 	lda #specialBonusScore			; add the special bonus score to the top 2 digits of score
 	bcc addScoreTop
