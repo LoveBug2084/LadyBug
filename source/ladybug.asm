@@ -2477,13 +2477,13 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda shield				; if shield != 0
 	beq checkLevelEndExit
 
-	sed					; then decimal mode
+	sed					; then switch to bcd mode
 
 	sec					; shield = shield - 1
 	sbc #1
 	sta shield
 
-	cld					; binary mode
+	cld					; back to binary mode
 
 .checkLevelEndExit
 
@@ -3794,7 +3794,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .levelAdvance
 
-	sed					; bcd mode, clear carry
+	sed					; bcd mode
 
 	lda level				; if level < &99
 	cmp #&99
@@ -6595,6 +6595,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr addScoreSpecial			; add the special bonus score (bcd)
 
 	sed					; bcd mode, clear carry
+	clc
 
 	lda #specialBonusShield			; add the shield bonus to shield
 	adc shield
@@ -6633,6 +6634,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawBonusScreen			; draw the extra bonus screen
 
 	sed					; bcd mode, clear carry
+	clc
 
 	lda #extraBonusLives			; add bonus lives
 	adc lives
