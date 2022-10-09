@@ -2477,13 +2477,13 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda shield				; if shield != 0
 	beq checkLevelEndExit
 
-	sed					; then switch to bcd mode
+	sed					; then bcd mode
 
-	sec					; shield = shield - 1
+	sec					; reduce shield by 1
 	sbc #1
 	sta shield
 
-	cld					; back to binary mode
+	cld					; binary mode
 
 .checkLevelEndExit
 
@@ -3549,10 +3549,10 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .addScoreBottom
 
-	sed					; bcd mode, clear carry
-	clc	
+	sed					; bcd mode
 
-	adc score				; add A to score LSB
+	clc					; add A to score units/tens
+	adc score
 	sta score
 
 	lda #0					; add carry if any
@@ -3585,7 +3585,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; addScoreVegetable				shift vegetable score one digit and add to score
+; addScoreVegetable				multiply vegetable score by 10(bcd) and add to score
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry						none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3594,23 +3594,23 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .addScoreVegetable
 
-	lda vegetableScore			; get vegetable score and shift units digit to tens and add to score
+	lda vegetableScore			; shift units to tens and add to score
 	asl a
 	asl a
 	asl a
 	asl a
 	jsr addScore
 	
-	lda vegetableScore			; get vegetable score and shift units digit to hundreds
+	lda vegetableScore			; shift tens to units and add to score hundreds
 	lsr a
 	lsr a
 	lsr a
 	lsr a
 	
-	sed					; bcd mode, clear carry
-	clc
+	sed					; bcd mode
 
-	bcc addScoreMiddle			; add hundreds
+	clc					; add hundreds
+	bcc addScoreMiddle
 
 
 
@@ -3620,10 +3620,10 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .addScoreDiamond
 
-	sed					; bcd mode, clear carry
-	clc
-	
-	lda #diamondBonusScore			; add the diamond bonus score to the top 2 digits of score
+	sed					; bcd mode
+
+	clc					; add the diamond bonus score to the top 2 digits of score
+	lda #diamondBonusScore
 	bcc addScoreTop
 
 
@@ -3634,10 +3634,10 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .addScoreSpecial
 
-	sed					; bcd mode, clear carry
-	clc
+	sed					; bcd mode
 
-	lda #specialBonusScore			; add the special bonus score to the top 2 digits of score
+	clc					; add the special bonus score to the top 2 digits of score
+	lda #specialBonusScore
 	bcc addScoreTop
 
 
@@ -6594,10 +6594,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr addScoreSpecial			; add the special bonus score (bcd)
 
-	sed					; bcd mode, clear carry
-	clc
+	sed					; bcd mode
 
-	lda #specialBonusShield			; add the shield bonus to shield
+	clc					; add the shield bonus to shield
+	lda #specialBonusShield
 	adc shield
 
 	bcc checkBonusSpecialShieldUpdate	; if shield > 99
@@ -6633,10 +6633,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawBonusScreen			; draw the extra bonus screen
 
-	sed					; bcd mode, clear carry
-	clc
+	sed					; bcd mode
 
-	lda #extraBonusLives			; add bonus lives
+	clc					; add bonus lives
+	lda #extraBonusLives
 	adc lives
 
 	bcc checkBonusExtraLives		; if lives > 99
