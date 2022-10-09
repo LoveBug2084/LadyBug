@@ -4689,7 +4689,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      1CFC   A9 00      LDA #&00
      1CFE   4C 96 21   JMP &2196
 .redrawSprites
-     1D01   A9 03      LDA #&03
+     1D01   A9 04      LDA #&04
      1D03   85 92      STA &92
      1D05   A9 03      LDA #&03
      1D07   85 93      STA &93

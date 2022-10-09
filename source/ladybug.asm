@@ -7140,7 +7140,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSprites
 
-	lda #spritesTotal - 2			; set length of sprites list to parse ((spritesTotal - 1) - 1 for ladybug)
+	lda #spritesTotal - 1			; set length of sprites list to parse (enemies)
 	sta redrawSpritesCount
 	
 	lda #spritesPerFrame			; maximum number of sprites to process within 1 frame before using frame skip
