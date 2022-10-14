@@ -81,12 +81,12 @@ PROClogo
 PROCexpand
 
 Z%=OPENIN("_Maps")
-INPUT#Z%,maze1$,maze2$,maze3$
+INPUT#Z%,map1$,map2$,map3$
 CLOSE#Z%
 
-OSCLI("LOAD "+maze1$+" 7800")
-OSCLI("LOAD "+maze2$+" 7900")
-OSCLI("LOAD "+maze3$+" 7A00")
+OSCLI("LOAD "+map1$+" 7800")
+OSCLI("LOAD "+map2$+" 7900")
+OSCLI("LOAD "+map3$+" 7A00")
 */Loader
 
 END
@@ -191,7 +191,7 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 
 PRINT TAB(13,3);CHR$(135);"Instructions";TAB(34,3);CHR$(131);"1/2";
 
-PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maze";
+PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the mazes";
 PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(135);"enemies";CHR$(130);"and";CHR$(135);"skulls";
 
 PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block";
@@ -262,8 +262,8 @@ PRINT TAB(11,4);"Editor control keys";
 
 PRINT TAB(5, 7);CHR$(134);"123   ";CHR$(135);"-";CHR$(129);"Select map";
 
-PRINT TAB(5, 9);CHR$(133);":/ZX  ";CHR$(135);"-";CHR$(130);"Move cursor";
-PRINT TAB(5,10);CHR$(132);"QW    ";CHR$(135);"-";CHR$(131);"Select tile";
+PRINT TAB(5, 9);CHR$(132);"QW    ";CHR$(135);"-";CHR$(131);"Select tile";
+PRINT TAB(5,10);CHR$(133);":/ZX  ";CHR$(135);"-";CHR$(130);"Move cursor";
 PRINT TAB(5,11);CHR$(130);"SHIFT ";CHR$(135);"-";CHR$(133);"Erase tile";
 PRINT TAB(5,12);CHR$(131);"RETURN";CHR$(135);"-";CHR$(132);"Draw tile";
 
@@ -349,7 +349,7 @@ ENDPROC
 DEF PROCreadConfig
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-IF F%?2<>V% THEN OSCLI("LOAD _Conf"):ENDPROC
+IF F%?2<>V% THEN OSCLI("LOAD _Conf " + STR$~(&FF0000 + C%)):ENDPROC
 
 P%=&7B00
 [OPT 0
@@ -381,7 +381,7 @@ V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF
 IF F%?2<>V% THEN ENDPROC
 
 OSCLI("ACCESS _Conf")
-OSCLI("SAVE _Conf " + STR$~(&FF0000 + C%) + " +7E")
+OSCLI("SAVE _Conf " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0")
 OSCLI("ACCESS _Conf L")
 
 PROCeraseCenter

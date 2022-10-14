@@ -30,7 +30,7 @@
 
 	include "loader.asm"			; sideways ram and game loader
 
-	include "maze.asm"			; 3 default maze maps
+	include "map.asm"			; 3 default maze maps
 
 	include "ladybug.asm"			; main game
 	
@@ -48,13 +48,13 @@
 
 	putbasic	"boot.bas", "Boot"
 
-	save		"_Conf", config, configEnd, &ffffff, &ff0000 + config
+	save		"_Conf", config, configEnd, &ffffff, 0
 
-	save		"_Maps", mazeFilenames, mazeFilenamesEnd, &ffffff, 0
+	save		"_Maps", mapFilenames, mapFilenamesEnd, &ffffff, 0
 
-	putfile		"default-maze1.bin", "_Maze1", 0, &ffffff
-	putfile		"default-maze2.bin", "_Maze2", 0, &ffffff
-	putfile		"default-maze3.bin", "_Maze3", 0, &ffffff
+	putfile		"default-map1.bin", "_Map1", 0, &ffffff
+	putfile		"default-map2.bin", "_Map2", 0, &ffffff
+	putfile		"default-map3.bin", "_Map3", 0, &ffffff
 
 	save		"Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 
@@ -62,7 +62,7 @@
 
 	putbasic	"reset.bas", "Reset"
 
-	save		"_ConfR", config, configEnd, &ffffff, &ff0000 + config
+	save		"_ConfR", config, configEnd, &ffffff, 0
 
 	putbasic	"editor.bas", "Editor"
 

@@ -557,13 +557,13 @@ swramEnd		= pageHigh + &3000
 
 pageBoot		= &f000			; temporary canvas address for !Boot file generation
 
-mazeNames		= &f100			; temporary canvas address for Maps file generation
+mapNames		= &f100			; temporary canvas address for Maps file generation
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-maze1Load		= &7800			; maze addresses used by boot.bas to load the 3 maps before running lady bug
-maze2Load		= &7900
-maze3Load		= &7a00
+map1Load		= &7800			; map addresses used by boot.bas to load the 3 maps before running lady bug
+map2Load		= &7900
+map3Load		= &7a00
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 

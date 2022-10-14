@@ -254,25 +254,25 @@
 	sta lives
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; copy the 3 mazes into the game
+	; copy the 3 maze maps into the game
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #0					; copy maze data into ram
 	
-.relocateProgramMazeData
+.relocateProgramMapData
 
-	lda maze1Load, x
-	sta maze1, x
+	lda map1Load, x
+	sta map1, x
 
-	lda maze2Load, x
-	sta maze2, x
+	lda map2Load, x
+	sta map2, x
 
-	lda maze3Load, x
-	sta maze3, x
+	lda map3Load, x
+	sta map3, x
 
 	inx
 	cpx #21*11
-	bne relocateProgramMazeData
+	bne relocateProgramMapData
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; run lady bug

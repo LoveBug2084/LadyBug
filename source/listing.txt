@@ -878,20 +878,20 @@ bootstrap     &4800 - &4943 , 324 bytes
 
 
 ----------------------------------------------------
- maze.asm
+ map.asm
 ----------------------------------------------------
 
-.mazeFilenames
+.mapFilenames
      F100   00
-     F101   06
-     F102   31 65 7A ...
-     F108   00
-     F109   06
-     F10A   32 65 7A ...
-     F110   00
-     F111   06
-     F112   33 65 7A ...
-.mazeFilenamesEnd
+     F101   05
+     F102   31 70 61 ...
+     F107   00
+     F108   05
+     F109   32 70 61 ...
+     F10E   00
+     F10F   05
+     F110   33 70 61 ...
+.mapFilenamesEnd
 
 
 
@@ -8805,12 +8805,12 @@ bootstrap     &4800 - &4943 , 324 bytes
      44D4   AC
      44D5   AC
      44D6   AC
-.mazeData
-.maze1
+.mapData
+.map1
      44D7
-.maze2
+.map2
      45BE
-.maze3
+.map3
      46A5
 .joystickBitSet
      478C   04
@@ -8995,7 +8995,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      4915   AD 80 80   LDA &8080
      4918   85 0D      STA &0D
      491A   A2 00      LDX #&00
-.relocateProgramMazeData
+.relocateProgramMapData
      491C   BD 00 78   LDA &7800,X
      491F   9D D7 44   STA &44D7,X
      4922   BD 00 79   LDA &7900,X

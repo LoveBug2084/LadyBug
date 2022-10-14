@@ -28,7 +28,7 @@
 
 .escCounter		skip 1			; escape key counter (times how long esc is pressed)
 
-.mazeMap		skip 1			; current maze map value 0-5   0,1=maze1 2,3=maze2 4,5=maze3
+.mazeMap		skip 1			; current maze map value 0-5   0,1=map1 2,3=map2 4,5=map3
 
 .score			skip 3			; player score (BCD) last digit always 0 and not stored
 .highScore		skip 3			; highest score (BCD) last digit always 0 and not stored
