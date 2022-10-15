@@ -194,8 +194,8 @@ PRINT TAB(13,3);CHR$(135);"Instructions";TAB(34,3);CHR$(131);"1/2";
 PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the mazes";
 PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(135);"enemies";CHR$(130);"and";CHR$(135);"skulls";
 
-PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to block";
-PRINT TAB(2,9);CHR$(132);"the enemy attack paths";
+PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to";
+PRINT TAB(2,9);CHR$(132);"escape and block enemy attacks";
 
 PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply";
 PRINT TAB(2,12);CHR$(133);"an items score value by";CHR$(134);"x2 x3 x5";
