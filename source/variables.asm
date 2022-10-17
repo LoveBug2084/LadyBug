@@ -48,7 +48,7 @@
 
 bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
 
-.bonusDiamondEnable	skip 1			; diamond bonus is enabled if != 0
+.bonusDiamondEnable	equb &ff		; diamond bonus is enabled if != 0, initialize here for main menu first run illuminated
 .bonusDiamondActive	skip 1			; diamond bonus is active if != 0
 .bonusSpecialActive	skip 1			; special bonus is active if != 0
 .bonusExtraActive	skip 1			; extra bonus is active if != 0

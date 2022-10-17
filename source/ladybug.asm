@@ -3088,6 +3088,10 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
+	jsr drawPlayfieldLowerDiamond		; draw a diamond if enabled else draw a space
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	lda #34					; draw vegetable image to the right of ladybug
 	sta drawSpriteX
 	lda #23 * 8 + 6
@@ -3180,6 +3184,28 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	jmp drawBcd
 
 
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawPlayfieldLowerDiamond			; draw a diamond if enabled else draw a space
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawPlayfieldLowerDiamond
+
+	jsr drawString				; set screen address for diamond and color to red
+	equb pixels1
+	equw screenAddr + 2 + 8 + 2 * chrColumn + 25 * chrRow
+	equb &ff
+
+	lda bonusDiamondEnable			; if diamond bonus is enabled then draw diamond
+	php
+	lda #chrDiamond
+	plp
+	bne drawPlayfieldLowerDiamondExit
+	lda #' '				; else draw a space
+
+.drawPlayfieldLowerDiamondExit
+
+	jmp drawChr
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawPlayfieldMiddle				draw middle playfield tiles
@@ -8946,8 +8972,13 @@ animateLadybugInstructions	= 4		; instructions animation index
 	cpx #objectModeCyan			; if the object was not cyan
 	beq checkForObjectScoreNow
 
+	lda bonusDiamondEnable			; and if the diamond bonus was enabled
+	beq checkForObjectScoreNow
+
 	lda #0					; then remove the possibility of getting a diamond bonus
 	sta bonusDiamondEnable
+
+	jsr drawPlayfieldLowerDiamond		; and remove it from the lower playfield
 
 .checkForObjectScoreNow
 
@@ -9116,10 +9147,12 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #&ff				; enable death animation
 	sta ladybugDeathEnable
 
-	lda #0					; remove the possibility of getting a diamond bonus
-	sta bonusDiamondEnable
+	lda #0					; disable vegetable/diamond
+	sta bonusItemActive
 
-	sta bonusItemActive			; disable vegetable/diamond
+	sta bonusDiamondEnable			; remove the possibility of getting a diamond bonus
+
+	jsr drawPlayfieldLowerDiamond		; remove diamond from lower playfield
 
 	sed					; bcd mode
 
