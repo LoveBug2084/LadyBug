@@ -157,7 +157,7 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug    
 PRINT TAB(7,3);CHR$(131);"A remake of the original";
 PRINT TAB(6,4);CHR$(129);"Universal 1981 arcade game";
 
-PRINT TAB(6,6);CHR$(131);"Programmed by";CHR$(133);"LoveBug";CHR$(131);"2021";
+PRINT TAB(6,6);CHR$(133);"Programmed by";CHR$(131);"LoveBug";CHR$(133);"2021";
 
 PRINT TAB(15,9);CHR$(135);"Options";
 
@@ -194,8 +194,8 @@ PRINT TAB(13,3);CHR$(135);"Instructions";TAB(34,3);CHR$(131);"1/2";
 PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the mazes";
 PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(135);"enemies";CHR$(130);"and";CHR$(135);"skulls";
 
-PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green turnstiles";CHR$(132);"to";
-PRINT TAB(2,9);CHR$(132);"escape and block enemy attacks";
+PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green doors";CHR$(132);"to escape";
+PRINT TAB(2,9);CHR$(132);"enemies and block their attacks";
 
 PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply";
 PRINT TAB(2,12);CHR$(133);"an items score value by";CHR$(134);"x2 x3 x5";
