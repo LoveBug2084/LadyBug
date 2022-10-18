@@ -89,7 +89,7 @@ chrMultiplier2		= '''
 chrMultiplier3		= '('
 chrMultiplier5		= ')'
 chrHeart		= '*'
-chrDiamond		= '$'
+chrHeartD		= '$'
 
 
 

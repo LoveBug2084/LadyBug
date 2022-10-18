@@ -3196,9 +3196,9 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 25 * chrRow
 	equb &ff
 
-	lda bonusDiamondEnable			; if diamond bonus is enabled then draw diamond
+	lda bonusDiamondEnable			; if diamond bonus is enabled then draw HeartD
 	php
-	lda #chrDiamond
+	lda #chrHeartD
 	plp
 	bne drawPlayfieldLowerDiamondExit
 	lda #' '				; else draw a space
