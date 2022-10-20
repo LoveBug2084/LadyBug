@@ -1,8 +1,8 @@
 ----------------------------------------------------
 high ram      &8000 - &AFFF , 12288 bytes
 ----------------------------------------------------
-used          &8000 - &AF9D , 12190  bytes
-free          &AF9E - &AFFF , 98 bytes
+used          &8000 - &ADE7 , 11752  bytes
+free          &ADE8 - &AFFF , 536 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -688,6 +688,8 @@ bootstrap     &4800 - &4943 , 324 bytes
      ADE5   85 BC      STA &BC
      ADE7   60         RTS
 .swramLastAddr
+     ADE8
+.loaderMain
      AE00
 .loaderMessages
      AE00

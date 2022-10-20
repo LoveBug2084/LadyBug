@@ -510,11 +510,26 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-	align &100
+; end of sideways ram code
+
 .swramLastAddr
 	skip 0					; show this address in listing
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;
+; loader main program				detect high ram, copy data to high ram, run main ladybug file
+;
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	align &100				; start page aligned
+
+.loaderMain
+	skip 0					; show this address in listing
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -604,7 +619,7 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 	; display the current build of Lady Bug
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldy #lo(loaderBuild - loaderReloc)	; display build number
+	ldy #loaderBuild - loaderMessages	; display build number
 	jsr loaderPrint - loaderReloc
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -641,7 +656,7 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 
 .loaderBplus
 						; we got this far so its a real b+, display b+ workspace message
-	ldy #lo(loaderUsingWorkspace - loaderReloc)
+	ldy #loaderUsingWorkspace - loaderMessages
 	jsr loaderPrint - loaderReloc
 
 	jmp loaderCopyData - loaderReloc	; copy data and run ladybug
@@ -659,7 +674,7 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 	; sideways ram found so display message and bank number
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldy #lo(loaderUsingBank - loaderReloc)	; else display sideways bank message
+	ldy #loaderUsingBank - loaderMessages	; else display sideways bank message
 	jsr loaderPrint - loaderReloc
 
 	ldy swrBank				; display bank number
@@ -690,7 +705,7 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 
 .loaderFailed
 
-	ldy #lo(loaderRamFailed - loaderReloc)	; display failure message
+	ldy #loaderRamFailed - loaderMessages	; display failure message
 	jsr loaderPrint - loaderReloc
 	
 .loaderFailedLoop
@@ -862,7 +877,7 @@ machineType		= pageHigh - 3		; storage for machine type
 
 .swramCopy
 
-	ldx #hi(swramLastAddr - swramStart)	; number of pages to copy
+	ldx #hi(loaderMain - swramStart)	; number of pages to copy
 
 	ldy #0
 

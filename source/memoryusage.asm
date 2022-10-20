@@ -21,8 +21,8 @@
 	print "----------------------------------------------------"
 	print "high ram      ", ~swramStart, "- ", ~swramEnd - 1, ", ", swramEnd - swramStart, "bytes"
 	print "----------------------------------------------------"
-	print "used          ", ~swramStart, "- ", ~loaderEnd - 1, ", ", loaderEnd - swramStart, " bytes"
-	print "free          ", ~loaderEnd, "- ", ~swramEnd - 1, ", ", swramEnd - loaderEnd, "bytes"
+	print "used          ", ~swramStart, "- ", ~swramLastAddr - 1, ", ", swramLastAddr - swramStart, " bytes"
+	print "free          ", ~swramLastAddr, "- ", ~swramEnd - 1, ", ", swramEnd - swramLastAddr, "bytes"
 	print "----------------------------------------------------"
 	print
 
