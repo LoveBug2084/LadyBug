@@ -27,7 +27,7 @@ Dreamland Fantasy's for their image2bbc utility allowing me to make the maze edi
  
 HeadHunter for recreating the enemy release sound for 50Hz using math !
  
-And to everyone at the stardot forums for their kind words and support
+And to everyone at the stardot forums for their kind words, help and support
  
 ```
 #
