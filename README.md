@@ -20,14 +20,15 @@ Keyboard, Analogue Port Joysick and Digital User Port Joystick Supported\
 #
 ```
 A big thank you to
-
+ 
 Kieranhj for their image2mode7 utility allowing me to make the lovebyte loading screen
-
+ 
 Dreamland Fantasy's for their image2bbc utility allowing me to make the maze editor tiles
-
+ 
 HeadHunter for recreating the enemy release sound for 50Hz using math !
-
+ 
 And to everyone at the stardot forums for their kind words and support
+ 
 ```
 #
 _**Note: The video and screenshots are from various builds during development, final build may differ slightly**_
