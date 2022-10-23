@@ -30,17 +30,21 @@
 	equb "*BASIC",13			; select basic language
 
 	equb 22,7				; mode 7
+
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
+
 	equb 23,0,6,0,0,0,0,0,0,0		; disable display
 
 	equs "*SHADOW 1", 13			; disable shadow ram (generates an error on model B but screen is disabled so it does'nt show)
 	equs "*FX 200 1",13			; disable ESC
 	equs "*FX 4 1",13			; disable cursor editing
 
-	equb 12					; erase text from screen
+	equb 12					; clear screen
 
 	equb 22,7				; select non-shadow mode 7
+
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
+
 	equb 23,0,6,0,0,0,0,0,0,0		; disable display
 
 	equs "CHAIN",34,"Boot",34,13		; CHAIN"Boot"

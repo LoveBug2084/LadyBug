@@ -198,7 +198,7 @@ PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green doors";CHR$(132);"to escape
 PRINT TAB(2,9);CHR$(132);"enemies and block their attacks";
 
 PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply";
-PRINT TAB(2,12);CHR$(133);"an items score value by";CHR$(134);"x2 x3 x5";
+PRINT TAB(2,12);CHR$(133);"item score values by";CHR$(134);"x2 x3 x5";
 
 PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"to spell";
 PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for 2 extra lives";
@@ -290,7 +290,7 @@ DEF PROCshrink
 
 FOR R%=24 TO 0 STEP -2
 *FX 19
-VDU 23,0,6,R%,0,0,0,0,0,0
+VDU 23,0,6,R%,0;0;0;
 NEXT R%
 *FX 19
 
@@ -302,7 +302,7 @@ DEF PROCexpand
 
 FOR R%=1 TO 25 STEP 2
 *FX 19
-VDU 23,0,6,R%,0,0,0,0,0,0
+VDU 23,0,6,R%,0;0;0;
 NEXT R%
 *FX 19
 
@@ -334,8 +334,8 @@ REPORT
 PRINT " at line ";ERL
 PRINT
 
-VDU 23,1,1,0,0,0,0,0,0,0
-VDU 23,0,6,25,0,0,0,0,0,0
+VDU 23,1,1,0,0;0;0;
+VDU 23,0,6,25,0;0;0;
 
 *FX 4
 *FX 200

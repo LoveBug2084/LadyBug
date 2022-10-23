@@ -510,6 +510,30 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrDrawPlayfieldLowerDiamond			; draw a diamond if enabled else draw a space
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDrawPlayfieldLowerDiamond
+
+	jsr drawString				; set screen address for diamond and color to red
+	equb pixels1
+	equw screenAddr + 2 + 8 + 2 * chrColumn + 25 * chrRow
+	equb &ff
+
+	lda bonusDiamondEnable			; if diamond bonus is enabled then draw HeartD
+	php
+	lda #chrHeartD
+	plp
+	bne swrDrawPlayfieldLowerDiamondExit
+	lda #' '				; else draw a space
+
+.swrDrawPlayfieldLowerDiamondExit
+
+	jmp drawChr
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of sideways ram code
 
 .swramLastAddr

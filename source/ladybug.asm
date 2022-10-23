@@ -3088,7 +3088,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr drawPlayfieldLowerDiamond		; draw a diamond if enabled else draw a space
+	jsr swrDrawPlayfieldLowerDiamond	; draw a diamond if enabled else draw a space
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -3182,30 +3182,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 	lda lives				; draw 2 digit lives value and return
 	jmp drawBcd
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawPlayfieldLowerDiamond			; draw a diamond if enabled else draw a space
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.drawPlayfieldLowerDiamond
-
-	jsr drawString				; set screen address for diamond and color to red
-	equb pixels1
-	equw screenAddr + 2 + 8 + 2 * chrColumn + 25 * chrRow
-	equb &ff
-
-	lda bonusDiamondEnable			; if diamond bonus is enabled then draw HeartD
-	php
-	lda #chrHeartD
-	plp
-	bne drawPlayfieldLowerDiamondExit
-	lda #' '				; else draw a space
-
-.drawPlayfieldLowerDiamondExit
-
-	jmp drawChr
 
 
 
@@ -5955,9 +5931,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;
 ; nameReg					draw the name registration screen and get high score name
 ;
-;						this is a huge mess and needs rewriting much smaller
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegText
@@ -6055,7 +6031,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc highScorePtr
 	sta highScorePtr
 
-	ldy #9					; clear high score name
+	ldy #9					; fill the high score name with 10 spaces
 	lda #' '
 	
 .nameRegClear
@@ -6169,7 +6145,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegProcessAdd32
 
-	clc					; add 32 to cursor position
+	clc					; add 32 to cursor box position
 	lda nameRegCursor
 	adc #32
 	sta nameRegCursor
@@ -6179,7 +6155,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegProcessSub32
 
-	sec					; sub 32 from cursor position
+	sec					; sub 32 from cursor box position
 	lda nameRegCursor
 	sbc #32
 	sta nameRegCursor
@@ -6192,7 +6168,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lsr playerInput				; if start pressed
 	bcc nameRegProcessLeft
 
-	lda nameRegCursor			; if cursor = 31 (enter name)
+	lda nameRegCursor			; if cursor box = 31 (enter name)
 	cmp #31
 	bne nameRegProcessDelete
 
@@ -6209,7 +6185,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	sec					; move back 1 position
+	sec					; move cursor box back 1 position
 	lda nameRegCursor
 	sbc #1
 	sta nameRegCursor
@@ -6227,7 +6203,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	clc					; move forward 8 positions
+	clc					; move cursor box forward 8 positions
 	lda nameRegCursor
 	adc #8
 	sta nameRegCursor
@@ -6246,7 +6222,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	sec					; move back 8 positions
+	sec					; move cursor box back 8 positions
 	lda nameRegCursor
 	sbc #8
 	sta nameRegCursor
@@ -6264,7 +6240,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
-	clc					; move forward 1 position
+	clc					; move cursor box forward 1 position
 	lda nameRegCursor
 	adc #1
 	sta nameRegCursor
@@ -6277,7 +6253,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegProcessCursor
 
-	jsr nameRegCursorUpdate			; update new cursor position
+	jsr nameRegCursorUpdate			; update new cursor box position
 
 	clc
 	rts
@@ -6287,7 +6263,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegCursorUpdate
 
-	jsr nameRegCursorAddr
+	jsr nameRegCursorAddr			; erase old and draw new cursor box
 	jsr nameRegCursorErase
 	jsr nameRegCursorAddr
 	jmp nameRegCursorDraw
@@ -6296,20 +6272,20 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegProcessDelete
 
-	cmp #30					; if cursor = 30 (delete)
+	cmp #30					; if cursor box = 30 (delete)
 	bne nameRegProcessChr
 	
-	ldy nameRegCursorText			; if cursor != 0
+	ldy nameRegCursorText			; if text cursor != 0 (first character position in name)
 	beq nameRegProcessCursor
 
-	dey					; move back 1 position
+	dey					; move text cursor back 1 position
 
-	sty nameRegCursorText			; update cursor
+	sty nameRegCursorText			; update text cursor
 
 	lda #' '				; replace chr in string with space
 	sta (highScorePtr), y
 
-	clc					; print blue -
+	clc					; print blue '-'
 	lda screenColumnLo, y
 	adc #lo(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr
@@ -6330,7 +6306,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegProcessChr
 
-	ldy nameRegCursorText			; if cursor != 10
+	ldy nameRegCursorText			; if text cursor != 10 (10 characters max in name)
 	cpy #10
 	beq nameRegProcessCursor
 	
@@ -6339,26 +6315,31 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	sta (highScorePtr), y			; store character in string
 
-	clc					; print chr
+	clc					; calculate screen position from text cursor position
 	lda screenColumnLo, y
 	adc #lo(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr
 	lda screenColumnHi, y
 	adc #Hi(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr + 1
-	lda #pixels7
+
+	lda #pixels7				; draw character in white
 	sta drawChrColor
 	lda (highScorePtr), y
 	jsr drawChr
 
-	inc nameRegCursorText			; move cursor forward 1
+	inc nameRegCursorText			; move text cursor forward 1
 
 	lda #sfxTurnstile			; play sound
 	jsr playSound
 
 	jmp nameRegProcessCursor		; exit
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; nameRegCursorErase				replace cursor box with blank tile (erase)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegCursorErase
 
@@ -6406,11 +6387,15 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #extraTileBlank
 	jmp drawExtraTile
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; nameRegCursorDraw				draw the cursor box
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegCursorDraw
 
-	lda #registrationTL		; draw the box
+	lda #registrationTL			; draw the box
 	jsr drawExtraTile
 	lda #registrationTH
 	jsr drawExtraTile
@@ -7474,7 +7459,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawSpriteY
 	jsr drawBonusItemVegetable
 
-	jsr drawString				; draw vegetable score
+	jsr drawString				; draw vegetable score value
 	equb pixels7
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 6 * chrRow
 	equb &ff
@@ -7488,31 +7473,31 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; draw vegetable name centered
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda #pixels3				; draw vegetable name
+	lda #pixels3				; set text color to yellow
 	sta drawChrColor
 
-	lda vegetableImg
+	lda vegetableImg			; index = vegetableImg * 4
 	asl a
 	asl a
 	tax
 
-	lda vegetableAddr, x
+	lda vegetableAddr, x			; get vegetable name screen draw address
 	sta drawChrAddr
 	lda vegetableAddr + 1, x
 	sta drawChrAddr + 1
 
-	lda vegetableAddr + 2, x
+	lda vegetableAddr + 2, x		; get vegetable name string address
 	sta drawTextAddr
 	lda vegetableAddr + 3, x
 	sta drawTextAddr + 1
 
-	jsr drawText
+	jsr drawText				; draw the vegetable name string
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; calculate the address to center the skulls
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-						; start with center
+						; start with center position
 
 	lda #lo(screenAddr + 12 * chrColumn + 11 * chrRow)
 	sta drawMapTileAddr
@@ -7555,6 +7540,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; draw the letters
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
+						; set screen position
+
 	lda #lo(screenAddr + 9 * chrColumn + 14 * chrRow)
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 9 * chrColumn + 14 * chrRow)
@@ -7576,6 +7563,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; draw the hearts
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+						; set screen position
 
 	lda #lo(screenAddr + 9 * chrColumn + 17 * chrRow)
 	sta drawMapTileAddr
@@ -7703,7 +7692,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 .drawBonusGraphicsLoop
 
 	ldy drawBonusGraphicsList, x		; get byte from table
-	bpl drawBonusGraphicsXY
+
+	bpl drawBonusGraphicsXY			; if its a negative byte (&ff) then its the end of the list so exit
 	rts
 
 .drawBonusGraphicsXY
@@ -7727,8 +7717,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawRandomFlower			; draw a single random flower
 
 	inx					; continue until all flowers drawn
-	beq drawBonusGraphicsExit
-	jmp drawBonusGraphicsLoop
+	bne drawBonusGraphicsLoop
 
 .drawBonusGraphicsExit
 
@@ -8980,7 +8969,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #0					; then remove the possibility of getting a diamond bonus
 	sta bonusDiamondEnable
 
-	jsr drawPlayfieldLowerDiamond		; and remove it from the lower playfield
+	jsr swrDrawPlayfieldLowerDiamond	; and remove it from the lower playfield
 
 .checkForObjectScoreNow
 
@@ -9154,7 +9143,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	sta bonusDiamondEnable			; remove the possibility of getting a diamond bonus
 
-	jsr drawPlayfieldLowerDiamond		; remove diamond from lower playfield
+	jsr swrDrawPlayfieldLowerDiamond		; remove diamond from lower playfield
 
 	sed					; bcd mode
 

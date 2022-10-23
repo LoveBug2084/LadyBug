@@ -68,7 +68,17 @@
 
 	save		"EditorM", editorStart, editorEnd, &ffffff, 0
 
-	putfile		"img-editor.bin", "EditorT", 0, &ffffff
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; load the bbc editor tiles screenshot saved by image2bbc.exe and save just the 19 tiles
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	org 0					; clear 20K of space for screenshot
+	clear 0, (20 * 1024) - 1
+
+	incbin		"img-editor-tiles.bin"	; load the 20K screenshot
+
+						; save the 12*8 mode 1 pixel editor tiles (19 tiles total, 4 pixels per byte)
+	save		"EditorT", 0, 19 * 12 * 8 / 4, &ffffff, 0
 
 
 
