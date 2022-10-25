@@ -1529,7 +1529,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	eor #7
 	tax
 
-	lda #pixels0				; fill byte = black
+	lda #pixelsBlack			; fill byte = black
 
 .eraseBlockWrite
 
@@ -1557,7 +1557,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 	ldx #7					; reset row adjust counter
 
-	lda #pixels0				; reload A with black
+	lda #pixelsBlack			; reload A with black
 
 .eraseBlockContinue
 
@@ -2259,8 +2259,8 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
-	jsr drawString				; draw game over message
-	equb pixels1
+	jsr drawString				; draw game over message in red
+	equb pixelsRed
 	equw screenAddr + 2 + 7 * chrColumn + 12 * chrRow
 	equs "GAME OVER", &ff
 	
@@ -2952,8 +2952,8 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	cpy #9 * 4				; repeat until all done
 	bne drawPlayfieldUpperGetData
 
-	jsr drawString				; draw the 3 'x' multipliers
-	equb pixels6
+	jsr drawString				; draw the 3 'x' multipliers in cyan
+	equb pixelsCyan
 	equw screenAddr + 2 + 16 * chrColumn
 	equs chrMultiplierX, ' ', chrMultiplierX, ' ', chrMultiplierX, &ff
 
@@ -2977,8 +2977,8 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	stx drawPlayfieldUpperBonusSaveX	; save x
 
-	jsr drawString				; set address
-	equb pixels7
+	jsr drawString				; set address and color to white
+	equb pixelsWhite
 	equw screenAddr + 2 + 16
 	equb &ff
 	
@@ -2993,7 +2993,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .drawPlayfieldUpperText
 
-	lda #pixels7				; if bit = 1 use white
+	lda #pixelsWhite			; if bit = 1 use white
 	bit bonusBitsCopy + 1
 	bmi drawPlayfieldUpperTextChr
 	lda upperBonusColor, x			; else bit = 0 so use color from table
@@ -3047,7 +3047,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	equb pixelsSpecial0, pixelsSpecial1, pixelsSpecial0, pixelsSpecial1, pixelsSpecial0, pixelsSpecial1, pixelsSpecial0
 	equb pixelsExtra1, pixelsExtra0, pixelsExtra1, pixelsExtra0, pixelsExtra1
-	equb pixels6, pixels6, pixels6
+	equb pixelsCyan, pixelsCyan, pixelsCyan
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -3070,7 +3070,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 
 .drawPlayfieldLower
 
-	lda spriteBaseImg			; ladybug sprite image
+	lda spriteBaseImg + 0			; ladybug sprite image
 	clc
 	adc #10
 	sta drawSpriteImg
@@ -3102,7 +3102,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; set screen address for vegetable score and color to green
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 24 * chrRow
 	equb &ff
 
@@ -3115,11 +3115,11 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; draw "L" in blue
-	equb pixels4
+	equb pixelsBlue
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 24 * chrRow
 	equs "L", &ff
 
-	lda #pixels5				; set color to magenta
+	lda #pixelsMagenta			; set color to magenta
 	sta drawChrColor
 
 	lda level				; draw 2 digits level number
@@ -3128,7 +3128,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; set screen position, set color to yellow, draw "1P"
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 16 + 13 * chrColumn + 24 * chrRow
 	equs "1P", &ff
 	
@@ -3156,7 +3156,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .drawHighScoreName
 
 	jsr drawString				; set screen position and color to red
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equb &ff
 	
@@ -3176,7 +3176,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .drawPlayfieldLowerLives
 
 	jsr drawString				; set screen position to right of ladybug, set color to yellow
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 16 + 1 * chrColumn + 24 * chrRow
 	equb &ff
 
@@ -3970,7 +3970,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawFlowers
 
 	jsr drawString				; draw "instruction" in red
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 4 * chrRow
 	equs "INSTRUCTIONS", &ff
 	
@@ -3997,7 +3997,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawMapTile
 	
 	jsr drawString				; draw "multiply score" in green
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 16 + 6 * chrColumn + 7 * chrRow
 	equs "MULTIPLY SCORE", &ff
 
@@ -4027,27 +4027,27 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bne instructionsLettersLoop
 
 	jsr drawString				; draw "collect for bonus" in green
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 3 * chrColumn + 11 * chrRow
 	equs "COLLECT FOR BONUS", &ff
 
 	jsr drawString				; draw "garden prizes" in green
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 5 * chrColumn + 12 * chrRow
 	equs "GARDEN PRIZES", &ff
 
 	jsr drawString				; draw "return pauses" in magenta
-	equb pixels5
+	equb pixelsMagenta
 	equw screenAddr + 2 + 5 * chrColumn + 15 * chrRow
 	equs "RETURN PAUSES", &ff
 
 	jsr drawString				; draw "move to unpause" in yellow
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 4 * chrColumn + 16 * chrRow
 	equs "MOVE TO UNPAUSE", &ff
 
 	jsr drawString				; draw "hold esc to quit" in red
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 3 * chrColumn + 17 * chrRow
 	equs "HOLD ESC TO QUIT!", &ff
 
@@ -5119,8 +5119,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	sta optionKeys + 3			; store up key scan code
 
-	jsr drawString				; position for printing
-	equb pixels7
+	jsr drawString				; position for printing and set color to white
+	equb pixelsWhite
 	equw screenAddr + 2 + 15 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5153,7 +5153,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta optionKeys + 2			; store down key scan code
 
 	jsr drawString				; position for printing
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 16 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5188,7 +5188,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta optionKeys + 1			; store left key scan code
 
 	jsr drawString				; position for printing
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 17 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5225,7 +5225,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta optionKeys + 0			; store right key scan code
 
 	jsr drawString				; position for printing
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 18 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5241,7 +5241,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawString				; restore original text
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "CONTROLS   ", &ff
 
@@ -5352,17 +5352,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawText
 
 	jsr drawString
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 7 * chrRow
 	equs "UNIVERSAL", chrCopyright, "1981", &ff
 
 	jsr drawString
-	equb pixels5
+	equb pixelsMagenta
 	equw screenAddr + 2 + 5 * chrColumn + 9 * chrRow
 	equs "PROGRAMMED BY", &ff
 
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 10 * chrRow
 	equs "LOVEBUG 2021", &ff
 
@@ -5377,37 +5377,37 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs "HIGH SCORES", &ff
 
 	jsr drawString
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 4 * chrColumn + 15 * chrRow
 	equs "LADY BUGS", &ff
 	
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 4 * chrColumn + 16 * chrRow
 	equs "ENEMY SPEED", &ff
 	
 	jsr drawString
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 4 * chrColumn + 17 * chrRow
 	equs "ENEMY ATTACK", &ff
 	
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 4 * chrColumn + 18 * chrRow
 	equs "TIMER VOLUME", &ff
 
 	jsr drawString
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 4 * chrColumn + 19 * chrRow
 	equs "SOUND", &ff
 	
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "CONTROLS", &ff
 	
 	jsr drawString
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 15 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -5436,7 +5436,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawSettings
 
 	jsr drawString				; draw ladybug lives
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 18 * chrColumn + 15 * chrRow
 	equb &ff
 	
@@ -5446,7 +5446,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawChr
 	
 	jsr drawString				; draw enemy speed
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 18 * chrColumn + 16 * chrRow
 	equb &ff
 	
@@ -5455,7 +5455,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawChr
 	
 	jsr drawString				; draw enemy attack
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 18 * chrColumn + 17 * chrRow
 	equb &ff
 	
@@ -5464,7 +5464,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawChr
 	
 	jsr drawString				; draw timer volume
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 18 * chrColumn + 18 * chrRow
 	equb &ff
 	
@@ -5478,7 +5478,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	beq mainMenuDrawSettingsMute
 
 	jsr drawString				; draw "ON"
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 16 * chrColumn + 19 * chrRow
 	equs " ON", &ff
 
@@ -5487,7 +5487,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawSettingsMute
 
 	jsr drawString				; else draw "OFF"
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 16 * chrColumn + 19 * chrRow
 	equs "OFF", &ff
 
@@ -5660,7 +5660,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	jsr drawString				; draw 2 red hearts
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 8 + 1 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,chrHeart,&ff
 	
@@ -5670,12 +5670,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs "BEST PLAYERS",&ff
 	
 	jsr drawString				; draw 2 red hearts
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 8 + 18 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,chrHeart,&ff
 
 	jsr drawString				; position cursor
-	equb pixels0
+	equb pixelsBlack
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 5 * chrRow
 	equb &ff
 
@@ -5964,46 +5964,46 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawFlowers
 
 	jsr drawString				; draw text and entry characters
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 16 + 4 * chrRow + 3 * chrColumn
 	equs "CONGRATULATIONS!", &ff
 
 	jsr drawString
-	equb pixels5
+	equb pixelsMagenta
 	equw screenAddr + 2 + 6 * chrRow + 5 * chrColumn
 	equs "REGISTER YOUR", &ff
 
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 8 * chrRow + 4 * chrColumn
 	equs "HIGH SCORE NAME", &ff
 
 	jsr drawString
-	equb pixels4
+	equb pixelsBlue
 	equw screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn
 	equs "----------", &ff
 
 	jsr drawString
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 14 * chrRow + 4 * chrColumn
 	equs "A B C D E F G H", &ff
 	
 	jsr drawString
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 16 * chrRow + 4 * chrColumn
 	equs "I J K L M N O P", &ff
 
 	jsr drawString
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 18 * chrRow + 4 * chrColumn
 	equs "Q R S T U V W X", &ff
 
 	jsr drawString
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 20 * chrRow + 4 * chrColumn
 	equs "Y Z ", chrHeart, " ! .   ", &ff
 
-	lda #pixels1				; draw delete in red
+	lda #pixelsRed				; draw delete in red
 	sta drawChrColor
 	lda #chrLeft
 	jsr drawChr
@@ -6292,7 +6292,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda screenColumnHi, y
 	adc #Hi(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr + 1
-	lda #pixels4
+	lda #pixelsBlue
 	sta drawChrColor
 	lda #'-'
 	jsr drawChr
@@ -6323,7 +6323,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc #Hi(screenAddr + 2 + 8 + 11 * chrRow + 6 * chrColumn)
 	sta drawChrAddr + 1
 
-	lda #pixels7				; draw character in white
+	lda #pixelsWhite			; draw character in white
 	sta drawChrColor
 	lda (highScorePtr), y
 	jsr drawChr
@@ -7439,11 +7439,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; draw level text
-	equb pixels2
+	equb pixelsGreen
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 4 * chrRow
 	equs "LEVEL ", &ff
 	
-	lda #pixels5				; draw level number
+	lda #pixelsMagenta				; draw level number
 	sta drawChrColor
 	
 	lda level
@@ -7460,7 +7460,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawBonusItemVegetable
 
 	jsr drawString				; draw vegetable score value
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 6 * chrRow
 	equb &ff
 
@@ -7473,7 +7473,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; draw vegetable name centered
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda #pixels3				; set text color to yellow
+	lda #pixelsYellow			; set text color to yellow
 	sta drawChrColor
 
 	lda vegetableImg			; index = vegetableImg * 4
@@ -7592,11 +7592,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	beq drawLevelIntroGoodLuck
 
 	jsr drawString
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 7 * chrColumn + 20 * chrRow
 	equs "SHIELD ", &ff
 	
-	lda #pixels7
+	lda #pixelsWhite
 	sta drawChrColor
 	lda shield
 	jsr drawBcd
@@ -7610,7 +7610,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 .drawLevelIntroGoodLuck
 
 	jsr drawString
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 7 * chrColumn + 20 * chrRow
 	equs "GOOD LUCK", &ff
 	
@@ -7756,16 +7756,16 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta ulaPalette
 
 	jsr drawString				; draw the bonus text
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 8 + 3 * chrColumn + 16 * chrRow
 	equs "CONGRATULATIONS!", &ff
 
 	jsr drawString
-	equb pixels5
+	equb pixelsMagenta
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 18 * chrRow
 	equs "YOU WIN ", &ff
 
-	lda #pixels7
+	lda #pixelsWhite
 	sta drawChrColor
 	
 	lda #specialBonusScore + '0'
@@ -7778,19 +7778,19 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 
 	jsr drawString
-	equb pixels5
+	equb pixelsMagenta
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 18 * chrRow
 	equs "PTS", &ff
 
 	if specialBonusShield = 1
 
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs "AND", &ff
 
 	jsr drawString
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 8 + 8 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -7798,7 +7798,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 	
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 20 * chrRow
 	equs "SHIELD", &ff
 
@@ -7813,12 +7813,12 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	else
 	
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "AND", &ff
 
 	jsr drawString
-	equb pixels7
+	equb pixelsWhite
 	equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
 	equb &ff
 
@@ -7826,7 +7826,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 	
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs "SHIELDS", &ff
 
@@ -7855,16 +7855,16 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	beq drawBonusScreenDiamond
 
 	jsr drawString				; draw the bonus text
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 16 + 3 * chrColumn + 16 * chrRow
 	equs "CONGRATULATIONS!", &ff
 
 	jsr drawString
-	equb pixels5
+	equb pixelsMagenta
 	equw screenAddr + 2 + 7 * chrColumn + 18 * chrRow
 	equs "YOU WIN ", &ff
 
-	lda #pixels7
+	lda #pixelsWhite
 	sta drawChrColor
 
 	lda #extraBonusLives + '0'
@@ -7873,14 +7873,14 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	if extraBonusLives = 1
 	
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs "EXTRA LADY BUG", &ff
 
 	else
 
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs "EXTRA LADY BUGS", &ff
 
@@ -7948,21 +7948,21 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	bne drawBonusScreenDiamondGraphicsLoop3
 
 	jsr drawString				; draw the bonus text
-	equb pixels1
+	equb pixelsRed
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 16 * chrRow
 	equs "YOU DISCOVERED THE", &ff
 
 	jsr drawString
-	equb pixels3
+	equb pixelsYellow
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 18 * chrRow
 	equs "DIAMOND GARDEN", &ff
 
 	jsr drawString
-	equb pixels5
+	equb pixelsMagenta
 	equw screenAddr + 2 + 2 * chrColumn + 20 * chrRow
 	equs "AND WIN ", &ff
 
-	lda #pixels7
+	lda #pixelsWhite
 	sta drawChrColor
 	
 	lda #diamondBonusScore
@@ -7975,7 +7975,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 
 	jsr drawString
-	equb pixels5
+	equb pixelsMagenta
 	equw screenAddr + 2 + 18 * chrColumn + 20 * chrRow
 	equs "PTS", &ff
 
@@ -8966,7 +8966,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda bonusDiamondEnable			; and if the diamond bonus was enabled
 	beq checkForObjectScoreNow
 
-	lda #0					; then remove the possibility of getting a diamond bonus
+	lda #0					; then disable the diamond bonus
 	sta bonusDiamondEnable
 
 	jsr swrDrawPlayfieldLowerDiamond	; and remove it from the lower playfield
@@ -9115,10 +9115,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta objectScoreY
 
 	lda objectMode				; calculate which object score image to display based on color mode and multiplier
-	asl a					; objectScoreImg = objectMode * 4 + scoreMultiplier + pointsImgBase
+	asl a					; objectScoreImg = objectMode * 4 + scoreMultiplier + ImgPoints
 	asl a
 	adc scoreMultiplier			; no need for clc, carry is already clear
-	adc #pointsBaseImg
+	adc #ImgPoints
 	sta objectScoreImg
 
 	rts
@@ -10226,26 +10226,24 @@ include "soundtables.asm"
 ; sprite address tables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.spriteBaseImg					; img index for base sprite of ladybug, the 8 enemies and the angel
+.spriteBaseImg
 
-	for n, 0, 9
-	equb n * 15 + sprite10x10
+	for n, 0, 10				; img index for base sprite of ladybug, the 8 enemies and the angel
+	equb n * 15 + ImgLadybugEnemiesAngel
 	next
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; generate lo address table for the 10x10 pixel bonus vegetable/diamond/points sprites
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .spriteImgAddrLo
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; generate lo address table for the 10x10 pixel vegetable and points sprites
-	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	for n, sprite10x10Bin, sprite10x10BinEnd - 1, sprite10x10Bytes
 	equb lo(n)
 	next
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; generate lo address table for the 10x14 pixel ladybug and enemies
+	; generate lo address table for the 10x14 pixel ladybug, enemies and angel sprites
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	for n, ladybugBin, spriteBinEnd - 1, spriteTileBytes
@@ -10253,24 +10251,36 @@ include "soundtables.asm"
 	next
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; generate lo address table for the 10x7 diamond tiles
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	equb lo(diamondBin)
+	equb lo(diamondBin + diamondTileBytes)
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; generate hi address table for bonus vegetable/diamond/point tiles
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .spriteImgAddrHi
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; generate hi address table for vegetable and point tiles
-	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	for n,  sprite10x10Bin, sprite10x10BinEnd - 1, sprite10x10Bytes
 	equb hi(n)
 	next
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; generate hi address table for ladybug and enemies
+	; generate hi address table for ladybug, enemies and angel sprites
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	for n, ladybugBin, spriteBinEnd - 1, spriteTileBytes
 	equb hi(n)
 	next
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; generate hi address table for the 10x7 diamond tiles
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	equb hi(diamondBin)
+	equb hi(diamondBin + diamondTileBytes)
 
 
 

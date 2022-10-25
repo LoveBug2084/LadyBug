@@ -21,7 +21,9 @@ utils\pixels				img-enemy5.raw								10	14	img-enemy5.bin
 utils\pixels				img-enemy6.raw								10	14	img-enemy6.bin
 utils\pixels				img-enemy7.raw								10	14	img-enemy7.bin
 utils\pixels				img-enemy8.raw								10	14	img-enemy8.bin
-utils\pixels				img-angel.raw									10	14	img-angel.bin
+utils\pixels				img-angel0.raw								10	14	img-angel0.bin
+utils\pixels				img-angel1.raw								10	14	img-angel1.bin
+utils\pixels				img-diamond.raw								8		6		img-diamond.bin
 
 
 

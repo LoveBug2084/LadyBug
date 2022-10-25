@@ -136,9 +136,6 @@
 .sprite10x10BinEnd
 	skip 0					; show this address in listing
 
-	sprite10x10 = (sprite10x10BinEnd - sprite10x10Bin) / sprite10x10Bytes
-	pointsBaseImg = (pointsBin - spriteBin) / sprite10x10Bytes
-
 .ladybugBin
 	skip 0					; show this address in listing
 
@@ -184,13 +181,35 @@
 
 	incbin "img-enemy8.bin"			; load 8th enemy sprite set into memory
 
-.angelBin
+.angel0Bin
 	skip 0					; show this address in listing
 	
-	incbin "img-angel.bin"			; load ladybug angel sprite set into memory
+	incbin "img-angel0.bin"			; load ladybug angel sprite set (1st part) into memory
+
+.diamondBin
+	skip 0					; show this address in listing
+
+	incbin "img-diamond.bin"		; load diamond sprite set into memory
+	
+.diamondFiller					; fill remainding space so that 2nd part angel address is correctly aligned
+	skip spriteTileBytes - (2 * diamondTileBytes)
+
+.angel1Bin
+	skip 0					; show this address in listing
+	
+	incbin "img-angel1.bin"			; load ladybug angel sprite set (2nd part) into memory
 
 .spriteBinEnd
 	skip 0					; show this address in listing
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; generate image index for sprite sets
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+imgVegetables		= (vegetablesBin - spriteBin) / sprite10x10Bytes
+ImgPoints		= (pointsBin - spriteBin) / sprite10x10Bytes
+ImgLadybugEnemiesAngel	= (ladybugBin - spriteBin) / sprite10x10Bytes
+;imgDiamond		= (diamondBin - ladybugBin) / sprite10x14Bytes
 
 
 
@@ -410,7 +429,7 @@ masterMos350 = &e374
 
 	ldx #lo(screenAddr)			; start x at low 8 bits of screen start address
 
-	lda #pixels0				; fill screen with black
+	lda #pixelsBlack			; fill screen with black
 
 .swrInitScreenClear
 
@@ -515,21 +534,39 @@ masterMos350 = &e374
 
 .swrDrawPlayfieldLowerDiamond
 
-	jsr drawString				; set screen address for diamond and color to red
-	equb pixels1
-	equw screenAddr + 2 + 8 + 2 * chrColumn + 25 * chrRow
-	equb &ff
+	stx drawSpriteSaveX			; save registers
+	sty drawSpriteSaveY
 
-	lda bonusDiamondEnable			; if diamond bonus is enabled then draw HeartD
-	php
-	lda #chrHeartD
-	plp
+	lda #0					; draw column from 0
+	sta drawSpriteColumnVinit + 1
+
+	lda #diamondTileHeight			; done when height = diamondTileHeight
+	sta drawSpriteColumnVtest + 1
+
+	sta drawSpriteColumnTileHeight + 1	; set sprite column height to diamondTileHeight
+
+	lda #opcodeINX				; drawing normal so use INX instruction
+	sta drawSpriteNextLineInstruction
+
+	lda #diamondTileBytes			; store number of bytes in sprite in counter
+	sta drawByteCount
+
+	lda #lowerDiamondX			; set position for the lower diamond available
+	sta drawSpriteX
+	lda #lowerDiamondY
+	sta drawSpriteY
+
+	lda #spriteLowerDiamond			; set sprite to diamond image
+	sta drawSpriteImg
+	
+	lda bonusDiamondEnable			; if diamond bonus not enabled
 	bne swrDrawPlayfieldLowerDiamondExit
-	lda #' '				; else draw a space
+
+	inc drawSpriteImg			; then set sprite image to blank
 
 .swrDrawPlayfieldLowerDiamondExit
 
-	jmp drawChr
+	jmp drawSpriteGetX
 
 
 

@@ -1,8 +1,8 @@
 ----------------------------------------------------
 high ram      &8000 - &AFFF , 12288 bytes
 ----------------------------------------------------
-used          &8000 - &ADFB , 11772  bytes
-free          &ADFC - &AFFF , 516 bytes
+used          &8000 - &AE16 , 11799  bytes
+free          &AE17 - &AFFF , 489 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -12,8 +12,8 @@ screen ram    &47F0 - &7FFF , 14352 bytes
 ----------------------------------------------------
 main ram      &0 - &47EF , 18416 bytes
 ----------------------------------------------------
-used          &0 - &47D2 , 18387 bytes
-free          &47D3 - &47EF , 29 bytes
+used          &0 - &47D7 , 18392 bytes
+free          &47D8 - &47EF , 24 bytes
 unused        68 bytes
 ----------------------------------------------------
 
@@ -32,8 +32,8 @@ unused        &253 - &257 , 5 bytes
 used          &258 - &280 , 41 bytes
 unused        &281 - &286 , 6 bytes
 ----------------------------------------------------
-used          &287 - &47D2 , 17740 bytes
-free          &47D3 - &47EF , 29 bytes
+used          &287 - &47D7 , 17745 bytes
+free          &47D8 - &47EF , 24 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -527,8 +527,14 @@ bootstrap     &4800 - &4943 , 324 bytes
      A352
 .enemy8Bin
      A76C
-.angelBin
+.angel0Bin
      AB86
+.diamondBin
+     AC12
+.diamondFiller
+     AC42
+.angel1Bin
+     AC58
 .spriteBinEnd
      ACE4
 .swrCleanResetJmp
@@ -688,207 +694,217 @@ bootstrap     &4800 - &4943 , 324 bytes
      ADE5   85 BC      STA &BC
      ADE7   60         RTS
 .swrDrawPlayfieldLowerDiamond
-     ADE8   20 41 22   JSR &2241
-     ADEB   03
-     ADEC   12 7E
-     ADEE   FF
-     ADEF   A5 15      LDA &15
-     ADF1   08         PHP
-     ADF2   A9 24      LDA #&24
-     ADF4   28         PLP
-     ADF5   D0 02      BNE &ADF9
-     ADF7   A9 20      LDA #&20
+     ADE8   86 8B      STX &8B
+     ADEA   84 8C      STY &8C
+     ADEC   A9 00      LDA #&00
+     ADEE   8D 48 0C   STA &0C48
+     ADF1   A9 06      LDA #&06
+     ADF3   8D 6E 0C   STA &0C6E
+     ADF6   8D 76 0C   STA &0C76
+     ADF9   A9 E8      LDA #&E8
+     ADFB   8D 6C 0C   STA &0C6C
+     ADFE   A9 18      LDA #&18
+     AE00   85 49      STA &49
+     AE02   A9 14      LDA #&14
+     AE04   85 87      STA &87
+     AE06   A9 C5      LDA #&C5
+     AE08   85 88      STA &88
+     AE0A   A9 A8      LDA #&A8
+     AE0C   85 86      STA &86
+     AE0E   A5 15      LDA &15
+     AE10   D0 02      BNE &AE14
+     AE12   E6 86      INC &86
 .swrDrawPlayfieldLowerDiamondExit
-     ADF9   4C 80 06   JMP &0680
+     AE14   4C 26 0C   JMP &0C26
 .swramLastAddr
-     ADFC
+     AE17
 .loaderMain
-     AE00
+     AF00
 .loaderMessages
-     AE00
+     AF00
 .loaderBuild
-     AE00   1F
-     AE01   09
-     AE02   0B
-     AE03   81
-     AE04   4C 61 64 ...
-     AE0D   84
-     AE0E   42 75 69 ...
-     AE13   87
-     AE1C   FF
+     AF00   1F
+     AF01   09
+     AF02   0B
+     AF03   81
+     AF04   4C 61 64 ...
+     AF0D   84
+     AF0E   42 75 69 ...
+     AF13   87
+     AF1C   FF
 .loaderUsingBank
-     AE1D   1F
-     AE1E   07
-     AE1F   0D
-     AE20   84
-     AE21   55 73 69 ...
-     AE38   87
-     AE39   30 
-     AE3A   FF
+     AF1D   1F
+     AF1E   07
+     AF1F   0D
+     AF20   84
+     AF21   55 73 69 ...
+     AF38   87
+     AF39   30 
+     AF3A   FF
 .loaderUsingWorkspace
-     AE3B   1F
-     AE3C   09
-     AE3D   0D
-     AE3E   84
-     AE3F   55 73 69 ...
-     AE55   FF
+     AF3B   1F
+     AF3C   09
+     AF3D   0D
+     AF3E   84
+     AF3F   55 73 69 ...
+     AF55   FF
 .loaderBank
-     AE56   30 31 32 ...
+     AF56   30 31 32 ...
 .loaderRamFailed
-     AE66   1F
-     AE67   07
-     AE68   0D
-     AE69   88
-     AE6A   84
-     AE6B   53 69 64 ...
-     AE83   FF
+     AF66   1F
+     AF67   07
+     AF68   0D
+     AF69   88
+     AF6A   84
+     AF6B   53 69 64 ...
+     AF83   FF
 .runLadybug
-     AE84   2F 4C 61 ...
-     AE8C   0D
+     AF84   2F 4C 61 ...
+     AF8C   0D
 .loaderStart
-     AE8D   A9 13      LDA #&13
-     AE8F   20 F4 FF   JSR &FFF4
-     AE92   A2 00      LDX #&00
-     AE94   A9 20      LDA #&20
+     AF8D   A9 13      LDA #&13
+     AF8F   20 F4 FF   JSR &FFF4
+     AF92   A2 00      LDX #&00
+     AF94   A9 20      LDA #&20
 .loaderClearCenter
-     AE96   9D 90 7D   STA &7D90,X
-     AE99   E8         INX
-     AE9A   E0 C8      CPX #&C8
-     AE9C   D0 F8      BNE &AE96
-     AE9E   8D 71 7E   STA &7E71
-     AEA1   8D 72 7E   STA &7E72
-     AEA4   A0 00      LDY #&00
-     AEA6   20 F7 4E   JSR &4EF7
-     AEA9   78         SEI
-     AEAA   A5 F4      LDA &F4
-     AEAC   8D FF 7F   STA &7FFF
-     AEAF   A9 00      LDA #&00
-     AEB1   A2 01      LDX #&01
-     AEB3   20 F4 FF   JSR &FFF4
-     AEB6   8E FD 7F   STX &7FFD
-     AEB9   E0 02      CPX #&02
-     AEBB   D0 12      BNE &AECF
-     AEBD   20 14 4F   JSR &4F14
-     AEC0   F0 05      BEQ &AEC7
-     AEC2   CE FD 7F   DEC &7FFD
-     AEC5   D0 08      BNE &AECF
+     AF96   9D 90 7D   STA &7D90,X
+     AF99   E8         INX
+     AF9A   E0 C8      CPX #&C8
+     AF9C   D0 F8      BNE &AF96
+     AF9E   8D 71 7E   STA &7E71
+     AFA1   8D 72 7E   STA &7E72
+     AFA4   A0 00      LDY #&00
+     AFA6   20 F7 4F   JSR &4FF7
+     AFA9   78         SEI
+     AFAA   A5 F4      LDA &F4
+     AFAC   8D FF 7F   STA &7FFF
+     AFAF   A9 00      LDA #&00
+     AFB1   A2 01      LDX #&01
+     AFB3   20 F4 FF   JSR &FFF4
+     AFB6   8E FD 7F   STX &7FFD
+     AFB9   E0 02      CPX #&02
+     AFBB   D0 12      BNE &AFCF
+     AFBD   20 14 50   JSR &5014
+     AFC0   F0 05      BEQ &AFC7
+     AFC2   CE FD 7F   DEC &7FFD
+     AFC5   D0 08      BNE &AFCF
 .loaderBplus
-     AEC7   A0 3B      LDY #&3B
-     AEC9   20 F7 4E   JSR &4EF7
-     AECC   4C E2 4E   JMP &4EE2
+     AFC7   A0 3B      LDY #&3B
+     AFC9   20 F7 4F   JSR &4FF7
+     AFCC   4C E2 4F   JMP &4FE2
 .loaderNotBplus
-     AECF   20 05 4F   JSR &4F05
-     AED2   D0 1B      BNE &AEEF
-     AED4   A0 1D      LDY #&1D
-     AED6   20 F7 4E   JSR &4EF7
-     AED9   AC FE 7F   LDY &7FFE
-     AEDC   B9 56 4E   LDA &4E56,Y
-     AEDF   20 EE FF   JSR &FFEE
+     AFCF   20 05 50   JSR &5005
+     AFD2   D0 1B      BNE &AFEF
+     AFD4   A0 1D      LDY #&1D
+     AFD6   20 F7 4F   JSR &4FF7
+     AFD9   AC FE 7F   LDY &7FFE
+     AFDC   B9 56 4F   LDA &4F56,Y
+     AFDF   20 EE FF   JSR &FFEE
 .loaderCopyData
-     AEE2   20 87 4F   JSR &4F87
-     AEE5   0E FD 7F   ASL &7FFD
-     AEE8   A2 84      LDX #&84
-     AEEA   A0 4E      LDY #&4E
-     AEEC   4C F7 FF   JMP &FFF7
+     AFE2   20 87 50   JSR &5087
+     AFE5   0E FD 7F   ASL &7FFD
+     AFE8   A2 84      LDX #&84
+     AFEA   A0 4F      LDY #&4F
+     AFEC   4C F7 FF   JMP &FFF7
 .loaderFailed
-     AEEF   A0 66      LDY #&66
-     AEF1   20 F7 4E   JSR &4EF7
+     AFEF   A0 66      LDY #&66
+     AFF1   20 F7 4F   JSR &4FF7
 .loaderFailedLoop
-     AEF4   4C F4 4E   JMP &4EF4
+     AFF4   4C F4 4F   JMP &4FF4
 .loaderPrint
-     AEF7   B9 00 4E   LDA &4E00,Y
-     AEFA   C9 FF      CMP #&FF
-     AEFC   F0 06      BEQ &AF04
-     AEFE   20 EE FF   JSR &FFEE
-     AF01   C8         INY
-     AF02   D0 F3      BNE &AEF7
+     AFF7   B9 00 4F   LDA &4F00,Y
+     AFFA   C9 FF      CMP #&FF
+     AFFC   F0 06      BEQ &B004
+     AFFE   20 EE FF   JSR &FFEE
+     B001   C8         INY
+     B002   D0 F3      BNE &AFF7
 .loaderPrintExit
-     AF04   60         RTS
+     B004   60         RTS
 .swrTest
-     AF05   A0 00      LDY #&00
+     B005   A0 00      LDY #&00
 .swrTestLoop
-     AF07   20 43 4F   JSR &4F43
-     AF0A   F0 07      BEQ &AF13
-     AF0C   C8         INY
-     AF0D   C0 10      CPY #&10
-     AF0F   D0 F6      BNE &AF07
-     AF11   A9 FF      LDA #&FF
+     B007   20 43 50   JSR &5043
+     B00A   F0 07      BEQ &B013
+     B00C   C8         INY
+     B00D   C0 10      CPY #&10
+     B00F   D0 F6      BNE &B007
+     B011   A9 FF      LDA #&FF
 .swrTestExit
-     AF13   60         RTS
+     B013   60         RTS
 .swrTestBplus
-     AF14   A0 00      LDY #&00
-     AF16   8C 30 FE   STY &FE30
-     AF19   AD 08 80   LDA &8008
-     AF1C   48         PHA
-     AF1D   A0 80      LDY #&80
-     AF1F   20 43 4F   JSR &4F43
-     AF22   D0 13      BNE &AF37
-     AF24   A0 00      LDY #&00
-     AF26   8C 30 FE   STY &FE30
-     AF29   CD 08 80   CMP &8008
-     AF2C   F0 09      BEQ &AF37
-     AF2E   68         PLA
-     AF2F   A0 80      LDY #&80
-     AF31   8C 30 FE   STY &FE30
-     AF34   A9 00      LDA #&00
-     AF36   60         RTS
+     B014   A0 00      LDY #&00
+     B016   8C 30 FE   STY &FE30
+     B019   AD 08 80   LDA &8008
+     B01C   48         PHA
+     B01D   A0 80      LDY #&80
+     B01F   20 43 50   JSR &5043
+     B022   D0 13      BNE &B037
+     B024   A0 00      LDY #&00
+     B026   8C 30 FE   STY &FE30
+     B029   CD 08 80   CMP &8008
+     B02C   F0 09      BEQ &B037
+     B02E   68         PLA
+     B02F   A0 80      LDY #&80
+     B031   8C 30 FE   STY &FE30
+     B034   A9 00      LDA #&00
+     B036   60         RTS
 .swrTestBplusFailed
-     AF37   68         PLA
-     AF38   8D 08 80   STA &8008
-     AF3B   A0 80      LDY #&80
-     AF3D   8C 30 FE   STY &FE30
-     AF40   A9 FF      LDA #&FF
-     AF42   60         RTS
+     B037   68         PLA
+     B038   8D 08 80   STA &8008
+     B03B   A0 80      LDY #&80
+     B03D   8C 30 FE   STY &FE30
+     B040   A9 FF      LDA #&FF
+     B042   60         RTS
 .swrTestByte
-     AF43   84 F4      STY &F4
-     AF45   8C FE 7F   STY &7FFE
-     AF48   98         TYA
-     AF49   29 0F      AND #&0F
-     AF4B   8D 32 FE   STA &FE32
-     AF4E   AA         TAX
-     AF4F   9D 30 FF   STA &FF30,X
-     AF52   8C 30 FE   STY &FE30
-     AF55   AE 07 80   LDX &8007
-     AF58   BD 00 80   LDA &8000,X
-     AF5B   D0 15      BNE &AF72
-     AF5D   BD 01 80   LDA &8001,X
-     AF60   C9 28      CMP #&28
-     AF62   D0 0E      BNE &AF72
-     AF64   BD 02 80   LDA &8002,X
-     AF67   C9 43      CMP #&43
-     AF69   D0 07      BNE &AF72
-     AF6B   BD 03 80   LDA &8003,X
-     AF6E   C9 29      CMP #&29
-     AF70   F0 12      BEQ &AF84
+     B043   84 F4      STY &F4
+     B045   8C FE 7F   STY &7FFE
+     B048   98         TYA
+     B049   29 0F      AND #&0F
+     B04B   8D 32 FE   STA &FE32
+     B04E   AA         TAX
+     B04F   9D 30 FF   STA &FF30,X
+     B052   8C 30 FE   STY &FE30
+     B055   AE 07 80   LDX &8007
+     B058   BD 00 80   LDA &8000,X
+     B05B   D0 15      BNE &B072
+     B05D   BD 01 80   LDA &8001,X
+     B060   C9 28      CMP #&28
+     B062   D0 0E      BNE &B072
+     B064   BD 02 80   LDA &8002,X
+     B067   C9 43      CMP #&43
+     B069   D0 07      BNE &B072
+     B06B   BD 03 80   LDA &8003,X
+     B06E   C9 29      CMP #&29
+     B070   F0 12      BEQ &B084
 .swrTestByteWrite
-     AF72   98         TYA
-     AF73   49 69      EOR #&69
-     AF75   4D 08 80   EOR &8008
-     AF78   8D 08 80   STA &8008
-     AF7B   A2 00      LDX #&00
+     B072   98         TYA
+     B073   49 69      EOR #&69
+     B075   4D 08 80   EOR &8008
+     B078   8D 08 80   STA &8008
+     B07B   A2 00      LDX #&00
 .swrTestByteDelay
-     AF7D   CA         DEX
-     AF7E   D0 FD      BNE &AF7D
-     AF80   CD 08 80   CMP &8008
-     AF83   60         RTS
+     B07D   CA         DEX
+     B07E   D0 FD      BNE &B07D
+     B080   CD 08 80   CMP &8008
+     B083   60         RTS
 .swrTestFailed
-     AF84   A9 FF      LDA #&FF
-     AF86   60         RTS
+     B084   A9 FF      LDA #&FF
+     B086   60         RTS
 .swramCopy
-     AF87   A2 2E      LDX #&2E
-     AF89   A0 00      LDY #&00
+     B087   A2 2F      LDX #&2F
+     B089   A0 00      LDY #&00
 .swramCopyLoop
-     AF8B   B9 00 20   LDA &2000,Y
-     AF8E   99 00 80   STA &8000,Y
-     AF91   C8         INY
-     AF92   D0 F7      BNE &AF8B
-     AF94   EE 8D 4F   INC &4F8D
-     AF97   EE 90 4F   INC &4F90
-     AF9A   CA         DEX
-     AF9B   D0 EE      BNE &AF8B
-     AF9D   60         RTS
+     B08B   B9 00 20   LDA &2000,Y
+     B08E   99 00 80   STA &8000,Y
+     B091   C8         INY
+     B092   D0 F7      BNE &B08B
+     B094   EE 8D 50   INC &508D
+     B097   EE 90 50   INC &5090
+     B09A   CA         DEX
+     B09B   D0 EE      BNE &B08B
+     B09D   60         RTS
 .loaderEnd
-     AF9E
+     B09E
 
 
 
@@ -1012,11 +1028,11 @@ bootstrap     &4800 - &4943 , 324 bytes
 .waitIntVsync
      01A7   24 02      BIT &02
      01A9   10 FC      BPL &01A7
-     01AB   4C A6 47   JMP &47A6
+     01AB   4C AB 47   JMP &47AB
 .waitIntTimer
      01AE   24 02      BIT &02
      01B0   30 FC      BMI &01AE
-     01B2   4C A6 47   JMP &47A6
+     01B2   4C AB 47   JMP &47AB
 .updateObjectTimerPalette
      01B5   F1
      01B6   F6
@@ -1156,9 +1172,9 @@ bootstrap     &4800 - &4943 , 324 bytes
 .updateEnemyTimerExit
      02BD   60         RTS
 .initPlayfieldMiddleMazeTable
-     02BE   E1 44
-     02C0   C8 45
-     02C2   AF 46
+     02BE   E6 44
+     02C0   CD 45
+     02C2   B4 46
 .initPlayfieldMiddleTilesLeft
      02C4   00
      02C5   01
@@ -2500,9 +2516,9 @@ bootstrap     &4800 - &4943 , 324 bytes
      0C26   20 E5 1B   JSR &1BE5
      0C29   A5 86      LDA &86
      0C2B   A8         TAY
-     0C2C   B9 8B 43   LDA &438B,Y
+     0C2C   B9 8C 43   LDA &438C,Y
      0C2F   8D 4A 0C   STA &0C4A
-     0C32   B9 36 44   LDA &4436,Y
+     0C32   B9 39 44   LDA &4439,Y
      0C35   8D 4B 0C   STA &0C4B
 .drawSpriteColumn
      0C38   A5 88      LDA &88
@@ -8480,403 +8496,408 @@ bootstrap     &4800 - &4943 , 324 bytes
      4388   88
      4389   97
      438A   A6
+     438B   B5
 .spriteImgAddrLo
-     438B   8E
-     438C   C0
-     438D   F2
-     438E   24
-     438F   56
-     4390   88
-     4391   BA
-     4392   EC
-     4393   1E
-     4394   50
-     4395   82
-     4396   B4
-     4397   E6
-     4398   18
-     4399   4A
-     439A   7C
-     439B   AE
-     439C   E0
-     439D   12
-     439E   44
-     439F   76
-     43A0   A8
-     43A1   DA
-     43A2   0C
-     43A3   3E
-     43A4   70
-     43A5   A2
-     43A6   D4
-     43A7   06
-     43A8   38
-     43A9   6A
-     43AA   9C
-     43AB   E2
-     43AC   28
-     43AD   6E
-     43AE   B4
-     43AF   FA
-     43B0   40
-     43B1   86
-     43B2   CC
-     43B3   12
-     43B4   58
-     43B5   9E
-     43B6   E4
-     43B7   2A
-     43B8   70
-     43B9   B6
-     43BA   FC
-     43BB   42
-     43BC   88
-     43BD   CE
-     43BE   14
-     43BF   5A
-     43C0   A0
-     43C1   E6
-     43C2   2C
-     43C3   72
-     43C4   B8
-     43C5   FE
-     43C6   44
-     43C7   8A
-     43C8   D0
-     43C9   16
-     43CA   5C
-     43CB   A2
-     43CC   E8
-     43CD   2E
-     43CE   74
-     43CF   BA
-     43D0   00
-     43D1   46
-     43D2   8C
-     43D3   D2
-     43D4   18
-     43D5   5E
-     43D6   A4
-     43D7   EA
-     43D8   30
-     43D9   76
-     43DA   BC
-     43DB   02
-     43DC   48
-     43DD   8E
-     43DE   D4
-     43DF   1A
-     43E0   60
-     43E1   A6
-     43E2   EC
-     43E3   32
-     43E4   78
-     43E5   BE
-     43E6   04
-     43E7   4A
-     43E8   90
-     43E9   D6
-     43EA   1C
-     43EB   62
-     43EC   A8
-     43ED   EE
-     43EE   34
-     43EF   7A
-     43F0   C0
-     43F1   06
-     43F2   4C
-     43F3   92
-     43F4   D8
-     43F5   1E
-     43F6   64
-     43F7   AA
-     43F8   F0
-     43F9   36
-     43FA   7C
-     43FB   C2
-     43FC   08
-     43FD   4E
-     43FE   94
-     43FF   DA
-     4400   20
-     4401   66
-     4402   AC
-     4403   F2
-     4404   38
-     4405   7E
-     4406   C4
-     4407   0A
-     4408   50
-     4409   96
-     440A   DC
-     440B   22
-     440C   68
-     440D   AE
-     440E   F4
-     440F   3A
-     4410   80
-     4411   C6
-     4412   0C
-     4413   52
-     4414   98
-     4415   DE
-     4416   24
-     4417   6A
-     4418   B0
-     4419   F6
-     441A   3C
-     441B   82
-     441C   C8
-     441D   0E
-     441E   54
-     441F   9A
-     4420   E0
-     4421   26
-     4422   6C
-     4423   B2
-     4424   F8
-     4425   3E
-     4426   84
-     4427   CA
-     4428   10
-     4429   56
-     442A   9C
-     442B   E2
-     442C   28
-     442D   6E
-     442E   B4
-     442F   FA
-     4430   40
-     4431   86
-     4432   CC
-     4433   12
-     4434   58
-     4435   9E
+     438C   8E
+     438D   C0
+     438E   F2
+     438F   24
+     4390   56
+     4391   88
+     4392   BA
+     4393   EC
+     4394   1E
+     4395   50
+     4396   82
+     4397   B4
+     4398   E6
+     4399   18
+     439A   4A
+     439B   7C
+     439C   AE
+     439D   E0
+     439E   12
+     439F   44
+     43A0   76
+     43A1   A8
+     43A2   DA
+     43A3   0C
+     43A4   3E
+     43A5   70
+     43A6   A2
+     43A7   D4
+     43A8   06
+     43A9   38
+     43AA   6A
+     43AB   9C
+     43AC   E2
+     43AD   28
+     43AE   6E
+     43AF   B4
+     43B0   FA
+     43B1   40
+     43B2   86
+     43B3   CC
+     43B4   12
+     43B5   58
+     43B6   9E
+     43B7   E4
+     43B8   2A
+     43B9   70
+     43BA   B6
+     43BB   FC
+     43BC   42
+     43BD   88
+     43BE   CE
+     43BF   14
+     43C0   5A
+     43C1   A0
+     43C2   E6
+     43C3   2C
+     43C4   72
+     43C5   B8
+     43C6   FE
+     43C7   44
+     43C8   8A
+     43C9   D0
+     43CA   16
+     43CB   5C
+     43CC   A2
+     43CD   E8
+     43CE   2E
+     43CF   74
+     43D0   BA
+     43D1   00
+     43D2   46
+     43D3   8C
+     43D4   D2
+     43D5   18
+     43D6   5E
+     43D7   A4
+     43D8   EA
+     43D9   30
+     43DA   76
+     43DB   BC
+     43DC   02
+     43DD   48
+     43DE   8E
+     43DF   D4
+     43E0   1A
+     43E1   60
+     43E2   A6
+     43E3   EC
+     43E4   32
+     43E5   78
+     43E6   BE
+     43E7   04
+     43E8   4A
+     43E9   90
+     43EA   D6
+     43EB   1C
+     43EC   62
+     43ED   A8
+     43EE   EE
+     43EF   34
+     43F0   7A
+     43F1   C0
+     43F2   06
+     43F3   4C
+     43F4   92
+     43F5   D8
+     43F6   1E
+     43F7   64
+     43F8   AA
+     43F9   F0
+     43FA   36
+     43FB   7C
+     43FC   C2
+     43FD   08
+     43FE   4E
+     43FF   94
+     4400   DA
+     4401   20
+     4402   66
+     4403   AC
+     4404   F2
+     4405   38
+     4406   7E
+     4407   C4
+     4408   0A
+     4409   50
+     440A   96
+     440B   DC
+     440C   22
+     440D   68
+     440E   AE
+     440F   F4
+     4410   3A
+     4411   80
+     4412   C6
+     4413   0C
+     4414   52
+     4415   98
+     4416   DE
+     4417   24
+     4418   6A
+     4419   B0
+     441A   F6
+     441B   3C
+     441C   82
+     441D   C8
+     441E   0E
+     441F   54
+     4420   9A
+     4421   E0
+     4422   26
+     4423   6C
+     4424   B2
+     4425   F8
+     4426   3E
+     4427   84
+     4428   CA
+     4429   10
+     442A   56
+     442B   9C
+     442C   E2
+     442D   28
+     442E   6E
+     442F   B4
+     4430   FA
+     4431   40
+     4432   86
+     4433   CC
+     4434   12
+     4435   58
+     4436   9E
+     4437   12
+     4438   2A
 .spriteImgAddrHi
-     4436   80
-     4437   80
-     4438   80
-     4439   81
-     443A   81
-     443B   81
+     4439   80
+     443A   80
+     443B   80
      443C   81
      443D   81
-     443E   82
-     443F   82
-     4440   82
+     443E   81
+     443F   81
+     4440   81
      4441   82
      4442   82
-     4443   83
-     4444   83
-     4445   83
+     4443   82
+     4444   82
+     4445   82
      4446   83
      4447   83
-     4448   84
-     4449   84
-     444A   84
+     4448   83
+     4449   83
+     444A   83
      444B   84
      444C   84
-     444D   85
-     444E   85
-     444F   85
+     444D   84
+     444E   84
+     444F   84
      4450   85
      4451   85
-     4452   86
-     4453   86
-     4454   86
+     4452   85
+     4453   85
+     4454   85
      4455   86
      4456   86
-     4457   87
-     4458   87
-     4459   87
+     4457   86
+     4458   86
+     4459   86
      445A   87
-     445B   88
-     445C   88
-     445D   88
-     445E   89
-     445F   89
-     4460   89
+     445B   87
+     445C   87
+     445D   87
+     445E   88
+     445F   88
+     4460   88
      4461   89
-     4462   8A
-     4463   8A
-     4464   8A
+     4462   89
+     4463   89
+     4464   89
      4465   8A
-     4466   8B
-     4467   8B
-     4468   8B
-     4469   8C
-     446A   8C
-     446B   8C
+     4466   8A
+     4467   8A
+     4468   8A
+     4469   8B
+     446A   8B
+     446B   8B
      446C   8C
-     446D   8D
-     446E   8D
-     446F   8D
+     446D   8C
+     446E   8C
+     446F   8C
      4470   8D
-     4471   8E
-     4472   8E
-     4473   8E
-     4474   8F
-     4475   8F
-     4476   8F
+     4471   8D
+     4472   8D
+     4473   8D
+     4474   8E
+     4475   8E
+     4476   8E
      4477   8F
-     4478   90
-     4479   90
-     447A   90
-     447B   91
-     447C   91
-     447D   91
+     4478   8F
+     4479   8F
+     447A   8F
+     447B   90
+     447C   90
+     447D   90
      447E   91
-     447F   92
-     4480   92
-     4481   92
+     447F   91
+     4480   91
+     4481   91
      4482   92
-     4483   93
-     4484   93
-     4485   93
-     4486   94
-     4487   94
-     4488   94
+     4483   92
+     4484   92
+     4485   92
+     4486   93
+     4487   93
+     4488   93
      4489   94
-     448A   95
-     448B   95
-     448C   95
+     448A   94
+     448B   94
+     448C   94
      448D   95
-     448E   96
-     448F   96
-     4490   96
-     4491   97
-     4492   97
-     4493   97
+     448E   95
+     448F   95
+     4490   95
+     4491   96
+     4492   96
+     4493   96
      4494   97
-     4495   98
-     4496   98
-     4497   98
+     4495   97
+     4496   97
+     4497   97
      4498   98
-     4499   99
-     449A   99
-     449B   99
-     449C   9A
-     449D   9A
-     449E   9A
+     4499   98
+     449A   98
+     449B   98
+     449C   99
+     449D   99
+     449E   99
      449F   9A
-     44A0   9B
-     44A1   9B
-     44A2   9B
+     44A0   9A
+     44A1   9A
+     44A2   9A
      44A3   9B
-     44A4   9C
-     44A5   9C
-     44A6   9C
-     44A7   9D
-     44A8   9D
-     44A9   9D
+     44A4   9B
+     44A5   9B
+     44A6   9B
+     44A7   9C
+     44A8   9C
+     44A9   9C
      44AA   9D
-     44AB   9E
-     44AC   9E
-     44AD   9E
+     44AB   9D
+     44AC   9D
+     44AD   9D
      44AE   9E
-     44AF   9F
-     44B0   9F
-     44B1   9F
-     44B2   A0
-     44B3   A0
-     44B4   A0
+     44AF   9E
+     44B0   9E
+     44B1   9E
+     44B2   9F
+     44B3   9F
+     44B4   9F
      44B5   A0
-     44B6   A1
-     44B7   A1
-     44B8   A1
+     44B6   A0
+     44B7   A0
+     44B8   A0
      44B9   A1
-     44BA   A2
-     44BB   A2
-     44BC   A2
-     44BD   A3
-     44BE   A3
-     44BF   A3
+     44BA   A1
+     44BB   A1
+     44BC   A1
+     44BD   A2
+     44BE   A2
+     44BF   A2
      44C0   A3
-     44C1   A4
-     44C2   A4
-     44C3   A4
+     44C1   A3
+     44C2   A3
+     44C3   A3
      44C4   A4
-     44C5   A5
-     44C6   A5
-     44C7   A5
-     44C8   A6
-     44C9   A6
-     44CA   A6
+     44C5   A4
+     44C6   A4
+     44C7   A4
+     44C8   A5
+     44C9   A5
+     44CA   A5
      44CB   A6
-     44CC   A7
-     44CD   A7
-     44CE   A7
+     44CC   A6
+     44CD   A6
+     44CE   A6
      44CF   A7
-     44D0   A8
-     44D1   A8
-     44D2   A8
-     44D3   A9
-     44D4   A9
-     44D5   A9
+     44D0   A7
+     44D1   A7
+     44D2   A7
+     44D3   A8
+     44D4   A8
+     44D5   A8
      44D6   A9
-     44D7   AA
-     44D8   AA
-     44D9   AA
+     44D7   A9
+     44D8   A9
+     44D9   A9
      44DA   AA
-     44DB   AB
-     44DC   AB
-     44DD   AB
-     44DE   AC
-     44DF   AC
-     44E0   AC
+     44DB   AA
+     44DC   AA
+     44DD   AA
+     44DE   AB
+     44DF   AB
+     44E0   AB
+     44E1   AC
+     44E2   AC
+     44E3   AC
+     44E4   AC
+     44E5   AC
 .mapData
 .map1
-     44E1
+     44E6
 .map2
-     45C8
+     45CD
 .map3
-     46AF
+     46B4
 .joystickBitSet
-     4796   04
-     4797   00
-     4798   00
-     4799   08
-     479A   10
-     479B   00
+     479B   04
      479C   00
-     479D   02
+     479D   00
+     479E   08
+     479F   10
+     47A0   00
+     47A1   00
+     47A2   02
 .joystickBitClear
-     479E   F3
-     479F   F3
-     47A0   F3
-     47A1   F3
-     47A2   ED
-     47A3   ED
-     47A4   ED
-     47A5   ED
+     47A3   F3
+     47A4   F3
+     47A5   F3
+     47A6   F3
+     47A7   ED
+     47A8   ED
+     47A9   ED
+     47AA   ED
 .joystickAnalogue
-     47A6   AD 33 01   LDA &0133
-     47A9   C9 01      CMP #&01
-     47AB   D0 25      BNE &47D2
+     47AB   AD 33 01   LDA &0133
+     47AE   C9 01      CMP #&01
+     47B0   D0 25      BNE &47D7
 .joystickAnalogueChannelRead
-     47AD   AD 00 FF   LDA &FF00
-     47B0   85 BE      STA &BE
-.joystickAnalogueControlRead
      47B2   AD 00 FF   LDA &FF00
-     47B5   29 01      AND #&01
-     47B7   49 01      EOR #&01
+     47B5   85 BE      STA &BE
+.joystickAnalogueControlRead
+     47B7   AD 00 FF   LDA &FF00
+     47BA   29 01      AND #&01
+     47BC   49 01      EOR #&01
 .joystickAnalogueControlWrite
-     47B9   8D 00 FF   STA &FF00
-     47BC   4A         LSR A
-     47BD   26 BE      ROL &BE
-     47BF   26 BE      ROL &BE
-     47C1   26 BE      ROL &BE
-     47C3   A5 BE      LDA &BE
-     47C5   29 07      AND #&07
-     47C7   AA         TAX
-     47C8   A5 BD      LDA &BD
-     47CA   3D 9E 47   AND &479E,X
-     47CD   1D 96 47   ORA &4796,X
-     47D0   85 BD      STA &BD
+     47BE   8D 00 FF   STA &FF00
+     47C1   4A         LSR A
+     47C2   26 BE      ROL &BE
+     47C4   26 BE      ROL &BE
+     47C6   26 BE      ROL &BE
+     47C8   A5 BE      LDA &BE
+     47CA   29 07      AND #&07
+     47CC   AA         TAX
+     47CD   A5 BD      LDA &BD
+     47CF   3D A3 47   AND &47A3,X
+     47D2   1D 9B 47   ORA &479B,X
+     47D5   85 BD      STA &BD
 .joystickAnalogueExit
-     47D2   60         RTS
+     47D7   60         RTS
 .programEnd
-     47D3
+     47D8
 
 
 
@@ -8972,27 +8993,27 @@ bootstrap     &4800 - &4943 , 324 bytes
      48BA   C9 06      CMP #&06
      48BC   F0 1C      BEQ &48DA
      48BE   A9 C1      LDA #&C1
-     48C0   8D AE 67   STA &67AE
+     48C0   8D B3 67   STA &67B3
      48C3   A9 FE      LDA #&FE
-     48C5   8D AF 67   STA &67AF
+     48C5   8D B4 67   STA &67B4
      48C8   A9 C0      LDA #&C0
-     48CA   8D B3 67   STA &67B3
-     48CD   8D BA 67   STA &67BA
+     48CA   8D B8 67   STA &67B8
+     48CD   8D BF 67   STA &67BF
      48D0   A9 FE      LDA #&FE
-     48D2   8D B4 67   STA &67B4
-     48D5   8D BB 67   STA &67BB
+     48D2   8D B9 67   STA &67B9
+     48D5   8D C0 67   STA &67C0
      48D8   D0 1A      BNE &48F4
 .bootstrapJoystickAnalogueMaster
      48DA   A9 19      LDA #&19
-     48DC   8D AE 67   STA &67AE
+     48DC   8D B3 67   STA &67B3
      48DF   A9 FE      LDA #&FE
-     48E1   8D AF 67   STA &67AF
+     48E1   8D B4 67   STA &67B4
      48E4   A9 18      LDA #&18
-     48E6   8D B3 67   STA &67B3
-     48E9   8D BA 67   STA &67BA
+     48E6   8D B8 67   STA &67B8
+     48E9   8D BF 67   STA &67BF
      48EC   A9 FE      LDA #&FE
-     48EE   8D B4 67   STA &67B4
-     48F1   8D BB 67   STA &67BB
+     48EE   8D B9 67   STA &67B9
+     48F1   8D C0 67   STA &67C0
 .bootstrapRelocate
      48F4   A2 48      LDX #&48
      48F6   A0 00      LDY #&00
@@ -9016,11 +9037,11 @@ bootstrap     &4800 - &4943 , 324 bytes
      491A   A2 00      LDX #&00
 .relocateProgramMapData
      491C   BD 00 78   LDA &7800,X
-     491F   9D E1 44   STA &44E1,X
+     491F   9D E6 44   STA &44E6,X
      4922   BD 00 79   LDA &7900,X
-     4925   9D C8 45   STA &45C8,X
+     4925   9D CD 45   STA &45CD,X
      4928   BD 00 7A   LDA &7A00,X
-     492B   9D AF 46   STA &46AF,X
+     492B   9D B4 46   STA &46B4,X
      492E   E8         INX
      492F   E0 E7      CPX #&E7
      4931   D0 E9      BNE &491C

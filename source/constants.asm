@@ -15,14 +15,10 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; important constants
+; game constants
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 magicNumber		= &69			; used for random seed, validation generation, swr test
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; game constants
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 spritesTotal		= 5			; total number of sprites in game (1 for lady bug and 4 for enemies)
 
@@ -106,6 +102,9 @@ centerBoxY		= 88
 vegetableScoreX		= 10			; tile coordinates
 vegetableScoreY		= 12
 
+lowerDiamondX		= 20			; position in pixels of playfield lower diamond available indicator
+lowerDiamondY		= 197
+
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -128,6 +127,8 @@ joystickDown		= %00000100		; digital joystick down
 joystickUp		= %00001000		; digital joystick up
 joystickRight		= %00010000		; digital joystick right
 
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; playerInput bit assignments
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -138,6 +139,7 @@ keyBitDown		= %00000100
 keyBitUp		= %00001000
 keyBitRight		= %00010000
 keyBitEsc		= %00100000
+
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -231,7 +233,7 @@ opcodeRTI		= &40			; 6502 opcode for RTI instruction (used in clean reset code)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 dummy8			= &ff			; dummy byte place holder (used in self modifying code in multiple functions)
-dummy16			= &ff00
+dummy16			= &ff00			; dummy word place holder (used in self modifying code in multiple functions)
 
 
 
@@ -301,7 +303,7 @@ mapTileTimerBottomRight	= &10
 ; maze turnstile tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-mapTileVerticalBar	= &16			; maze tile
+mapTileVerticalBar	= &16			; vertical bar tile used to redraw center box left and right sides after vegetable bonus display
 
 mapTileTurnstileCV	= &1c			; turnstile tiles
 mapTileTurnstileCH	= &1d
@@ -379,9 +381,7 @@ extraTileFlower3BR	= 89
 ; name registration cursor box tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-						; name registration letter box
-
-registrationTL		= 90
+registrationTL		= 90			; name registration letter box
 registrationTR		= 91
 registrationBL		= 92
 registrationBR		= 93
@@ -393,12 +393,40 @@ registrationBH		= 97
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; tile size constants
+; sprite reference
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+spriteVegetables	= 0
+spriteDiamond		= 18
+spritePoints		= 19
+spriteLadybug		= 31
+spriteEnemy1		= 46
+spriteEnemy2		= 61
+spriteEnemy3		= 76
+spriteEnemy4		= 91
+spriteEnemy5		= 106
+spriteEnemy6		= 121
+spriteEnemy7		= 136
+spriteEnemy8		= 151
+spriteAngel0		= 166
+spriteLowerDiamond	= 168
+spriteAngel1		= 170
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; tile/sprite sizes and bytes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 mapTileWidth		= 6
 mapTileHeight		= 8
 mapTileBytes		= mapTileHeight * mapTileWidth / 2 
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+diamondTileWidth	= 8
+diamondTileHeight	= 6
+diamondTileBytes	= diamondTileHeight * diamondTileWidth / 2 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -427,18 +455,28 @@ miniFontBytes		= miniFontHeight * miniFontWidth / 2
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; image base (index) for ladybug, enemies and angel
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+imgLadybug		= 0
+imgEnemies		= 1
+imgAngel		= 9
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; screen constants
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 screenWidth		= 69			; screen is 69 bytes wide (138 pixels)
-screenHeight		= 26			; screen is 26 * 8 lines high (208 raster lines)
+screenHeight		= 26			; screen is 26 rows of 8 lines high (208 raster lines)
 
+						; start address of screen
 screenAddr		= &8000 - screenWidth * screenHeight * 8
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; character consants
+; screen character sizes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 column			= 8			; 8 bytes to next column
@@ -487,17 +525,17 @@ palObject		= &f0
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; pixel values for colors
+; pixel mask values for colors
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-pixels0			= &00			; pixel mask color values
-pixels1			= &03
-pixels2			= &0c
-pixels3			= &0f
-pixels4			= &30
-pixels5			= &33
-pixels6			= &3c
-pixels7			= &3f
+pixelsBlack		= &00			; pixel mask color values used for text drawing and screen erase
+pixelsRed		= &03
+pixelsGreen		= &0c
+pixelsYellow		= &0f
+pixelsBlue		= &30
+pixelsMagenta		= &33
+pixelsCyan		= &3c
+pixelsWhite		= &3f
 pixelsMultiplier0	= &c0
 pixelsMultiplier1	= &c3
 pixelsSpecial0		= &cc
@@ -513,15 +551,15 @@ pixelsObject		= &ff
 ; os vectors and functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-irqAcc			= &fc			; irq1 bbc os stores accumilator here
-irqVector		= &204			; irq1 jump vector
-fx200			= &0258			; *fx 200 value
-breakVector		= &0287			; break key reset jump
-resetVector		= &fffc			; os reset vector
-bankSelectCopy		= &f4			; os stores current bank copy here
+irqAcc			= &fc			; bbc os irq1 interrupt stores accumilator here
+irqVector		= &204			; bbc os irq1 interrupt jumps to this vector
+fx200			= &0258			; bbc os reads the *fx 200 value from here
+breakVector		= &0287			; bbc os jumps to this vector on break key reset
+resetVector		= &fffc			; bbc os reset vector
+bankSelectCopy		= &f4			; bbc os stores current sideways bank copy here
 bankSelect		= &fe30			; bank select register for acorn/other
 bankSelectSolidisk	= &fe32			; bank select register for solidisk
-bankSelectWatford	= &ff30			; bank select register for watford electronics during write operations (ff30 to ffef)
+bankSelectWatford	= &ff30			; bank select register (&ff30 - &ff3f) for write operations with watford electronics sideways ram
 
 acccon			= &fe34			; access control register
 osbyte			= &fff4			; os function
@@ -551,8 +589,8 @@ progReloc		= &0000			; relocation address of program
 progLoad		= &2000			; load address of program
 progOffset		= progLoad - progReloc	; relocation offset
 
-swramStart		= pageHigh		; high/sideways ram, keep it b+ compatible (12K)
-swramEnd		= pageHigh + &3000
+swramStart		= pageHigh		; high/sideways ram start address
+swramEnd		= pageHigh + &3000	; high/sideways ram end address (12K only for compatibility with B+ 64K model)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -570,6 +608,7 @@ map3Load		= &7a00
 
 pageEditor		= &2b00			; editor code runs at this address
 pageEditorCanvas	= &f200			; temporary canvas address to assemble code
+
 						; offset
 pageEditorOffset	= pageEditorCanvas - pageEditor
 

@@ -204,7 +204,7 @@ PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"to spe
 PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for 2 extra lives";
 
 PRINT TAB(2,17);CHR$(131);"Collect";CHR$(129);"red letters";CHR$(131);"to spell";
-PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(131);"for";CHR$(135);"200,000 points";CHR$(131);"plus a";
+PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(131);"for";CHR$(135);"200000 points";CHR$(131);"plus a";
 PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(131);"lasting 6 rounds";
 
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
@@ -225,7 +225,7 @@ NEXT R%
 PRINT TAB(34,3);CHR$(131);"2";:*FX 19
 
 PRINT TAB(2,5);CHR$(133);"A special diamond bonus worth";:*FX 19
-PRINT TAB(2,6);CHR$(135);"1,000,000 points";CHR$(133);"will be awarded if";:*FX 19
+PRINT TAB(2,6);CHR$(135);"1000000 points";CHR$(133);"will be awarded if";:*FX 19
 PRINT TAB(2,7);CHR$(133);"you can reach";CHR$(131);"level 6";CHR$(133);"while only";:*FX 19
 PRINT TAB(2,8);CHR$(133);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
 PRINT TAB(2,9);CHR$(133);"and";CHR$(131);"without losing a life";:*FX 19
