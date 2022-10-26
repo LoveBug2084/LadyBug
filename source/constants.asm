@@ -302,8 +302,6 @@ mapTileTimerBottomRight	= &10
 ; maze turnstile tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-mapTileVerticalBar	= &16			; vertical bar tile used to redraw center box left and right sides after vegetable bonus display
-
 mapTileTurnstileCV	= &1c			; turnstile tiles
 mapTileTurnstileCH	= &1d
 mapTileTurnstileD	= &1e

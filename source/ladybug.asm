@@ -3898,13 +3898,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #hi(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
 	sta drawMapTileAddr + 1
 	
-	lda #mapTileVerticalBar			; draw vertical wall tile
+	lda tileMap + 11 * 23 + 10		; redraw tiles that were over written by vegetable bonus score
 	jsr drawMapTile
 	
-	lda #mapTileBlank			; draw blank tile
+	lda tileMap + 11 * 23 + 11
 	jsr drawMapTile
 	
-	lda #mapTileVerticalBar			; draw vertical wall tile
+	lda tileMap + 11 * 23 + 12
 	jsr drawMapTile
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
