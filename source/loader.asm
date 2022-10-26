@@ -191,7 +191,7 @@
 
 	incbin "img-diamond.bin"		; load diamond sprite set into memory
 	
-.diamondFiller					; fill remainding space so that 2nd part angel address is correctly aligned
+.diamondFiller					; fill remaining space so that 2nd part angel address is correctly aligned
 	skip spriteTileBytes - (2 * diamondTileBytes)
 
 .angel1Bin
