@@ -9071,101 +9071,116 @@ bootstrap     &4800 - &4943 , 324 bytes
 ----------------------------------------------------
 
 .editorStart
-     F200
+     F300
 .editorMapDirty
-     F200   00
-     F201   00
-     F202   00
-     F203   00
+     F300   00
+     F301   00
+     F302   00
+     F303   00
 .editorMapDirtyOld
-     F204   00
-     F205   00
-     F206   00
-     F207   00
+     F304   00
+     F305   00
+     F306   00
+     F307   00
 .editorTileMirror
-     F208   00
-     F209   01
-     F20A   02
-     F20B   03
-     F20C   04
-     F20D   05
-     F20E   07
-     F20F   06
-     F210   09
-     F211   08
-     F212   0B
-     F213   0A
-     F214   0C
-     F215   0D
-     F216   0E
-     F217   0F
-     F218   11
-     F219   10
+     F308   00
+     F309   01
+     F30A   02
+     F30B   03
+     F30C   04
+     F30D   05
+     F30E   07
+     F30F   06
+     F310   09
+     F311   08
+     F312   0B
+     F313   0A
+     F314   0C
+     F315   0D
+     F316   0E
+     F317   0F
+     F318   11
+     F319   10
 .editorDrawTile
-     F21A   0A         ASL A
-     F21B   0A         ASL A
-     F21C   0A         ASL A
-     F21D   85 72      STA &72
-     F21F   18         CLC
-     F220   69 83      ADC #&83
-     F222   85 70      STA &70
-     F224   A9 00      LDA #&00
-     F226   69 2B      ADC #&2B
-     F228   85 71      STA &71
-     F22A   A5 72      LDA &72
-     F22C   18         CLC
-     F22D   65 70      ADC &70
-     F22F   85 70      STA &70
-     F231   90 02      BCC &F235
-     F233   E6 71      INC &71
-     F235   A5 72      LDA &72
-     F237   18         CLC
-     F238   65 70      ADC &70
-     F23A   85 70      STA &70
-     F23C   90 02      BCC &F240
-     F23E   E6 71      INC &71
-     F240   A0 17      LDY #&17
+     F31A   0A         ASL A
+     F31B   0A         ASL A
+     F31C   0A         ASL A
+     F31D   85 72      STA &72
+     F31F   18         CLC
+     F320   69 83      ADC #&83
+     F322   85 70      STA &70
+     F324   A9 00      LDA #&00
+     F326   69 2B      ADC #&2B
+     F328   85 71      STA &71
+     F32A   A5 72      LDA &72
+     F32C   18         CLC
+     F32D   65 70      ADC &70
+     F32F   85 70      STA &70
+     F331   90 02      BCC &F335
+     F333   E6 71      INC &71
+     F335   A5 72      LDA &72
+     F337   18         CLC
+     F338   65 70      ADC &70
+     F33A   85 70      STA &70
+     F33C   90 02      BCC &F340
+     F33E   E6 71      INC &71
+     F340   A0 17      LDY #&17
 .editorDrawTileLoop
-     F242   B1 70      LDA (&70),Y
-     F244   91 74      STA (&74),Y
-     F246   88         DEY
-     F247   10 F9      BPL &F242
-     F249   18         CLC
-     F24A   A9 18      LDA #&18
-     F24C   65 74      ADC &74
-     F24E   85 74      STA &74
-     F250   A9 00      LDA #&00
-     F252   65 75      ADC &75
-     F254   85 75      STA &75
-     F256   60         RTS
+     F342   B1 70      LDA (&70),Y
+     F344   91 74      STA (&74),Y
+     F346   88         DEY
+     F347   10 F9      BPL &F342
+     F349   18         CLC
+     F34A   A9 18      LDA #&18
+     F34C   65 74      ADC &74
+     F34E   85 74      STA &74
+     F350   A9 00      LDA #&00
+     F352   65 75      ADC &75
+     F354   85 75      STA &75
+     F356   60         RTS
 .editorDrawLine
-     F257   A5 78      LDA &78
-     F259   8D 6A 2B   STA &2B6A
-     F25C   8D 77 2B   STA &2B77
-     F25F   A5 79      LDA &79
-     F261   8D 6B 2B   STA &2B6B
-     F264   8D 78 2B   STA &2B78
-     F267   A2 00      LDX #&00
+     F357   A5 78      LDA &78
+     F359   8D 6A 2B   STA &2B6A
+     F35C   8D 77 2B   STA &2B77
+     F35F   A5 79      LDA &79
+     F361   8D 6B 2B   STA &2B6B
+     F364   8D 78 2B   STA &2B78
+     F367   A2 00      LDX #&00
 .editorDrawLineLeft
-     F269   BD 00 FF   LDA &FF00,X
-     F26C   20 1A 2B   JSR &2B1A
-     F26F   E8         INX
-     F270   E0 0B      CPX #&0B
-     F272   D0 F5      BNE &F269
-     F274   A2 09      LDX #&09
+     F369   BD 00 FF   LDA &FF00,X
+     F36C   20 1A 2B   JSR &2B1A
+     F36F   E8         INX
+     F370   E0 0B      CPX #&0B
+     F372   D0 F5      BNE &F369
+     F374   A2 09      LDX #&09
 .editorDrawLineRight
-     F276   BC 00 FF   LDY &FF00,X
-     F279   B9 08 2B   LDA &2B08,Y
-     F27C   20 1A 2B   JSR &2B1A
-     F27F   CA         DEX
-     F280   10 F4      BPL &F276
-     F282   60         RTS
+     F376   BC 00 FF   LDY &FF00,X
+     F379   B9 08 2B   LDA &2B08,Y
+     F37C   20 1A 2B   JSR &2B1A
+     F37F   CA         DEX
+     F380   10 F4      BPL &F376
+     F382   60         RTS
 .editorEnd
-     F283
+     F383
+
+
+
+----------------------------------------------------
+ bonus.asm
+----------------------------------------------------
+
+.bonusBin
+     F200   02
+     F201   02
+     F202   06
+     F203   10
+     F204   06
+.bonusBinEnd
 
 
 
 Saving file '!Boot'
+Saving file '_Bonus'
 Saving file '_Conf'
 Saving file '_Maps'
 Saving file 'Loader'

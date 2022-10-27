@@ -3627,7 +3627,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	sed					; bcd mode
 
 	clc					; add the diamond bonus score to the top 2 digits of score
-	lda #diamondBonusScore
+	lda #bonusDiamondScore
 	bcc addScoreTop
 
 
@@ -3641,7 +3641,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	sed					; bcd mode
 
 	clc					; add the special bonus score to the top 2 digits of score
-	lda #specialBonusScore
+	lda #bonusSpecialScore
 	bcc addScoreTop
 
 
@@ -6611,7 +6611,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sed					; bcd mode
 
 	clc					; add the shield bonus to shield
-	lda #specialBonusShield
+	lda #bonusSpecialShield
 	adc shield
 
 	bcc checkBonusSpecialShieldUpdate	; if shield > 99
@@ -6650,7 +6650,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sed					; bcd mode
 
 	clc					; add bonus lives
-	lda #extraBonusLives
+	lda #bonusExtraLives
 	adc lives
 
 	bcc checkBonusExtraLives		; if lives > 99
@@ -7769,7 +7769,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #pixelsWhite
 	sta drawChrColor
 	
-	lda #specialBonusScore + '0'
+	lda #bonusSpecialScore + '0'
 	jsr drawChr
 	lda #0
 	jsr drawBcd
@@ -7783,7 +7783,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 18 * chrRow
 	equs "PTS", &ff
 
-	if specialBonusShield = 1
+	if bonusSpecialShield = 1
 
 	jsr drawString
 	equb pixelsYellow
@@ -7823,7 +7823,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
 	equb &ff
 
-	lda #specialBonusShield + '0'
+	lda #bonusSpecialShield + '0'
 	jsr drawChr
 	
 	jsr drawString
@@ -7868,10 +7868,10 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #pixelsWhite
 	sta drawChrColor
 
-	lda #extraBonusLives + '0'
+	lda #bonusExtraLives + '0'
 	jsr drawChr
 
-	if extraBonusLives = 1
+	if bonusExtraLives = 1
 	
 	jsr drawString
 	equb pixelsYellow
@@ -7966,7 +7966,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #pixelsWhite
 	sta drawChrColor
 	
-	lda #diamondBonusScore
+	lda #bonusDiamondScore
 	jsr drawBcd
 	lda #0
 	jsr drawBcd

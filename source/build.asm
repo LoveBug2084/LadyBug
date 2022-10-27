@@ -38,6 +38,7 @@
 
 	include "editor.asm"			; tile drawing functions for the basic map editor
 
+	include "bonus.asm"			; bonus settings for boot.bas to display
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -47,6 +48,8 @@
 	save		"!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 
 	putbasic	"boot.bas", "Boot"
+
+	save		"_Bonus", bonusBin, bonusBinEnd, &ffffff, 0
 
 	save		"_Conf", config, configEnd, &ffffff, 0
 

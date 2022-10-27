@@ -15,11 +15,11 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Map						default map names
+; bonus settings for boot.bas
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
-	print " map.asm"
+	print " bonus.asm"
 	print "----------------------------------------------------"
 	print
 
@@ -27,18 +27,25 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org canvasMapNames			; temporary space for creating Maps file
+	org canvasBonusSettings			; temporary canvas for creating _Bonus file
+	
+.bonusBin
+
+	equb bonusExtraLives
+	
+	equb bonusSpecialScore
+	equb bonusSpecialShield
+	
+	equb bonusDiamondScore
+	equb bonusDiamondLevel
+	
+.bonusBinEnd
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.mapFilenames
-
-	equb &00,&05,"1paM_"			; the 3 default maps to load _Map1 _Map2 _Map3
-	equb &00,&05,"2paM_"			; acorns backward style strings for openin/openout
-	equb &00,&05,"3paM_"
-
-.mapFilenamesEnd
-
 	print
 	print
 	print
+	

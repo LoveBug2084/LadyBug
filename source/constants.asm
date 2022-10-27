@@ -18,6 +18,16 @@
 ; game constants
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+bonusSpecialScore	= &02			; special bonus 200,000 points
+bonusSpecialShield	= 6			; special bonus skull shield for 6 levels
+
+bonusExtraLives		= 2			; extra bonus 2 lives
+
+bonusDiamondScore	= &10			; diamond bonus score 1,000,000 points
+bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 magicNumber		= &69			; used for random seed, validation generation, swr test
 
 spritesTotal		= 5			; total number of sprites in game (1 for lady bug and 4 for enemies)
@@ -53,13 +63,6 @@ nameRegTimer		= frame * 1.00		; 1.00 second timer tick speed during name entry
 letterBonusTime		= pause * 1.50		; 1.50 seconds pause during letter bonus sound
 
 bonusTime		= pause * 7.00		; 7.00 seconds special/extra/diamond bonus screen time
-
-specialBonusScore	= &02			; special bonus 200,000 points
-specialBonusShield	= 6			; special bonus skull shield for 6 levels
-
-extraBonusLives		= 2			; extra bonus 2 lives
-
-diamondBonusScore	= &10			; diamond bonus score 1,000,000 points
 
 objectModeCyanTime	= pause * 7.00		; 7.00 second cyan objects
 objectModeRedTime	= pause * 0.60		; 0.60 second red objects
@@ -591,23 +594,26 @@ swramEnd		= pageHigh + &3000	; high/sideways ram end address (12K only for compa
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-pageBoot		= &f000			; temporary canvas address for !Boot file generation
-
-mapNames		= &f100			; temporary canvas address for Maps file generation
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 map1Load		= &7800			; map addresses used by boot.bas to load the 3 maps before running lady bug
 map2Load		= &7900
 map3Load		= &7a00
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
+canvasBoot		= &f000			; temporary canvas address for !Boot file generation
+
+canvasMapNames		= &f100			; temporary canvas address for _Maps file generation
+
+canvasBonusSettings	= &f200			; temporary canvas address for _Bonus file generation
+
+canvasEditor		= &f300			; temporary canvas address to assemble code
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 pageEditor		= &2b00			; editor code runs at this address
-pageEditorCanvas	= &f200			; temporary canvas address to assemble code
 
 						; offset
-pageEditorOffset	= pageEditorCanvas - pageEditor
+pageEditorOffset	= canvasEditor - pageEditor
 
 
 

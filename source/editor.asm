@@ -25,7 +25,7 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org pageEditorCanvas
+	org canvasEditor
 
 .editorStart
 	skip 0					; show this address in listing

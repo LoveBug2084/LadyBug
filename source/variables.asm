@@ -46,8 +46,6 @@
 
 .bonusBitsCopy		skip 2			; storage for working on bonus bits
 
-bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
-
 .bonusDiamondEnable	equb &ff		; diamond bonus is enabled if != 0, initialize here for main menu first run illuminated
 .bonusDiamondActive	skip 1			; diamond bonus is active if != 0
 .bonusSpecialActive	skip 1			; special bonus is active if != 0
