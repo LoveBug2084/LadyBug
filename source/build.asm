@@ -78,7 +78,6 @@
 	incbin		"img-editor-tiles.bin"	; load the image file
 
 						; save the 19 tiles of 12x8 pixels @ 4 pixels per byte (mode 1)
-
 	save		"EditorT", 0, 19 * 12 * 8 / 4, &ffffff, 0
 
 
