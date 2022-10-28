@@ -201,7 +201,7 @@ PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multip
 PRINT TAB(2,12);CHR$(133);"item score values by";CHR$(134);"x2 x3 x5";
 
 PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"to spell";
-PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for ";~Y%;" extra lives";
+PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for";CHR$(133);~Y%;" extra ";:IF Y%=1 THEN PRINT "life"; ELSE PRINT "lives";
 
 PRINT TAB(2,17);CHR$(131);"Collect";CHR$(129);"red letters";CHR$(131);"to spell";
 PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(131);"for";CHR$(135);~X%;"00000 points";CHR$(131);"plus a";
