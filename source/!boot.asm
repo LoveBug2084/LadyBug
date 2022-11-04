@@ -38,6 +38,7 @@
 	equs "*SHADOW 1", 13			; disable shadow ram (generates an error on model B but screen is disabled so it does'nt show)
 	equs "*FX 200 1",13			; disable ESC
 	equs "*FX 4 1",13			; disable cursor editing
+	equs "HIMEM=&7C00", 13			; set himem to non-shadow address
 
 	equb 12					; clear screen
 

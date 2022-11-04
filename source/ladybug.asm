@@ -2010,7 +2010,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	sta lives
 
 	lda #&ff				; clear the special, extra and multiplier bonus flag bits
-	sta bonusBits
+	sta bonusBits + 0
 	sta bonusBits + 1
 
 	sta ladybugEntryEnable			; enable ladybug entry movement animation
@@ -2982,9 +2982,9 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	equw screenAddr + 2 + 16
 	equb &ff
 	
-	lda bonusBits				; copy bonus bits (shifting everything left one bit to drop the unused bit 15)
+	lda bonusBits + 0				; copy bonus bits (shifting everything left one bit to drop the unused bit 15)
 	asl a
-	sta bonusBitsCopy
+	sta bonusBitsCopy + 0
 	lda bonusBits + 1
 	rol a
 	sta bonusBitsCopy + 1
@@ -3014,7 +3014,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	
 .drawPlayfieldUpperTextShiftBits
 
-	asl bonusBitsCopy			; shift to next bonus bit
+	asl bonusBitsCopy + 0			; shift to next bonus bit
 	rol bonusBitsCopy + 1
 
 	inx					; repeat until all chrs done
@@ -3641,7 +3641,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	sed					; bcd mode
 
 	clc					; add the special bonus score to the top 2 digits of score
-	lda #bonusSpecialScore
+	lda #bonusSpecialScore and 15
 	bcc addScoreTop
 
 
@@ -4642,9 +4642,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; clear the x2 x3 x5 flags, clear the score multiplier and the special/extra/diamond active flags
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda bonusBits				; clear the x2 x3 x5 bits of bonusBits
+	lda bonusBits + 0				; clear the x2 x3 x5 bits of bonusBits
 	ora #bonusBitsMultiplier
-	sta bonusBits
+	sta bonusBits + 0
 
 	lda #0					; start with no multiplier
 	sta scoreMultiplier
@@ -5592,11 +5592,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	tay					; use as index for flower tile
 
-	lda drawBonusGraphicsTile, y		; draw top left
+	lda drawRandomFlowerTile, y		; draw top left
 	jsr drawExtraTile
 	iny
 
-	lda drawBonusGraphicsTile,y		; draw top right
+	lda drawRandomFlowerTile,y		; draw top right
 	jsr drawExtraTile
 	iny
 
@@ -5608,11 +5608,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc #hi(chrRow - 2 * chrColumn)
 	sta drawMapTileAddr + 1
 
-	lda drawBonusGraphicsTile, y		; draw bottom left
+	lda drawRandomFlowerTile, y		; draw bottom left
 	jsr drawExtraTile
 	iny
 	
-	lda drawBonusGraphicsTile, y		; draw bottom right
+	lda drawRandomFlowerTile, y		; draw bottom right
 	jsr drawExtraTile
 
 	clc					; move to next row
@@ -5628,6 +5628,15 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda #extraTileLeavesR
 	jmp drawExtraTile
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawRandomFlowerTile				; top left, top right, bottom left, bottom right tiles for the 4 different flower types
+
+	equb extraTileFlower0TL, extraTileFlower0TR, extraTileFlower0BL, extraTileFlower0BR
+	equb extraTileFlower1TL, extraTileFlower1TR, extraTileFlower1BL, extraTileFlower1BR
+	equb extraTileFlower2TL, extraTileFlower2TR, extraTileFlower2BL, extraTileFlower2BR
+	equb extraTileFlower3TL, extraTileFlower3TR, extraTileFlower3BL, extraTileFlower3BR
 
 
 
@@ -6611,7 +6620,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sed					; bcd mode
 
 	clc					; add the shield bonus to shield
-	lda #bonusSpecialShield
+	lda #bonusSpecialShield and 15
 	adc shield
 
 	bcc checkBonusSpecialShieldUpdate	; if shield > 99
@@ -6650,7 +6659,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sed					; bcd mode
 
 	clc					; add bonus lives
-	lda #bonusExtraLives
+	lda #bonusExtraLives and 15
 	adc lives
 
 	bcc checkBonusExtraLives		; if lives > 99
@@ -7444,10 +7453,10 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 4 * chrRow
 	equs "LEVEL ", &ff
 	
-	lda #pixelsMagenta				; draw level number
+	lda #pixelsMagenta			; set color to magenta
 	sta drawChrColor
 	
-	lda level
+	lda level				; draw 2 digit level number
 	jsr drawBcd
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7460,14 +7469,15 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawSpriteY
 	jsr drawBonusItemVegetable
 
-	jsr drawString				; draw vegetable score value
+	jsr drawString				; draw vegetable score value in white
 	equb pixelsWhite
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 6 * chrRow
 	equb &ff
 
-	lda vegetableScore
+	lda vegetableScore			; draw top 2 digits vegetable score
 	jsr drawBcd
-	lda #&00
+
+	lda #&00				; draw 00
 	jsr drawBcd
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7586,37 +7596,38 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	bne drawLevelIntroHeartsImg
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if shield != 0 then draw "shield " and number of shield rounds remaining 
+	; if shield != 0 then draw "SHIELD " in red and number of shield rounds remaining in white
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda shield
+	lda shield				; if shields available then
 	beq drawLevelIntroGoodLuck
 
-	jsr drawString
+	jsr drawString				; draw "SHIELD " in red
 	equb pixelsRed
 	equw screenAddr + 2 + 7 * chrColumn + 20 * chrRow
 	equs "SHIELD ", &ff
 	
-	lda #pixelsWhite
+	lda #pixelsWhite			; set color to white
 	sta drawChrColor
-	lda shield
+
+	lda shield				; draw number of shields
 	jsr drawBcd
 
 	jmp drawLevelIntroWait
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; else draw draw "good luck"
+	; else draw draw "GOOD LUCK" in red
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawLevelIntroGoodLuck
 
-	jsr drawString
+	jsr drawString				; else draw "GOOD LUCK" in red
 	equb pixelsRed
 	equw screenAddr + 2 + 7 * chrColumn + 20 * chrRow
 	equs "GOOD LUCK", &ff
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; process sound and colors until timer expires
+	; process sound and colors until level intro time expires
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawLevelIntroWait
@@ -7640,21 +7651,27 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawBonusGraphics				draw the bonus screen graphics from the list
+; drawBonusGraphics				draw the bonus screen flowers from the list
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawBonusGraphicsList
+.drawBonusGraphicsList				; screen positions for 16 flowers
 
-	equb  4,  1,  3,  3,  2,  7,  2,  9,  2, 12,  2, 14,  3, 18,  4, 20
-	equb  9,  1, 10,  3, 11,  7, 11,  9, 11, 12, 11, 14, 10, 18,  9, 20
-	equb &ff
-
-.drawBonusGraphicsTile
-
-	equb extraTileFlower0TL, extraTileFlower0TR, extraTileFlower0BL, extraTileFlower0BR
-	equb extraTileFlower1TL, extraTileFlower1TR, extraTileFlower1BL, extraTileFlower1BR
-	equb extraTileFlower2TL, extraTileFlower2TR, extraTileFlower2BL, extraTileFlower2BR
-	equb extraTileFlower3TL, extraTileFlower3TR, extraTileFlower3BL, extraTileFlower3BR
+	equw screenAddr +  5 * chrRow +  1 * chrColumn
+	equw screenAddr +  4 * chrRow +  3 * chrColumn
+	equw screenAddr +  3 * chrRow +  7 * chrColumn
+	equw screenAddr +  3 * chrRow +  9 * chrColumn
+	equw screenAddr +  3 * chrRow + 12 * chrColumn
+	equw screenAddr +  3 * chrRow + 14 * chrColumn
+	equw screenAddr +  4 * chrRow + 18 * chrColumn
+	equw screenAddr +  5 * chrRow + 20 * chrColumn
+	equw screenAddr + 10 * chrRow +  1 * chrColumn
+	equw screenAddr + 11 * chrRow +  3 * chrColumn
+	equw screenAddr + 12 * chrRow +  7 * chrColumn
+	equw screenAddr + 12 * chrRow +  9 * chrColumn
+	equw screenAddr + 12 * chrRow + 12 * chrColumn
+	equw screenAddr + 12 * chrRow + 14 * chrColumn
+	equw screenAddr + 11 * chrRow + 18 * chrColumn
+	equw screenAddr + 10 * chrRow + 20 * chrColumn
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -7688,36 +7705,21 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusGraphicsFlowers
 
-	ldx #0					; index into graphics positions
+	ldx #0					; index into flower positions
 		
 .drawBonusGraphicsLoop
 
-	ldy drawBonusGraphicsList, x		; get byte from table
-
-	bpl drawBonusGraphicsXY			; if its a negative byte (&ff) then its the end of the list so exit
-	rts
-
-.drawBonusGraphicsXY
-
-	clc					; convert Y and X from table into screen address
-	lda screenRowLo, y
+	lda drawBonusGraphicsList, x		; get low byte address from table
+	sta drawMapTileAddr + 0
 	inx
-	ldy drawBonusGraphicsList, x
-	adc screenColumnLo, y
-	sta drawMapTileAddr
-	dex
-	ldy drawBonusGraphicsList, x
-	lda screenRowHi, y
-	inx
-	ldy drawBonusGraphicsList, x
-	adc screenColumnHi, y
+
+	lda drawBonusGraphicsList, x		; get high byte address from table
 	sta drawMapTileAddr + 1
-
-.drawBonusGraphicsRandom
+	inx
 
 	jsr drawRandomFlower			; draw a single random flower
 
-	inx					; continue until all flowers drawn
+	cpx #16 * 2				; continue until all flowers drawn
 	bne drawBonusGraphicsLoop
 
 .drawBonusGraphicsExit
@@ -7769,11 +7771,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #pixelsWhite
 	sta drawChrColor
 	
-	lda #bonusSpecialScore + '0'
+	lda #(bonusSpecialScore and 15) + '0'
 	jsr drawChr
-	lda #0
+	lda #&00
 	jsr drawBcd
-	lda #0
+	lda #&00
 	jsr drawBcd
 	lda #'0'
 	jsr drawChr
@@ -7783,7 +7785,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 18 * chrRow
 	equs "PTS", &ff
 
-	if bonusSpecialShield = 1
+	if (bonusSpecialShield and 15) = 1
 
 	jsr drawString
 	equb pixelsYellow
@@ -7795,7 +7797,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 8 * chrColumn + 20 * chrRow
 	equb &ff
 
-	lda #specialBonusShield + '0'
+	lda #(bonusSpecialShield and 15) + '0'
 	jsr drawChr
 	
 	jsr drawString
@@ -7823,7 +7825,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
 	equb &ff
 
-	lda #bonusSpecialShield + '0'
+	lda #(bonusSpecialShield and 15) + '0'
 	jsr drawChr
 	
 	jsr drawString
@@ -7868,10 +7870,10 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #pixelsWhite
 	sta drawChrColor
 
-	lda #bonusExtraLives + '0'
+	lda #(bonusExtraLives and 15) + '0'
 	jsr drawChr
 
-	if bonusExtraLives = 1
+	if (bonusExtraLives and 15) = 1
 	
 	jsr drawString
 	equb pixelsYellow
@@ -7968,9 +7970,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	
 	lda #bonusDiamondScore
 	jsr drawBcd
-	lda #0
+	lda #&00
 	jsr drawBcd
-	lda #0
+	lda #&00
 	jsr drawBcd
 	lda #'0'
 	jsr drawChr
@@ -8940,8 +8942,8 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ldx scoreMultiplier			; get the current score multiplier
 
 	lda bonusBitsMultiplierFlags, x		; enable multiplier bit in bonus bits
-	and bonusBits
-	sta bonusBits
+	and bonusBits + 0
+	sta bonusBits + 0
 
 	jsr drawPlayfieldUpperBonus		; update playfield upper to show the multiplier changes
 
@@ -9054,8 +9056,8 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	tax					; get yellow letter bit value and highlight it
 	lda objectLetterBitsYellow, x
-	and bonusBits
-	sta bonusBits
+	and bonusBits + 0
+	sta bonusBits + 0
 	
 	jsr drawPlayfieldUpperBonus		; update upper bonus display
 
@@ -9093,7 +9095,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	equb %11111111				; "C" no effect in yellow mode
 	equb %11111111				; "I" no effect in yellow mode
 	equb %11110111				; "A" clear bit 3 of bonusBits + 0
-	equb %11111111				; "L" clear bit 0 of bonusBits + 1
+	equb %11111111				; "L" no effect in yellow mode
 	equb %10111111				; "X" clear bit 6 of bonusBits + 0
 	equb %11011111				; "T" clear bit 5 of bonusBits + 0
 	equb %11101111				; "R" clear bit 4 of bonusBits + 0

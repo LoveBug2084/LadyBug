@@ -18,13 +18,13 @@
 ; game constants
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-bonusSpecialScore	= &02			; special bonus 200,000 points
+bonusSpecialScore	= 2			; special bonus score value * 100,000
 bonusSpecialShield	= 6			; special bonus skull shield for 6 levels
 
 bonusExtraLives		= 2			; extra bonus 2 lives
 
-bonusDiamondScore	= &10			; diamond bonus score 1,000,000 points
 bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
+bonusDiamondScore	= &10			; diamond bonus score value * 100,000
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

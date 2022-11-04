@@ -27,14 +27,14 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org canvasBonusSettings			; temporary canvas for creating _Bonus file
+	org canvasBonusSettings			; temporary canvas for creating _Bonus file used by boot.bas to display in the instruction pages
 	
 .bonusBin
 
-	equb bonusExtraLives
+	equb bonusExtraLives and 15
 	
-	equb bonusSpecialScore
-	equb bonusSpecialShield
+	equb bonusSpecialScore and 15
+	equb bonusSpecialShield and 15
 	
 	equb bonusDiamondScore
 	equb bonusDiamondLevel
