@@ -4638,44 +4638,44 @@ bootstrap     &4800 - &4943 , 324 bytes
      1C6A   60         RTS
 .enemyRelease
      1C6B   A5 30      LDA &30
-     1C6D   F0 1D      BEQ &1C8C
+     1C6D   F0 3C      BEQ &1CAB
      1C6F   A5 32      LDA &32
      1C71   C9 04      CMP #&04
-     1C73   B0 17      BCS &1C8C
+     1C73   B0 36      BCS &1CAB
      1C75   A5 33      LDA &33
      1C77   C9 06      CMP #&06
-     1C79   B0 11      BCS &1C8C
+     1C79   B0 30      BCS &1CAB
      1C7B   A2 04      LDX #&04
 .enemyReleaseLoop
      1C7D   B5 6B      LDA &6B,X
      1C7F   29 0C      AND #&0C
      1C81   C9 04      CMP #&04
-     1C83   F0 08      BEQ &1C8D
+     1C83   F0 03      BEQ &1C88
      1C85   CA         DEX
      1C86   D0 F5      BNE &1C7D
-.enemyReleaseMax
-     1C88   A9 FF      LDA #&FF
-     1C8A   85 1B      STA &1B
-.enemyReleaseExit
-     1C8C   60         RTS
 .enemyReleaseFound
-     1C8D   8A         TXA
-     1C8E   29 03      AND #&03
-     1C90   0A         ASL A
-     1C91   0A         ASL A
-     1C92   85 31      STA &31
-     1C94   A5 00      LDA &00
-     1C96   29 0F      AND #&0F
-     1C98   C5 31      CMP &31
-     1C9A   D0 F0      BNE &1C8C
-     1C9C   A9 00      LDA #&00
-     1C9E   95 6B      STA &6B,X
-     1CA0   E6 32      INC &32
-     1CA2   A9 00      LDA #&00
-     1CA4   85 30      STA &30
-     1CA6   A5 32      LDA &32
-     1CA8   C9 04      CMP #&04
-     1CAA   F0 DC      BEQ &1C88
+     1C88   8A         TXA
+     1C89   29 03      AND #&03
+     1C8B   0A         ASL A
+     1C8C   0A         ASL A
+     1C8D   85 31      STA &31
+     1C8F   A5 00      LDA &00
+     1C91   29 0F      AND #&0F
+     1C93   C5 31      CMP &31
+     1C95   D0 14      BNE &1CAB
+     1C97   A9 00      LDA #&00
+     1C99   95 6B      STA &6B,X
+     1C9B   E6 32      INC &32
+     1C9D   A9 00      LDA #&00
+     1C9F   85 30      STA &30
+     1CA1   A5 32      LDA &32
+     1CA3   C9 04      CMP #&04
+     1CA5   D0 05      BNE &1CAC
+.enemyReleaseMax
+     1CA7   A9 FF      LDA #&FF
+     1CA9   85 1B      STA &1B
+.enemyReleaseExit
+     1CAB   60         RTS
 .enemySpawn
      1CAC   A2 04      LDX #&04
 .enemySpawnCheckEmpty

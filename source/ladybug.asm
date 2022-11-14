@@ -2321,10 +2321,12 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	bpl checkHighScoreLoop
 
 	rts					; score didnt qualify for the high score table so just return
-	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; shift high score table down if needed to make room for entry
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; shift high score table down if needed to make room for entry
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkHighScoreEntry
 
@@ -2344,10 +2346,14 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	lda hi(highScoreTable) * 256, y		; shift last byte
 	sta hi(highScoreTable) * 256 + 14, y
-	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enter name into table
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	; continue down to registration
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; enter name into table
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkHighScoreRegister
 
@@ -2362,12 +2368,12 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jmp drawScoreTable			; draw the high score page and return
 	
-
-
+	
+	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; playfieldMiddleWithTimer			initialize all sprites as blanked and erased
 ;						clear tilemap
-;						fill tilemap with timer
+;						fill tilemap edges with with timer tiles
 ;						draw tilemap
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2436,7 +2442,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda levelEndActive			; if level has ended then advance level and exit with true status
 	bne checkLevelEndTrue
 
-	lda levelEdibles			; if theres still edible objects then exit with false status
+	lda levelEdibles			; if there are still edible objects then exit with false status
 	bne checkLevelEndFalse
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6946,19 +6952,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.enemyReleaseMax
-
-	lda #&ff				; maximum enemies released so activate center bonus item (vegetable/diamond)
-	sta bonusItemActive
-	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.enemyReleaseExit
-
-	rts					; return
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 .enemyReleaseFound
 	
 	txa					; calculate frame for delayed enemy release (0, 4, 8 or 12)
@@ -6982,11 +6975,23 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #0					; disable enemy release until timer re-enables it
 	sta enemyReleaseEnable
 
-	lda enemiesActive			; if maximum number of enemys released then activate the bonus vegetable/diamondenemies not active yet
+	lda enemiesActive			; if maximum number of enemys not yet released then spawn an enemy
 	cmp #spritesTotal - 1
-	beq enemyReleaseMax
+	bne enemySpawn
 	
-						; else continue down to enemySpawn to place another enemy in the centerbox
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.enemyReleaseMax
+
+	lda #&ff				; else activate center bonus item (vegetable/diamond)
+	sta bonusItemActive
+	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.enemyReleaseExit
+
+	rts					; return
+
 
 
 
@@ -10365,11 +10370,11 @@ include "soundtables.asm"
 
 	sta dummy16				; start new adc conversion (addr setup by relocator)
 
-	lsr a					; put channel (0 or 1) into carry (note channel has been exored with 1 !)
+	lsr a					; put channel (0 or 1) into carry (note inverted channel from previous eor instruction)
 
 	rol joystickAnalogueSave		; rotate analogue value so that
-	rol joystickAnalogueSave		; bit 2 contains the channel
-	rol joystickAnalogueSave		; bits 1,0 contain the msb's of the analogue value
+	rol joystickAnalogueSave		; bit 2 contains the channel (inverted)
+	rol joystickAnalogueSave		; bits 1,0 contain bits 7,6 of the analogue value
 
 	lda joystickAnalogueSave		; mask bits for index value
 	and #%00000111
