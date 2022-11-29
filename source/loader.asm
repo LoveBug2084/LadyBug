@@ -548,7 +548,7 @@ masterMos350 = &e374
 	lda #opcodeINX				; drawing normal so use INX instruction
 	sta drawSpriteNextLineInstruction
 
-	lda #diamondTileBytes			; store number of bytes in sprite in counter
+	lda #diamondTileBytes			; store number of bytes for diamond tile in counter
 	sta drawByteCount
 
 	lda #lowerDiamondX			; set position for the lower diamond available
@@ -566,7 +566,7 @@ masterMos350 = &e374
 
 .swrDrawPlayfieldLowerDiamondExit
 
-	jmp drawSpriteGetX
+	jmp drawSpriteGetX			; draw the diamond/blank image and return
 
 
 

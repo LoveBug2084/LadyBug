@@ -1436,7 +1436,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 
 .eraseSpriteCheckLeft
 	
-	lda spritesEraseDir,x			; if sprite was moving left
+	lda spritesEraseDir, x			; if sprite was moving left
 	and #3
 	cmp #moveLeft
 	bne eraseSpriteCheckUp
@@ -5284,10 +5284,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; draw the ladybug logo
+; draw the ladybug logo of 15x3 tiles
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuDrawLogoData
+						; value offset added to #extraTileLogo constant
+						; or -1 to draw a blank tile
 
 	equb -1,  0,  1, -1, -1,  2, -1, -1,  3,  4,  5, -1, -1, -1, -1
 	equb  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
@@ -5602,7 +5604,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawExtraTile
 	iny
 
-	lda drawRandomFlowerTile,y		; draw top right
+	lda drawRandomFlowerTile, y		; draw top right
 	jsr drawExtraTile
 	iny
 
@@ -5668,7 +5670,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawScoreTable				; draw the high score table page and wait for start to be pressed
+; drawScoreTable				; draw the high score table page and wait for start or esc to be pressed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawScoreTable
@@ -5680,7 +5682,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equw screenAddr + 2 + 8 + 1 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,chrHeart,&ff
 	
-	jsr drawString				; draw text in skull color
+	jsr drawString				; draw "BEST PLAYERS" in skull color
 	equb pixelsSkull
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 3 * chrRow
 	equs "BEST PLAYERS",&ff
@@ -5690,12 +5692,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equw screenAddr + 2 + 8 + 18 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,chrHeart,&ff
 
-	jsr drawString				; position cursor
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	jsr drawString				; position cursor for start of high score table
 	equb pixelsBlack
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 5 * chrRow
 	equb &ff
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #8					; 8 high scores and names to display
 
@@ -5735,7 +5737,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc #hi((46 - 18) * chrColumn)
 	sta drawChrAddr + 1
 
-	lda highScorePtr			; advance to next score (3 bytes score, 10 bytes name, 1 byte terminator)
+	lda highScorePtr			; advance 14 bytes to next high score entry (3 bytes score, 10 bytes name, 1 byte terminator)
 	clc
 	adc #14
 	sta highScorePtr
@@ -5745,7 +5747,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr drawString				; draw ">MAIN MENU<"
+	jsr drawString				; draw "> MENU <"
 	equb pixelsSpecial0
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 21 * chrRow
 	equs chrRight, &ff
@@ -5864,7 +5866,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawScoreTableFunctions			wait for syncs, update colors, scan keyboard etc
+; drawScoreTableFunctions			wait for syncs, process sound, update colors, scan keyboard/joystick
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawScoreTableFunctions
@@ -6904,7 +6906,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .updateSkullColorPalette
 
-	lda updateSkullColorTable,x		; set skull palette to color from table using index
+	lda updateSkullColorTable, x		; set skull palette to color from table using index
 	sta ulaPalette
 
 	rts					; return
@@ -8242,7 +8244,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta animateLadybugCounter		; else store byte into animation counter
 	
 	ldy #1
-	lda (animateLadybugAddr),y		; get next byte and store in ladybug direction
+	lda (animateLadybugAddr), y		; get next byte and store in ladybug direction
 	sta spritesDir + 0
 	
 	clc					; advance to next table entry
@@ -10149,7 +10151,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 .screenColumnHi
 
-	for n, 0, 22				; generate column offset low byte lookup table
+	for n, 0, 22				; generate column offset high byte lookup table
 	equb hi(n * chrColumn)
 	next
 
@@ -10204,6 +10206,8 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 	skip 23 * 23				; storage for tile id's for the middle screen
 
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; tileMap row address table
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -10236,7 +10240,7 @@ include "soundtables.asm"
 
 .spriteBaseImg
 
-	for n, 0, 10				; img index for base sprite of ladybug, the 8 enemies and the angel
+	for n, 0, 9				; img index for base sprite of ladybug, the 8 enemies and the angel
 	equb n * 15 + ImgLadybugEnemiesAngel
 	next
 

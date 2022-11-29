@@ -12,8 +12,8 @@ screen ram    &47F0 - &7FFF , 14352 bytes
 ----------------------------------------------------
 main ram      &0 - &47EF , 18416 bytes
 ----------------------------------------------------
-used          &0 - &47C3 , 18372 bytes
-free          &47C4 - &47EF , 44 bytes
+used          &0 - &47C2 , 18371 bytes
+free          &47C3 - &47EF , 45 bytes
 unused        68 bytes
 ----------------------------------------------------
 
@@ -32,8 +32,8 @@ unused        &253 - &257 , 5 bytes
 used          &258 - &280 , 41 bytes
 unused        &281 - &286 , 6 bytes
 ----------------------------------------------------
-used          &287 - &47C3 , 17725 bytes
-free          &47C4 - &47EF , 44 bytes
+used          &287 - &47C2 , 17724 bytes
+free          &47C3 - &47EF , 45 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -1030,11 +1030,11 @@ bootstrap     &4800 - &4943 , 324 bytes
 .waitIntVsync
      01A7   24 02      BIT &02
      01A9   10 FC      BPL &01A7
-     01AB   4C 97 47   JMP &4797
+     01AB   4C 96 47   JMP &4796
 .waitIntTimer
      01AE   24 02      BIT &02
      01B0   30 FC      BMI &01AE
-     01B2   4C 97 47   JMP &4797
+     01B2   4C 96 47   JMP &4796
 .updateObjectTimerPalette
      01B5   F1
      01B6   F6
@@ -1174,9 +1174,9 @@ bootstrap     &4800 - &4943 , 324 bytes
 .updateEnemyTimerExit
      02BD   60         RTS
 .initPlayfieldMiddleMazeTable
-     02BE   D2 44
-     02C0   B9 45
-     02C2   A0 46
+     02BE   D1 44
+     02C0   B8 45
+     02C2   9F 46
 .initPlayfieldMiddleTilesLeft
      02C4   00
      02C5   01
@@ -2518,9 +2518,9 @@ bootstrap     &4800 - &4943 , 324 bytes
      0C26   20 F8 1B   JSR &1BF8
      0C29   A5 86      LDA &86
      0C2B   A8         TAY
-     0C2C   B9 78 43   LDA &4378,Y
+     0C2C   B9 77 43   LDA &4377,Y
      0C2F   8D 4A 0C   STA &0C4A
-     0C32   B9 25 44   LDA &4425,Y
+     0C32   B9 24 44   LDA &4424,Y
      0C35   8D 4B 0C   STA &0C4B
 .drawSpriteColumn
      0C38   A5 88      LDA &88
@@ -8469,408 +8469,407 @@ bootstrap     &4800 - &4943 , 324 bytes
      4374   88
      4375   97
      4376   A6
-     4377   B5
 .spriteImgAddrLo
-     4378   8E
-     4379   C0
-     437A   F2
-     437B   24
-     437C   56
-     437D   88
-     437E   BA
-     437F   EC
-     4380   1E
-     4381   50
-     4382   82
-     4383   B4
-     4384   E6
-     4385   18
-     4386   4A
-     4387   7C
-     4388   AE
-     4389   E0
-     438A   12
-     438B   44
-     438C   76
-     438D   A8
-     438E   DA
-     438F   0C
-     4390   3E
-     4391   70
-     4392   A2
-     4393   D4
-     4394   06
-     4395   38
-     4396   6A
-     4397   9C
-     4398   E2
-     4399   28
-     439A   6E
-     439B   B4
-     439C   FA
-     439D   40
-     439E   86
-     439F   CC
-     43A0   12
-     43A1   58
-     43A2   9E
-     43A3   E4
-     43A4   2A
-     43A5   70
-     43A6   B6
-     43A7   FC
-     43A8   42
-     43A9   88
-     43AA   CE
-     43AB   14
-     43AC   5A
-     43AD   A0
-     43AE   E6
-     43AF   2C
-     43B0   72
-     43B1   B8
-     43B2   FE
-     43B3   44
-     43B4   8A
-     43B5   D0
-     43B6   16
-     43B7   5C
-     43B8   A2
-     43B9   E8
-     43BA   2E
-     43BB   74
-     43BC   BA
-     43BD   00
-     43BE   46
-     43BF   8C
-     43C0   D2
-     43C1   18
-     43C2   5E
-     43C3   A4
-     43C4   EA
-     43C5   30
-     43C6   76
-     43C7   BC
-     43C8   02
-     43C9   48
-     43CA   8E
-     43CB   D4
-     43CC   1A
-     43CD   60
-     43CE   A6
-     43CF   EC
-     43D0   32
-     43D1   78
-     43D2   BE
-     43D3   04
-     43D4   4A
-     43D5   90
-     43D6   D6
-     43D7   1C
-     43D8   62
-     43D9   A8
-     43DA   EE
-     43DB   34
-     43DC   7A
-     43DD   C0
-     43DE   06
-     43DF   4C
-     43E0   92
-     43E1   D8
-     43E2   1E
-     43E3   64
-     43E4   AA
-     43E5   F0
-     43E6   36
-     43E7   7C
-     43E8   C2
-     43E9   08
-     43EA   4E
-     43EB   94
-     43EC   DA
-     43ED   20
-     43EE   66
-     43EF   AC
-     43F0   F2
-     43F1   38
-     43F2   7E
-     43F3   C4
-     43F4   0A
-     43F5   50
-     43F6   96
-     43F7   DC
-     43F8   22
-     43F9   68
-     43FA   AE
-     43FB   F4
-     43FC   3A
-     43FD   80
-     43FE   C6
-     43FF   0C
-     4400   52
-     4401   98
-     4402   DE
-     4403   24
-     4404   6A
-     4405   B0
-     4406   F6
-     4407   3C
-     4408   82
-     4409   C8
-     440A   0E
-     440B   54
-     440C   9A
-     440D   E0
-     440E   26
-     440F   6C
-     4410   B2
-     4411   F8
-     4412   3E
-     4413   84
-     4414   CA
-     4415   10
-     4416   56
-     4417   9C
-     4418   E2
-     4419   28
-     441A   6E
-     441B   B4
-     441C   FA
-     441D   40
-     441E   86
-     441F   CC
-     4420   12
-     4421   58
-     4422   9E
-     4423   12
-     4424   2A
+     4377   8E
+     4378   C0
+     4379   F2
+     437A   24
+     437B   56
+     437C   88
+     437D   BA
+     437E   EC
+     437F   1E
+     4380   50
+     4381   82
+     4382   B4
+     4383   E6
+     4384   18
+     4385   4A
+     4386   7C
+     4387   AE
+     4388   E0
+     4389   12
+     438A   44
+     438B   76
+     438C   A8
+     438D   DA
+     438E   0C
+     438F   3E
+     4390   70
+     4391   A2
+     4392   D4
+     4393   06
+     4394   38
+     4395   6A
+     4396   9C
+     4397   E2
+     4398   28
+     4399   6E
+     439A   B4
+     439B   FA
+     439C   40
+     439D   86
+     439E   CC
+     439F   12
+     43A0   58
+     43A1   9E
+     43A2   E4
+     43A3   2A
+     43A4   70
+     43A5   B6
+     43A6   FC
+     43A7   42
+     43A8   88
+     43A9   CE
+     43AA   14
+     43AB   5A
+     43AC   A0
+     43AD   E6
+     43AE   2C
+     43AF   72
+     43B0   B8
+     43B1   FE
+     43B2   44
+     43B3   8A
+     43B4   D0
+     43B5   16
+     43B6   5C
+     43B7   A2
+     43B8   E8
+     43B9   2E
+     43BA   74
+     43BB   BA
+     43BC   00
+     43BD   46
+     43BE   8C
+     43BF   D2
+     43C0   18
+     43C1   5E
+     43C2   A4
+     43C3   EA
+     43C4   30
+     43C5   76
+     43C6   BC
+     43C7   02
+     43C8   48
+     43C9   8E
+     43CA   D4
+     43CB   1A
+     43CC   60
+     43CD   A6
+     43CE   EC
+     43CF   32
+     43D0   78
+     43D1   BE
+     43D2   04
+     43D3   4A
+     43D4   90
+     43D5   D6
+     43D6   1C
+     43D7   62
+     43D8   A8
+     43D9   EE
+     43DA   34
+     43DB   7A
+     43DC   C0
+     43DD   06
+     43DE   4C
+     43DF   92
+     43E0   D8
+     43E1   1E
+     43E2   64
+     43E3   AA
+     43E4   F0
+     43E5   36
+     43E6   7C
+     43E7   C2
+     43E8   08
+     43E9   4E
+     43EA   94
+     43EB   DA
+     43EC   20
+     43ED   66
+     43EE   AC
+     43EF   F2
+     43F0   38
+     43F1   7E
+     43F2   C4
+     43F3   0A
+     43F4   50
+     43F5   96
+     43F6   DC
+     43F7   22
+     43F8   68
+     43F9   AE
+     43FA   F4
+     43FB   3A
+     43FC   80
+     43FD   C6
+     43FE   0C
+     43FF   52
+     4400   98
+     4401   DE
+     4402   24
+     4403   6A
+     4404   B0
+     4405   F6
+     4406   3C
+     4407   82
+     4408   C8
+     4409   0E
+     440A   54
+     440B   9A
+     440C   E0
+     440D   26
+     440E   6C
+     440F   B2
+     4410   F8
+     4411   3E
+     4412   84
+     4413   CA
+     4414   10
+     4415   56
+     4416   9C
+     4417   E2
+     4418   28
+     4419   6E
+     441A   B4
+     441B   FA
+     441C   40
+     441D   86
+     441E   CC
+     441F   12
+     4420   58
+     4421   9E
+     4422   12
+     4423   2A
 .spriteImgAddrHi
+     4424   80
      4425   80
      4426   80
-     4427   80
+     4427   81
      4428   81
      4429   81
      442A   81
      442B   81
-     442C   81
+     442C   82
      442D   82
      442E   82
      442F   82
      4430   82
-     4431   82
+     4431   83
      4432   83
      4433   83
      4434   83
      4435   83
-     4436   83
+     4436   84
      4437   84
      4438   84
      4439   84
      443A   84
-     443B   84
+     443B   85
      443C   85
      443D   85
      443E   85
      443F   85
-     4440   85
+     4440   86
      4441   86
      4442   86
      4443   86
      4444   86
-     4445   86
+     4445   87
      4446   87
      4447   87
      4448   87
-     4449   87
+     4449   88
      444A   88
      444B   88
-     444C   88
+     444C   89
      444D   89
      444E   89
      444F   89
-     4450   89
+     4450   8A
      4451   8A
      4452   8A
      4453   8A
-     4454   8A
+     4454   8B
      4455   8B
      4456   8B
-     4457   8B
+     4457   8C
      4458   8C
      4459   8C
      445A   8C
-     445B   8C
+     445B   8D
      445C   8D
      445D   8D
      445E   8D
-     445F   8D
+     445F   8E
      4460   8E
      4461   8E
-     4462   8E
+     4462   8F
      4463   8F
      4464   8F
      4465   8F
-     4466   8F
+     4466   90
      4467   90
      4468   90
-     4469   90
+     4469   91
      446A   91
      446B   91
      446C   91
-     446D   91
+     446D   92
      446E   92
      446F   92
      4470   92
-     4471   92
+     4471   93
      4472   93
      4473   93
-     4474   93
+     4474   94
      4475   94
      4476   94
      4477   94
-     4478   94
+     4478   95
      4479   95
      447A   95
      447B   95
-     447C   95
+     447C   96
      447D   96
      447E   96
-     447F   96
+     447F   97
      4480   97
      4481   97
      4482   97
-     4483   97
+     4483   98
      4484   98
      4485   98
      4486   98
-     4487   98
+     4487   99
      4488   99
      4489   99
-     448A   99
+     448A   9A
      448B   9A
      448C   9A
      448D   9A
-     448E   9A
+     448E   9B
      448F   9B
      4490   9B
      4491   9B
-     4492   9B
+     4492   9C
      4493   9C
      4494   9C
-     4495   9C
+     4495   9D
      4496   9D
      4497   9D
      4498   9D
-     4499   9D
+     4499   9E
      449A   9E
      449B   9E
      449C   9E
-     449D   9E
+     449D   9F
      449E   9F
      449F   9F
-     44A0   9F
+     44A0   A0
      44A1   A0
      44A2   A0
      44A3   A0
-     44A4   A0
+     44A4   A1
      44A5   A1
      44A6   A1
      44A7   A1
-     44A8   A1
+     44A8   A2
      44A9   A2
      44AA   A2
-     44AB   A2
+     44AB   A3
      44AC   A3
      44AD   A3
      44AE   A3
-     44AF   A3
+     44AF   A4
      44B0   A4
      44B1   A4
      44B2   A4
-     44B3   A4
+     44B3   A5
      44B4   A5
      44B5   A5
-     44B6   A5
+     44B6   A6
      44B7   A6
      44B8   A6
      44B9   A6
-     44BA   A6
+     44BA   A7
      44BB   A7
      44BC   A7
      44BD   A7
-     44BE   A7
+     44BE   A8
      44BF   A8
      44C0   A8
-     44C1   A8
+     44C1   A9
      44C2   A9
      44C3   A9
      44C4   A9
-     44C5   A9
+     44C5   AA
      44C6   AA
      44C7   AA
      44C8   AA
-     44C9   AA
+     44C9   AB
      44CA   AB
      44CB   AB
-     44CC   AB
+     44CC   AC
      44CD   AC
      44CE   AC
      44CF   AC
      44D0   AC
-     44D1   AC
 .mapData
 .map1
-     44D2
+     44D1
 .map2
-     45B9
+     45B8
 .map3
-     46A0
+     469F
 .joystickBitSet
-     4787   04
+     4786   04
+     4787   00
      4788   00
-     4789   00
-     478A   08
-     478B   10
+     4789   08
+     478A   10
+     478B   00
      478C   00
-     478D   00
-     478E   02
+     478D   02
 .joystickBitClear
+     478E   F3
      478F   F3
      4790   F3
      4791   F3
-     4792   F3
+     4792   ED
      4793   ED
      4794   ED
      4795   ED
-     4796   ED
 .joystickAnalogue
-     4797   AD 33 01   LDA &0133
-     479A   C9 01      CMP #&01
-     479C   D0 25      BNE &47C3
+     4796   AD 33 01   LDA &0133
+     4799   C9 01      CMP #&01
+     479B   D0 25      BNE &47C2
 .joystickAnalogueChannelRead
-     479E   AD 00 FF   LDA &FF00
-     47A1   85 BE      STA &BE
+     479D   AD 00 FF   LDA &FF00
+     47A0   85 BE      STA &BE
 .joystickAnalogueControlRead
-     47A3   AD 00 FF   LDA &FF00
-     47A6   29 01      AND #&01
-     47A8   49 01      EOR #&01
+     47A2   AD 00 FF   LDA &FF00
+     47A5   29 01      AND #&01
+     47A7   49 01      EOR #&01
 .joystickAnalogueControlWrite
-     47AA   8D 00 FF   STA &FF00
-     47AD   4A         LSR A
-     47AE   26 BE      ROL &BE
-     47B0   26 BE      ROL &BE
-     47B2   26 BE      ROL &BE
-     47B4   A5 BE      LDA &BE
-     47B6   29 07      AND #&07
-     47B8   AA         TAX
-     47B9   A5 BD      LDA &BD
-     47BB   3D 8F 47   AND &478F,X
-     47BE   1D 87 47   ORA &4787,X
-     47C1   85 BD      STA &BD
+     47A9   8D 00 FF   STA &FF00
+     47AC   4A         LSR A
+     47AD   26 BE      ROL &BE
+     47AF   26 BE      ROL &BE
+     47B1   26 BE      ROL &BE
+     47B3   A5 BE      LDA &BE
+     47B5   29 07      AND #&07
+     47B7   AA         TAX
+     47B8   A5 BD      LDA &BD
+     47BA   3D 8E 47   AND &478E,X
+     47BD   1D 86 47   ORA &4786,X
+     47C0   85 BD      STA &BD
 .joystickAnalogueExit
-     47C3   60         RTS
+     47C2   60         RTS
 .programEnd
-     47C4
+     47C3
 
 
 
@@ -8966,27 +8965,27 @@ bootstrap     &4800 - &4943 , 324 bytes
      48BA   C9 06      CMP #&06
      48BC   F0 1C      BEQ &48DA
      48BE   A9 C1      LDA #&C1
-     48C0   8D 9F 67   STA &679F
+     48C0   8D 9E 67   STA &679E
      48C3   A9 FE      LDA #&FE
-     48C5   8D A0 67   STA &67A0
+     48C5   8D 9F 67   STA &679F
      48C8   A9 C0      LDA #&C0
-     48CA   8D A4 67   STA &67A4
-     48CD   8D AB 67   STA &67AB
+     48CA   8D A3 67   STA &67A3
+     48CD   8D AA 67   STA &67AA
      48D0   A9 FE      LDA #&FE
-     48D2   8D A5 67   STA &67A5
-     48D5   8D AC 67   STA &67AC
+     48D2   8D A4 67   STA &67A4
+     48D5   8D AB 67   STA &67AB
      48D8   D0 1A      BNE &48F4
 .bootstrapJoystickAnalogueMaster
      48DA   A9 19      LDA #&19
-     48DC   8D 9F 67   STA &679F
+     48DC   8D 9E 67   STA &679E
      48DF   A9 FE      LDA #&FE
-     48E1   8D A0 67   STA &67A0
+     48E1   8D 9F 67   STA &679F
      48E4   A9 18      LDA #&18
-     48E6   8D A4 67   STA &67A4
-     48E9   8D AB 67   STA &67AB
+     48E6   8D A3 67   STA &67A3
+     48E9   8D AA 67   STA &67AA
      48EC   A9 FE      LDA #&FE
-     48EE   8D A5 67   STA &67A5
-     48F1   8D AC 67   STA &67AC
+     48EE   8D A4 67   STA &67A4
+     48F1   8D AB 67   STA &67AB
 .bootstrapRelocate
      48F4   A2 48      LDX #&48
      48F6   A0 00      LDY #&00
@@ -9010,11 +9009,11 @@ bootstrap     &4800 - &4943 , 324 bytes
      491A   A2 00      LDX #&00
 .relocateProgramMapData
      491C   BD 00 78   LDA &7800,X
-     491F   9D D2 44   STA &44D2,X
+     491F   9D D1 44   STA &44D1,X
      4922   BD 00 79   LDA &7900,X
-     4925   9D B9 45   STA &45B9,X
+     4925   9D B8 45   STA &45B8,X
      4928   BD 00 7A   LDA &7A00,X
-     492B   9D A0 46   STA &46A0,X
+     492B   9D 9F 46   STA &469F,X
      492E   E8         INX
      492F   E0 E7      CPX #&E7
      4931   D0 E9      BNE &491C
