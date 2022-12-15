@@ -606,7 +606,7 @@ canvasMapNames		= &f100			; temporary canvas address for _Maps file generation
 
 canvasBonusSettings	= &f200			; temporary canvas address for _Bonus file generation
 
-canvasEditor		= &f300			; temporary canvas address to assemble code
+canvasEditor		= &f300			; temporary canvas address for editor tile drawing code
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -675,6 +675,16 @@ sbKeyboard		= 3			; output line 3 connected to keyboard
 
 sbHigh			= 8			; high low values for output lines
 sbLow			= 0
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; misc
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+quote			= '"'			; ascii code for quotation
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

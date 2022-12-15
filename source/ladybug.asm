@@ -5901,7 +5901,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda ladybugDeathEnable			; if ladybug death animation active then return false
 	bne checkPauseGameReturnFalse
 
-	lda pauseGame				; if game not currently paused
+	lda pauseGame				; if game is currently paused then return true
 	bne checkPauseGameTrue
 
 	lda playerInput				; if start not pressed
@@ -5919,7 +5919,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta pauseGame
 	
 	jsr drawString				; draw paused message
-	equb pixelsSpecial0
+	equb pixelsMultiplier0
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equs "  PAUSED  ", &ff
 	

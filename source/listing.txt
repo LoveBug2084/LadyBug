@@ -4042,7 +4042,7 @@ bootstrap     &4800 - &4943 , 324 bytes
      1788   A9 FF      LDA #&FF
      178A   85 2B      STA &2B
      178C   20 2D 22   JSR &222D
-     178F   CC
+     178F   C0
      1790   62 7E
      1792   20 20 50 ...
      179C   FF

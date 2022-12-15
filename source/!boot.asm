@@ -32,7 +32,6 @@
 	equb 22,7				; mode 7
 
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
-
 	equb 23,0,6,0,0,0,0,0,0,0		; disable display
 
 	equs "*SHADOW 1", 13			; disable shadow ram (generates an error on model B but screen is disabled so it does'nt show)
@@ -45,10 +44,9 @@
 	equb 22,7				; select non-shadow mode 7
 
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
-
 	equb 23,0,6,0,0,0,0,0,0,0		; disable display
 
-	equs "CHAIN",34,"Boot",34,13		; CHAIN"Boot"
+	equs "CHAIN",quote,"Boot",quote,13	; CHAIN"Boot"
 
 
 

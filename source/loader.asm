@@ -209,7 +209,6 @@
 imgVegetables		= (vegetablesBin - spriteBin) / sprite10x10Bytes
 ImgPoints		= (pointsBin - spriteBin) / sprite10x10Bytes
 ImgLadybugEnemiesAngel	= (ladybugBin - spriteBin) / sprite10x10Bytes
-;imgDiamond		= (diamondBin - ladybugBin) / sprite10x14Bytes
 
 
 
