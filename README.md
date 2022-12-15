@@ -16,7 +16,7 @@ Master Compact MOS 5.00/5.10 using 12K of sideways ram\
 \
 Keyboard, Analogue Port Joysick and Digital User Port Joystick Supported\
 \
-**The full game development diary can be viewed at the Stardot forums** [here](https://stardot.org.uk/forums/viewtopic.php?f=53&t=21812)
+**The full game development diary can be viewed at the** [Stardot forums](https://stardot.org.uk/forums/viewtopic.php?f=53&t=21812)
 #
 ```
 A big thank you to
