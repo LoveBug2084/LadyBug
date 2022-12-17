@@ -2640,7 +2640,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	jmp moveSpritesNext
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy collision check with ladybug
+	; check for enemy collision with ladybug
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesCollision
