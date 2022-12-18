@@ -2988,7 +2988,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	equw screenAddr + 2 + 16
 	equb &ff
 	
-	lda bonusBits + 0				; copy bonus bits (shifting everything left one bit to drop the unused bit 15)
+	lda bonusBits + 0			; copy bonus bits (shifting everything left one bit to drop the unused bit 15)
 	asl a
 	sta bonusBitsCopy + 0
 	lda bonusBits + 1
@@ -3309,7 +3309,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	lda #0					; draw column from 0
 	sta drawSpriteColumnVinit + 1
 
-	lda #sprite10x10Height			; set hight for the 10x10 pixel sprite
+	lda #sprite10x10Height			; set height for the 10x10 pixel sprite
 	sta drawSpriteColumnVtest + 1
 	sta drawSpriteColumnTileHeight + 1
 	
@@ -3319,7 +3319,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	lda #sprite10x10Bytes			; store number of bytes for sprite in counter
 	sta drawByteCount
 
-	bpl drawSpriteGetX			; draw the vegetable sprite
+	bpl drawSpriteGetX			; draw the 10x10 pixel sprite
 
 
 
@@ -3414,12 +3414,12 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	; data value of following instruction modified by drawSprite/drawSpriteVflip/drawBonusItemCenter
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx #dummy8
+	ldx #dummy8				; get initial vertical value
 
 .drawSpriteRead
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; sprite source address written into the following instruction
+	; sprite source address value of following intruction is setup by previous code
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda dummy16, x				; read byte from sprite (address previously setup)
@@ -3427,7 +3427,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .drawSpriteWrite	
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; screen destination address written into the following instruction
+	; screen destination address value of following intruction is setup by previous code
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	sta dummy16, y				; write byte to screen
@@ -3453,7 +3453,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 .drawSpriteCount
 
 	dec drawByteCount			; bump sprite byte counter
-	beq drawSpriteDrawn			; exit if all bytes drawn
+	beq drawSpriteExit			; exit if all bytes drawn
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; the following instruction is replaced with inx/dex by drawSprite/drawSpriteVflip/drawBonusItemCenter
@@ -3495,10 +3495,6 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 	bcc drawSpriteColumn
 	inc drawSpriteScreenAddr + 1
 	bpl drawSpriteColumn
-
-.drawSpriteDrawn
-
-	sec					; exit with drawn status
 
 .drawSpriteExit
 
@@ -3680,7 +3676,7 @@ bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits +
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawBcdMini					draw 2 digits of BCD mini chr tiles
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			value to display as hex
+; entry			A			value to display
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawChrMiniAddr		points to next mini chr tile position on screen
 ;			A			destroyed
@@ -5677,7 +5673,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
-	jsr drawString				; draw 2 red hearts
+	jsr drawString				; draw 3 red hearts
 	equb pixelsRed
 	equw screenAddr + 2 + 8 + 1 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,chrHeart,&ff
@@ -5687,7 +5683,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 3 * chrRow
 	equs "BEST PLAYERS",&ff
 	
-	jsr drawString				; draw 2 red hearts
+	jsr drawString				; draw 3 red hearts
 	equb pixelsRed
 	equw screenAddr + 2 + 8 + 18 * chrColumn + 3 * chrRow
 	equs chrHeart,chrHeart,chrHeart,&ff
