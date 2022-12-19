@@ -4391,10 +4391,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	clc
 	adc ladybugDeathAnimationTable, x
 
-	cmp #8					; clip y to stay within the playfield area
+	cmp #1 * 8				; clip y to stay within the playfield area
 	bcs ladybugDeathAnimationLimitYstore
 
-	lda #8
+	lda #1 * 8
 
 .ladybugDeathAnimationLimitYstore
 
@@ -4454,10 +4454,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	stx keyboardScanSaveX			; save register
 
-	lda #&7f				; set port A bit 7 as input ( from keyboard output )
+	lda #%01111111				; set port A bit 7 as input ( from keyboard output )
 	sta via1PortDdrA
 	
-	lda #sbKeyboard + sbLow			; keyboard -enable low
+	lda #sbKeyboard + sbLow			; keyboard -enable low (enable keyboard output to bit 7)
 	sta via1PortB
 	
 	ldx #(keyScanCodesEnd - keyScanCodes) - 1; start at end of table
@@ -4475,9 +4475,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	dex					; else try next code until all tested
 	bpl keyboardScanLoop
 
-	lda #sbKeyboard + sbHigh		; keyboard -enable high
+	lda #sbKeyboard + sbHigh		; keyboard -enable high (disable keyboard output on bit 7)
 	sta via1PortB
 	
+	lda #%11111111				; set port A all bits output
+	sta via1PortDdrA
+
 	ldx keyboardScanSaveX			; restore register
 
 	clc					; no key pressed so return with false
@@ -4485,9 +4488,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .keyboardScanPressed
 
-	lda #sbKeyboard + sbHigh		; keyboard -enable high
+	lda #sbKeyboard + sbHigh		; keyboard -enable high (disable keyboard output to bit 7)
 	sta via1PortB
 	
+	lda #%11111111				; set port A all bits output
+	sta via1PortDdrA
+
 	txa					; A = scan index
 	
 	ldx keyboardScanSaveX			; restore register
