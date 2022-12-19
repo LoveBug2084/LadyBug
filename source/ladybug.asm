@@ -4475,31 +4475,27 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	dex					; else try next code until all tested
 	bpl keyboardScanLoop
 
+	clc					; no key pressed so return with false
+
+.keyboardScanExit
+
 	lda #sbKeyboard + sbHigh		; keyboard -enable high (disable keyboard output on bit 7)
 	sta via1PortB
 	
 	lda #%11111111				; set port A all bits output
 	sta via1PortDdrA
 
+	txa					; A = scan index or ff (no key pressed)
+
 	ldx keyboardScanSaveX			; restore register
 
-	clc					; no key pressed so return with false
-	rts
+	rts					; return
 
 .keyboardScanPressed
 
-	lda #sbKeyboard + sbHigh		; keyboard -enable high (disable keyboard output to bit 7)
-	sta via1PortB
+	sec					; key pressed so return with true
 	
-	lda #%11111111				; set port A all bits output
-	sta via1PortDdrA
-
-	txa					; A = scan index
-	
-	ldx keyboardScanSaveX			; restore register
-
-	sec					; return true
-	rts
+	bcs keyboardScanExit			; return with true
 
 
 
