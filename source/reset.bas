@@ -34,7 +34,7 @@ REM ---------------------------
 
 
 
-ON ERROR PRINT TAB(0,21);:REPORT:PRINT'"Press any key";:K%=GET:RUN
+ON ERROR SOUND1,-15,150,4:PRINT TAB(0,19);:REPORT:PRINT'''"Press any key";:K%=GET:RUN
 
 MODE 7:VDU23,1,0;0;0;0;
 

@@ -1962,9 +1962,9 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	lda pauseCounter			; wait until pause time has expired
 	bne mainPauseLoop
 
-	lda #6					; enable display
+	lda #1					; enable display
 	sta crtcAddr
-	lda #screenHeight
+	lda #screenWidth
 	sta crtcData
 
 	jsr drawPlayfieldUpper			; display the upper playfield bonus letters and multipliers
@@ -2241,6 +2241,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; gameOver					clear the screen and display game over message
+;						check if score needs to be registered in the high score table
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2529,8 +2530,8 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	equb (99.96 * 256) / 100		; percentage chance of enemy turning randomly instead of towards ladybug
 	equb (91.63 * 256) / 100		; enemy attack value on game menu (0-9) is added to the enemy number (0-3)
-	equb (83.30 * 256) / 100		; and used as an index into this table to give the enemy its attack strength
-	equb (74.97 * 256) / 100
+	equb (83.30 * 256) / 100		; and used as an index into this table to give the enemy its random percentage
+	equb (74.97 * 256) / 100		; lower random percentage = higher attack percentage. example 05.00% random = 95.00% attack
 	equb (66.64 * 256) / 100
 	equb (58.31 * 256) / 100
 	equb (49.98 * 256) / 100
@@ -2542,6 +2543,8 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	equb (05.00 * 256) / 100
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; x and y delta for the four possible directions
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesDirX
 
@@ -2552,7 +2555,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	equb -1, 1, 0, 0			; Y up down left right
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; move all sprites 1 pixel
+	; move ladybug and enemy sprites 1 pixel
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSprites
@@ -2793,7 +2796,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	and #&03
 	tay
 
-	bpl moveSpritesFindPath			; go check if this direction is a path (bpl use as branch always)
+	bpl moveSpritesFindPath			; go check if this direction is a path (bpl used as branch always)
 	
 .moveSpritesAttack
 
@@ -3057,9 +3060,9 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-bonusBitsSpecial	= &7f			; bit mask for special bits on bonusBits + 1
-bonusBitsExtra		= &f8			; bit mask for extra bits on bonusBits + 0
-bonusBitsMultiplier	= &07			; bit mask for x2x3x5 multiplier bits on bonusBits + 0
+bonusBitsSpecial	= %01111111		; bit mask for special bits on bonusBits + 1
+bonusBitsExtra		= %11111000		; bit mask for extra bits on bonusBits + 0
+bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusBits + 0
 
 
 
@@ -9151,7 +9154,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	sta bonusDiamondEnable			; remove the possibility of getting a diamond bonus
 
-	jsr swrDrawPlayfieldLowerDiamond		; remove diamond from lower playfield
+	jsr swrDrawPlayfieldLowerDiamond	; remove diamond from lower playfield
 
 	sed					; bcd mode
 

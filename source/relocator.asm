@@ -33,7 +33,7 @@
 
 .bootstrap
 
-	ldx #24					; disable display by setting rows starting at 24 and reducing to 0
+	ldx #24					; set display rows from 24 to 2
 
 .bootstrapDisableDisplay
 
@@ -54,6 +54,11 @@
 	dex
 	dex
 	bpl bootstrapDisableDisplay		; repeat until all rows done
+
+	lda #1					; blank display
+	sta crtcAddr
+	lda #0
+	sta crtcData
 
 	lda #19					; wait 2 * vsync
 	jsr osbyte
@@ -289,12 +294,12 @@
 .bootstrapCrtcData
 	
 	equb 127				; r0  horizontal total
-	equb 69					; r1  horizontal displayed
+	equb 0					; r1  horizontal displayed (set to 0 here to blank the display, set later in the game code)
 	equb 92					; r2  horizontal position
 	equb 40					; r3  sync width
 	equb 38					; r4  vertical total
 	equb 0					; r5  vertical total adjust
-	equb 0					; r6  vertical displayed (set to 0 here to blank the display, set later in the game code)
+	equb screenHeight			; r6  vertical displayed
 	equb 32					; r7  vertical position
 	equb 0					; r8  non-interlaced, no skew
 	equb 7					; r9  scanlines per row
