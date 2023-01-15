@@ -224,19 +224,19 @@ NEXT R%
 
 PRINT TAB(34,3);CHR$(131);"2";:*FX 19
 
-PRINT TAB(2,5);CHR$(133);"A special diamond bonus worth";:*FX 19
-PRINT TAB(2,6);CHR$(135);~U%;"00000 points";CHR$(133);"will be awarded if";:*FX 19
-PRINT TAB(2,7);CHR$(133);"you can reach";CHR$(131);"level ";~Q%;CHR$(133);"while only";:*FX 19
-PRINT TAB(2,8);CHR$(133);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
-PRINT TAB(2,9);CHR$(133);"and";CHR$(131);"without losing a life";:*FX 19
+PRINT TAB(2,5);CHR$(132);"A special diamond bonus worth";:*FX 19
+PRINT TAB(2,6);CHR$(135);~U%;"00000 points";CHR$(130);"will be awarded if";:*FX 19
+PRINT TAB(2,7);CHR$(132);"you can reach";CHR$(131);"level ";~Q%;CHR$(132);"while only";:*FX 19
+PRINT TAB(2,8);CHR$(132);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
+PRINT TAB(2,9);CHR$(132);"and";CHR$(131);"without losing a life";:*FX 19
 
 PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);up$;CHR$(129);"and";CHR$(131);down$;CHR$(129);"keys to";:*FX 19
 PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"RETURN";CHR$(129);"to";:*FX 19
 PRINT TAB(2,13);CHR$(129);"adjust the game settings or";:*FX 19
 PRINT TAB(2,14);CHR$(129);"redefine the game controls";:*FX 19
 
-PRINT TAB(2,16);CHR$(131);"During the game press";CHR$(129);"RETURN";CHR$(131);"to":*FX 19
-PRINT TAB(2,17);CHR$(131);"pause, move";CHR$(129);"Lady Bug";CHR$(131);"to unpause";:*FX 19
+PRINT TAB(2,16);CHR$(130);"During the game press";CHR$(129);"RETURN";CHR$(130);"to":*FX 19
+PRINT TAB(2,17);CHR$(130);"pause, move";CHR$(129);"Lady Bug";CHR$(130);"to unpause";:*FX 19
 
 PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"ESC";CHR$(133);"to quit the current game";:*FX 19
 
