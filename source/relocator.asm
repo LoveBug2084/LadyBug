@@ -60,9 +60,7 @@
 	lda #0
 	sta crtcData
 
-	lda #19					; wait 2 * vsync
-	jsr osbyte
-	jsr osbyte
+	jsr bootstrapVsync + progOffset		; wait 4 vsyncs
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set all palette colors to black
@@ -77,11 +75,8 @@
 	adc #&10
 	bcc bootstrapBlackPalette
 	
-	lda #19					; wait 4 x vsync
-	jsr osbyte
-	jsr osbyte
-	jsr osbyte
-	jsr osbyte
+	jsr bootstrapVsync + progOffset		; wait 4 vsyncs
+
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup custom graphics mode
@@ -105,11 +100,8 @@
 	and #%00111000
 	sta acccon
 
-	lda #19					; wait 4 x vsync
-	jsr osbyte
-	jsr osbyte
-	jsr osbyte
-	jsr osbyte
+	jsr bootstrapVsync + progOffset		; wait 4 vsyncs
+
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup stack, interrupts, via etc
@@ -290,6 +282,20 @@
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jmp main				; run the main game
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; wait 4 vsyncs
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.bootstrapVsync
+
+	lda #19
+	jsr osbyte
+	jsr osbyte
+	jsr osbyte
+	jmp osbyte
 
 
 
