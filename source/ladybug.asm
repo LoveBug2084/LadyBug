@@ -1448,7 +1448,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster line 156 ( (312 / 2) * 64
 	cmp #objectTileIndex			; if its not an object then then exit
 	bcc eraseSpriteExit
 
-	jsr drawMapTile				; else draw the object tile to prevent cropping a column on objects cause by the previous tile draw
+	jsr drawMapTile				; else draw the object tile to prevent cropping a column on objects caused by the previous tile draw
 
 .eraseSpriteExit
 
@@ -2146,7 +2146,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	jsr updateObjectTimer			; update object timer, object mode and palette
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; gameLoopWaitIntTimer				wait for timer1 interrupt then process game functions
+	; gameLoopWaitIntTimer			wait for timer1 interrupt then process game functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLoopWaitIntTimer
@@ -2214,7 +2214,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	cmp #keyBitEsc
 	beq checkEscPressed
 	
-	lda #escTime				; then reset esc counter
+	lda #escTime				; then reset escCounter
 	sta escCounter
 	
 .checkEscReturnFalse
@@ -2266,7 +2266,7 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 	equs "GAME OVER", &ff
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; process some color stuff and wait for the pauseCounter to expire
+	; update bonus colors while waiting for the pauseCounter to timeout
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameOverLoop
@@ -3068,7 +3068,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawPlayfieldLower				draws the bottom info panel showing
-;						ladybug, lives, vegetable, vegetable score, level, score, highScore, highScore name
+;						ladybug, lives, diamond available, vegetable, vegetable score, level, score, highScore, highScore name
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3169,7 +3169,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equb &ff
 	
-	lda #lo(highScoreTable + 3)		; draw the high score name text
+	lda #lo(highScoreTable + 3)		; draw the high score name text and return
 	sta drawTextAddr
 	lda #Hi(highScoreTable + 3)
 	sta drawTextAddr + 1
@@ -3253,7 +3253,8 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawBonusItemCenter				draw vegetable sprite in center bug box (if enabled) or draw diamond sprite (if enabled and correct level)
+; drawBonusItemCenter				draw vegetable sprite in center bug box (if enabled)
+;						or draw diamond sprite (if enabled and correct level)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3285,7 +3286,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	cmp #bonusDiamondLevel
 	bcc drawBonusItemVegetable
 	
-	lda #centerDiamond			; then draw a diamond
+	lda #centerDiamond			; then draw a diamond and return
 	bne drawSprite10x10
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -3744,7 +3745,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	
 .drawChrMiniWrite
 
-	sta dummy16, y				; store it on screen
+	sta dummy16, y				; store it on screen (address previously setup)
 	
 	dey					; repeat until all bytes transferred
 	bpl drawChrMiniLoop
@@ -3952,7 +3953,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; instructions					display game instructions and wait for start to be pressed
+; instructions					display game instructions and wait for start or esc to be pressed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .instructionsLetters
@@ -4006,6 +4007,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equb pixelsGreen
 	equw screenAddr + 2 + 16 + 6 * chrColumn + 7 * chrRow
 	equs "MULTIPLY SCORE", &ff
+
+						; position ready for drawing special and extra letter tiles
 
 	lda #lo(screenAddr + 8 + 3 * chrColumn + 10 * chrRow)
 	sta drawMapTileAddr
@@ -4576,7 +4579,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #&18				; level 10-17
 	bcc initLevelSettingsSkulls
 	
-	inx					; 6 skulls level 18-99
+	inx					; 6 skulls
+						; level 18-99
 
 .initLevelSettingsSkulls
 
@@ -4649,7 +4653,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; clear the x2 x3 x5 flags, clear the score multiplier and the special/extra/diamond active flags
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda bonusBits + 0				; clear the x2 x3 x5 bits of bonusBits
+	lda bonusBits + 0			; clear the x2 x3 x5 bits of bonusBits
 	ora #bonusBitsMultiplier
 	sta bonusBits + 0
 
@@ -4878,7 +4882,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr drawScore				; draw score (1 digit per loop)
 
-	jsr random				; guarentee that letters and layout are random when the player starts a game
+	jsr random				; call to random so that when the player starts a new game it'll have a random letter choice
 
 	jsr inputScan				; read keyboard input and joystick (if enabled)
 
@@ -4886,7 +4890,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #6
 	bne mainMenuFunctionsExit
 	
-	lda vsyncCounter			; if vsyncCounter & 7 == 0
+	lda vsyncCounter			; and if vsyncCounter & 7 == 0
 	and #7
 	bne mainMenuFunctionsExit
 

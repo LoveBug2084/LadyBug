@@ -33,7 +33,7 @@
 
 .bootstrap
 
-	ldx #24					; set display rows from 24 to 2
+	ldx #25					; set display rows from 25 to 1
 
 .bootstrapDisableDisplay
 
@@ -55,7 +55,7 @@
 	dex
 	bpl bootstrapDisableDisplay		; repeat until all rows done
 
-	lda #1					; blank display
+	lda #1					; set columns to 1 (blank display)
 	sta crtcAddr
 	lda #0
 	sta crtcData
@@ -77,6 +77,34 @@
 	adc #&10
 	bcc bootstrapBlackPalette
 	
+	lda #19					; wait 4 x vsync
+	jsr osbyte
+	jsr osbyte
+	jsr osbyte
+	jsr osbyte
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup custom graphics mode
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	ldx #13					; 14 crtc registers for custom video mode
+
+.bootstrapCrtc
+
+	stx crtcAddr				; copy register values to crtc
+	lda bootstrapCrtcData + progOffset, x
+	sta crtcData
+
+	dex					; until done
+	bpl bootstrapCrtc
+
+	lda #%11110100				; put ula into 16 color mode
+	sta ulaMode
+
+	lda acccon				; disable shadow ram
+	and #%00111000
+	sta acccon
+
 	lda #19					; wait 4 x vsync
 	jsr osbyte
 	jsr osbyte
@@ -114,28 +142,6 @@
 
 	lda #%11111111				; via port A bits 0 - 7 output
 	sta via1PortDdrA
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; setup custom graphics mode
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	ldx #13					; 14 crtc registers for custom video mode
-
-.bootstrapCrtc
-
-	stx crtcAddr				; copy register values to crtc
-	lda bootstrapCrtcData + progOffset, x
-	sta crtcData
-
-	dex					; until done
-	bpl bootstrapCrtc
-
-	lda #%11110100				; put ula into 16 color mode
-	sta ulaMode
-
-	lda acccon				; disable shadow ram
-	and #%00111000
-	sta acccon
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup reset stuff
