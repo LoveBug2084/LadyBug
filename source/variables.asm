@@ -58,7 +58,7 @@
 
 .scoreMultiplier	skip 1			; multiplier 0=x1, 1=x2, 2=x3, 3=x5
 
-.vegetableImg		equb centerCucumber	; vegetable image number for current level, , initialize here for main menu first run
+.vegetableImg		equb centerCucumber	; vegetable image number for current level, initialize here for main menu first run
 
 .bonusItemActive	skip 1			; center bonus item active if != 0
 

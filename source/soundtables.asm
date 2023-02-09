@@ -115,58 +115,39 @@
 
 	equb 0
 
-	equb &86
-	equb &0d
-	equb &91
-	equb &ab
-	equb &06
-	equb &b1
+	equb &86, &0d, &91
+	equb &ab, &06, &b1
 	equb &43
 
-	equb &8e
-	equb &0b
-	equb &a1
-	equb &07
+	equb &8e, &0b
+	equb &a1, &07
 	equb &43
 
-	equb &8a
-	equb &0a
-	equb &af
-	equb &07
+	equb &8a, &0a
+	equb &af, &07
 	equb &43
 
-	equb &80
-	equb &0a
-	equb &af
-	equb &08
+	equb &80, &0a
+	equb &af, &08
 	equb &43
 
-	equb &8f
-	equb &08
-	equb &a0
-	equb &0a
+	equb &8f, &08
+	equb &a0, &0a
 	equb &43
 
-	equb &8f
-	equb &07
-	equb &aa
-	equb &0a
+	equb &8f, &07
+	equb &aa, &0a
 	equb &43
 
-	equb &81
-	equb &07
-	equb &ae
-	equb &0b
+	equb &81, &07
+	equb &ae, &0b
 	equb &43
 
-	equb &8b
-	equb &06
-	equb &a6
-	equb &0d
+	equb &8b, &06
+	equb &a6, &0d
 	equb &43
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &40
 	
 
@@ -294,285 +275,214 @@
 	
 	equb 2
 	
-	equb &c6
-	equb &35
-	equb &d0
+	equb &c6, &35, &d0
 	equb &41
 
-	equb &cd
-	equb &31
+	equb &cd, &31
 	equb &41
 
-	equb &c7
-	equb &2e
+	equb &c7, &2e
 	equb &41
 
-	equb &c5
-	equb &2b
+	equb &c5, &2b
 	equb &41
 
-	equb &c7
-	equb &28
+	equb &c7, &28
 	equb &41
 
-	equb &cb
-	equb &25
+	equb &cb, &25
 	equb &41
 
-	equb &c3
-	equb &23
+	equb &c3, &23
 	equb &41
 
-	equb &cd
-	equb &20
+	equb &cd, &20
 	equb &41
 
-	equb &c9
-	equb &1e
+	equb &c9, &1e
 	equb &41
 
-	equb &c9
-	equb &1c
+	equb &c9, &1c
 	equb &41
 
-	equb &cb
-	equb &25
+	equb &cb, &25
 	equb &41
 
-	equb &c3
-	equb &23
+	equb &c3, &23
 	equb &41
 
-	equb &cd
-	equb &20
+	equb &cd, &20
 	equb &41
 
-	equb &ca
-	equb &1e
+	equb &ca, &1e
 	equb &41
 
-	equb &c9
-	equb &1c
+	equb &c9, &1c
 	equb &41
 
-	equb &ca
-	equb &1a
+	equb &ca, &1a
 	equb &41
 
-	equb &cd
-	equb &18
+	equb &cd, &18
 	equb &41
 
-	equb &c3
-	equb &17
+	equb &c3, &17
 	equb &41
 
-	equb &ca
-	equb &15
+	equb &ca, &15
 	equb &41
 
-	equb &c2
-	equb &14
+	equb &c2, &14
 	equb &41
 
-	equb &cb
-	equb &1a
+	equb &cb, &1a
 	equb &41
 
-	equb &ce
-	equb &18
+	equb &ce, &18
 	equb &41
 
-	equb &c3
-	equb &17
+	equb &c3, &17
 	equb &41
 
-	equb &ca
-	equb &15
+	equb &ca, &15
 	equb &41
 
-	equb &c3
-	equb &14
+	equb &c3, &14
 	equb &41
 
-	equb &cd
-	equb &12
+	equb &cd, &12
 	equb &41
 
-	equb &c9
-	equb &11
+	equb &c9, &11
 	equb &41
 
-	equb &c6
-	equb &10
+	equb &c6, &10
 	equb &41
 
-	equb &c4
-	equb &0f
+	equb &c4, &0f
 	equb &41
 
-	equb &c4
-	equb &0e
+	equb &c4, &0e
 	equb &41
 
-	equb &cd
-	equb &12
+	equb &cd, &12
 	equb &41
 
-	equb &c9
-	equb &11
+	equb &c9, &11
 	equb &41
 
-	equb &c6
-	equb &10
+	equb &c6, &10
 	equb &41
 
-	equb &c5
-	equb &0f
+	equb &c5, &0f
 	equb &41
 
-	equb &c4
-	equb &0e
+	equb &c4, &0e
 	equb &41
 
-	equb &c5
-	equb &0d
+	equb &c5, &0d
 	equb &41
 
-	equb &c6
-	equb &0c
+	equb &c6, &0c
 	equb &41
 
-	equb &c9
-	equb &0b
+	equb &c9, &0b
 	equb &41
 
-	equb &cd
-	equb &0a
+	equb &cd, &0a
 	equb &41
 
-	equb &c1
-	equb &0a
+	equb &c1, &0a
 	equb &41
 
-	equb &c5
-	equb &0d
+	equb &c5, &0d
 	equb &41
 
-	equb &c7
-	equb &0c
+	equb &c7, &0c
 	equb &41
 
-	equb &ca
-	equb &0b
+	equb &ca, &0b
 	equb &41
 
-	equb &cd
-	equb &0a
+	equb &cd, &0a
 	equb &41
 
-	equb &c2
-	equb &0a
+	equb &c2, &0a
 	equb &41
 
-	equb &c7
-	equb &09
+	equb &c7, &09
 	equb &41
 
-	equb &cc
-	equb &08
+	equb &cc, &08
 	equb &41
 
-	equb &c3
-	equb &08
+	equb &c3, &08
 	equb &41
 
-	equb &ca
-	equb &07
+	equb &ca, &07
 	equb &41
 
-	equb &c2
-	equb &07
+	equb &c2, &07
 	equb &41
 
-	equb &c7
-	equb &09
+	equb &c7, &09
 	equb &41
 
-	equb &cd
-	equb &08
+	equb &cd, &08
 	equb &41
 
-	equb &c3
-	equb &08
+	equb &c3, &08
 	equb &41
 
-	equb &ca
-	equb &07
+	equb &ca, &07
 	equb &41
 
-	equb &c2
-	equb &07
+	equb &c2, &07
 	equb &41
 
-	equb &ca
-	equb &06
+	equb &ca, &06
 	equb &41
 
-	equb &c3
-	equb &06
+	equb &c3, &06
 	equb &41
 
-	equb &cc
-	equb &05
+	equb &cc, &05
 	equb &41
 
-	equb &c6
-	equb &05
+	equb &c6, &05
 	equb &41
 
-	equb &c0
-	equb &05
+	equb &c0, &05
 	equb &41
 
-	equb &ca
-	equb &06
+	equb &ca, &06
 	equb &41
 
-	equb &c3
-	equb &06
+	equb &c3, &06
 	equb &41
 
-	equb &cc
-	equb &05
+	equb &cc, &05
 	equb &41
 
-	equb &c6
-	equb &05
+	equb &c6, &05
 	equb &41
 
-	equb &c0
-	equb &05
+	equb &c0, &05
 	equb &41
 
-	equb &cb
-	equb &04
+	equb &cb, &04
 	equb &41
 
-	equb &c6
-	equb &04
+	equb &c6, &04
 	equb &41
 
-	equb &c1
-	equb &04
+	equb &c1, &04
 	equb &41
 
-	equb &cd
-	equb &03
+	equb &cd, &03
 	equb &41
 
-	equb &c9
-	equb &03
+	equb &c9, &03
 	equb &41
 
 	equb &df
@@ -590,100 +500,67 @@
 
 	equb 3
 
-	equb &88
-	equb &3f
-	equb &92
-	equb &a6
-	equb &35
-	equb &b2
+	equb &88, &3f, &92
+	equb &a6, &35, &b2
 	equb &41
 
-	equb &86
-	equb &35
-	equb &ae
-	equb &2c
+	equb &86, &35
+	equb &ae, &2c
 	equb &41
 
-	equb &8e
-	equb &2c
-	equb &ac
-	equb &25
+	equb &8e, &2c
+	equb &ac, &25
 	equb &41
 
-	equb &8c
-	equb &25
-	equb &ac
-	equb &1f
+	equb &8c, &25
+	equb &ac, &1f
 	equb &41
 
-	equb &8c
-	equb &1f
-	equb &ab
-	equb &1a
+	equb &8c, &1f
+	equb &ab, &1a
 	equb &41
 
-	equb &8b
-	equb &1a
-	equb &a7
-	equb &16
+	equb &8b, &1a
+	equb &a7, &16
 	equb &41
 
-	equb &87
-	equb &16
-	equb &ae
-	equb &12
+	equb &87, &16
+	equb &ae, &12
 	equb &41
 
-	equb &8e
-	equb &12
-	equb &ae
-	equb &0f
+	equb &8e, &12
+	equb &ae, &0f
 	equb &41
 
-	equb &8e
-	equb &0f
-	equb &a6
-	equb &0d
+	equb &8e, &0f
+	equb &a6, &0d
 	equb &41
 
-	equb &86
-	equb &0d
-	equb &a4
-	equb &0b
+	equb &86, &0d
+	equb &a4, &0b
 	equb &41
 
-	equb &84
-	equb &0b
-	equb &a7
-	equb &09
+	equb &84, &0b
+	equb &a7, &09
 	equb &41
 
-	equb &87
-	equb &09
-	equb &af
-	equb &07
+	equb &87, &09
+	equb &af, &07
 	equb &41
 
-	equb &8f
-	equb &07
-	equb &ab
-	equb &06
+	equb &8f, &07
+	equb &ab, &06
 	equb &41
 
-	equb &8b
-	equb &06
-	equb &aa
-	equb &05
+	equb &8b, &06
+	equb &aa, &05
 	equb &41
 
-	equb &8a
-	equb &05
-	equb &ab
-	equb &04
+	equb &8a, &05
+	equb &ab, &04
 	equb &41
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &40
 
 
@@ -698,250 +575,167 @@
 
 	equb 3
 
-	equb &8d
-	equb &10
-	equb &90
-	equb &a3
-	equb &15
-	equb &b0
+	equb &8d, &10, &90
+	equb &a3, &15, &b0
 	equb &41
 
-	equb &8d
-	equb &11
-	equb &a7
-	equb &16
+	equb &8d, &11
+	equb &a7, &16
 	equb &41
 
-	equb &8e
-	equb &12
-	equb &ad
-	equb &17
+	equb &8e, &12
+	equb &ad, &17
 	equb &41
 
-	equb &80
-	equb &14
-	equb &a3
-	equb &19
+	equb &80, &14
+	equb &a3, &19
 	equb &41
 
-	equb &8d
-	equb &11
-	equb &a7
-	equb &16
+	equb &8d, &11
+	equb &a7, &16
 	equb &41
 
-	equb &8e
-	equb &12
-	equb &ad
-	equb &17
+	equb &8e, &12
+	equb &ad, &17
 	equb &41
 
-	equb &80
-	equb &14
-	equb &a3
-	equb &19
+	equb &80, &14
+	equb &a3, &19
 	equb &41
 
-	equb &83
-	equb &15
-	equb &ab
-	equb &1a
+	equb &83, &15
+	equb &ab, &1a
 	equb &41
 
-	equb &8e
-	equb &12
-	equb &ad
-	equb &17
+	equb &8e, &12
+	equb &ad, &17
 	equb &41
 
-	equb &80
-	equb &14
-	equb &a3
-	equb &19
+	equb &80, &14
+	equb &a3, &19
 	equb &41
 
-	equb &83
-	equb &15
-	equb &ab
-	equb &1a
+	equb &83, &15
+	equb &ab, &1a
 	equb &41
 
-	equb &87
-	equb &16
-	equb &a4
-	equb &1c
+	equb &87, &16
+	equb &a4, &1c
 	equb &41
 
-	equb &80
-	equb &14
-	equb &a3
-	equb &19
+	equb &80, &14
+	equb &a3, &19
 	equb &41
 
-	equb &83
-	equb &15
-	equb &ab
-	equb &1a
+	equb &83, &15
+	equb &ab, &1a
 	equb &41
 
-	equb &87
-	equb &16
-	equb &a4
-	equb &1c
+	equb &87, &16
+	equb &a4, &1c
 	equb &41
 
-	equb &8d
-	equb &17
-	equb &af
-	equb &1d
+	equb &8d, &17
+	equb &af, &1d
 	equb &41
 
-	equb &83
-	equb &15
-	equb &ab
-	equb &1a
+	equb &83, &15
+	equb &ab, &1a
 	equb &41
 
-	equb &87
-	equb &16
-	equb &a4
-	equb &1c
+	equb &87, &16
+	equb &a4, &1c
 	equb &41
 
-	equb &8d
-	equb &17
-	equb &af
-	equb &1d
+	equb &8d, &17
+	equb &af, &1d
 	equb &41
 
-	equb &83
-	equb &19
-	equb &ac
-	equb &1f
+	equb &83, &19
+	equb &ac, &1f
 	equb &41
 
-	equb &87
-	equb &16
-	equb &a4
-	equb &1c
+	equb &87, &16
+	equb &a4, &1c
 	equb &41
 
-	equb &8d
-	equb &17
-	equb &af
-	equb &1d
+	equb &8d, &17
+	equb &af, &1d
 	equb &41
 
-	equb &83
-	equb &19
-	equb &ac
-	equb &1f
+	equb &83, &19
+	equb &ac, &1f
 	equb &41
 
-	equb &8b
-	equb &1a
-	equb &aa
-	equb &21
+	equb &8b, &1a
+	equb &aa, &21
 	equb &41
 
-	equb &8d
-	equb &17
-	equb &af
-	equb &1d
+	equb &8d, &17
+	equb &af, &1d
 	equb &41
 
-	equb &83
-	equb &19
-	equb &ac
-	equb &1f
+	equb &83, &19
+	equb &ac, &1f
 	equb &41
 
-	equb &8b
-	equb &1a
-	equb &aa
-	equb &21
+	equb &8b, &1a
+	equb &aa, &21
 	equb &41
 
-	equb &84
-	equb &1c
-	equb &aa
-	equb &23
+	equb &84, &1c
+	equb &aa, &23
 	equb &41
 
-	equb &83
-	equb &19
-	equb &ac
-	equb &1f
+	equb &83, &19
+	equb &ac, &1f
 	equb &41
 
-	equb &8b
-	equb &1a
-	equb &aa
-	equb &21
+	equb &8b, &1a
+	equb &aa, &21
 	equb &41
 
-	equb &84
-	equb &1c
-	equb &aa
-	equb &23
+	equb &84, &1c
+	equb &aa, &23
 	equb &41
 
-	equb &8f
-	equb &1d
-	equb &ac
-	equb &25
+	equb &8f, &1d
+	equb &ac, &25
 	equb &41
 
-	equb &8b
-	equb &1a
-	equb &aa
-	equb &21
+	equb &8b, &1a
+	equb &aa, &21
 	equb &41
 
-	equb &84
-	equb &1c
-	equb &aa
-	equb &23
+	equb &84, &1c
+	equb &aa, &23
 	equb &41
 
-	equb &8f
-	equb &1d
-	equb &ac
-	equb &25
+	equb &8f, &1d
+	equb &ac, &25
 	equb &41
 
-	equb &8c
-	equb &1f
-	equb &a0
-	equb &28
+	equb &8c, &1f
+	equb &a0, &28
 	equb &41
 
-	equb &84
-	equb &1c
-	equb &aa
-	equb &23
+	equb &84, &1c
+	equb &aa, &23
 	equb &41
 
-	equb &8f
-	equb &1d
-	equb &ac
-	equb &25
+	equb &8f, &1d
+	equb &ac, &25
 	equb &41
 
-	equb &8c
-	equb &1f
-	equb &a0
-	equb &28
+	equb &8c, &1f
+	equb &a0, &28
 	equb &41
 
-	equb &8a
-	equb &21
-	equb &a6
-	equb &2a
+	equb &8a, &21
+	equb &a6, &2a
 	equb &41
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &40
 
 
@@ -1008,12 +802,10 @@
 	equb &ca, &23
 	equb &4a
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &42
 
-	equb &91
-	equb &b4
+	equb &91, &b4
 	equb &44
 
 	equb &df
@@ -1052,9 +844,7 @@
 	equb &d4
 	equb &5a
 
-	equb &9f
-	equb &bf
-	equb &df
+	equb &9f, &bf, &df
 	equb &40
 	
 
@@ -1073,282 +863,151 @@
 
 	equb 0
 
-	equb &86
-	equb &0d
-	equb &90
-	equb &ae
-	equb &0f
-	equb &b0
+	equb &86, &0d, &90
+	equb &ae, &0f, &b0
 	equb &44
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &8e
-	equb &0f
-	equb &90
-	equb &a0
-	equb &14
-	equb &b0
+	equb &8e, &0f, &90
+	equb &a0, &14, &b0
 	equb &44
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &80
-	equb &14
-	equb &90
-	equb &ad
-	equb &17
-	equb &b0
+	equb &80, &14, &90
+	equb &ad, &17, &b0
 	equb &44
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &8b
-	equb &1a
-	equb &90
-	equb &ac
-	equb &1f
-	equb &b0
+	equb &8b, &1a, &90
+	equb &ac, &1f, &b0
 	equb &44
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &8d
-	equb &17
-	equb &92
-	equb &a4
-	equb &1c
-	equb &b2
+	equb &8d, &17, &92
+	equb &a4, &1c, &b2
 	equb &4c
 
-	equb &83
-	equb &15
-	equb &91
-	equb &ab
-	equb &1a
-	equb &b1
+	equb &83, &15, &91
+	equb &ab, &1a, &b1
 	equb &4c
 
-	equb &80
-	equb &14
-	equb &90
-	equb &ad
-	equb &17
-	equb &b0
+	equb &80, &14, &90
+	equb &ad, &17, &b0
 	equb &4c
 
-	equb &83
-	equb &15
-	equb &ab
-	equb &1a
+	equb &83, &15
+	equb &ab, &1a
 	equb &44
 
-	equb &8d
-	equb &17
-	equb &91
-	equb &a4
-	equb &1c
-	equb &b1
+	equb &8d, &17, &91
+	equb &a4, &1c, &b1
 	equb &44
 
-	equb &8b
-	equb &1a
-	equb &92
-	equb &ac
-	equb &1f
-	equb &b2
+	equb &8b, &1a, &92
+	equb &ac, &1f, &b2
 	equb &44
 
-	equb &84
-	equb &1c
-	equb &93
-	equb &aa
-	equb &23
-	equb &b3
+	equb &84, &1c, &93
+	equb &aa, &23, &b3
 	equb &44
 
-	equb &8c
-	equb &1f
-	equb &94
-	equb &a0
-	equb &28
-	equb &b4
+	equb &8c, &1f, &94
+	equb &a0, &28, &b4
 	equb &44
 
-	equb &8a
-	equb &23
-	equb &95
-	equb &a6
-	equb &2a
-	equb &b5
+	equb &8a, &23, &95
+	equb &a6, &2a, &b5
 	equb &44
 
-	equb &80
-	equb &28
-	equb &90
-	equb &aa
-	equb &2f
-	equb &b0
+	equb &80, &28, &90
+	equb &aa, &2f, &b0
 	equb &52
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; 2nd part floating angel music
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb &8f
-	equb &07
-	equb &94
-	equb &ab
-	equb &06
-	equb &b4
+	equb &8f, &07, &94
+	equb &ab, &06, &b4
 	equb &48
 
-	equb &88
-	equb &07
-	equb &92
-	equb &a5
-	equb &06
-	equb &b2
+	equb &88, &07, &92
+	equb &a5, &06, &b2
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &91
-	equb &ab
-	equb &06
-	equb &b1
+	equb &8f, &07, &91
+	equb &ab, &06, &b1
 	equb &48
 
-	equb &88
-	equb &07
-	equb &92
-	equb &a5
-	equb &06
-	equb &b2
+	equb &88, &07, &92
+	equb &a5, &06, &b2
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &94
-	equb &ab
-	equb &06
-	equb &b4
+	equb &8f, &07, &94
+	equb &ab, &06, &b4
 	equb &48
 
-	equb &88
-	equb &07
-	equb &98
-	equb &a5
-	equb &06
-	equb &b8
+	equb &88, &07, &98
+	equb &a5, &06, &b8
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &94
-	equb &ab
-	equb &06
-	equb &b4
+	equb &8f, &07, &94
+	equb &ab, &06, &b4
 	equb &48
 
-	equb &88
-	equb &07
-	equb &92
-	equb &a5
-	equb &06
-	equb &b2
+	equb &88, &07, &92
+	equb &a5, &06, &b2
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &91
-	equb &ab
-	equb &06
-	equb &b1
+	equb &8f, &07, &91
+	equb &ab, &06, &b1
 	equb &48
 
-	equb &88
-	equb &07
-	equb &92
-	equb &a5
-	equb &06
-	equb &b2
+	equb &88, &07, &92
+	equb &a5, &06, &b2
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &94
-	equb &ab
-	equb &06
-	equb &b4
+	equb &8f, &07, &94
+	equb &ab, &06, &b4
 	equb &48
 
-	equb &88
-	equb &07
-	equb &98
-	equb &a5
-	equb &06
-	equb &b8
+	equb &88, &07, &98
+	equb &a5, &06, &b8
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &94
-	equb &ab
-	equb &06
-	equb &b4
+	equb &8f, &07, &94
+	equb &ab, &06, &b4
 	equb &48
 
-	equb &88
-	equb &07
-	equb &92
-	equb &a5
-	equb &06
-	equb &b2
+	equb &88, &07, &92
+	equb &a5, &06, &b2
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &91
-	equb &ab
-	equb &06
-	equb &b1
+	equb &8f, &07, &91
+	equb &ab, &06, &b1
 	equb &48
 
-	equb &88
-	equb &07
-	equb &92
-	equb &a5
-	equb &06
-	equb &b2
+	equb &88, &07, &92
+	equb &a5, &06, &b2
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &94
-	equb &ab
-	equb &06
-	equb &b4
+	equb &8f, &07, &94
+	equb &ab, &06, &b4
 	equb &48
 
-	equb &88
-	equb &07
-	equb &98
-	equb &a5
-	equb &06
-	equb &b8
+	equb &88, &07, &98
+	equb &a5, &06, &b8
 	equb &48
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &40
 
 
@@ -1367,262 +1026,161 @@
 	; 1st part collect vegetable sound effect
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb &80
-	equb &0a
-	equb &91
-	equb &a7
-	equb &09
-	equb &b1
+	equb &80, &0a, &91
+	equb &a7, &09, &b1
 	equb &43
 
-	equb &8f
-	equb &08
-	equb &a7
-	equb &08
+	equb &8f, &08
+	equb &a7, &08
 	equb &43
 
-	equb &8f
-	equb &07
-	equb &a8
-	equb &07
+	equb &8f, &07
+	equb &a8, &07
 	equb &43
 
-	equb &8b
-	equb &06
-	equb &a5
-	equb &06
+	equb &8b, &06
+	equb &a5, &06
 	equb &43
 
-	equb &8f
-	equb &05
-	equb &aa
-	equb &05
+	equb &8f, &05
+	equb &aa, &05
 	equb &43
 
-	equb &8b
-	equb &06
-	equb &a5
-	equb &06
+	equb &8b, &06
+	equb &a5, &06
 	equb &43
 
-	equb &8f
-	equb &07
-	equb &a8
-	equb &07
+	equb &8f, &07
+	equb &a8, &07
 	equb &43
 
-	equb &8f
-	equb &08
-	equb &a7
-	equb &08
+	equb &8f, &08
+	equb &a7, &08
 	equb &43
 
-	equb &80
-	equb &0a
-	equb &a7
-	equb &09
+	equb &80, &0a
+	equb &a7, &09
 	equb &43
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &43
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; 2nd part vegetable music
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb &86
-	equb &0d
-	equb &90
-	equb &aa
-	equb &23
-	equb &b0
+	equb &86, &0d, &90
+	equb &aa, &23, &b0
 	equb &48
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &8d
-	equb &11
-	equb &91
-	equb &ab
-	equb &1a
-	equb &b1
+	equb &8d, &11, &91
+	equb &ab, &1a, &b1
 	equb &48
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &86
-	equb &0d
-	equb &90
-	equb &aa
-	equb &23
-	equb &b0
+	equb &86, &0d, &90
+	equb &aa, &23, &b0
 	equb &48
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &8d
-	equb &11
-	equb &91
-	equb &ab
-	equb &1a
-	equb &b1
+	equb &8d, &11, &91
+	equb &ab, &1a, &b1
 	equb &48
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &8a
-	equb &0a
-	equb &90
-	equb &ad
-	equb &11
-	equb &b0
+	equb &8a, &0a, &90
+	equb &ad, &11, &b0
 	equb &4c
 
-	equb &8e
-	equb &0b
-	equb &91
-	equb &a0
-	equb &14
-	equb &b1
+	equb &8e, &0b, &91
+	equb &a0, &14, &b1
 	equb &44
 
-	equb &86
-	equb &0d
-	equb &90
-	equb &a3
-	equb &15
-	equb &b0
+	equb &86, &0d, &90
+	equb &a3, &15, &b0
 	equb &4c
 
-	equb &8d
-	equb &11
-	equb &ab
-	equb &1a
+	equb &8d, &11
+	equb &ab, &1a
 	equb &44
 
-	equb &8e
-	equb &0f
-	equb &91
-	equb &a0
-	equb &14
-	equb &b1
+	equb &8e, &0f, &91
+	equb &a0, &14, &b1
 	equb &4c
 
-	equb &82
-	equb &0e
-	equb &ad
-	equb &17
+	equb &82, &0e
+	equb &ad, &17
 	equb &44
 
-	equb &86
-	equb &0d
-	equb &a3
-	equb &15
+	equb &86, &0d
+	equb &a3, &15
 	equb &4c
 
-	equb &8e
-	equb &0b
-	equb &a0
-	equb &14
+	equb &8e, &0b
+	equb &a0, &14
 	equb &44
 
-	equb &8a
-	equb &0a
-	equb &90
-	equb &ab
-	equb &1a
-	equb &b0
+	equb &8a, &0a, &90
+	equb &ab, &1a, &b0
 	equb &48
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &87
-	equb &09
-	equb &90
-	equb &ad
-	equb &17
-	equb &b0
+	equb &87, &09, &90
+	equb &ad, &17, &b0
 	equb &48
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &8f
-	equb &08
-	equb &90
-	equb &ad
-	equb &11
-	equb &b0
+	equb &8f, &08, &90
+	equb &ad, &11, &b0
 	equb &48
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &58
 
-	equb &8f
-	equb &08
-	equb &90
-	equb &ad
-	equb &11
-	equb &b0
+	equb &8f, &08, &90
+	equb &ad, &11, &b0
 	equb &44
 	
-	equb &8f
-	equb &07
-	equb &a0
-	equb &14
+	equb &8f, &07
+	equb &a0, &14
 	equb &44
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &8f
-	equb &07
-	equb &90
-	equb &a0
-	equb &14
-	equb &b0
+	equb &8f, &07, &90
+	equb &a0, &14, &b0
 	equb &44
 	
-	equb &81
-	equb &07
-	equb &ad
-	equb &17
+	equb &81, &07
+	equb &ad, &17
 	equb &44
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 
-	equb &81
-	equb &07
-	equb &90
-	equb &ad
-	equb &17
-	equb &b0
+	equb &81, &07, &90
+	equb &ad, &17, &b0
 	equb &44
 
-	equb &8b
-	equb &06
-	equb &ab
-	equb &1a
+	equb &8b, &06
+	equb &ab, &1a
 	equb &44
 	
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &48
 	equb &40
 
@@ -1638,52 +1196,35 @@
 
 	equb 0
 	
-	equb &8b
-	equb &06
-	equb &91
-	equb &ab
-	equb &1a
-	equb &b1
+	equb &8b, &06, &91
+	equb &ab, &1a, &b1
 	equb &4E
 
-	equb &86
-	equb &0d
-	equb &ad
-	equb &11
+	equb &86, &0d
+	equb &ad, &11
 	equb &47
 
-	equb &8a
-	equb &0a
-	equb &a6
-	equb &0d
+	equb &8a, &0a
+	equb &a6, &0d
 	equb &47
 
-	equb &8f
-	equb &08
-	equb &aa
-	equb &0a
+	equb &8f, &08
+	equb &aa, &0a
 	equb &47
 
-	equb &8b
-	equb &06
-	equb &a3
-	equb &15
+	equb &8b, &06
+	equb &a3, &15
 	equb &47
 
-	equb &85
-	equb &05
-	equb &af
-	equb &08
+	equb &85, &05
+	equb &af, &08
 	equb &47
 
-	equb &8b
-	equb &06
-	equb &aa
-	equb &0a
+	equb &8b, &06
+	equb &aa, &0a
 	equb &47
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &40
 
 
@@ -1698,40 +1239,29 @@
 
 	equb 0
 
-	equb &8a
-	equb &0a
-	equb &92
-	equb &a6
-	equb &35
-	equb &b4
+	equb &8a, &0a, &92
+	equb &a6, &35, &b4
 	equb &54
 
 	equb &bf
 	equb &41
 
-	equb &8e
-	equb &0b
+	equb &8e, &0b
 	equb &b4
 	equb &46
 
 	equb &bf
 	equb &41
 
-	equb &8a
-	equb &0a
-	equb &a6
-	equb &2a
-	equb &b4
+	equb &8a, &0a
+	equb &a6, &2a, &b4
 	equb &55
 
-	equb &8e
-	equb &0b
+	equb &8e, &0b
 	equb &47
 
-	equb &86
-	equb &0d
-	equb &ac
-	equb &1f
+	equb &86, &0d
+	equb &ac, &1f
 	equb &46
 
 	equb &9f
@@ -1743,16 +1273,14 @@
 	equb &bf
 	equb &41
 
-	equb &82
-	equb &0e
+	equb &82, &0e
 	equb &b4
 	equb &46
 
 	equb &bf
 	equb &41
 
-	equb &8e
-	equb &0f
+	equb &8e, &0f
 	equb &b4
 	equb &5d
 
@@ -1760,44 +1288,37 @@
 	equb &41
 
 	equb &92
-	equb &aa
-	equb &2f
+	equb &aa, &2f
 	equb &4d
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &41
 
-	equb &92
-	equb &b4
+	equb &92, &b4
 	equb &4d
 
 	equb &bf
 	equb &41
 
-	equb &86
-	equb &0d
+	equb &86, &0d
 	equb &b4
 	equb &46
 
 	equb &bf
 	equb &41
 
-	equb &8a
-	equb &0a
+	equb &8a, &0a
 	equb &b4
 	equb &4d
 
 	equb &bf
 	equb &41
 
-	equb &8e
-	equb &0b
+	equb &8e, &0b
 	equb &b4
 	equb &47
 
-	equb &aa
-	equb &23
+	equb &aa, &23
 	equb &4d
 
 	equb &bf
@@ -1842,8 +1363,7 @@
 	equb &b4
 	equb &5c
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &40
 
 
@@ -1858,82 +1378,60 @@
 
 	equb 0
 	
-	equb &8e
-	equb &0f
-	equb &92
-	equb &a0
-	equb &28
-	equb &b4
+	equb &8e, &0f, &92
+	equb &a0, &28, &b4
 	equb &4e
 
-	equb &86
-	equb &0d
+	equb &86, &0d
 	equb &46
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &41
 
-	equb &92
-	equb &b4
+	equb &92, &b4
 	equb &46
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &41
 
-	equb &92
-	equb &b4
+	equb &92, &b4
 	equb &46
 
-	equb &9f
-	equb &41
+	equb &9f, &41
 
 	equb &92
 	equb &47
 
-	equb &8e
-	equb &0f
+	equb &8e, &0f
 	equb &47
 
-	equb &8d
-	equb &11
+	equb &8d, &11
 	equb &47
 
-	equb &8e
-	equb &0f
-	equb &a6
-	equb &35
+	equb &8e, &0f
+	equb &a6, &35
 	equb &47
 
-	equb &8d
-	equb &11
+	equb &8d, &11
 	equb &47
 
-	equb &83
-	equb &15
+	equb &83, &15
 	equb &46
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &41
 
-	equb &92
-	equb &b4
+	equb &92, &b4
 	equb &46
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &41
 
-	equb &92
-	equb &b4
+	equb &92, &b4
 	equb &5c
 
-	equb &8d
-	equb &17
-	equb &aa
-	equb &2f
+	equb &8d, &17
+	equb &aa, &2f
 	equb &4d
 
 	equb &9f
@@ -1942,20 +1440,16 @@
 	equb &92
 	equb &46
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &41
 
-	equb &92
-	equb &b4
+	equb &92, &b4
 	equb &46
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &41
 
-	equb &92
-	equb &b4
+	equb &92, &b4
 	equb &46
 
 	equb &9f
@@ -1970,10 +1464,8 @@
 	equb &92
 	equb &47
 
-	equb &8d
-	equb &11
-	equb &aa
-	equb &23
+	equb &8d, &11
+	equb &aa, &23
 	equb &46
 
 	equb &9f
@@ -1982,38 +1474,34 @@
 	equb &92
 	equb &47
 
-	equb &8e
-	equb &0f
+	equb &8e, &0f
 	equb &46
 
 	equb &bf
 	equb &41
 
-	equb &8d
-	equb &11
-	equb &aa
-	equb &23
+	equb &8d, &11
+	equb &aa, &23
 	equb &b4
 	equb &46
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &41
 
-	equb &8d
-	equb &11
-	equb &92
-	equb &aa
-	equb &23
-	equb &b4
+	equb &8d, &11, &92
+	equb &aa, &23, &b4
 	equb &5e
 
-	equb &9f
-	equb &bf
+	equb &9f, &bf
 	equb &40
 
 
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; end of sfxData
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+.sfxDataEnd
+	skip 0					; show this address in listing
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print

@@ -8461,6 +8461,8 @@ bootstrap     &4800 - &494E , 335 bytes
      4368   9F
      4369   BF
      436A   40
+.sfxDataEnd
+     436B
 
 
 
