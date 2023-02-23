@@ -963,7 +963,7 @@ bootstrap     &4800 - &494E , 335 bytes
      0122   A5 1C      LDA &1C
      0124   20 FE 0C   JSR &0CFE
      0127   A9 00      LDA #&00
-     0129   20 FE 0C   JSR &0CFE
+     0129   4C FE 0C   JMP &0CFE
 .drawVegetableScoreExit
      012C   60         RTS
 .cleanResetBank

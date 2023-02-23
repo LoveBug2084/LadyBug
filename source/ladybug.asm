@@ -92,13 +92,11 @@
 	lda #hi(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
 	sta drawChrMiniAddr + 1
 
-	
-
 	lda vegetableScore			; draw the top 2 digits of vegetable bonus
 	jsr drawBcdMini
 
-	lda #&00				; draw "00"
-	jsr drawBcdMini
+	lda #&00				; draw "00" and return
+	jmp drawBcdMini
 
 .drawVegetableScoreExit
 
