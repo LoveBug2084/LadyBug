@@ -25,28 +25,28 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-bonusSpecialScore	= 2			; special bonus score value * 100,000
-bonusSpecialShield	= 6			; special bonus skull shield for 6 levels
+bonusSpecialScore	= 2			; special bonus score 2 * 100,000
+bonusSpecialShield	= 6			; special bonus skull shield 6 levels
 
 bonusExtraLives		= 2			; extra bonus 2 lives
 
 bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
-bonusDiamondScore	= &10			; diamond bonus score value * 100,000
+bonusDiamondScore	= &10			; diamond bonus score value 10 * 100,000
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-magicNumber		= &69			; used for random seed, validation generation, swr test
+magicNumber		= &69			; used for random seed initialization, data validation code generation and swr test
 
 spritesTotal		= 5			; total number of sprites in game (1 for lady bug and 4 for enemies)
 
-spritesAnimationSpeed	= 8			; number of vsyncs per animation frame (6.25Hz)
+spritesAnimationSpeed	= 8			; number of vsyncs per animation frame (animation speed = 6.25Hz (50Hz / 8))
 
 ladybugEnemyRange	= 6			; range allowed between enemy and ladybug to detect as a hit
 
 frame			= 50			; 1 second = 50 * 50Hz vsync frames
 pause			= 25			; 1 second pause = 25 * 25Hz
 
-escTime			= frame * 2.00		; hold esc for 2.00 seconds to quit game
+escTime			= frame * 2.00		; hold esc for 2.00 seconds to quit game and return back to menu
 
 levelIntroTime		= pause * 3.00		; 3.00 seconds level intro screen time
 
@@ -102,16 +102,16 @@ chrHeart		= '*'
 ; object positions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-ladybugStartX		= 88			; sprite coordinates in pixels
+ladybugStartX		= 88			; sprite coordinates for ladybug starting position
 ladybugStartY		= 136
 
-centerBoxX		= 88			; sprite coordinates in pixels
+centerBoxX		= 88			; sprite coordinates for center box
 centerBoxY		= 88
 
-vegetableScoreX		= 10			; tile coordinates
+vegetableScoreX		= 10			; tile coordinates for vegetable score
 vegetableScoreY		= 12
 
-lowerDiamondX		= 20			; position in pixels of playfield lower diamond available indicator
+lowerDiamondX		= 20			; sprite coordinates for diamond available indicator
 lowerDiamondY		= 197
 
 
@@ -128,13 +128,13 @@ adcControlM		= &fe18			; master 128 udp 7002 control register
 adcHighM		= &fe19			; master 128 udp 7002 high byte of analogue data
 adcLowM			= &fe1a			; master 128 udp 7002 low byte of analogue data
 
-joystickFireAnalogue	= %00010000		; analogue joystick fire
+joystickFireAnalogue	= %00010000		; analogue joystick fire bit mask
 
-joystickFire		= %00000001		; digital joystick fire
-joystickLeft		= %00000010		; digital joystick left
-joystickDown		= %00000100		; digital joystick down
-joystickUp		= %00001000		; digital joystick up
-joystickRight		= %00010000		; digital joystick right
+joystickFire		= %00000001		; digital joystick fire bit mask
+joystickLeft		= %00000010		; digital joystick left bit mask
+joystickDown		= %00000100		; digital joystick down bit mask
+joystickUp		= %00001000		; digital joystick up bit mask
+joystickRight		= %00010000		; digital joystick right bit mask
 
 
 
@@ -142,7 +142,7 @@ joystickRight		= %00010000		; digital joystick right
 ; playerInput bit assignments
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-keyBitStart		= %00000001
+keyBitStart		= %00000001		; internal player control bit masks used by keyboard and joystick
 keyBitLeft		= %00000010
 keyBitDown		= %00000100
 keyBitUp		= %00001000
@@ -155,7 +155,7 @@ keyBitEsc		= %00100000
 ; key scan codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-keyEsc			= &70			; keyboard hardware scan codes
+keyEsc			= &70			; keyboard matrix hardware scan codes
 key1			= &30
 key2			= &31
 key3			= &11
@@ -561,7 +561,7 @@ pixelsObject		= &ff
 irqAcc			= &fc			; bbc os irq1 interrupt stores accumilator here
 irqVector		= &204			; bbc os irq1 interrupt jumps to this vector
 fx200			= &0258			; bbc os reads the *fx 200 value from here
-breakVector		= &0287			; bbc os jumps to this vector on break key reset
+breakVector		= &0287			; bbc os jumps here on break key reset
 resetVector		= &fffc			; bbc os reset vector
 bankSelectCopy		= &f4			; bbc os stores current sideways bank copy here
 bankSelect		= &fe30			; bank select register for acorn/other
@@ -581,8 +581,8 @@ oswrch			= &ffee			; os function
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 pageZero		= &0000			; all variables here
-page0100		= &0100			; page 1 functions
-page0130		= &0130			; reset code
+page0100		= &0100			; page 1 functions and stack
+page0130		= &0130			; clean reset code
 page0200		= &0200			; os vector redirect and misc
 pagefx200		= &0258			; os fx 200
 pageBreak		= &0287			; os break key intercept
