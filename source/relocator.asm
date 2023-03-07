@@ -60,23 +60,7 @@
 	lda #0
 	sta crtcData
 
-	jsr bootstrapVsync + progOffset		; wait 4 vsyncs
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set all palette colors to black
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	lda #palBlack				; set all 16 palette colors to black
-
-.bootstrapBlackPalette
-
-	sta ulaPalette
-	clc
-	adc #&10
-	bcc bootstrapBlackPalette
-	
-	jsr bootstrapVsync + progOffset		; wait 4 vsyncs
-
+	jsr bootstrapVsync + progOffset		; wait 8 vsyncs
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup custom graphics mode
@@ -93,14 +77,7 @@
 	dex					; until done
 	bpl bootstrapCrtc
 
-	lda #%11110100				; put ula into 16 color mode
-	sta ulaMode
-
-	lda acccon				; disable shadow ram
-	and #%00111000
-	sta acccon
-
-	jsr bootstrapVsync + progOffset		; wait 4 vsyncs
+	jsr bootstrapVsync + progOffset		; wait 8 vsyncs
 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -290,12 +267,16 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; wait 4 vsyncs
+; wait 8 vsyncs
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .bootstrapVsync
 
 	lda #19
+	jsr osbyte
+	jsr osbyte
+	jsr osbyte
+	jsr osbyte
 	jsr osbyte
 	jsr osbyte
 	jsr osbyte

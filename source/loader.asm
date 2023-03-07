@@ -669,7 +669,7 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 
 	sta screenCenter, x
 	inx
-	cpx #200
+	cpx #5 * 40				; repeat clear until 5 rows of 40 colums have been erased (200 characters)
 	bne loaderClearCenter
 
 	sta screenCenterY			; clear the tail of the 'y'
@@ -755,7 +755,7 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 	; run the Lady Bug main game code
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx #lo(runLadybug - loaderReloc)	; run the main ladybug
+	ldx #lo(runLadybug - loaderReloc)	; load and run the main ladybug program */LadyBug
 	ldy #hi(runLadybug - loaderReloc)
 	jmp oscli
 
@@ -808,7 +808,7 @@ swrBank			= pageHigh - 2		; storage for bank number of swram
 machineType		= pageHigh - 3		; storage for machine type
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; test sideways ram bank starting at 0
+	; test sideways ram bank starting at bank 0 up to bank 15
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrTest
@@ -921,7 +921,7 @@ machineType		= pageHigh - 3		; storage for machine type
 	dex
 	bne swrTestByteDelay
 	
-	cmp swrTestLocation			; exit with compare result
+	cmp swrTestLocation			; check swrTestLocation and exit with compare result
 	rts
 
 .swrTestFailed

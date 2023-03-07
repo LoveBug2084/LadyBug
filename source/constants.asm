@@ -26,9 +26,9 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 bonusSpecialScore	= 2			; special bonus score 2 * 100,000
-bonusSpecialShield	= 6			; special bonus skull shield 6 levels
+bonusSpecialShield	= 6			; special bonus skull shield lasts 6 levels
 
-bonusExtraLives		= 2			; extra bonus 2 lives
+bonusExtraLives		= 2			; extra bonus 2 extra lives
 
 bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
 bonusDiamondScore	= &10			; diamond bonus score value 10 * 100,000
@@ -82,7 +82,7 @@ objectModeYellow	= 2
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; special ascii chr reassignment
+; ascii chr reassignment
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 chrCopyright		= '%'
@@ -290,8 +290,8 @@ centerDiamond		= 18
 ; maze tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-wallSolid		= &c0			; solid tile to enemy and player
-wallTurnstile		= &80			; solid tile to enemy only
+wallSolid		= &c0			; bits 7,6 = 1,1 solid tile to enemy and ladybug
+wallTurnstile		= &80			; bitd 7,6 = 1,0 solid tile to enemy only
 
 mapTileBlank		= &00			; empty tile
 
@@ -312,12 +312,12 @@ mapTileTimerBottomRight	= &10
 ; maze turnstile tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-mapTileTurnstileCV	= &1c			; turnstile tiles
-mapTileTurnstileCH	= &1d
-mapTileTurnstileD	= &1e
-mapTileTurnstileU	= &1f
-mapTileTurnstileR	= &20
-mapTileTurnstileL	= &21
+mapTileTurnstileCV	= &1c			; center vertical
+mapTileTurnstileCH	= &1d			; center horizontal
+mapTileTurnstileD	= &1e			; down
+mapTileTurnstileU	= &1f			; up
+mapTileTurnstileR	= &20			; right
+mapTileTurnstileL	= &21			; left
 
 
 
@@ -327,30 +327,42 @@ mapTileTurnstileL	= &21
 
 objectTileIndex		= &22			; object tile images start at this index
 
-mapTileS		= objectTileIndex + 0
-mapTileP		= objectTileIndex + 1
-mapTileE		= objectTileIndex + 2
-mapTileC		= objectTileIndex + 3
-mapTileI		= objectTileIndex + 4
-mapTileA		= objectTileIndex + 5
-mapTileL		= objectTileIndex + 6
-mapTileX		= objectTileIndex + 7
-mapTileT		= objectTileIndex + 8
-mapTileR		= objectTileIndex + 9
-mapTileSkull		= objectTileIndex + 10
-mapTileHeart		= objectTileIndex + 11
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; letters, heart, skull that change color
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+mapTileS		= objectTileIndex + 0	; S
+mapTileP		= objectTileIndex + 1	; P
+mapTileE		= objectTileIndex + 2	; E
+mapTileC		= objectTileIndex + 3	; C
+mapTileI		= objectTileIndex + 4	; I
+mapTileA		= objectTileIndex + 5	; A
+mapTileL		= objectTileIndex + 6	; L
+mapTileX		= objectTileIndex + 7	; X
+mapTileT		= objectTileIndex + 8	; T
+mapTileR		= objectTileIndex + 9	; R
+mapTileSkull		= objectTileIndex + 10	; skull
+mapTileHeart		= objectTileIndex + 11	; heart
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; letters and heart with fixed color (used on level intro screen)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 mapTilecyanHeart	= objectTileIndex + 12
 mapTileYellowE		= objectTileIndex + 13
 mapTileYellowX		= objectTileIndex + 14
 mapTileYellowT		= objectTileIndex + 15
 mapTileYellowR		= objectTileIndex + 16
 mapTileYellowA		= objectTileIndex + 17
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 mapTileBlankObj		= objectTileIndex + 18
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; extra tile codes
+; extra tiles codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 extraTileDigits		= 0			; digits 0-9
@@ -608,11 +620,8 @@ map3Load		= &7a00
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 canvasBoot		= &f000			; temporary canvas address for !Boot file generation
-
 canvasMapNames		= &f100			; temporary canvas address for _Maps file generation
-
 canvasBonusSettings	= &f200			; temporary canvas address for _Bonus file generation
-
 canvasEditor		= &f300			; temporary canvas address for editor tile drawing code
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------

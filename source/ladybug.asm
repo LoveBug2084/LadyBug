@@ -1952,6 +1952,9 @@ drawChrAddr		= drawChrWriteScreen + 1; screen address to write chr
 
 	jsr swrInitScreen			; full screen erase, setup palette colors (see loader.asm)
 	
+	lda #%11110100				; put ula into 16 color mode
+	sta ulaMode
+
 	lda #pause * 0.5			; set pause time to 0.5 seconds
 	sta pauseCounter
 	
@@ -4936,7 +4939,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1 then we need to decrement again
-	beq mainMenuProcessUp			; (skip over blank line between "start game" and first adjustable menu item
+	beq mainMenuProcessUp			; (skip over blank line between "high scores" and "start game")
 
 	lda mainMenuCursor			; if mainMenuCursor < 0
 	bpl mainMenuProcessUpExit
@@ -4966,7 +4969,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1 then increment again
-	beq mainMenuProcessDown			; (skip over the blank line between "start game" and first adjustable menu item
+	beq mainMenuProcessDown			; (skip over the blank line between "start game" and "high scores")
 
 	cmp #9					; if mainMenuCursor >= 9
 	bne mainMenuProcessDownExit
@@ -4991,18 +4994,19 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuProcessStart
 
-	ldx mainMenuCursor			; if mainMenuCursor = 0 then return true (start game)
+	ldx mainMenuCursor			; if mainMenuCursor = 0 (start game) then return true
 	beq mainMenuProcessReturnTrue
 	
-	cpx #2					; if mainMenuCursor = 2 then display high score table
+	cpx #2					; if mainMenuCursor = 2 (high scores) then display high score table
 	beq mainMenuHighScores
 
-	cpx #8					; if mainMenuCursor == 8 then redefine the keyboard
+	cpx #8					; if mainMenuCursor == 8 (controls) then redefine the keyboard
 	beq mainMenuProcessKeyboard
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; we got here so its none of the above, we are at one of the adjustable game settins so
 	; add 1 to the current game setting pointed to by cursor index (x)
-	; if its higher then allowed then reset it to the minimum value
+	; if its higher than allowed then reset it to the minimum value
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 						; x index is offset by 3
@@ -5937,7 +5941,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	and #keyBitStart
 	bne checkPauseGameReturnTrue
 
-	lda playerInput				; if up down left right pressed
+	lda playerInput				; if any of up down left right pressed
 	and #keyBitUp + keyBitDown + keyBitLeft + keyBitRight
 	beq checkPauseGameReturnTrue
 	
