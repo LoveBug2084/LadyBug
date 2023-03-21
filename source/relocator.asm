@@ -116,9 +116,20 @@
 	; setup reset stuff
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda swrBank				; select ram bank
-	sta bankSelect
+	lda swrBank				; get ram bank number
+
 	sta cleanResetBank + progOffset		; save ram bank for clean reset code
+
+	sta bankSelect				; select ram bank
+
+	bmi bootstrapResetValidation		; if its not B+ (bank 128) then
+
+	sta bankSelectSolidisk			; select solidisk write bank
+
+	tax					; select watford electronics write bank
+	sta bankSelectWatford, x
+
+.bootstrapResetValidation
 
 	eor #magicNumber			; calculate validation
 	sta cleanResetValidation + progOffset
@@ -212,10 +223,10 @@
 	iny
 	bne relocateProgram
 
-	inc relocateProgram + progOffset + 2	; do next page
+	inc relocateProgram + progOffset + 2	; calculate next page address
 	inc relocateProgram + progOffset + 5
 
-	dex					; until all pages copied
+	dex					; and repeat relocate until all pages copied
 	bne relocateProgram
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------

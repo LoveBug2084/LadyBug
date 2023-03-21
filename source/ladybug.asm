@@ -5754,19 +5754,19 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr drawString				; draw "> MENU <"
+	jsr drawString				; draw "> OK <"
 	equb pixelsSpecial0
-	equw screenAddr + 2 + 8 + 7 * chrColumn + 21 * chrRow
+	equw screenAddr + 2 + 8 + 8 * chrColumn + 21 * chrRow
 	equs chrRight, &ff
 	
 	jsr drawString
 	equb pixelsSkull
-	equw screenAddr + 2 + 8 + 9 * chrColumn + 21 * chrRow
-	equs "MENU", &ff
+	equw screenAddr + 2 + 8 + 10 * chrColumn + 21 * chrRow
+	equs "OK", &ff
 	
 	jsr drawString
 	equb pixelsSpecial0
-	equw screenAddr + 2 + 8 + 14 * chrColumn + 21 * chrRow
+	equw screenAddr + 2 + 8 + 13 * chrColumn + 21 * chrRow
 	equs chrLeft, &ff
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
