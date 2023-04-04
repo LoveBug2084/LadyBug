@@ -6777,6 +6777,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; spriteToScreen				convert x y coordinates to screen address
+;						adjust sprite image number for 1 pixel shifted alternate image if x = odd
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			drawSpriteX		sprite x coordinate
 ;			drawSpriteY		sprite y coordinate
@@ -6784,7 +6785,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 ; exit			A			destroyed
 ;			X			preserved
 ;			Y			preserved
-;			carry			set if sprite is onscreen
 ;			drawSpriteScreenAddr	screen address to the nearest row
 ;			drawSpriteX		adjusted for offset
 ;			drawSpriteY		adjusted for offset
@@ -6850,22 +6850,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc screenRowHi, y
 	sta drawSpriteScreenAddr + 1		; drawSpriteScreenAddr = screen address for the nearest row
 	
-.spriteToScreenValid
-
-	sec					; flag as valid
-
-.spriteToScreenExit
-
 	ldy spriteToScreenSaveY			; restore registers
 	ldx spriteToScreenSaveX
 
 	rts					; and return
-	
-.spriteToScreenNotValid
-
-	clc					; flag as not valid
-
-	bcc spriteToScreenExit			; and return
 
 
 
