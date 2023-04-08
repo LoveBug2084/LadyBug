@@ -544,7 +544,30 @@ palObject		= &f0
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; pixel mask values for colors
+; draw chr color index
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+colorBlack		= 0
+colorRed		= 1
+colorGreen		= 2
+colorYellow		= 3
+colorBlue		= 4
+colorMagenta		= 5
+colorCyan		= 6
+colorWhite		= 7
+colorMultiplier0	= 8
+colorMultiplier1	= 9
+colorSpecial0		= 10
+colorSpecial1		= 11
+colorExtra0		= 12
+colorExtra1		= 13
+colorSkull		= 14
+colorObject		= 15
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; pixel mask values for chr colors
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 pixelsBlack		= &00			; pixel mask color values used for text drawing and screen erase

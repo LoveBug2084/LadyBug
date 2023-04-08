@@ -111,6 +111,7 @@
 
 .drawStringSaveY	skip 1			; preserve register
 
+.drawTextSaveX		skip 1			; preserve register
 .drawTextSaveY		skip 1			; preserve register
 .drawTextAddr		skip 2			; pointer to text
 

@@ -310,12 +310,10 @@ masterMos350 = &e374
 
 	lda resetVector				; check for mos version
 	
-	cmp #lo(masterMos320)			; mos 3.20 supported
-	beq swrCleanResetMaster320
-	
 	cmp #lo(masterMos350)			; mos 3.50 supported
 	beq swrCleanResetMaster350
-
+	
+	cmp #lo(masterMos320)			; mos 3.20 supported
 	bne swrCleanResetB			; other mos not supported, use the bbc model b function to wipe memory
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
