@@ -40,28 +40,28 @@
 ; high score table
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb &00,&45,&00
+	equb &00,&45,&00			; 45000
 	equs "UNIVERSAL",chrHeart,&FF
 
-	equb &00,&40,&00
+	equb &00,&40,&00			; 40000
 	equs "ASTEROIDS ",&FF
 
-	equb &00,&35,&00
+	equb &00,&35,&00			; 35000
 	equs "CENTIPEDE ",&FF
 
-	equb &00,&30,&00
+	equb &00,&30,&00			; 30000
 	equs "GALAXIAN  ",&FF
 
-	equb &00,&25,&00
+	equb &00,&25,&00			; 25000
 	equs "DEFENDER  ",&FF
 
-	equb &00,&20,&00
+	equb &00,&20,&00			; 20000
 	equs "ROBOTRON  ",&FF
 
-	equb &00,&15,&00
+	equb &00,&15,&00			; 15000
 	equs "SCRAMBLE  ",&FF
 
-	equb &00,&10,&00
+	equb &00,&10,&00			; 10000
 	equs "GAUNTLET  ",&FF
 
 

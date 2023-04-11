@@ -2657,7 +2657,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	sbc spritesX + 0
 	bcs moveSpritesCollisionX
 	eor #&ff
-	adc #1					; carry is clear, clc not needed
+	adc #1					; (carry is clear, clc not needed)
 
 .moveSpritesCollisionX
 
@@ -2669,7 +2669,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	sbc spritesY + 0
 	bcs moveSpritesCollisionY
 	eor #&ff
-	adc #1					; carry is clear, clc not needed
+	adc #1					; (carry is clear, clc not needed)
 
 .moveSpritesCollisionY
 
@@ -2679,7 +2679,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy collision check with skull
+	; check if enemy is exactly aligned with grid
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesCheckAlignmentX
@@ -2736,7 +2736,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	ora spritesDir, x
 	sta spritesDir, x
 
-	jsr enemySpawn				; spawn enemy in center box
+	jsr enemySpawn				; spawn new enemy in center box
 
 	jmp moveSpritesNext			; skip to next sprite
 
@@ -3356,6 +3356,8 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	bne drawSpriteGetX			; contine to drawSprite code
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup drawing vertically mirrored sprite (flipped)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawSpriteFlipped
 
@@ -3378,10 +3380,16 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	sta drawByteCount
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; convert sprite x and y coordinates to screen address
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawSpriteGetX
 
 	jsr spriteToScreen			; convert sprite XY to screen address
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup address of sprite data from table
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda drawSpriteImg			; get sprite data address from spriteImg address table
 
@@ -3390,6 +3398,10 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	sta drawSpriteRead + 1
 	lda spriteImgAddrHi, y
 	sta drawSpriteRead + 2
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup screen address and offset for drawing
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawSpriteColumn
 
@@ -3405,7 +3417,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 .drawSpriteColumnVinit
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; data value of following instruction modified by drawSprite/drawSpriteVflip/drawBonusItemCenter
+	; data value of following instruction modified by drawSprite/drawSpriteVflip/drawBonusItemCenter etc
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #dummy8				; get initial vertical value
@@ -3424,7 +3436,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	; screen destination address value of following intruction is setup by previous code
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	sta dummy16, y				; write byte to screen
+	sta dummy16, y				; write byte to screen (address previously setup)
 
 .drawSpriteNextLine
 
@@ -3450,7 +3462,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	beq drawSpriteExit			; exit if all bytes drawn
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; the following instruction is replaced with inx/dex by drawSprite/drawSpriteVflip/drawBonusItemCenter
+	; the following instruction is replaced with INX or DEx by drawSprite/drawSpriteVflip/drawBonusItemCenter for normal or mirrored drawing mode
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawSpriteNextLineInstruction
@@ -3475,14 +3487,14 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 .drawSpriteColumnTileHeight
 
-	adc #dummy8
+	adc #dummy8				; adjust sprite data address for next column
 	sta drawSpriteRead + 1
 	bcc drawSpriteColumnTileHeightNext
 	inc drawSpriteRead + 2
 
 .drawSpriteColumnTileHeightNext
 
-	clc					; adjust screen address for next column
+	clc					; adjust screen address for next column and loop back to do next column
 	lda drawSpriteScreenAddr
 	adc #8
 	sta drawSpriteScreenAddr
@@ -3648,10 +3660,10 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 .generateValidation
 
-	ldx #0					; zero the validation code
+	ldx #0					; validationCode = 0
 	stx validationCode
 	
-.generateValidationLoop
+.generateValidationLoop				; repeat
 
 	lda configData, x			; validationCode += configData[x] eor #magicNumber
 	eor #magicNumber
@@ -3659,9 +3671,9 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	adc validationCode
 	sta validationCode
 	
-	inx					; repeat loop until end of configData
+	inx
 	cpx #validationCode - configData
-	bne generateValidationLoop
+	bne generateValidationLoop		; until end of configData
 	
 	rts					; return
 
@@ -3671,6 +3683,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ; drawBcdMini					draw 2 digits of BCD mini chr tiles
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			A			value to display
+;			drawChrMiniAddr		screen address to draw
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawChrMiniAddr		points to next mini chr tile position on screen
 ;			A			destroyed
@@ -3694,7 +3707,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	
 	and #%00001111				; draw low nybble
 
-	; continue on into drawChrMini for the 2nd digit
+	; continue on into drawChrMini for the lownybble
 
 
 
@@ -3702,11 +3715,12 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ; drawChrMini					draw mini chr to screen, move to next chr position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			A			chr to be drawn 0-9
-;			drawChrMiniAddr		current screen location for chr
+;			drawChrMiniAddr		screen address for chr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
 ;			Y			preserved
+;			drawChrMiniAddr		points to next chr position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		drawChrSaveX		storage to preserve X
 ;			drawChrSaveY		storage to preserve Y
@@ -3721,7 +3735,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	asl a
 	asl a
 	asl a
-	adc #lo(miniFontBin)			; clc not needed as its already clear
+	adc #lo(miniFontBin)			; (clc not needed as its already clear)
 	sta drawChrMiniLoop + 1
 	lda #0
 	adc #hi(miniFontBin)
@@ -3729,7 +3743,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	ldy #miniFontBytes - 1			; number of bytes to transfer
 	
-.drawChrMiniLoop
+.drawChrMiniLoop				; repeat
 
 	lda dummy16, y				; get byte from minifont (address previously setup)
 	
@@ -3737,8 +3751,8 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	sta dummy16, y				; store it on screen (address previously setup)
 	
-	dey					; repeat until all bytes transferred
-	bpl drawChrMiniLoop
+	dey
+	bpl drawChrMiniLoop			; until all bytes transferred
 	
 	lda #miniFontBytes			; move to next chr position
 	clc
@@ -3755,7 +3769,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	rts					; return
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; alias to self modifying code address
+; alias to self modifying code write address
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 drawChrMiniAddr = drawChrMiniWrite + 1
@@ -4005,7 +4019,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	ldx #0					; draw the special and extra letters
 
-.instructionsLettersLoop
+.instructionsLettersLoop			; repeat
 
 	lda instructionsLetters, x		; get a letter from table
 
@@ -4020,7 +4034,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	inx					; move to next entry in table
 
-	cpx #15					; and repeat until all letters done
+	cpx #15					; until all letters done
 	bne instructionsLettersLoop
 
 	jsr drawString				; draw "collect for bonus" in green
@@ -4039,7 +4053,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equw screenAddr + 2 + 4 * chrColumn + 16 * chrRow
 	equs colorYellow, "MOVE TO UNPAUSE", &ff
 
-	jsr drawString				; draw "hold esc to quit" in red
+	jsr drawString				; draw "hold esc to quit!" in red
 	equw screenAddr + 2 + 3 * chrColumn + 17 * chrRow
 	equs colorRed, "HOLD ESC TO QUIT!", &ff
 
@@ -4435,29 +4449,29 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #%01111111				; set port A bit 7 as input ( from keyboard output )
 	sta via1PortDdrA
 	
-	lda #sbKeyboard + sbLow			; keyboard -enable low (enable keyboard output to bit 7)
+	lda #sbKeyboard + sbLow			; keyboard -enable low (enable keyboard output to part a bit 7 input)
 	sta via1PortB
 	
 	ldx #(keyScanCodesEnd - keyScanCodes) - 1; start at end of table
 	
-.keyboardScanLoop
+.keyboardScanLoop				; repeat
 
 	lda keyScanCodes, x			; get key scan code from table
 
 	sta via1PortA				; select key in keyboard matrix
 
-	lda via1PortA				; read key status
+	lda via1PortA				; read key pressed status from bit 7
 
 	bmi keyboardScanPressed			; if pressed then exit with scancode
 
-	dex					; else try next code until all tested
+	dex					; until all tested
 	bpl keyboardScanLoop
 
 	clc					; no key pressed so return with false
 
 .keyboardScanExit
 
-	lda #sbKeyboard + sbHigh		; keyboard -enable high (disable keyboard output on bit 7)
+	lda #sbKeyboard + sbHigh		; keyboard -enable high (disable keyboard output)
 	sta via1PortB
 	
 	lda #%11111111				; set port A all bits output
@@ -4471,9 +4485,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .keyboardScanPressed
 
-	sec					; key pressed so return with true
+	sec					; key pressed so set true status
 	
-	bcs keyboardScanExit			; return with true
+	bcs keyboardScanExit			; return with keyboard scan code
 
 
 
@@ -4866,7 +4880,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	and #7
 	bne mainMenuFunctionsExit
 
-	jsr playSoundTimer			; play timer sound at correct volume
+	jsr playSoundTimer			; play timer sound at the selected volume
 
 .mainMenuFunctionsExit
 
@@ -8469,7 +8483,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .playSoundTimer				play the enemy timer sound at the correct volume
+; .playSoundTimer				play the enemy timer sound at the selected volume
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundTimer
@@ -8481,10 +8495,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .playSoundTimerVolume
 
-	clc					; then select timer bleep volume
+	clc					; then add optionTimerVolume to #sfxTimerLow - 1 to select the required volume Low/Medium/High
 	adc #sfxTimerLow - 1
 
-	; contine to play sound			; play timer sound effect and exit
+	; contine down to play sound		; play timer sound effect and exit
 
 
 
@@ -8520,8 +8534,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	lda sfxAddrTable, y			; get sound effect data address from table
 	sta playSoundAddr
-	iny
-	lda sfxAddrTable, y
+	lda sfxAddrTable + 1, y
 	sta playSoundAddr + 1
 
 	ldy #0					; get sound effect type from table
@@ -8539,18 +8552,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	cpy #0					; if type = 0 (music)
 	bne playSoundLowPriority
 	
-	sty soundTimers + 0			; then shut down all types except 5 (sfxMunch)
-	sty soundTimers + 1
-	sty soundTimers + 2
-	sty soundTimers + 3
-	sty soundTimers + 4
-
-	lda #&9f				; silence psg channels 0,1,2
-	jsr psgWrite
-	lda #&bf
-	jsr psgWrite
-	lda #&df
-	jsr psgWrite
+	jsr playSoundSilence			; kill any current sounds
 
 	jmp playSoundNow			; play the music
 
@@ -8599,14 +8601,14 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	lda playSoundSaveA			; get sound number
 	
-	cmp #sfxObject				; if sfxObject then shut down types 1 (sfxTimer) and 4 (sfxTurnstile)
+	cmp #sfxObject				; if sfxObject then shut down types 1 and 4 (sfxTimer, sfxTurnstile)
 	beq playSoundDisable14
 	
-	cmp #sfxSkull				; if sfxSkull then shut down types 1 (sfxTimer) and 4 (sfxTurnstile)
+	cmp #sfxSkull				; if sfxSkull then shut down types 1 and 4 (sfxTimer, sfxTurnstile)
 	beq playSoundDisable14
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; copy sound data address and set timer to 1 to trigger start of sound
+	; copy sound data address and set timer to 1 to instantly trigger start of sound
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundNow
@@ -8634,7 +8636,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	rts					; return
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; disable sound types 1 (sfxTimer) and channel 4 (sfxTurnstile)
+	; disable sound types 1 and 4 (sfxTimer, sfxTurnstile)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundDisable14
@@ -8644,13 +8646,13 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta soundTimers + 1			; disable type 1 (sfxTimer)
 	sta soundTimers + 4			; disable type 4 (sfxTurnstile)
 
-	beq playSoundNow			; and play sound
+	beq playSoundNow			; play sound and return
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; checkForObject				check if ladybug is over the bonus vegetable/diamond
-;						also read tile under ladybug and handle any objects found
+;						also read tile under ladybug and handle any objects found (dots, hearts, letters, skulls)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8663,7 +8665,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .bonusBitsMultiplierFlags			; multiplier bit flags
 
-	equb &fb, &f9, &f8
+	equb %11111011, %11111101, %11111110	; x2 x3 x5
 
 .objectScore 
 
@@ -8758,7 +8760,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	cmp #mapTileHeart			; if tile = heart then use heart function
 	beq checkForObjectHeart
 
-	cmp #mapTileS				; if tile >= mapTileS and < mapTileR + 1 (letter tiles S P E C I A L E X T R)
+	cmp #mapTileS				; if tile >= mapTileS and < mapTileR + 1 (letter tiles S P E C I A L X T R)
 	bcc checkForObjectTileExit
 	
 	cmp #mapTileR + 1
@@ -8776,7 +8778,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .checkForObjectDot
 
-	lda #mapTileBlank			; replace dot with blank tile
+	lda #mapTileBlank			; replace dot with blank tile (no need to erase dot from screen as ladybug erase will do that)
 	sta (tileMapAddr), y
 	
 	dec levelEdibles			; dec edibles
@@ -8804,7 +8806,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #mapTileBlankObj			; erase skull from screen
 	jsr drawMapTile
 
-	jsr ladybugKill				; kill ladybug
+	jmp ladybugKill				; kill ladybug and exit
 
 .checkForObjectSkullExit
 
@@ -8848,9 +8850,13 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .checkForObjectScore
 
-	ldx objectMode				; add score value for object cyan = 100, red = 500, yellow = 300
+	ldx objectMode				; add score value for object cyan = 100, red = 800, yellow = 300
 	lda objectScore, x
 	jsr addScoreMultiply
+
+	;-------------------------------------------------------------------------------------------------------------------------------------------------
+	; if object was not cyan then disable the the possibility of getting a diamond bonus
+	;-------------------------------------------------------------------------------------------------------------------------------------------------
 
 	cpx #objectModeCyan			; if the object was not cyan
 	beq checkForObjectScoreNow
@@ -8863,6 +8869,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	jsr swrDrawPlayfieldLowerDiamond	; and remove it from the lower playfield
 
+	;-------------------------------------------------------------------------------------------------------------------------------------------------
+	; display the object score at the object location
+	;-------------------------------------------------------------------------------------------------------------------------------------------------
+
 .checkForObjectScoreNow
 
 	jsr displayobjectScore			; setup object score display
@@ -8874,8 +8884,8 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #objectTime				; pause ladybug
 	sta pauseLadybug
 
-	cmp pauseEnemy				; only set enemy pause time if its currently less than object time
-	bcc checkForObjectExit			; (enemy might already be paused after vegetable bonus so dont overwrite it with a shorter object pause time)
+	cmp pauseEnemy				; only set enemy pause time if its currently less than object time as the enemy might already be paused
+	bcc checkForObjectExit			; after collecting a vegetable bonus, we dont want to reset it to the shorter object time
 	sta pauseEnemy
 
 .checkForObjectExit
@@ -9009,7 +9019,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda objectMode				; calculate which object score image to display based on color mode and multiplier
 	asl a					; objectScoreImg = objectMode * 4 + scoreMultiplier + ImgPoints
 	asl a
-	adc scoreMultiplier			; no need for clc, carry is already clear
+	adc scoreMultiplier			; no need for clc (carry is already clear)
 	adc #ImgPoints
 	sta objectScoreImg
 
@@ -9149,7 +9159,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 .updateLadybugInputLeftAlign
 
-	lda updateLadybugOldDir			; use old direction to align ladybug with turn
+	lda updateLadybugOldDir			; else use old direction to align ladybug with turn
 	sta updateLadybugNewDirY
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9170,7 +9180,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugInputDownAlign
 
-	lda updateLadybugOldDir			; use old direction to align ladybug with turn
+	lda updateLadybugOldDir			; else use old direction to align ladybug with turn
 	sta updateLadybugNewDirX
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9257,7 +9267,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	stx spritesDir + 0			; save new direction
 
-	ora spritesDir + 0			; and combine with blanking flag
+	ora spritesDir + 0			; and combine with blanking bit
 	sta spritesDir + 0
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9393,18 +9403,18 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	ldy #0
 
-	cmp #mapTileTurnstileU + wallTurnstile	; if up tile found then y = 0
+	cmp #mapTileTurnstileU + wallTurnstile	; if up tile found then y = 0 (up)
 	beq updateLadybugTurnstilePush
 
 	iny
-	cmp #mapTileTurnstileD + wallTurnstile	; if down tile found then y = 1
+	cmp #mapTileTurnstileD + wallTurnstile	; if down tile found then y = 1 (down)
 	beq updateLadybugTurnstilePush
 
 	iny
-	cmp #mapTileTurnstileL + wallTurnstile	; if left tile found then y = 2
+	cmp #mapTileTurnstileL + wallTurnstile	; if left tile found then y = 2 (left)
 	beq updateLadybugTurnstilePush
 
-	iny					; remaining tile must be right, y = 3
+	iny					; remaining tile must be right, y = 3 (right)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; push the turnstile in the required direction (rewrite background tile buffer and setup screen address for drawing (handled in gameloop))
@@ -9467,7 +9477,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #0					; set turnstile direction to vertical for drawTurnstile
 	sta drawTurnstileDir
 
-	bpl updateLadybugTurnstileExit		; (bpl used as branch always)
+	beq updateLadybugTurnstileExit		; (beq used as branch always)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; horizontal turnstile
@@ -9569,7 +9579,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .drawTurnstileVertical
 
-	clc					; jump to 1,0
+	clc					; tile offset 1,0
 	lda drawMapTileAddr
 	adc #lo(chrColumn)
 	sta drawMapTileAddr
@@ -9580,7 +9590,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #mapTileTurnstileU			; draw up tile
 	jsr drawMapTile
 	
-	clc					; jump to 0,1
+	clc					; tile offset 0,1
 	lda drawMapTileAddr
 	adc #lo(chrRow - 2 * chrColumn)
 	sta drawMapTileAddr
@@ -9597,7 +9607,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #mapTileBlank			; draw blank tile
 	jsr drawMapTile
 	
-	clc					; jump to 1,2
+	clc					; tile offset 1,2
 	lda drawMapTileAddr
 	adc #lo(chrRow - 2 * chrColumn)
 	sta drawMapTileAddr
@@ -9612,7 +9622,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .drawTurnstileHorizontal
 
-	clc					; jump to 1,0
+	clc					; tile offset 1,0
 	lda drawMapTileAddr
 	adc #lo(chrColumn)
 	sta drawMapTileAddr
@@ -9623,7 +9633,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #mapTileBlank			; draw blank
 	jsr drawMapTile
 	
-	clc					; jump to 0,1
+	clc					; tile offset 0,1
 	lda drawMapTileAddr
 	adc #lo(chrRow - 2 * chrColumn)
 	sta drawMapTileAddr
@@ -9640,7 +9650,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda #mapTileTurnstileR			; draw right tile
 	jsr drawMapTile
 	
-	clc					; jump to 1,2
+	clc					; tile offset 1,2
 	lda drawMapTileAddr
 	adc #lo(chrRow - 2 * chrColumn)
 	sta drawMapTileAddr
@@ -9654,7 +9664,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; offsetDrawMapTileAddr				add offset to drawMapTileAddr to 1 character and 1 row to be under center of sprite
+; offsetDrawMapTileAddr				offset drawMapTileAddr to 1 character and 1 row to be under center of sprite
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .offsetDrawMapTileAddr
@@ -9685,6 +9695,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 spriteToAddrOffset	= 4			; correction factor for center of tile
+						; ( tiles are internally 8x8 pixels so offset of 4 puts it at the center)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -9827,7 +9838,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 	equs "HORSERADISH", &ff
 
-
+.vegetableEnd
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; vegetable name screen address (centered) and name string address
@@ -9835,59 +9846,59 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 .vegetableAddr
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 8) * chrColumn) / 2) and &fff8)
-	equw vegetableCucumber;, 8
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableEggplant - vegetableCucumber)) * chrColumn) / 2) and &fff8)
+	equw vegetableCucumber
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 8) * chrColumn) / 2) and &fff8)
-	equw vegetableEggplant;, 8
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableCarrot - vegetableEggplant)) * chrColumn) / 2) and &fff8)
+	equw vegetableEggplant
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 6) * chrColumn) / 2) and &fff8)
-	equw vegetableCarrot;, 6
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableRadish - vegetableCarrot)) * chrColumn) / 2) and &fff8)
+	equw vegetableCarrot
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 6) * chrColumn) / 2) and &fff8)
-	equw vegetableRadish;, 6
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableParsley - vegetableRadish)) * chrColumn) / 2) and &fff8)
+	equw vegetableRadish
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 7) * chrColumn) / 2) and &fff8)
-	equw vegetableParsley;, 7
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableTomato - vegetableParsley)) * chrColumn) / 2) and &fff8)
+	equw vegetableParsley
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 6) * chrColumn) / 2) and &fff8)
-	equw vegetableTomato;, 6
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetablePumpkin - vegetableTomato)) * chrColumn) / 2) and &fff8)
+	equw vegetableTomato
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 7) * chrColumn) / 2) and &fff8)
-	equw vegetablePumpkin;, 7
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableBambooShoot - vegetablePumpkin)) * chrColumn) / 2) and &fff8)
+	equw vegetablePumpkin
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 12) * chrColumn) / 2) and &fff8)
-	equw vegetableBambooShoot;, 12
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableJapaneseRadish - vegetableBambooShoot)) * chrColumn) / 2) and &fff8)
+	equw vegetableBambooShoot
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 15) * chrColumn) / 2) and &fff8)
-	equw vegetableJapaneseRadish;, 15
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableMushroom - vegetableJapaneseRadish)) * chrColumn) / 2) and &fff8)
+	equw vegetableJapaneseRadish
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 8) * chrColumn) / 2) and &fff8)
-	equw vegetableMushroom;, 8
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetablePotato - vegetableMushroom)) * chrColumn) / 2) and &fff8)
+	equw vegetableMushroom
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 6) * chrColumn) / 2) and &fff8)
-	equw vegetablePotato;, 6
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableOnion - vegetablePotato)) * chrColumn) / 2) and &fff8)
+	equw vegetablePotato
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 5) * chrColumn) / 2) and &fff8)
-	equw vegetableOnion;, 5
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableChineseCabbage - vegetableOnion)) * chrColumn) / 2) and &fff8)
+	equw vegetableOnion
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 15) * chrColumn) / 2) and &fff8)
-	equw vegetableChineseCabbage;, 15
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableTurnip - vegetableChineseCabbage)) * chrColumn) / 2) and &fff8)
+	equw vegetableChineseCabbage
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 6) * chrColumn) / 2) and &fff8)
-	equw vegetableTurnip;, 6
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableGreenChilli - vegetableTurnip)) * chrColumn) / 2) and &fff8)
+	equw vegetableTurnip
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 12) * chrColumn) / 2) and &fff8)
-	equw vegetableGreenChilli;, 12
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableCelery - vegetableGreenChilli)) * chrColumn) / 2) and &fff8)
+	equw vegetableGreenChilli
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 6) * chrColumn) / 2) and &fff8)
-	equw vegetableCelery;, 6
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableSweetPotato - vegetableCelery)) * chrColumn) / 2) and &fff8)
+	equw vegetableCelery
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 12) * chrColumn) / 2) and &fff8)
-	equw vegetableSweetPotato;, 12
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableHorseradish - vegetableSweetPotato)) * chrColumn) / 2) and &fff8)
+	equw vegetableSweetPotato
 
-	equw screenAddr + 2 + 8 * chrRow + ((((23 - 11) * chrColumn) / 2) and &fff8)
-	equw vegetableHorseradish;, 11
+	equw screenAddr + 2 + 8 * chrRow + ((((24 - (vegetableEnd - vegetableHorseradish)) * chrColumn) / 2) and &fff8)
+	equw vegetableHorseradish
 
 
 
