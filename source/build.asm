@@ -36,7 +36,9 @@
 	
 	include "relocator.asm"			; initialization and game relocation
 
-	include "editor.asm"			; tile drawing functions for the basic map editor
+	include "editor.asm"			; tile drawing functions for editor.bas
+
+	include "cls.asm"			; mode 1 clear screen function for editor.bas
 
 	include "bonus.asm"			; bonus settings for boot.bas to display
 
@@ -68,6 +70,8 @@
 	save		"_ConfR", config, configEnd, &ffffff, 0
 
 	putbasic	"editor.bas", "Editor"
+
+	save		"Cls", cls, clsEnd, &ff0000 + cls - canvasCls + pageCls, &ff0000 + cls - canvasCls + pageCls
 
 	save		"EditorM", editorStart, editorEnd, &ffffff, 0
 

@@ -492,7 +492,8 @@ screenHeight		= 26			; screen is 26 rows of 8 lines high (208 raster lines)
 						; start address of screen
 screenAddr		= &8000 - screenWidth * screenHeight * 8
 
-
+screenAddrMode1		= &3000			; start address of mode 1 screen for editor.bas
+screenSizeMode1		= &5000			; size of mode 1 screen
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; screen character sizes
@@ -622,6 +623,7 @@ page0200		= &0200			; os vector redirect and misc
 pagefx200		= &0258			; os fx 200
 pageBreak		= &0287			; os break key intercept
 pageNmi			= &0d00			; os nmi
+pageCls			= &2b00			; clear screen funcrion for editor.bas
 pageConfig		= &7b80			; config / high score table load address
 pageHigh		= &8000			; high ram
 
@@ -646,6 +648,7 @@ canvasBoot		= &f000			; temporary canvas address for !Boot file generation
 canvasMapNames		= &f100			; temporary canvas address for _Maps file generation
 canvasBonusSettings	= &f200			; temporary canvas address for _Bonus file generation
 canvasEditor		= &f300			; temporary canvas address for editor tile drawing code
+canvasCls		= &f400			; temporary canvas address for cls
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 

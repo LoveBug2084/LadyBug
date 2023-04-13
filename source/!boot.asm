@@ -29,6 +29,8 @@
 
 	equb "*BASIC",13			; select basic language
 
+	equb 6					; enable vdu
+
 	equb 22,7				; select mode 7
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
 	equb 23,0,1,0,0,0,0,0,0,0		; disable display
