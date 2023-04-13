@@ -32,10 +32,10 @@ rem  read project name and current build number, create build number text with l
 rem -----------------------------------------------------------------------------------------
 
 set /p bbcProjectName=<projectname.txt
-set /p bbcProjectBuildText=<build.txt
+set /p bbcProjectBuildText=<buildNumber.txt
 set "bbcProjectBuildBin=00000%bbcProjectBuildText%"
 set "bbcProjectBuildBin=%bbcProjectBuildBin:~-6%"
-echo %bbcProjectBuildBin%>build.bin
+echo %bbcProjectBuildBin%>buildNumber.bin
 
 
 
@@ -55,7 +55,7 @@ rem --------------------------------------------------
 
 echo.
 echo %bbcProjectName%.ssd locking files
-utils\filelocker "%bbcProjectName%.ssd" "!Boot  $" "Boot   $" "_Bonus $" "Editor $" "EditorM$" "EditorT$" "LadyBug$" "Loader $" "Reset  $" "_Conf  $" "_ConfR $" "_Maps  $" "_Map1  $" "_Map2  $" "_Map3  $"
+utils\filelocker "%bbcProjectName%.ssd" "!Boot  $" "Boot   $" "_Bonus $" "Editor $" "Cls    $" "EditorM$" "EditorT$" "LadyBug$" "Loader $" "Reset  $" "_Conf  $" "_ConfR $" "_Maps  $" "_Map1  $" "_Map2  $" "_Map3  $"
 
 
 
@@ -66,7 +66,7 @@ rem --------------------------------------------------
 echo.
 echo %bbcProjectName% build %bbcProjectBuildBin%
 set /a bbcProjectBuildText+=1
-echo %bbcProjectBuildText%>build.txt
+echo %bbcProjectBuildText%>buildNumber.txt
 echo.
 
 

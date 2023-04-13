@@ -601,7 +601,7 @@ masterMos350 = &e374
 
 	equb 31,9,11				; position cursor
 	equs 129,"Lady Bug ",132,"Build",135
-	incbin "build.bin"
+	incbin "buildNumber.bin"
 	equb &ff				; end
 
 .loaderUsingBank
