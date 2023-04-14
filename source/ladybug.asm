@@ -5000,11 +5000,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	inc gameSettings - 3, x			; gameSettings[x - 3] += 1
 
-	lda gameSettings - 3, x			; if gameSettings[x - 3] >= optionsMax[x - 3]
+	lda gameSettings - 3, x			; if gameSettings[x - 3] >= optionsMax[x - 3] (maximum value + 1)
 	cmp optionsMax - 3, x
 	bcc mainMenuProcessStartExit
 	
-	lda optionsMin - 3, x			; then gameSettings[x - 3] = optionsMin[x - 3]
+	lda optionsMin - 3, x			; then gameSettings[x - 3] = optionsMin[x - 3] (minimum value)
 	sta gameSettings - 3, x
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -5025,7 +5025,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #3					; if cursor == 3 (ladybugLives) then
 	bne mainMenuProcessStartEnemySpeed
 
-	lda optionLives				; lives = optionLives (update the game lives value from the config)
+	lda optionLives				; lives = optionLives (update the game lives value from the new optionLives value)
 	sta lives
 
 	jsr drawPlayfieldLowerLives		; draw the updated lives value in the lower playfield
@@ -5040,7 +5040,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #4					; if cursor == 4 (enemySpeed) then
 	bne mainMenuProcessStartEnemyAttack
 	
-	jsr mainMenuDrawEnemies			; place 4 random enemies on screen
+	jsr mainMenuDrawEnemies			; update the 4 enemies on screen with new random enemies
 	
 	clc					; return false
 	rts
@@ -5052,7 +5052,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #5					; if cursor == 5 (enemyAttack) then
 	bne mainMenuProcessReturnFalse
 	
-	jsr mainMenuDrawEnemies			; place 4 random enemies on screen
+	jsr mainMenuDrawEnemies			; update the 4 enemies on screen with new random enemies
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -5447,16 +5447,14 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ora #'0'
 	jsr drawChr
 
-						; draw sound on/off
-
 	lda optionSound				; if sound enabled
 	beq mainMenuDrawSettingsMute
 
-	jsr drawString				; draw " ON"
+	jsr drawString				; draw " ON" and return
 	equw screenAddr + 2 + 16 * chrColumn + 19 * chrRow
 	equs " ON", &ff
 
-	rts					; return
+	rts
 	
 .mainMenuDrawSettingsMute
 
@@ -10259,13 +10257,13 @@ include "soundtables.asm"
 
 .joystickAnalogueControlRead
 
-	lda dummy16				; read current channel and flip bit to select other channel (addr setup by relocator)
+	lda dummy16				; read current channel and flip bit to select other channel (addr setup by relocator.asm)
 	and #%00000001
 	eor #%00000001
 
 .joystickAnalogueControlWrite
 
-	sta dummy16				; start new adc conversion (addr setup by relocator)
+	sta dummy16				; start new adc conversion (addr setup by relocator.asm)
 
 	lsr a					; put channel (0 or 1) into carry (note inverted channel from previous eor instruction)
 

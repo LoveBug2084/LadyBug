@@ -9220,6 +9220,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      F521   20 EE FF   JSR &FFEE
      F524   4C EE FF   JMP &FFEE
 .clsEnd
+     F527
 
 
 
