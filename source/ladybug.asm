@@ -60,7 +60,7 @@
 	ror a					; rotate it right putting carry into bit 7 and bit 0 into carry
 	eor randomSeed + 1			; eor with hi 8 bits
 	sta randomSeed + 1			; store in hi 8 bits
-	ror a					; rotate it right putting carry into bit 7
+	ror a					; rotate it right putting and put bit 0 of lo 8 bits into bit 7
 	eor randomSeed				; eor with lo 8 bits
 	sta randomSeed				; store in lo 8 bits
 	eor randomSeed + 1			; eor with hi 8 bits
@@ -4151,6 +4151,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr updateAnimationFrame		; update the animtion frame number
 
 	jsr updateSkullColor			; update the skull palette color
+
+	jsr updateBonusColor			; update the bonus letters palette colors (also used for lower diamond)
 
 	jsr drawScore				; draw score (1 digit per loop)
 
