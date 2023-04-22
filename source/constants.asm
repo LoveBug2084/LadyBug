@@ -594,12 +594,12 @@ pixelsObject		= &ff
 ; os vectors and functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-irqAcc			= &fc			; bbc os irq1 interrupt stores accumilator here
-irqVector		= &204			; bbc os irq1 interrupt jumps to this vector
+irqAcc			= &00fc			; bbc os irq1 interrupt stores accumilator here
+irqVector		= &0204			; bbc os irq1 interrupt vector
 fx200			= &0258			; bbc os reads the *fx 200 value from here
 breakVector		= &0287			; bbc os jumps here on break key reset
 resetVector		= &fffc			; bbc os reset vector
-bankSelectCopy		= &f4			; bbc os stores current sideways bank copy here
+bankSelectCopy		= &00f4			; bbc os stores current sideways bank copy here
 bankSelect		= &fe30			; bank select register for acorn/other
 bankSelectSolidisk	= &fe32			; bank select register for solidisk
 bankSelectWatford	= &ff30			; bank select register (&ff30 - &ff3f) for write operations with watford electronics sideways ram
@@ -619,13 +619,13 @@ oswrch			= &ffee			; os function
 pageZero		= &0000			; all variables here
 page0100		= &0100			; page 1 functions and stack
 page0130		= &0130			; clean reset code
-page0200		= &0200			; os vector redirect and misc
-pagefx200		= &0258			; os fx 200
-pageBreak		= &0287			; os break key intercept
+page0200		= &0200			; os vector redirect and misc functions
+pagefx200		= fx200			; os fx 200
+pageBreak		= breakVector		; os break key intercept
 pageNmi			= &0d00			; os nmi
-pageCls			= &2b00			; clear screen funcrion for editor.bas
+pageCls			= &2b00			; clear screen function for editor.bas
 pageConfig		= &7b80			; config / high score table load address
-pageHigh		= &8000			; high ram
+pageHigh		= &8000			; high ram / sideways ram
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -647,15 +647,11 @@ map3Load		= &7a00
 canvasBoot		= &f000			; temporary canvas address for !Boot file generation
 canvasMapNames		= &f100			; temporary canvas address for _Maps file generation
 canvasBonusSettings	= &f200			; temporary canvas address for _Bonus file generation
-canvasEditor		= &f300			; temporary canvas address for editor tile drawing code
-canvasCls		= &f400			; temporary canvas address for cls
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
+canvasEditor		= &f300			; temporary canvas address for tile drawing code used in editor.bas
 pageEditor		= &2b00			; editor code runs at this address
-
-						; offset
+						; offset from canvas to real editor code address
 pageEditorOffset	= canvasEditor - pageEditor
+canvasCls		= &f400			; temporary canvas address for cls code used in editor.bas
 
 
 
@@ -668,10 +664,10 @@ via1PortDdrB		= &fe42			; via port B io control
 
 via1PortDdrA		= &fe43			; via Port A io control
 
-via1T1CounterLo		= &fe44			; via timer 1 low counter
-via1T1CounterHi		= &fe45			; via timer 1 high counter
-via1T1LatchLo		= &fe46			; via timer 1 low latch
-via1T1LatchHi		= &fe47			; via timer 1 high latch
+via1T1CounterLo		= &fe44			; via timer 1 counter low
+via1T1CounterHi		= &fe45			; via timer 1 counter high
+via1T1LatchLo		= &fe46			; via timer 1 latch low
+via1T1LatchHi		= &fe47			; via timer 1 latch high
 
 via1T2CounterLo		= &fe48			; via timer 2 counter low
 via1T2CounterHi		= &fe49			; via timer 2 counter high
@@ -701,8 +697,8 @@ via2Ier			= &fe6e			; via interrupt enable
 ; video control
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-crtcAddr		= &fe00			; 6845 address
-crtcData		= &fe01			; 6845 data
+crtcAddr		= &fe00			; crtc address
+crtcData		= &fe01			; crtc data
 ulaMode			= &fe20			; ula video mode
 ulaPalette		= &fe21			; ula color palette
 
