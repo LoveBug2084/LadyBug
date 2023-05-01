@@ -119,6 +119,8 @@ IFM%?&2B00<>0THENm$="Unsaved map, save it now":IFFNc THENPROCs:ENDPROC
 VDU28,0,31,39,29,23,1,1;0;0;0;:INPUTTAB(5,0);"Load file name ";l$:VDU23,1,0;0;0;0;26
 PROCb
 
+IFl$=""THENl$=f$(M%)
+
 OSCLI("LOAD "+l$+" "+STR$~(&2F19-M%*&E7))
 f$(M%)=l$
 

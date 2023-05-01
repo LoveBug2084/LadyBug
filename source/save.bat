@@ -1,5 +1,5 @@
 @echo off
-set /p bbcProjectName=<projectname.txt
+set /p bbcProjectName=<projectName.txt
 set /p bbcProjectBuildBin=<buildNumber.bin
 echo creating \backup\%bbcProjectName%\%bbcProjectBuildBin%
 mkdir "\backup\%bbcProjectName%\%bbcProjectBuildBin%" > nul

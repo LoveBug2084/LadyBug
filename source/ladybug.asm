@@ -338,9 +338,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.waitIntVsync
+.waitIntVsync					; repeat
 
-	bit screenHalf				; wait until raster is in upper area line 0
+	bit screenHalf				; until raster is in upper area line 0
 	bpl waitIntVsync
 	
 	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
@@ -359,9 +359,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.waitIntTimer
+.waitIntTimer					; repeat
 
-	bit screenHalf				; wait until raster is in lower area line 156
+	bit screenHalf				; until raster is in lower area line 156
 	bmi waitIntTimer
 	
 	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
@@ -819,7 +819,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.initPlayfieldMiddleRead
+.initPlayfieldMiddleRead			; repeat
 
 	ldx dummy16, y				; get byte from maze (address previously setup)
 
@@ -861,7 +861,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	sbc #0
 	sta initPlayfieldMiddleWriteRight + 2
 
-	iny					; repeat until row transferred
+	iny					; until row transferred
 	cpy #11
 	bne initPlayfieldMiddleRead
 	
@@ -1961,9 +1961,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #pause * 0.5			; set pause time to 0.5 seconds
 	sta pauseCounter
 	
-.mainPauseLoop
+.mainPauseLoop					; repeat
 
-	lda pauseCounter			; wait until pause time has expired
+	lda pauseCounter			; until pause time has expired
 	bne mainPauseLoop
 
 	lda #1					; enable display
@@ -2279,7 +2279,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr updateBonusColor			; update the bonus letters palette colors
 
-	lda pauseCounter			; until time expires
+	lda pauseCounter			; until pause time expires
 	bne gameOverLoop
 
 	jsr checkHighScore			; check if highScore was beaten (handles score position and the high score entry)
@@ -2547,7 +2547,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	equb (05.00 * 256) / 100
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; x and y delta for the four possible directions
+	; x and y for the four possible directions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesDirX
@@ -2938,7 +2938,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	ldy #0					; draw the red, yellow, cyan boxes
 	
-.drawPlayfieldUpperGetData
+.drawPlayfieldUpperGetData			; repeat
 
 	lda drawPlayfieldUpperBoxData + 0, y	; get screen address
 	sta drawMapTileAddr + 0
@@ -2949,11 +2949,11 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	
 	lda drawPlayfieldUpperBoxData + 3, y	; get tile
 
-.drawPlayfieldUpperLoop
+.drawPlayfieldUpperLoop				; repeat
 
 	jsr drawExtraTile			; draw the tile
 	
-	dex					; repeat until all done
+	dex					; until tilecount done
 	bne drawPlayfieldUpperLoop
 	
 	iny					; move to next entry in list
@@ -2961,7 +2961,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	iny
 	iny
 
-	cpy #9 * 4				; repeat until all done
+	cpy #9 * 4				; until all done
 	bne drawPlayfieldUpperGetData
 
 	jsr drawString				; draw the 3 'x' multipliers in cyan
@@ -4188,12 +4188,18 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .ladybugDeathAnimationTable
 
-	equb -2,  0				; floating angel x,y directions
+	equb -2,  0				; floating angel x, y
 	equb -2, -1
 	equb  0, -1
 	equb  2,  0
 	equb  2, -1
 	equb  0, -1
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+angelMinX	= 8 * 1				; angel sprite minimum x value (keep within playfield)
+angelMaxX	= 8 * 21			; angel sprite maximum x value (keep within playfield)
+angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4364,16 +4370,16 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	clc
 	adc ladybugDeathAnimationTable, x
 
-	cmp #1 * 8				; clip x to stay within the playfield area
+	cmp #angelMinX				; clip x to stay within the playfield area
 	bcs ladybugDeathAnimationLimitXhi
-	lda #1 * 8
+	lda #angelMinX
 
 .ladybugDeathAnimationLimitXhi
 
-	cmp #21 * 8
+	cmp #angelMaxX
 	bcc ladybugDeathAnimationLimitXstore
 
-	lda #21 * 8
+	lda #angelMaxX
 
 .ladybugDeathAnimationLimitXstore
 
@@ -4385,10 +4391,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	clc
 	adc ladybugDeathAnimationTable, x
 
-	cmp #1 * 8				; clip y to stay within the playfield area
+	cmp #angelMinY				; clip y to stay within the playfield area
 	bcs ladybugDeathAnimationLimitYstore
 
-	lda #1 * 8
+	lda #angelMinY
 
 .ladybugDeathAnimationLimitYstore
 
@@ -4552,19 +4558,19 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda level				; get current level (bcd)
 
 	ldx #&02				; 2 skulls
-	cmp #&02				; level 1
+	cmp #&01 + 1				; level 1
 	bcc initLevelSettingsSkulls
 	
 	inx					; 3 skulls
-	cmp #&05				; level 2-4
+	cmp #&04 + 1				; level 2-4
 	bcc initLevelSettingsSkulls
 	
 	inx					; 4 skulls
-	cmp #&10				; level 5-9
+	cmp #&09 + 1				; level 5-9
 	bcc initLevelSettingsSkulls
 
 	inx					; 5 skulls
-	cmp #&18				; level 10-17
+	cmp #&17 + 1				; level 10-17
 	bcc initLevelSettingsSkulls
 	
 	inx					; 6 skulls
@@ -4603,20 +4609,20 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta enemySpeed
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy timer speed (number of vsync frames per tick)
+	; set enemy timer speed (number of vsync frames per timer tick)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda level				; get current level (bcd)
 
-	ldx #&08				; use 8 frames if level < 2 (level 1, slow enemy timer)
-	cmp #&02
+	ldx #&08				; use 8 frames if level = (1) (slow enemy timer)
+	cmp #&01 + 1
 	bcc initLevelSettingsTimer
 	
-	ldx #&05				; use 5 frames if level < 5 (levels 2 to 4, medium enemy timer)
-	cmp #&05
+	ldx #&05				; use 5 frames if level (2 to 4) (medium enemy timer)
+	cmp #&04 + 1
 	bcc initLevelSettingsTimer
 	
-	ldx #&03				; else use 3 frames (level 5 to 99, fast enemy timer)
+	ldx #&03				; else use 3 frames level = (5 to 99) (fast enemy timer)
 
 .initLevelSettingsTimer
 
@@ -4638,7 +4644,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta objectModeTimer
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; clear the x2 x3 x5 flags, clear the score multiplier and the special/extra/diamond active flags
+	; clear the x2 x3 x5 flags, clear the score multiplier and the special/extra/diamond bonus active flags
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda bonusBits + 0			; clear the x2 x3 x5 bits of bonusBits
@@ -4648,11 +4654,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #0					; start with no multiplier
 	sta scoreMultiplier
 
-	sta bonusDiamondActive			; disable diamond bonus
+	sta bonusDiamondActive			; disable diamond bonus active
 
-	sta bonusSpecialActive			; disable special bonus
+	sta bonusSpecialActive			; disable special bonus active
 
-	sta bonusExtraActive			; disable extra bonus
+	sta bonusExtraActive			; disable extra bonus active
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; level not ended yet
@@ -4714,7 +4720,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; update cursor and validation code
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.mainMenuUpdateCursor
+.mainMenuUpdateCursor				; repeat
 
 	jsr mainMenuDrawCursor			; draw updated cursor
 
@@ -4724,17 +4730,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; process functions and wait key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.mainMenuWaitRelease
+.mainMenuWaitRelease				; repeat
 
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
-	bne mainMenuWaitRelease			; if key/joystick is pressed then loop back and wait for release
+	bne mainMenuWaitRelease			; until no player input
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait key press
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.mainMenuWaitPress
+.mainMenuWaitPress				; repeat
 
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
@@ -4742,7 +4748,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr mainMenuProcess			; process the key/joystick pressed option
 
-	bcc mainMenuUpdateCursor		; loop back until start game selected
+	bcc mainMenuUpdateCursor		; until start game selected (carry set)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; return to start a new game
@@ -4898,8 +4904,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuProcess
 
-	lda playerInput				; if up pressed then run up function
-	cmp #keyBitUp
+	lda playerInput				; get player input
+
+	cmp #keyBitUp				; if up pressed then run up function
 	beq mainMenuProcessUp
 	
 	cmp #keyBitDown				; if down pressed then run down function
@@ -4959,7 +4966,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	beq mainMenuProcessDown			; (skip over the blank line between "start game" and "high scores")
 
 	cmp #9					; if mainMenuCursor >= 9
-	bne mainMenuProcessDownExit
+	bcc mainMenuProcessDownExit
 	
 	lda #0					; then mainMenuCursor == 0 (handle wrap around)
 
@@ -4981,8 +4988,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuProcessStart
 
-	ldx mainMenuCursor			; if mainMenuCursor = 0 (start game) then return true
-	beq mainMenuProcessReturnTrue
+	ldx mainMenuCursor			; get mainMenuCursor position
+
+	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 (start game) then return true
 	
 	cpx #2					; if mainMenuCursor = 2 (high scores) then display high score table
 	beq mainMenuHighScores
@@ -4994,6 +5002,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	; we got here so its none of the above, we are at one of the adjustable game settings so
 	; add 1 to the current game setting pointed to by cursor index (x)
 	; if its higher than allowed then reset it to the minimum value
+	; note: x is offset by 3 so compensate by subtracting 3 from the game settings table address
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 						; x index is offset by 3
@@ -5093,7 +5102,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .mainMenuProcessKeyboard			; redefine the keys
+; .mainMenuProcessKeyboard			redefine the keys
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessKeyboard
@@ -5403,7 +5412,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda optionKeysAscii, x			; get ascii version of key and display it
 	jsr drawChr
 	
-	dex					; continue until all 4 printed
+	dex					; until all 4 printed
 	bpl mainMenuDrawTextKeys
 
 	rts					; return
@@ -5422,7 +5431,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	lda optionLives
 	ora #'0'
-
 	jsr drawChr
 	
 	jsr drawString				; draw enemy speed
@@ -5490,12 +5498,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 .mainMenuDrawEnemiesLoop			; repeat
 
-	lda mainMenuEnemiesX, x			; set X and Y position
+	lda mainMenuEnemiesX, x			; set X and Y position for enemy from table
 	sta spritesX + 1, x
 	lda mainMenuEnemiesY, x
 	sta spritesY + 1, x
 	
-	lda randomSeed + 1			; set sprite image
+	lda randomSeed + 1			; set enemy sprite image
 	and #7
 	tay
 	lda spriteBaseImg + 1, y
@@ -5562,7 +5570,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr random				; pick random number 0,4,8,12
 	and #%00001100
 
-	tay					; use as index for flower tile
+	tay					; use as index for flower tile table
 
 	lda drawRandomFlowerTile + 0, y		; draw top left
 	jsr drawExtraTile
@@ -5691,7 +5699,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc #14
 	sta highScorePtr
 	
-	dex					; until all 8 processed
+	dex					; until all 8 entrys processed
 	bne drawScoreTableLoop
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -5839,8 +5847,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda ladybugDeathEnable			; if ladybug death animation active then return false
 	bne checkPauseGameReturnFalse
 
-	lda pauseGame				; if game is currently paused then return true
+	lda pauseGame				; if game is currently paused then handle unpausingif needed
 	bne checkPauseGameTrue
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; we got here so game isnt paused and no entry or death movement animation is active
+	; so check if start is pressed and if so pause game and display paused message
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda playerInput				; if start not pressed
 	cmp #keyBitStart
@@ -5865,13 +5878,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sec					; return true
 	rts
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; we got here because game is currently paused so check if only start key is pressed and if so unpause game
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .checkPauseGameTrue
 
 	lda playerInput				; if start is not pressed
 	and #keyBitStart
 	bne checkPauseGameReturnTrue
 
-	lda playerInput				; if any of up down left right pressed
+	lda playerInput				; and if any of up down left right are pressed
 	and #keyBitUp + keyBitDown + keyBitLeft + keyBitRight
 	beq checkPauseGameReturnTrue
 	
@@ -5901,7 +5918,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
-	lda #nameRegTimer			; set enemy timer speed
+	lda #nameRegTimer			; set enemy timer speed (1 tick per second)
 	sta enemyTimerSpeed
 
 	lda #0					; unpause enemies so that the timer will tick
@@ -5911,7 +5928,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	sta shield				; make sure the "END" character is flashing (skull color) by setting shield to 0
 
-	lda #0					; enable enemy release flag usage and warning sound
+	lda #0					; enable enemy release flag usage and warning sound (warning for 10 seconds remaining to register name)
 	sta enemiesActive
 	sta enemyReleaseEnable			; disable enemy release flag (used later in timeout test)
 
@@ -6272,7 +6289,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; nameRegCursorErase				replace cursor box with blank tile (erase)
+; nameRegCursorErase				replace cursor box with blank tiles (erase)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegCursorErase
@@ -6408,6 +6425,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; checkBonus					check if diamond bonus, special bonus or extra bonus is required
 ;						call drawBonusScreen , return with carry set to indicate end of level
+;						carry clear if no bonus was given
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkBonus
@@ -6426,11 +6444,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 
-.checkBonusSpecial
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; handle the special bonus stuff
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.checkBonusSpecial
 
 	lda bonusSpecialActive			; if special bonus not active
 	bne checkBonusSpecialActive
@@ -6496,7 +6514,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .checkBonusExit
 
-	clc					; return to game (no bonus)
+	clc					; return to game (clear carry, no bonus)
 	rts
 
 
@@ -6521,10 +6539,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr addScoreDiamond			; add the diamond bonus score (bcd)
 
+	lda #0					; disable the possibiliy of getting a diamond after this
+	sta bonusDiamondEnable
+	
 	lda #sfxTwinkle				; play the twinkle sound
 	jsr playSound
 
-	sec					; end the current level and return
+	sec					; bonus given so signal end the current level (set carry) and return
 	rts
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6565,7 +6586,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr levelAdvance			; advance game to next level
 
-	sec					; end the current level and return
+	sec					; bonus given so signal end the current level (set carry) and return
 	rts
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6604,7 +6625,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr levelAdvance			; advance game to next level
 
-	sec					; end the current level and return
+	sec					; bonus given so signal end the current level (set carry) and return
 	rts
 
 
@@ -6968,12 +6989,12 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	ldx #spritesTotal - 1			; check all enemy sprites make sure that random enemy isnt already in list
 	
-.enemySpawnCheckImage
+.enemySpawnCheckImage				; repeat
 
 	cmp spritesImg, x			; if chosen enemy type image id is found in list
 	beq enemySpawnRandom			; then pick another random enemy type
 
-	dex					; repeat checking all until done
+	dex					; until done
 	bne enemySpawnCheckImage
 
 	ldx enemySpawnSaveX			; restore the current sprite index
@@ -7140,7 +7161,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	ldx dummy8				; get sprite index so we can continue (address previously setup)
 
-.redrawSpritesEraseLoop
+.redrawSpritesEraseLoop				; repeat
 
 	lda spritesEraseY, x			; compare sprite y coordinate with upper/lower threshold
 	cmp #upperLowerThreshold
@@ -7320,7 +7341,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSpritesCheckDone	
 
-	dec redrawSpritesCount			; continue until all sprites processed
+	dec redrawSpritesCount			; until all sprites processed
 	bne redrawSpritesEraseLoop
 	
 .redrawSpritesUpdateIndex
@@ -7423,7 +7444,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	
 	ldx levelSkulls				; get number of skulls
 
-.drawLevelIntroSkullAddr
+.drawLevelIntroSkullAddr			; repeat
 
 	sec					; for each skull subtract chrColumn from the address
 	lda drawMapTileAddr
@@ -7442,7 +7463,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	ldx levelSkulls				; get the number of skulls
 
-.drawLevelIntroSkullImg
+.drawLevelIntroSkullImg				; repeat
 
 	lda #mapTileSkull			; draw the skull
 	jsr drawMapTile
@@ -7466,7 +7487,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	
 	ldx #2					; start at last letter
 
-.drawLevelIntroLettersImg
+.drawLevelIntroLettersImg			; repeat
 
 	lda levelLetters, x			; draw a letter from the list
 	jsr drawMapTile
@@ -7490,7 +7511,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	
 	ldx #3					; 3 hearts to draw
 
-.drawLevelIntroHeartsImg
+.drawLevelIntroHeartsImg			; repeat
 
 	lda #mapTileHeart			; draw a heart
 	jsr drawMapTile
@@ -7531,7 +7552,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; process sound and colors until level intro time expires
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawLevelIntroWait
+.drawLevelIntroWait				; repeat
 
 	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 	jsr waitIntTimer			; wait for timer1 interrupt and read analogue joystick (if enabled)
@@ -7544,7 +7565,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr drawScore				; draw score (1 digit per loop)
 
-	lda pauseCounter			; repeat until time expires
+	lda pauseCounter			; until pause time expires
 	bne drawLevelIntroWait
 
 	rts					; return
@@ -7608,7 +7629,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	ldx #0					; index into flower positions
 		
-.drawBonusGraphicsLoop
+.drawBonusGraphicsLoop				; repeat
 
 	lda drawBonusGraphicsList, x		; get low byte address from table
 	sta drawMapTileAddr + 0
@@ -7620,7 +7641,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr drawRandomFlower			; draw a single random flower
 
-	cpx #16 * 2				; continue until all flowers drawn
+	cpx #16 * 2				; until all flowers drawn
 	bne drawBonusGraphicsLoop
 
 .drawBonusGraphicsExit
@@ -7875,7 +7896,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; wait for vsync interrupt and process
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawBonusScreenWaitVsync
+.drawBonusScreenWaitVsync			; repeat
 
 	jsr waitIntVsync			; wait for vsync interrupt and read analogue joystick (if enabled)
 
@@ -7905,7 +7926,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr drawScore				; draw score (1 digit per loop)
 
-	lda pauseCounter			; repeat until time expires
+	lda pauseCounter			; until pause time expires
 	bne drawBonusScreenWaitVsync
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8286,7 +8307,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda drawTextAddr
 	pha
 	
-	rts					; jump to terminator address + 1
+	rts					; return terminator address + 1 to continue
 
 
 
@@ -8313,7 +8334,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	lda (drawTextAddr), y			; get chr from text string
 
-	bmi drawTextAdjustAddr			; if bit 7 set then end of text string
+	bmi drawTextAdjustAddr			; if bit 7 set then end of text (string terminator)
 	
 	cmp #16					; if chr value is 0-15 then select chr color
 	bcs drawTextChr
@@ -8348,7 +8369,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ldx drawTextSaveX			; restore register
 	ldy drawTextSaveY			; restore register
 
-	rts					; done
+	rts					; return
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; pixel mask values for chr colors
@@ -8393,7 +8414,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ldy #soundChannels - 1			; process from soundChannels - 1 to 0
 	ldx #2 * (soundChannels - 1)		; offset to pointers
 
-.processSoundLoop
+.processSoundLoop				; repeat
 
 	lda soundTimers, y			; if soundTimer = 0 then skip it
 	beq processSoundNext
@@ -8441,7 +8462,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	dex
 	dey
 
-	bpl processSoundLoop			; continue until all channels processed
+	bpl processSoundLoop			; until all channels processed
 
 .processSoundExit
 
@@ -8463,9 +8484,9 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta soundTimers + 4
 	sta soundTimers + 5
 
-	lda #&9f				; silence all psg channels
+	lda #&9f				; start with psg first channel zero volume (silence)
 	
-.playSoundSilenceLoop
+.playSoundSilenceLoop				; repeat
 
 	pha					; save current channel
 	
@@ -8473,10 +8494,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	pla					; get current channel
 	
-	clc					; next channel
+	clc					; bump value to next channel
 	adc #&20
 	
-	bmi playSoundSilenceLoop		; until done
+	bmi playSoundSilenceLoop		; until all channels done
 	
 	rts					; return
 
@@ -8701,9 +8722,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	lda #&ff				; enable diamond bonus
 	sta bonusDiamondActive
-	
-	lda #0					; disable the diamond after this
-	sta bonusDiamondEnable
 	
 	lda #letterBonusTime			; pause ladybug and enemies
 	sta pauseLadybug
