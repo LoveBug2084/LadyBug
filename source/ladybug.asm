@@ -2459,7 +2459,10 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda soundTimers + 0			; if sound effect not playing on channel 0 (music)
 	bne checkLevelEndFalse
 
-	lda soundTimers + 3			; and if sound effects not playing on channel 3 (object)
+	lda soundTimers + 3			; and if sound effect not playing on channel 3 (object, skull)
+	bne checkLevelEndFalse
+
+	lda soundTimers + 5			; and if sound effect not playing on channel 5 (munch)
 	bne checkLevelEndFalse
 
 	lda #&ff				; flag level as ended
