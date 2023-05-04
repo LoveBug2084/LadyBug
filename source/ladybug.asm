@@ -766,7 +766,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .initPlayfieldMiddleMazeTable
 
-	equw map1, map2, map3		; list of available maze maps
+	equw map1, map2, map3			; list of available maze maps
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
