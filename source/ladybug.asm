@@ -772,12 +772,47 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .initPlayfieldMiddleTilesLeft			; left side tile translation table (normal)
 
-	equb &00,&01,&dc,&dd,&9e,&9f,&a0,&a1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&da,&db
+	equb mapTileBlank
+	equb mapTileDot
+	equb mapTileTurnstileCV + wallSolid
+	equb mapTileTurnstileCH + wallSolid
+	equb mapTileTurnstileD + wallTurnstile
+	equb mapTileTurnstileU + wallTurnstile
+	equb mapTileTurnstileR + wallTurnstile
+	equb mapTileTurnstileL + wallTurnstile
+	equb mapTileTopLeft + wallSolid
+	equb mapTileTopRight + wallSolid
+	equb mapTileBottomLeft + wallSolid
+	equb mapTileBottomRight + wallSolid
+	equb mapTileVertical + wallSolid
+	equb mapTileHorizontal + wallSolid
+	equb mapTileVerticalD + wallSolid
+	equb mapTileVerticalU + wallSolid
+	equb mapTileHorizontalR + wallSolid
+	equb mapTileHorizontalL + wallSolid
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .initPlayfieldMiddleTilesRight			; right side tile translation table (mirrored) 
 
-	equb &00,&01,&dc,&dd,&9e,&9f,&a1,&a0,&d3,&d2,&d5,&d4,&d6,&d7,&d8,&d9,&db,&da
-
+	equb mapTileBlank
+	equb mapTileDot
+	equb mapTileTurnstileCV + wallSolid
+	equb mapTileTurnstileCH + wallSolid
+	equb mapTileTurnstileD + wallTurnstile
+	equb mapTileTurnstileU + wallTurnstile
+	equb mapTileTurnstileL + wallTurnstile	; right and left switched
+	equb mapTileTurnstileR + wallTurnstile
+	equb mapTileTopRight + wallSolid	; right and left switched
+	equb mapTileTopLeft + wallSolid
+	equb mapTileBottomRight + wallSolid	; right and left switched
+	equb mapTileBottomLeft + wallSolid
+	equb mapTileVertical + wallSolid
+	equb mapTileHorizontal + wallSolid
+	equb mapTileVerticalD + wallSolid
+	equb mapTileVerticalU + wallSolid
+	equb mapTileHorizontalL + wallSolid	; right and left switched
+	equb mapTileHorizontalR + wallSolid
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
