@@ -24,6 +24,8 @@
 	print
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; bonus constants (bcd)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 bonusSpecialScore	= 2			; special bonus score 2 * 100,000
 bonusSpecialShield	= 6			; special bonus skull shield lasts 6 levels
@@ -290,21 +292,32 @@ centerDiamond		= 18
 ; maze tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-wallSolid		= &c0			; bits 7,6 = 1,1 solid tile to enemy and ladybug
-wallTurnstile		= &80			; bitd 7,6 = 1,0 solid tile to enemy only
+wallSolid		= %11000000		; bits 7,6 = 1,1 solid tile to enemy and ladybug (timer blocks and maze walls)
+wallTurnstile		= %10000000		; bitd 7,6 = 1,0 solid tile to enemy only (turnstiles)
 
-mapTileBlank		= &00			; empty tile
+mapTileBlank		= 0			; empty tile
 
-mapTileDot		= &01			; dot tile
+mapTileDot		= 1			; dot tile
 
-mapTileTimerTopLeft	= &02			; timer tiles
-mapTileTimerTop		= &04
-mapTileTimerTopRight	= &06
-mapTileTimerLeft	= &08
-mapTileTimerRight	= &0a
-mapTileTimerBottomLeft	= &0c
-mapTileTimerBottom	= &0e
-mapTileTimerBottomRight	= &10
+mapTileTimerTopLeft	= 2			; timer tiles
+mapTileTimerTop		= 4
+mapTileTimerTopRight	= 6
+mapTileTimerLeft	= 8
+mapTileTimerRight	= 10
+mapTileTimerBottomLeft	= 12
+mapTileTimerBottom	= 14
+mapTileTimerBottomRight	= 16
+
+mapTileTopLeft		= 18			; maze tiles
+mapTileTopRight		= 19
+mapTileBottomLeft	= 20
+mapTileBottomRight	= 21
+mapTileVertical		= 22
+mapTileHorizontal	= 23
+mapTileVerticalD	= 24
+mapTileVerticalU	= 25
+mapTileHorizontalR	= 26
+mapTileHorizontalL	= 27
 
 
 
@@ -312,12 +325,12 @@ mapTileTimerBottomRight	= &10
 ; maze turnstile tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-mapTileTurnstileCV	= &1c			; center vertical
-mapTileTurnstileCH	= &1d			; center horizontal
-mapTileTurnstileD	= &1e			; down
-mapTileTurnstileU	= &1f			; up
-mapTileTurnstileR	= &20			; right
-mapTileTurnstileL	= &21			; left
+mapTileTurnstileCV	= 28			; center vertical
+mapTileTurnstileCH	= 29			; center horizontal
+mapTileTurnstileD	= 30			; down
+mapTileTurnstileU	= 31			; up
+mapTileTurnstileR	= 32			; right
+mapTileTurnstileL	= 33			; left
 
 
 
@@ -325,7 +338,7 @@ mapTileTurnstileL	= &21			; left
 ; object tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-objectTileIndex		= &22			; object tile images start at this index
+objectTileIndex		= 34			; object tile images start at this index
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; letters, heart, skull that change color
@@ -400,7 +413,7 @@ extraTileFlower3BR	= 89
 ; name registration cursor box tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-registrationTL		= 90			; name registration letter box
+registrationTL		= 90			; name registration cursor box
 registrationTR		= 91
 registrationBL		= 92
 registrationBR		= 93
@@ -412,24 +425,24 @@ registrationBH		= 97
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; sprite reference
+; sprite base codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-spriteVegetables	= 0
-spriteDiamond		= 18
-spritePoints		= 19
-spriteLadybug		= 31
-spriteEnemy1		= 46
-spriteEnemy2		= 61
-spriteEnemy3		= 76
-spriteEnemy4		= 91
-spriteEnemy5		= 106
-spriteEnemy6		= 121
-spriteEnemy7		= 136
-spriteEnemy8		= 151
-spriteAngel0		= 166
-spriteLowerDiamond	= 168
-spriteAngel1		= 170
+spriteVegetables	= 0			; vegetables 0-17
+spriteDiamond		= 18			; diamond 18
+spritePoints		= 19			; object points 19-30
+spriteLadybug		= 31			; ladybug 31-45
+spriteEnemy1		= 46			; enemy1 46-60
+spriteEnemy2		= 61			; enemy2 61-75
+spriteEnemy3		= 76			; enemy3 76-90
+spriteEnemy4		= 91			; enemy4 91-105
+spriteEnemy5		= 106			; enemy5 106-120
+spriteEnemy6		= 121			; enemy6 121-135
+spriteEnemy7		= 136			; enemy7 136-150
+spriteEnemy8		= 151			; enemy8 151-165
+spriteAngel0		= 166			; angel0 166-167
+spriteLowerDiamond	= 168			; lower diamond 168-169
+spriteAngel1		= 170			; angel1 170-171
 
 
 
