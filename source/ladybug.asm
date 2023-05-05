@@ -770,7 +770,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.initPlayfieldMiddleTilesLeft			; left side tile translation table (normal)
+.initPlayfieldMiddleTilesLeft			; left side tile translation table (left/right order normal)
 
 	equb mapTileBlank
 	equb mapTileDot
@@ -778,22 +778,22 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	equb mapTileTurnstileCH + wallSolid
 	equb mapTileTurnstileD + wallTurnstile
 	equb mapTileTurnstileU + wallTurnstile
-	equb mapTileTurnstileR + wallTurnstile
-	equb mapTileTurnstileL + wallTurnstile
-	equb mapTileTopLeft + wallSolid
-	equb mapTileTopRight + wallSolid
-	equb mapTileBottomLeft + wallSolid
-	equb mapTileBottomRight + wallSolid
+	equb mapTileTurnstileR + wallTurnstile	; right
+	equb mapTileTurnstileL + wallTurnstile	; left
+	equb mapTileTopLeft + wallSolid		; left
+	equb mapTileTopRight + wallSolid	; right
+	equb mapTileBottomLeft + wallSolid	; left
+	equb mapTileBottomRight + wallSolid	; right
 	equb mapTileVertical + wallSolid
 	equb mapTileHorizontal + wallSolid
 	equb mapTileVerticalD + wallSolid
 	equb mapTileVerticalU + wallSolid
-	equb mapTileHorizontalR + wallSolid
-	equb mapTileHorizontalL + wallSolid
+	equb mapTileHorizontalR + wallSolid	; right
+	equb mapTileHorizontalL + wallSolid	; left
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.initPlayfieldMiddleTilesRight			; right side tile translation table (mirrored) 
+.initPlayfieldMiddleTilesRight			; right side tile translation table (left/right order switched) 
 
 	equb mapTileBlank
 	equb mapTileDot
@@ -801,18 +801,18 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	equb mapTileTurnstileCH + wallSolid
 	equb mapTileTurnstileD + wallTurnstile
 	equb mapTileTurnstileU + wallTurnstile
-	equb mapTileTurnstileL + wallTurnstile	; right and left switched
-	equb mapTileTurnstileR + wallTurnstile
-	equb mapTileTopRight + wallSolid	; right and left switched
-	equb mapTileTopLeft + wallSolid
-	equb mapTileBottomRight + wallSolid	; right and left switched
-	equb mapTileBottomLeft + wallSolid
+	equb mapTileTurnstileL + wallTurnstile	; left
+	equb mapTileTurnstileR + wallTurnstile	; right
+	equb mapTileTopRight + wallSolid	; right
+	equb mapTileTopLeft + wallSolid		; left
+	equb mapTileBottomRight + wallSolid	; right
+	equb mapTileBottomLeft + wallSolid	; left
 	equb mapTileVertical + wallSolid
 	equb mapTileHorizontal + wallSolid
 	equb mapTileVerticalD + wallSolid
 	equb mapTileVerticalU + wallSolid
-	equb mapTileHorizontalL + wallSolid	; right and left switched
-	equb mapTileHorizontalR + wallSolid
+	equb mapTileHorizontalL + wallSolid	; left
+	equb mapTileHorizontalR + wallSolid	; right
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
