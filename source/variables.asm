@@ -216,6 +216,9 @@ soundChannels		= 6			; number of software defined sound channels
 .mainMenuCursor		skip 1			; main menu cursor position
 .mainMenuCursorOld	skip 1			; main menu previous cursor position
 
+.mainMenuDrawEnemiesSeed			; copy of random seed for drawing the 4 enemies
+			skip 2
+
 .keyboardScanSaveX	skip 1			; preserve register
 
 .drawScoreTableZero	skip 1			; leading zero blanking flag for drawing score table

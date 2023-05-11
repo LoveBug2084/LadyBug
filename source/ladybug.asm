@@ -1725,11 +1725,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	; transfer map tile data to screen
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawMapTileTransfer				; repeat
+.drawMapTileTransfer
 
 	ldy #dummy8				; bytes to transfer (previously setup)
 	
-.drawMapTileRead
+.drawMapTileRead				; repeat
 
 	lda dummy16, y				; read byte from tile (address previously setup)
 	
@@ -1831,7 +1831,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	and #%00001111				; draw low nybble bcd digit
 	ora #'0'
 
-	; continue into drawChr wth low nybble
+	; continue into drawChr with low nybble
 
 
 
@@ -2023,7 +2023,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;
 ; setup a new game for level 1
+;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLevel1
@@ -2075,7 +2077,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;
 ; start current game level, setup level settings and initialize the tileMap with mazeMap layout
+;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLevelStart
@@ -2097,7 +2101,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;
 ; continue current level
+;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLevelContinue
@@ -2139,7 +2145,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;
 ; game main loop
+;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -5531,6 +5539,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 .mainMenuDrawEnemies
 
 	jsr random				; pick a random direction and enemy for the draw loop
+	lda randomSeed + 0
+	sta mainMenuDrawEnemiesSeed + 0
+	lda randomSeed + 1
+	sta mainMenuDrawEnemiesSeed + 1
 
 	ldx #3					; 4 enemies to draw
 	
@@ -5541,20 +5553,20 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda mainMenuEnemiesY, x
 	sta spritesY + 1, x
 	
-	lda randomSeed + 1			; set enemy sprite image
+	lda mainMenuDrawEnemiesSeed + 0		; set enemy sprite image
 	and #7
 	tay
 	lda spriteBaseImg + 1, y
 	sta spritesImg + 1, x
 	
-	lda randomSeed				; set sprite direction (not moving)
+	lda mainMenuDrawEnemiesSeed + 1		; set sprite direction (not moving)
 	and #3
 	ora #moveStop
 	sta spritesDir + 1, x
 
-	inc randomSeed				; increment direction for next sprite
+	inc mainMenuDrawEnemiesSeed + 0		; increment sprite image for next sprite
 
-	inc randomSeed + 1			; increment sprite image for next sprite
+	inc mainMenuDrawEnemiesSeed + 1		; increment direction for next sprite
 
 	dex					; until all enemies placed
 	bpl mainMenuDrawEnemiesLoop
