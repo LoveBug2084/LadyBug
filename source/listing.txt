@@ -1039,13 +1039,13 @@ bootstrap     &4800 - &4949 , 330 bytes
      01A1   A9 08      LDA #&08
      01A3   8D 40 FE   STA &FE40
      01A6   60         RTS
-.waitIntVsync
+.waitIntUpper
      01A7   24 02      BIT &02
-     01A9   10 FC      BPL &01A7
+     01A9   30 FC      BMI &01A7
      01AB   4C 4D 47   JMP &474D
-.waitIntTimer
+.waitIntLower
      01AE   24 02      BIT &02
-     01B0   30 FC      BMI &01AE
+     01B0   10 FC      BPL &01AE
      01B2   4C 4D 47   JMP &474D
 .updateObjectTimerPalette
      01B5   F1
@@ -1869,30 +1869,30 @@ bootstrap     &4800 - &4949 , 330 bytes
      078F   85 2C      STA &2C
      0791   A9 64      LDA #&64
      0793   85 03      STA &03
-.gameLoopWaitIntVsync
+.gameLoopwaitIntUpper
      0795   20 A7 01   JSR &01A7
      0798   20 A3 08   JSR &08A3
      079B   20 B9 1A   JSR &1AB9
      079E   B0 B4      BCS &0754
      07A0   20 D0 08   JSR &08D0
      07A3   B0 AF      BCS &0754
-     07A5   20 B7 0B   JSR &0BB7
-     07A8   20 EA 1C   JSR &1CEA
-     07AB   20 55 0F   JSR &0F55
-     07AE   B0 BA      BCS &076A
-     07B0   20 14 01   JSR &0114
-     07B3   20 43 02   JSR &0243
-     07B6   20 35 26   JSR &2635
-     07B9   20 24 1C   JSR &1C24
-     07BC   20 96 21   JSR &2196
-     07BF   20 56 17   JSR &1756
-     07C2   B0 09      BCS &07CD
-     07C4   20 86 24   JSR &2486
-     07C7   20 20 09   JSR &0920
-     07CA   20 BB 01   JSR &01BB
-.gameLoopWaitIntTimer
-     07CD   20 AE 01   JSR &01AE
-     07D0   20 57 22   JSR &2257
+     07A5   20 EA 1C   JSR &1CEA
+     07A8   20 55 0F   JSR &0F55
+     07AB   B0 BD      BCS &076A
+     07AD   20 14 01   JSR &0114
+     07B0   20 43 02   JSR &0243
+     07B3   20 35 26   JSR &2635
+     07B6   20 24 1C   JSR &1C24
+     07B9   20 96 21   JSR &2196
+     07BC   20 56 17   JSR &1756
+     07BF   B0 09      BCS &07CA
+     07C1   20 86 24   JSR &2486
+     07C4   20 20 09   JSR &0920
+     07C7   20 BB 01   JSR &01BB
+.gameLoopwaitIntLower
+     07CA   20 AE 01   JSR &01AE
+     07CD   20 57 22   JSR &2257
+     07D0   20 B7 0B   JSR &0BB7
      07D3   20 EA 1C   JSR &1CEA
      07D6   20 55 0F   JSR &0F55
      07D9   B0 8F      BCS &076A
