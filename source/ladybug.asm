@@ -2154,7 +2154,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	; gameLoopwaitIntUpper			wait for upper interrupt (raster lines 0-155) then process game functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.gameLoopwaitIntUpper
+.gameLoopWaitIntUpper
 
 	jsr waitIntUpper			; wait for interrupt and read analogue joystick (if enabled)
 
@@ -2182,7 +2182,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr updateBonusColor			; update the bonus letters and object points palette colors
 
 	jsr checkPauseGame			; if game is paused then skip sprite movement and timer stuff
-	bcs gameLoopwaitIntLower
+	bcs gameLoopWaitIntLower
 
 	jsr updateLadybug			; update ladybug direction, handle turnstile and object detection
 
@@ -2194,7 +2194,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	; gameLoopwaitIntLower			wait for lower interrupt (raster lines 156-311) then process game functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.gameLoopwaitIntLower
+.gameLoopWaitIntLower
 
 	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
 	
@@ -2226,7 +2226,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 .gameLoopCheckPause
 
 	jsr checkPauseGame			; if game is paused then skip enemy timer, enemy release, enemy/ladybug pause timers
-	bcs gameLoopwaitIntUpper
+	bcs gameLoopWaitIntUpper
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2236,7 +2236,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr updatePauseTimers			; update ladybug and enemy pause timers (also handles erasure of object score and bonus item score)
 
-	jmp gameLoopwaitIntUpper		; loop back to game main loop
+	jmp gameLoopWaitIntUpper		; loop back to game main loop
 
 
 
@@ -3034,9 +3034,9 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	stx drawPlayfieldUpperBonusSaveX	; save x
 
-	jsr drawString				; setup screen address and color to white
+	jsr drawString				; setup screen address
 	equw screenAddr + 2 + 16
-	equb colorWhite, &ff
+	equb &ff
 	
 	lda bonusBits + 0			; copy bonus bits (shifting everything left one bit to drop the unused bit 15)
 	asl a
@@ -4170,13 +4170,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .instructionsFunctions
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; wait for timer1 interrupt and process functions
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
+
 	jsr instructionsLadybugAnimation	; do the ladybug walking animation
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for vsync interrupt and process functions
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -4185,10 +4185,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr moveSprites				; move ladybug sprite
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for timer1 interrupt and process functions
+	; wait for vsync interrupt and process functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
+	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -4890,13 +4890,13 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .mainMenuFunctions
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; wait for timer1 interrupt and process functions
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
+
 	jsr mainMenuLadybugAnimation		; check and initialise ladybug animation if needed
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for vsync interrupt and process functions
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -4905,10 +4905,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	jsr moveSprites				; move sprites
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; wait for timer1 interrupt and process functions
+	; wait for vsync interrupt and process functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
+	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -5862,14 +5862,14 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawScoreTableFunctions			wait for syncs, process sound, update colors, scan keyboard/joystick
+; drawScoreTableFunctions			wait for interrupts, process sound, update colors, scan keyboard/joystick
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawScoreTableFunctions
 
-	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
-
 	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
+
+	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
@@ -6094,15 +6094,15 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .nameRegFunctions
 
-	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
+	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
-	jsr redrawSprites			; draw ladybug
-
 	jsr moveSprites				; move ladybug
 
-	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
+	jsr redrawSprites			; draw ladybug
+
+	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr processSound			; process sound effects and music
 
