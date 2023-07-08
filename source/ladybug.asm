@@ -6894,7 +6894,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;						increase active enemy count
 ;						disable enemy release (enabled by timer hitting top left when there is a pending release)
 ;
-;						enemy release is delayed by the staggered release frame so allow a window of 5 timer blocks
+;						enemy release is delayed by the staggered release frame so allow a window of 10 timer blocks
 ;						to ensure that the enemy does get released
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -6907,8 +6907,8 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	cmp #spritesTotal - 1
 	bcs enemyReleaseExit
 
-	lda enemyTimer				; if enemyTimer is within the first 5 blocks (make sure delayed frame enemy release isnt skiped)
-	cmp #6
+	lda enemyTimer				; if enemyTimer is within the first 10 blocks (make sure delayed frame enemy release isnt skiped)
+	cmp #10 + 1
 	bcs enemyReleaseExit
 
 	ldx #spritesTotal - 1			; start with last enemy in list
