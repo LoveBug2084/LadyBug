@@ -48,7 +48,7 @@ echo
 # --------------------------------------------------
 
 echo "Updating README.md"
-printf '_**Build - %s - %s**_\n' "$bbcProjectBuildBin" "$(date)">../README.build.md
+printf '**Build - %s - %s**\n' "$bbcProjectBuildBin" "$(date)">../README.build.md
 tail -n +2 ../README.md>>../README.build.md
 rm ../README.md
 mv ../README.build.md ../README.md
