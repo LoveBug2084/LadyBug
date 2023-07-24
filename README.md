@@ -1,11 +1,11 @@
 **Build - 003357 - Mon 24 Jul 11:35:45 BST 2023**
 #
 # Lady Bug
-A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the [Acorn BBC Micro Computer](https://en.wikipedia.org/wiki/BBC_Micro) systems, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler ( run asm.bat from command prompt )\
+A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the [Acorn BBC Micro Computer](https://en.wikipedia.org/wiki/BBC_Micro) systems, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler ( run asm.bat in windows or ./build in linux )\
 \
-I've included fontmaker, pixels and filelocker utilities ( C source code and compiled .exe's ) for converting the gimp/photoshop font, sprites and tile image files from .raw to a bbc compatible .bin format required during assembly and for locking the dfs filenames after assembly ( see asm.bat for details )\
+I've included fontmaker, pixels and filelocker utilities ( C source code included ) for converting the gimp/photoshop font, sprites and tile image files from .raw to a bbc compatible .bin format required during assembly and for locking the dfs filenames after assembly ( see asm.bat for details )\
 \
-**A map editor is now included allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next**\
+**A map editor is now included on disk allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next**\
 \
 **Tested on the following computer models using emulators**\
 \
@@ -14,18 +14,18 @@ B+ 64K/128K OS 2.00 using 12K of workspace ram ( no sideways ram required )\
 Master 128K MOS 3.20/3.50 using 12K of sideways ram\
 Master Compact MOS 5.00/5.10 using 12K of sideways ram\
 \
-Keyboard, Analogue Port Joysick and Digital User Port Joystick Supported\
+Keyboard (All Models), Analogue Port Joysick (B/B+/Master) and Digital User Port Joystick (Compact) Supported\
 \
 **The full game development diary can be viewed at the** [Stardot forums](https://stardot.org.uk/forums/viewtopic.php?f=53&t=21812)
 #
 ```
 A big thank you to
  
+HeadHunter for recreating the enemy release sound for 50Hz using math !
+ 
 Kieranhj for their image2mode7 utility allowing me to make the lovebyte loading screen
  
 Dreamland Fantasy's for their image2bbc utility allowing me to make the maze editor tiles
- 
-HeadHunter for recreating the enemy release sound for 50Hz using math !
  
 And to everyone at the stardot forums for their kind words, help and support
  
