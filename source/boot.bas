@@ -205,10 +205,10 @@ PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for";CHR$(135);~Y%;" extra ";:IF Y%
 
 PRINT TAB(2,17);CHR$(131);"Collect";CHR$(129);"red letters";CHR$(131);"to spell";
 PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(131);"for";CHR$(135);~X%;"00000 points";CHR$(131);"plus a";
-PRINT TAB(2,19);CHR$(133);"skull shield";CHR$(131);"lasting ";~W%;" rounds";
+PRINT TAB(2,19);CHR$(135);"skull shield";CHR$(131);"lasting ";~W%;" rounds";
 
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
-PRINT TAB(2,22);CHR$(132);"enemy and earn bonus points";
+PRINT TAB(2,22);CHR$(132);"enemies and earn bonus points";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
@@ -231,8 +231,8 @@ PRINT TAB(2,8);CHR$(132);"collecting";CHR$(134);"cyan hearts and letters";:*FX 1
 PRINT TAB(2,9);CHR$(132);"and";CHR$(131);"without losing a life";:*FX 19
 
 PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);up$;CHR$(129);"and";CHR$(131);down$;CHR$(129);"keys to";:*FX 19
-PRINT TAB(2,12);CHR$(129);"navigate the menu and";CHR$(131);"RETURN";CHR$(129);"to";:*FX 19
-PRINT TAB(2,13);CHR$(129);"adjust the game settings or";:*FX 19
+PRINT TAB(2,12);CHR$(129);"navigate the game menu and";CHR$(131);"RETURN";:*FX 19
+PRINT TAB(2,13);CHR$(129);"to adjust the game settings or";:*FX 19
 PRINT TAB(2,14);CHR$(129);"redefine the game controls";:*FX 19
 
 PRINT TAB(2,16);CHR$(130);"During the game press";CHR$(129);"RETURN";CHR$(130);"to":*FX 19

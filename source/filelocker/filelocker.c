@@ -93,8 +93,11 @@ int main(int argc, char *argv[])
 		if(fileFound)
 			printf("locked\n");
 		else
+			{
+			// beeb file not found so exit
 			printf("not found\n");
-
+			exit(EXIT_FAILURE);
+			}
 	}
 
 	// open ssd file in binary mode for reading and writing
