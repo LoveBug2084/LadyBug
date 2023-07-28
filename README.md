@@ -3,7 +3,7 @@
 # Lady Bug
 A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the [Acorn BBC Micro Computer](https://en.wikipedia.org/wiki/BBC_Micro) systems, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler ( run asm.bat in windows or ./build in linux )\
 \
-I've included fontmaker, pixels and filelocker utilities ( C source code included ) for converting the gimp/photoshop font, sprites and tile image files from .raw to a bbc compatible .bin format required during assembly and for locking the dfs filenames after assembly ( see asm.bat for details )\
+I've included fontmaker, pixels and filelocker utilities ( C source code included ) for converting the gimp/photoshop font, sprites and tile image files from .raw to a bbc compatible .bin format required during assembly and for locking the dfs filenames after assembly ( see asm.bat or ./build for details )\
 \
 **A map editor is now included on disk allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next**\
 \
