@@ -718,12 +718,15 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	inc enemyTimer				; bump enemy timer position
 
-	lda enemyTimer				; if enemyTimer >= 88
+	lda enemyTimer				; if enemyTimer >= 88 (timer range 0-87)
 	cmp #88
 	bcc updateEnemyTimerSound
 
 	lda #0					; then reset enemy timer back to 0
 	sta enemyTimer
+
+	lda #&ff				; and set enemyTimerZero flag to &ff to show that timer has hit zero (full revolution)
+	sta enemyTimerZero
 
 .updateEnemyTimerSound
 
@@ -733,7 +736,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	cmp #78
 	bne updateEnemyTimerExit
 	
-	lda enemiesActive			; if theres an enemy waiting in the center
+	lda enemiesActive			; if all enemies are not yet active
 	cmp #spritesTotal - 1
 	beq updateEnemyTimerExit
 
@@ -932,7 +935,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; initTimerTiles				fill the outer edges of tileMap with timer tiles
+; initTimerTiles				fill the outer edges of tileMap with timer tiles and initialize enemyTimer to 0
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2134,6 +2137,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta objectScoreImg			; disable object score display
 
 	sta enemyReleaseEnable			; disable enemy release
+	sta enemyTimerZero			; disable enemy timer zero flag
 
 	sta playerInput				; clear any pending player control inputs
 
@@ -2151,14 +2155,14 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; gameLoopwaitIntUpper			wait for upper interrupt (raster lines 0-155) then process game functions
+	; gameLoopWaitIntUpper			wait for upper interrupt (raster lines 0-155) then process game functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLoopWaitIntUpper
 
 	jsr waitIntUpper			; wait for interrupt and read analogue joystick (if enabled)
 
-	jsr ladybugEntryAnimation		; draw ladybug entry movement animation (if enabled)
+	jsr ladybugEntryAnimation		; ladybug entry movement animation (if enabled)
 
 	jsr checkBonus				; check if special, extra or diamond bonus screens are required
 	bcs gameLevelStart			; if bonus was awarded then start a new level (level was advanced by checkBonus)
@@ -2191,7 +2195,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr updateObjectTimer			; update object timer, object mode and palette
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; gameLoopwaitIntLower			wait for lower interrupt (raster lines 156-311) then process game functions
+	; gameLoopWaitIntLower			wait for lower interrupt (raster lines 156-311) then process game functions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLoopWaitIntLower
@@ -4129,6 +4133,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .instructionsPress				; repeat
 
+	jsr random				; call random so that when game is started objects are randomized
+
 	jsr instructionsFunctions		; update colors and get input bits (keyboard/joystick)
 
 	beq instructionsPress			; until an input bit is active
@@ -4677,6 +4683,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 	lda #0					; zero enemy timer position
 	sta enemyTimer
+	sta enemyTimerZero			; disable timer zero flag until next full revolution
 
 	sta enemyReleaseEnable			; disable enemy release
 
@@ -5980,7 +5987,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	lda #0					; enable enemy release flag usage and warning sound (warning for 10 seconds remaining to register name)
 	sta enemiesActive
-	sta enemyReleaseEnable			; disable enemy release flag (used later in timeout test)
+	sta enemyReleaseEnable			; disable enemy release flag (used later in name entry timeout test)
 
 	lda #4					; draw two random flowers at screen row 4
 	jsr drawFlowers
@@ -6903,12 +6910,11 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda enemyReleaseEnable			; if enemy release is enabled
 	beq enemyReleaseExit
 
-	lda enemiesActive			; if all enemies are not yet active (enemiesActive < spritesTotal - 1)
-	cmp #spritesTotal - 1
-	bcs enemyReleaseExit
+	lda enemyTimerZero			; and if timer has hit zero position top center
+	beq enemyReleaseExit
 
-	lda enemyTimer				; if enemyTimer is within the first 10 blocks (make sure delayed frame enemy release isnt skiped)
-	cmp #10 + 1
+	lda enemiesActive			; and if all enemies are not yet active (enemiesActive < spritesTotal - 1)
+	cmp #spritesTotal - 1
 	bcs enemyReleaseExit
 
 	ldx #spritesTotal - 1			; start with last enemy in list
@@ -6951,6 +6957,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	lda #0					; disable enemy release until timer re-enables it
 	sta enemyReleaseEnable
+	sta enemyTimerZero			; disable timer zero flag until timer re-enables it
 
 	lda enemiesActive			; if maximum number of enemys not yet released then spawn an enemy
 	cmp #spritesTotal - 1
