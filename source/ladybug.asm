@@ -237,6 +237,10 @@ continueCompact		= &8068			; master compact entry point
 
 rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half way down the screen, line 156)
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; check which interrupt occurred 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .irqInterrupt
@@ -452,10 +456,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	org page0200
 
-.keyOrder					; squeeze this in the previously unused 4 bytes here
 
-	equb 1, 2, 3, 0				; change key order from the config's right, left, down, up
-						; to the digital joystick order of left, down, up, right
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; set irq1 interrupt vector
@@ -501,8 +504,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	
 .inputScanLoop					; repeat
 
-	ldy keyOrder, x				; change order of config keys to match digital joystick layout
-	lda optionKeys, y
+	inx					; change order from 3 2 1 0 to 0 3 2 1 so that key input order matches joystick order
+	txa
+	and #3
+	tay
+	dex
+
+	lda optionKeys, y			; read user defined key matrix code from optionKeys
 
 	jsr readKey				; read key into playerInput bits
 	
@@ -936,6 +944,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; initTimerTiles				fill the outer edges of tileMap with timer tiles and initialize enemyTimer to 0
+;						clear enemy release flag and timer crossed zero flag
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -962,7 +971,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx #21					; 21 tiles to copy
+	ldx #21					; 21 columns
 	
 .initTimerTilesHorizontal			; repeat
 
@@ -982,7 +991,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #hi(tileMap + 1 * 23)
 	sta tileMapAddr + 1
 
-	ldx #21					; 21 tiles to copy
+	ldx #21					; 21 rows
 
 .initTimerTilesVertical				; repeat
 
@@ -1003,13 +1012,15 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .initTimerTilesNextRow
 
-	dex					; until rows 21-1 done
+	dex					; until rows 1-21 done
 	bne initTimerTilesVertical
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda #0					; set enemy timer position to 0
-	sta enemyTimer
+	lda #0
+	sta enemyTimer				; set enemy timer position to 0
+	sta enemyReleaseEnable			; clear enemy release enable
+	sta enemyTimerZero			; clesr enemy timer crossed zero flag
 
 	rts					; return
 
@@ -1017,8 +1028,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; tileMapfindDot				find a random tileMap location that contains a dot and isnt near a turnstile
-;						if location hasnt been found within 0.16 seconds then timeout
-;						(timeout happens because of a bad maze design with not enough spaces for objects)
+;						if location hasnt been found within 0.16 seconds then timeout (bad maze design)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1296,7 +1306,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .drawScore
 
-	lda #score				; set address so that score digits will be displayed
+	lda #score				; set address to score location
 	sta drawScoreDigitRead + 1
 
 	dec drawScoreIndex			; move to next digit
@@ -1377,7 +1387,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .drawHighScore
 
-	lda #highScore				; set address for highScore display
+	lda #highScore				; set address to highScore location
 	sta drawScoreDigitRead + 1
 
 	lda #5					; index = 5 (first digit of high score)
@@ -1482,6 +1492,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	ldy #1					; then check the next tile to the right
 	lda (tileMapAddr), y
+
 	bmi eraseSpriteExit			; if its a maze tile then exit
 
 	cmp #objectTileIndex			; if its not an object then then exit
@@ -1505,12 +1516,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	cmp #moveUp
 	bne eraseSpriteExit
 
-	lda spritesEraseY, x			; and if ladybug isnt on the bottom row
+	lda spritesEraseY, x			; and if sprite isnt on the bottom row
 	cmp #20 * 8
 	bcs eraseSpriteExit
 
 	ldy #23					; then check tile below
 	lda (tileMapAddr), y
+
 	bmi eraseSpriteExit			; if its a maze tile then exit
 
 	cmp #objectTileIndex			; if its an object tile
@@ -2122,6 +2134,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 .gameLevelContinueDrawMiddle
 
 	jsr initTimerTiles			; fill tileMap edges with timer tiles and initialize timer to starting point center top
+						; clear enemyReleaseEnable and enemyTimerZero flags 
 	
 	jsr drawPlayfieldMiddle			; draw playfield middle section from tileMap
 
@@ -2135,9 +2148,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta vegetableScoreActive		; disable center vegetable score display
 
 	sta objectScoreImg			; disable object score display
-
-	sta enemyReleaseEnable			; disable enemy release
-	sta enemyTimerZero			; disable enemy timer zero flag
 
 	sta playerInput				; clear any pending player control inputs
 
@@ -3515,7 +3525,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	beq drawSpriteExit			; exit if all bytes drawn
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; the following instruction is replaced with INX or DEx by drawSprite/drawSpriteVflip/drawBonusItemCenter for normal or mirrored drawing mode
+	; the following instruction is replaced with INX or DEX by drawSprite/drawSpriteVflip/drawBonusItemCenter for normal or mirrored drawing mode
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawSpriteNextLineInstruction
@@ -4043,19 +4053,19 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #hi(screenAddr + 8 + 2 * chrColumn + 7 * chrRow)
 	sta drawMapTileAddr + 1
 
-	lda #mapTilecyanHeart			; draw cyan heart
+	lda #mapTileCyanHeart			; draw cyan heart
 	jsr drawMapTile
 
 	lda #column				; advance 1 column
 	jsr drawMapTileAddrAdvance
 
-	lda #mapTilecyanHeart			; draw cyan heart
+	lda #mapTileCyanHeart			; draw cyan heart
 	jsr drawMapTile
 
 	lda #column				; advance 1 column
 	jsr drawMapTileAddrAdvance
 
-	lda #mapTilecyanHeart			; draw cyan heart
+	lda #mapTileCyanHeart			; draw cyan heart
 	jsr drawMapTile
 	
 	jsr drawString				; draw "multiply score" in green
@@ -4264,7 +4274,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	cmp #256 - ladybugDeathFlashTime
 	bcc ladybugDeathAnimationDrawAngel
 
-	and #2					; then flash ladybug
+	and #1					; then flash ladybug
 	bne ladybugDeathAnimationBlank
 	
 	lda spritesDir + 0
@@ -4291,14 +4301,12 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sta ladybugEntryEnable
 
 	sec					; return true (level restart required)
-	
-	rts					; return to game
+	rts
 
 .ladybugDeathAnimationReturnFalse
 
 	clc					; return false (level restart not required)
-
-	rts					; return to game
+	rts
 
 .ladybugDeathAnimationDrawAngelLower
 
@@ -5904,7 +5912,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda ladybugDeathEnable			; if ladybug death animation active then return false
 	bne checkPauseGameReturnFalse
 
-	lda pauseGame				; if game is currently paused then handle unpausingif needed
+	lda pauseGame				; if game is currently paused then handle unpausing if needed
 	bne checkPauseGameTrue
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -5987,7 +5995,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	lda #0					; enable enemy release flag usage and warning sound (warning for 10 seconds remaining to register name)
 	sta enemiesActive
-	sta enemyReleaseEnable			; disable enemy release flag (used later in name entry timeout test)
 
 	lda #4					; draw two random flowers at screen row 4
 	jsr drawFlowers

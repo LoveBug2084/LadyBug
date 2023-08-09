@@ -293,7 +293,7 @@ centerDiamond		= 18
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 wallSolid		= %11000000		; bits 7,6 = 1,1 solid tile to enemy and ladybug (timer blocks and maze walls)
-wallTurnstile		= %10000000		; bitd 7,6 = 1,0 solid tile to enemy only (turnstiles)
+wallTurnstile		= %10000000		; bits 7,6 = 1,0 solid tile to enemy only (turnstiles)
 
 mapTileBlank		= 0			; empty tile
 
@@ -361,7 +361,7 @@ mapTileHeart		= objectTileIndex + 11	; heart
 ; letters and heart with fixed color (used on level intro screen)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-mapTilecyanHeart	= objectTileIndex + 12
+mapTileCyanHeart	= objectTileIndex + 12
 mapTileYellowE		= objectTileIndex + 13
 mapTileYellowX		= objectTileIndex + 14
 mapTileYellowT		= objectTileIndex + 15

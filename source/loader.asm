@@ -863,9 +863,6 @@ machineType		= pageHigh - 3		; storage for machine type
 	pla					; restore bank 0 byte
 	sta swrTestLocation
 	
-	ldy #128				; select bank 128
-	sty bankSelect
-
 	lda #&ff				; exit with failed status
 	rts
 
