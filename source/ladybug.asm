@@ -4281,7 +4281,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	and #spriteBlanking eor 255
 	sta spritesDir + 0
 
-	lda #0					; zero death animation index for 2nd part
+	lda #0					; initialize death animation index for 2nd part
 	sta ladybugDeathAnimationIndex
 
 	jmp ladybugDeathAnimationCheckMusic
@@ -4327,7 +4327,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .ladybugDeathAnimationDrawAngelLoop
 
-	sta spritesDir, x
+	sta spritesDir + 0, x
 	dex
 	bne ladybugDeathAnimationDrawAngelLoop
 
@@ -5993,8 +5993,8 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	sta shield				; make sure the "END" character is flashing (skull color) by setting shield to 0
 
-	lda #0					; enable enemy release flag usage and warning sound (warning for 10 seconds remaining to register name)
-	sta enemiesActive
+	lda #0					; set active enemies to 0 so that the enemy release flag will trip when timer hits top left
+	sta enemiesActive			; which will trigger the enemy release sound to warn the player that registration time is runninh out
 
 	lda #4					; draw two random flowers at screen row 4
 	jsr drawFlowers
