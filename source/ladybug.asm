@@ -2619,7 +2619,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	equb -1, 1, 0, 0			; Y up down left right
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; move ladybug and enemy sprites 1 pixel
+	; move ladybug and enemies 1 pixel
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSprites
@@ -2628,7 +2628,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	jsr moveSpritesPixel			; move ladybug and enemies (if they're enabled to move)
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; move enemy sprites an extra pixel if required (enemy speed)
+	; move enemies an extra pixel if required (enemy speed)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	clc					; enemy speed fraction counter see if we need to move the enemies another pixel
@@ -2640,7 +2640,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	
 .moveSpritesEnemy
 
-	ldx #1					; then start at sprite index 1 (enemies) and move them again
+	ldx #1					; then start at sprite index 1 (enemies) and move them again (if they're enabled to move)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; move sprites
@@ -2786,10 +2786,10 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	lda #mapTileBlank			; erase skull from map
 	sta (tileMapAddr), y
 
-	jsr offsetDrawMapTileAddr		; adjust mapTileAddress to be location underneath sprite center
+;	jsr offsetDrawMapTileAddr		; adjust mapTileAddress to be location underneath sprite center
 
-	lda #mapTileBlankObj			; erase skull from screen
-	jsr drawMapTile
+;	lda #mapTileBlankObj			; erase skull from screen
+;	jsr drawMapTile
 
 	lda #sfxSkull				; play skull sound
 	jsr playSound
