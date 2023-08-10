@@ -5,7 +5,7 @@ A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki
 \
 I've included fontmaker, pixels and filelocker utilities ( C source code included ) for converting the gimp/photoshop font, sprites and tile image files from .raw to a bbc compatible .bin format required during assembly and for locking the dfs filenames after assembly ( see asm.bat or ./build for details )\
 \
-**A map editor is now included on disk allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next**\
+**A map editor is now included on disk allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next. Every six rounds the map sequence repeats.**\
 \
 **Tested on the following computer models using emulators**\
 \
