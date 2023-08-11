@@ -1,20 +1,4 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Lady Bug arcade style video game for the BBC Computer range based on the original 1981 arcade game by Universal
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Copyright (C) 2021 LoveBug https://github.com/LoveBug2084/LadyBug
-;
-; This program is free software: you can redistribute it and/or modify
-; it under the terms of the GNU General Public License as published by
-; the Free Software Foundation, either version 3 of the License, or
-; (at your option) any later version.
-;
-; This program is distributed in the hope that it will be useful,
-; but WITHOUT ANY WARRANTY; without even the implied warranty of
-; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-; GNU General Public License for more details. https://www.gnu.org/licenses/
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; build everything
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -86,6 +70,12 @@
 
 						; save the 19 tiles of 12x8 pixels @ 4 pixels per byte (mode 1)
 	save		"EditorT", 0, 19 * 12 * 8 / 4, &ffffff, 0
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; copy the readme.txt
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	puttext		"readme.txt", "ReadMe", 0, &ffffff
 
 
 

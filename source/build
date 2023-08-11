@@ -37,7 +37,7 @@ echo
 
 echo "Locking files in $bbcProjectName.ssd"
 echo
-if ./utils/filelocker "$bbcProjectName.ssd" "!Boot  $" "Boot   $" "_Bonus $" "_Conf  $" "_Maps  $" "_Map1  $" "_Map2  $" "_Map3  $" "Loader $" "LadyBug$" "Reset  $" "_ConfR $" "Editor $" "Cls    $" "EditorM$" "EditorT$"
+if ./utils/filelocker "$bbcProjectName.ssd" "!Boot  $" "Boot   $" "_Bonus $" "_Conf  $" "_Maps  $" "_Map1  $" "_Map2  $" "_Map3  $" "Loader $" "LadyBug$" "Reset  $" "_ConfR $" "Editor $" "Cls    $" "EditorM$" "EditorT$" "ReadMe $"
 then
 echo
 

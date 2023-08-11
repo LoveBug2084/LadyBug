@@ -1,26 +1,4 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Lady Bug arcade style video game for the BBC Computer range based on the original 1981 arcade game by Universal
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; Copyright (C) 2021 LoveBug https://github.com/LoveBug2084/LadyBug
-;
-; This program is free software: you can redistribute it and/or modify
-; it under the terms of the GNU General Public License as published by
-; the Free Software Foundation, either version 3 of the License, or
-; (at your option) any later version.
-;
-; This program is distributed in the hope that it will be useful,
-; but WITHOUT ANY WARRANTY; without even the implied warranty of
-; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-; GNU General Public License for more details. https://www.gnu.org/licenses/
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; thanks to everyone @ stardot forums for their kind words and support
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ladybug main program
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -28,8 +6,6 @@
 	print " ladybug.asm"
 	print "----------------------------------------------------"
 	print
-
-
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; page0100 functions
@@ -8800,7 +8776,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	; vegetable score
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 
-.checkForObjectVegetableScore
+.checkForObjectVegetableScore			; we got here so diamond is not active, its a vegetable so we
 
 	lda #&ff				; activate the vegetable score display
 	sta vegetableScoreActive
@@ -8826,7 +8802,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	; check for object tiles (dots, hearts, letters, skulls)
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 	
-.checkForObjectTile
+.checkForObjectTile				; we got here so ladybug is not in the center box so we
 
 	jsr offsetDrawMapTileAddr		; adjust drawMapTileAddress to be location underneath ladybug center
 
@@ -8957,7 +8933,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .checkForObjectScoreNow
 
-	jsr displayobjectScore			; setup object score display
+	jsr displayObjectScore			; setup object score display
 
 	lda spritesDir + 0			; blank ladybug sprite
 	ora #spriteBlanking
@@ -8967,8 +8943,8 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta pauseLadybug
 
 	cmp pauseEnemy				; only set enemy pause time if its currently less than object time as the enemy might already be paused
-	bcc checkForObjectExit			; after collecting a vegetable bonus, we dont want to reset it to the shorter object time
-	sta pauseEnemy
+	bcc checkForObjectExit			; as ladybug may have previously collected a vegetable bonus, before this object
+	sta pauseEnemy				; and we dont want to reset the enemy pause to the shorter object pause
 
 .checkForObjectExit
 
@@ -8982,7 +8958,9 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
-	; letter tile
+	; letter tile				replace letter in map with blank tile
+	;					levelEdibles--
+	;					update bonus bits
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkForObjectLetter
@@ -9084,10 +9062,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; displayobjectScore				setup the img and position to display the object score
+; displayObjectScore				setup the img and position to display the object score
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.displayobjectScore
+.displayObjectScore
 
 	lda spritesX + 0			; get ladybug position to the nearest 16 pixels in x and y, offset it by 8, 10 for correct positioning
 	and #&f0
@@ -9098,7 +9076,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	ora #10
 	sta objectScoreY
 
-	lda objectMode				; calculate which object score image to display based on color mode and multiplier
+	lda objectMode				; calculate which object score image to display based on object mode and multiplier
 	asl a					; objectScoreImg = objectMode * 4 + scoreMultiplier + ImgPoints
 	asl a
 	adc scoreMultiplier			; no need for clc (carry is already clear)
@@ -9110,7 +9088,12 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; ladybugKill					reduce lives by 1 and initiate death animation
+; ladybugKill					blank ladybug sprite
+;						enable ladybug death animation
+;						disable center bonus item
+;						remove the possibility of getting a diamond bonus
+;						reduce lives by 1
+;						play death music
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .ladybugKill
