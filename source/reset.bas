@@ -1,3 +1,5 @@
+ON ERROR SOUND1,-15,150,4:PRINT TAB(0,19);:REPORT:PRINT'''"Press any key";:K%=GET:RUN
+
 MODE 7:VDU23,1,0;0;0;0;
 
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);SPC(12);"Lady Bug";SPC(14);CHR$(156)
@@ -54,10 +56,11 @@ PRINT TAB(0,16);
 
 IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":OSCLI("ACCESS _Maps"):Z%=OPENOUT("_Maps"):PRINT#Z%,"_Map1","_Map2","_Map3":CLOSE#Z%:OSCLI("ACCESS _Maps L")
 
-IF H$="Y" THEN FOR Z%=&00 TO &6F:Z%?H%=Z%?D%:NEXT Z%:PRINT " ";CHR$(129);"Resetting high scores"
-IF S$="Y" THEN FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%:PRINT " ";CHR$(129);"Resetting controls and settings"
+IF H$="Y" THEN PRINT " ";CHR$(129);"Resetting high scores":FOR Z%=&00 TO &6F:Z%?H%=Z%?D%:NEXT Z%
 
-IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("ACCESS _Conf"):OSCLI("SAVE _Conf " + STR$~(&FF0000 + H%) + " +7E FFFFFF 0")::OSCLI("ACCESS _Conf L"):F%?0=0:F%?1=0:F%?2=0
+IF S$="Y" THEN PRINT " ";CHR$(129);"Resetting controls and settings":FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%
+
+IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("ACCESS _Conf"):OSCLI("SAVE _Conf " + STR$~(&FF0000 + H%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Conf L"):F%?0=0:F%?1=0:F%?2=0
 
 PRINT:PRINT " ";CHR$(132);
 
