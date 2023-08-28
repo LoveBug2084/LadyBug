@@ -3,7 +3,7 @@ HIMEM=&7800
 
 C%=&7B80
 S%=&8010
-E%=PAGE+5
+E%=PAGE+6
 F%=&130
 J%=&133
 M%=&69
@@ -11,6 +11,7 @@ M%=&69
 ON ERROR PROCerror
 
 PROCreadConfig
+
 up$=FNconfigKey(CHR$(C%?&7C))
 down$=FNconfigKey(CHR$(C%?&7B))
 
@@ -60,7 +61,7 @@ END
 
 DEF PROCintro
 
-IF ?E%<>32 THEN PROCanyKey(400):ENDPROC
+IF ?E%=33 THEN PROCanyKey(400):ENDPROC
 
 PROCsplash
 PROCexpand

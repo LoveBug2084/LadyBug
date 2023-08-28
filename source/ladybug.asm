@@ -5920,7 +5920,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	rts
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; we got here because game is currently paused so check if only start key is pressed and if so unpause game
+	; we got here because game is currently paused so check if start is not pressed and if any movement keys are pressed then unpause game
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkPauseGameTrue
@@ -5950,7 +5950,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegText
-
+						; available characters for name registration
 	equs "ABCDEFGHIJKLMNOPQRSTUVWXYZ", chrHeart, "!. "
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -5970,7 +5970,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sta shield				; make sure the "END" character is flashing (skull color) by setting shield to 0
 
 	lda #0					; set active enemies to 0 so that the enemy release flag will trip when timer hits top left
-	sta enemiesActive			; which will trigger the enemy release sound to warn the player that registration time is runninh out
+	sta enemiesActive			; which will trigger the enemy release sound to warn the player that registration time is running out
 
 	lda #4					; draw two random flowers at screen row 4
 	jsr drawFlowers
