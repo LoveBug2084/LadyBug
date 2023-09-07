@@ -100,6 +100,10 @@
 
 	skip 1					; validation of cleanResetBank and cleanResetMachine (checksum)
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; storage for keyboard/joystick mode (not preserved after reset)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .joystickEnable
 
 	skip 1					; control input mode, 0 = no joystick, 1 = analogue joystick, 2 = userport joystick
@@ -124,7 +128,8 @@
 	ldx cleanResetMachine			; get machine index
 
 	jmp swrCleanReset			; run reset code in high ram to clear memory (in loader.asm) which then jumps into
-						; original os reset code to continue with machine setup so that the beeb behaves normally
+						; one of the following functions to setup the jump into the original os
+						; setup so that the beeb behaves normally
 
 
 
@@ -2762,10 +2767,10 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	lda #mapTileBlank			; erase skull from map
 	sta (tileMapAddr), y
 
-;	jsr offsetDrawMapTileAddr		; adjust mapTileAddress to be location underneath sprite center
+	jsr offsetDrawMapTileAddr		; adjust mapTileAddress to be location underneath sprite center
 
-;	lda #mapTileBlankObj			; erase skull from screen
-;	jsr drawMapTile
+	lda #mapTileBlankObj			; and erase skull from screen
+	jsr drawMapTile
 
 	lda #sfxSkull				; play skull sound
 	jsr playSound

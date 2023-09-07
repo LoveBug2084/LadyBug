@@ -191,7 +191,7 @@ NEXT R%
 PRINT TAB(34,3);CHR$(131);"2";:*FX 19
 
 PRINT TAB(2,5);CHR$(132);"A special diamond bonus worth";:*FX 19
-PRINT TAB(2,6);CHR$(135);~U%;"00000 points";CHR$(132);"will be awarded if";:*FX 19
+PRINT TAB(2,6);CHR$(135);~U%;"00000 points";CHR$(132);"will appear if";:*FX 19
 PRINT TAB(2,7);CHR$(132);"you can reach";CHR$(131);"level ";~Q%;CHR$(132);"while only";:*FX 19
 PRINT TAB(2,8);CHR$(132);"collecting";CHR$(134);"cyan hearts and letters";:*FX 19
 PRINT TAB(2,9);CHR$(132);"and";CHR$(131);"without losing a life";:*FX 19
