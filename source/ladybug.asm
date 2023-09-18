@@ -729,9 +729,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	cmp #spritesTotal - 1
 	beq updateEnemyTimerExit
 
-	lda #sfxEnemyWarning			; then play enemy release warning and enable enemy release
+	lda #sfxEnemyWarning			; then play enemy release warning
 	jsr playSound
-	lda #&ff
+
+	lda #&ff				; enable enemy release
 	sta enemyReleaseEnable
 
 .updateEnemyTimerExit
@@ -1001,7 +1002,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #0
 	sta enemyTimer				; set enemy timer position to 0
 	sta enemyReleaseEnable			; clear enemy release enable
-	sta enemyTimerZero			; clesr enemy timer crossed zero flag
+	sta enemyTimerZero			; clear enemy timer crossed zero flag
 
 	rts					; return
 
@@ -2759,7 +2760,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	bne moveSpritesCheckValidJunction
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy hit a skull so remove skull from map, remove skull from screen, kill enemy and spawn new enemy in center box
+	; enemy hit a skull so remove skull from map, remove skull from screen, kill enemy, disable enemy release flags and spawn new enemy in center box
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesKillEnemy
@@ -2779,6 +2780,10 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	
 	lda #spriteBlanking			; disable the current enemy
 	sta spritesDir, x
+
+	lda #0					; disable enemy release
+	sta enemyTimerZero
+	sta enemyReleaseEnable
 
 	jsr enemySpawn				; spawn new enemy in center box
 
@@ -4673,7 +4678,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda #0					; zero enemy timer position
 	sta enemyTimer
 	sta enemyTimerZero			; disable timer zero flag until next full revolution
-
 	sta enemyReleaseEnable			; disable enemy release
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------

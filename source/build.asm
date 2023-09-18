@@ -4,11 +4,11 @@
 
 	include "memoryusage.asm"		; show memory usage details
 
-	include "constants.asm"			; global constants
+	include "constants.asm"			; game constants
 
 	include "variables.asm"			; zero page variables, counters, flags etc
 
-	include "!boot.asm"			; generate the !Boot file
+	include "!boot.asm"			; custom !Boot file
 
 	include "config.asm"			; default game configs and high score table
 
@@ -24,7 +24,7 @@
 
 	include "cls.asm"			; mode 1 clear screen function for editor.bas
 
-	include "bonus.asm"			; bonus settings for boot.bas to display
+	include "bonus.asm"			; game bonus settings for game instructions in boot.bas
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------

@@ -198,8 +198,8 @@ PRINT TAB(2,9);CHR$(132);"and";CHR$(131);"without losing a life";:*FX 19
 
 PRINT TAB(2,11);CHR$(129);"Use the";CHR$(131);up$;CHR$(129);"and";CHR$(131);down$;CHR$(129);"keys to";:*FX 19
 PRINT TAB(2,12);CHR$(129);"navigate the game menu and";CHR$(131);"RETURN";:*FX 19
-PRINT TAB(2,13);CHR$(129);"to adjust the game settings or";:*FX 19
-PRINT TAB(2,14);CHR$(129);"redefine the game controls";:*FX 19
+PRINT TAB(2,13);CHR$(129);"to adjust the settings and/or";:*FX 19
+PRINT TAB(2,14);CHR$(129);"redefine the controls";:*FX 19
 
 PRINT TAB(2,16);CHR$(130);"During the game press";CHR$(129);"RETURN";CHR$(130);"to":*FX 19
 PRINT TAB(2,17);CHR$(130);"pause, move";CHR$(129);"Lady Bug";CHR$(130);"to unpause";:*FX 19
