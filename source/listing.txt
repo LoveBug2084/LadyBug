@@ -2962,7 +2962,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      0F67   A5 2C      LDA &2C
      0F69   C9 E7      CMP #&E7
      0F6B   90 2B      BCC &0F98
-     0F6D   29 01      AND #&01
+     0F6D   29 02      AND #&02
      0F6F   D0 0D      BNE &0F7E
      0F71   A5 6D      LDA &6D
      0F73   29 F7      AND #&F7

@@ -4260,7 +4260,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	cmp #256 - ladybugDeathFlashTime
 	bcc ladybugDeathAnimationDrawAngel
 
-	and #1					; then flash ladybug
+	and #2					; then flash ladybug
 	bne ladybugDeathAnimationBlank
 	
 	lda spritesDir + 0
