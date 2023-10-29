@@ -746,7 +746,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;						place hearts in the map replacing dots (hearts are edible so no change to levelEdibles)
 ;						place letters in the map replacing dots (letters are edible so no change to levelEdibles)
 ;						place skulls in map replacing dots
-;						(skulls are not edible so decrease levelEdibles by the number of skulls (handled by placeTileMapSkulls)
+;						skulls are not edible so decrease levelEdibles by the number of skulls (in .placeTileMapSkulls)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2546,7 +2546,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; moveSprites					update coordinates of all sprites
+; moveSprites					update coordinates of all sprites, enemy ai and ladybug collision with enemy
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3905,8 +3905,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updatePauseTimers				update ladybug and enemy pause timers
-;						handle erasure of object score if required
-;						handle erasure of vegetable score if required
+;						erasure of object score if required
+;						erasure of vegetable score if required
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .updatePauseTimers
@@ -4984,7 +4984,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda mainMenuCursor			; if mainMenuCursor < 0
 	bpl mainMenuProcessUpExit
 
-	lda #8					; then mainMenuCursor = 8 (handle wrap around)
+	lda #8					; then mainMenuCursor = 8 (wrap around)
 	
 .mainMenuProcessUpExit
 
@@ -5014,7 +5014,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	cmp #9					; if mainMenuCursor >= 9
 	bcc mainMenuProcessDownExit
 	
-	lda #0					; then mainMenuCursor == 0 (handle wrap around)
+	lda #0					; then mainMenuCursor == 0 (wrap around)
 
 .mainMenuProcessDownExit
 
@@ -5297,7 +5297,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; handle colors and animation, wait for key release
+; colors, animation, wait for key release
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessKeyboardKey
@@ -5308,7 +5308,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	bcs mainMenuProcessKeyboardKey
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; handle colors and animation, wait for key press and return with key index in A
+; colors, animation, wait for key press and return with key index in A
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessKeyboardKeyWaitPress
@@ -6140,7 +6140,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; nameRegProcess and support functions		process key presses (handle insert delete characters in name, cursor update etc etc)
+; nameRegProcess and support functions		process key presses (insert/delete characters in name, cursor update etc)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessAdd32
@@ -6190,7 +6190,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sbc #1
 	sta nameRegCursor
 
-	bpl nameRegProcessCursor		; handle wrap around
+	bpl nameRegProcessCursor		; wrap around if required
 	bmi nameRegProcessAdd32
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6208,7 +6208,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	adc #8
 	sta nameRegCursor
 
-	cmp #32					; handle wrap around
+	cmp #32					; wrap around if required
 	bcs nameRegProcessSub32
 	bcc nameRegProcessCursor
 
@@ -6227,7 +6227,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sbc #8
 	sta nameRegCursor
 
-	bpl nameRegProcessCursor		; handle wrap around
+	bpl nameRegProcessCursor		; wrap around if required
 	bmi nameRegProcessAdd32
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6245,7 +6245,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	adc #1
 	sta nameRegCursor
 
-	cmp #32					; handle wrap around
+	cmp #32					; wrap around if required
 	bcc nameRegProcessCursor
 	bcs nameRegProcessSub32
 
@@ -6485,7 +6485,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; handle the diamond bonus stuff
+	; check if diamond bonus is required
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda bonusDiamondActive
@@ -6494,7 +6494,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; handle the special bonus stuff
+	; check if special bonus is required
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkBonusSpecial
@@ -6527,7 +6527,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; handle the extra bonus stuff
+	; check if extra bonus is required
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkBonusExtra
@@ -6569,7 +6569,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; handle the active diamond bonus
+	; diamond bonus
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkBonusDiamondActive
@@ -6597,8 +6597,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sec					; bonus given so signal end the current level (set carry) and return
 	rts
 
+
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; handle the active special bonus
+	; special bonus
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkBonusSpecialActive
@@ -6617,7 +6619,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda #bonusSpecialShield and 15
 	adc shield
 
-	bcc checkBonusSpecialShieldUpdate	; if shield > 99
+	bcc checkBonusSpecialShieldUpdate	; if shield >= 99
 	lda #&99				; then shield = 99
 
 .checkBonusSpecialShieldUpdate
@@ -6638,8 +6640,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sec					; bonus given so signal end the current level (set carry) and return
 	rts
 
+
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; handle the active extra bonus
+	; extra bonus
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkBonusExtraActive
@@ -6656,7 +6660,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda #bonusExtraLives and 15
 	adc lives
 
-	bcc checkBonusExtraLives		; if lives > 99
+	bcc checkBonusExtraLives		; if lives >= 99
 	lda #&99				; then lives = 99
 
 .checkBonusExtraLives
@@ -6695,12 +6699,12 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .changeTimerTile
 
-	lda enemyTimer				; get current timer tick * 2
+	lda enemyTimer				; get current timer position * 2
 	asl a
 
 	tay					; get tileMap x and y position
 	
-	ldx timerXYTable, y
+	ldx timerXYTable + 0, y
 	lda timerXYTable + 1, y
 	tay
 	
@@ -6714,11 +6718,11 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sta changeTimerTileFlip + 2
 	sta changeTimerTileFlip + 5
 	
-	lda #%00000001				; invert bit 0 of tile in tileMap timer position
+	lda #%00000001				; invert bit 0 of tile id in tileMap timer position (switches tile green<->blue)
 
 .changeTimerTileFlip
 
-	eor dummy16				; (address previously setup)
+	eor dummy16				; (tilemap address previously setup)
 	sta dummy16
 
 	sta changeTimerTileDraw + 1		; store tile number for drawing
@@ -6733,7 +6737,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 .changeTimerTileDraw
 
-	lda #dummy8				; tile number (replaced by tile number from previous code)
+	lda #dummy8				; (tile number previously setup)
 
 	cpx #0					; if tile is column 0
 	bne changeTimerTileDraw6
@@ -9142,7 +9146,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updateLadybug					set direction of ladybug if requested direction is valid
 ;						handle objects under ladybug
-;						handle turnstile movement (rewrite background map tiles only, drawing is handled by mainloop)
+;						handle turnstile movement (rewrite background map tile id's only, drawing is handled by mainloop)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
