@@ -8292,16 +8292,17 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .clearTileMap
 
-	ldx #0
+	ldx #0					; start with index = 0
 	
-	lda #mapTileBlank
+	lda #mapTileBlank			; use blank tile
 
 .clearTileMapLoop
 
-	sta tileMap, x				; store blank tile in &211 bytes
-	sta tileMap + &100, x
-	sta tileMap + &111, x
-	inx
+	sta tileMap + &000, x			; tileMap + &000 to tileMap + &0ff
+	sta tileMap + &100, x			; tileMap + &100 to tileMap + &1ff
+	sta tileMap + &111, x			; tileMap + &111 to tileMap + &210
+
+	inx					; bump index and loop back until fill completed
 	bne clearTileMapLoop
 	
 	rts					; return
