@@ -707,8 +707,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	inc enemyTimer				; bump enemy timer position
 
-	lda enemyTimer				; if enemyTimer >= 88 (timer range 0-87)
-	cmp #88
+	lda enemyTimer				; if enemyTimer >= enemyTimerMax + 1
+	cmp #enemyTimerMax + 1
 	bcc updateEnemyTimerSound
 
 	lda #0					; then reset enemy timer back to 0
@@ -721,8 +721,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr playSoundTimer			; play timer sound at selected volume
 
-	lda enemyTimer				; if enemyTimer = 78 (top left)
-	cmp #78
+	lda enemyTimer				; if enemyTimer = top left
+	cmp #enemyTimerTopLeft
 	bne updateEnemyTimerExit
 	
 	lda enemiesActive			; if all enemies are not yet active
