@@ -1175,7 +1175,7 @@ bootstrap     &4800 - &4949 , 330 bytes
 .updateEnemyTimerSound
      02A9   20 BE 22   JSR &22BE
      02AC   A5 33      LDA &33
-     02AE   C9 4D      CMP #&4D
+     02AE   C9 4E      CMP #&4E
      02B0   D0 0F      BNE &02C1
      02B2   A5 32      LDA &32
      02B4   C9 04      CMP #&04

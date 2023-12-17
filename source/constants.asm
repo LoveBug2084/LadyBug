@@ -65,7 +65,7 @@ objectModeCyan		= 0			; object modes
 objectModeRed		= 1
 objectModeYellow	= 2
 
-enemyTimerTopLeft	= 77			; top left tile index for enemy timer for triggering enemy release warning
+enemyTimerTopLeft	= 78			; top left tile index for enemy timer for triggering enemy release warning
 enemyTimerMax		= 87			; highest index for enemy timer, index reset to 0 when it increments to enemyTimerMax + 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
