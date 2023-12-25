@@ -71,6 +71,20 @@ printf '%s - Build %06d\n' "$bbcProjectName" "$bbcProjectBuildTxt"
 ((++bbcProjectBuildTxt))
 echo $bbcProjectBuildTxt>./buildNumber.txt
 
+
+
+#------------------
+# run the project
+#------------------
+
+./run
+
+
+
+#-----
+# end
+#-----
+
 fi
 
 fi

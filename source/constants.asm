@@ -69,19 +69,19 @@ enemyTimerTopLeft	= 78			; top left tile index for enemy timer for triggering en
 enemyTimerMax		= 87			; highest index for enemy timer, index reset to 0 when it increments to enemyTimerMax + 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; ascii chr reassignment
+; ascii character reassignment for special game characters
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-chrCopyright		= '%'
-chrUp			= '<'
-chrDown			= '='
-chrLeft			= '>'
-chrRight		= '?'
-chrMultiplierX		= '&'
-chrMultiplier2		= '''
-chrMultiplier3		= '('
-chrMultiplier5		= ')'
-chrHeart		= '*'
+chrCopyright		= '%'			; copyright
+chrUp			= '<'			; arrow up
+chrDown			= '='			; arrow down
+chrLeft			= '>'			; arrow left
+chrRight		= '?'			; arrow right
+chrMultiplierX		= '&'			; top box multiplier X
+chrMultiplier2		= '''			; top box multiplier 2
+chrMultiplier3		= '('			; top box multiplier 3
+chrMultiplier5		= ')'			; top box multiplier 5
+chrHeart		= '*'			; heart
 
 
 
@@ -92,14 +92,14 @@ chrHeart		= '*'
 ladybugStartX		= 88			; sprite coordinates for ladybug starting position
 ladybugStartY		= 136
 
+lowerDiamondX		= 20			; sprite coordinates for diamond available indicator
+lowerDiamondY		= 197
+
 centerBoxX		= 88			; sprite coordinates for center box
 centerBoxY		= 88
 
 vegetableScoreX		= 10			; tile coordinates for vegetable score
 vegetableScoreY		= 12
-
-lowerDiamondX		= 20			; sprite coordinates for diamond available indicator
-lowerDiamondY		= 197
 
 
 

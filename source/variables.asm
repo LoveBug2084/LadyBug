@@ -121,10 +121,6 @@
 
 .tileMapAddr		skip 2			; tileMap address used by various routines
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.moveDirMap		equb 1, 47, 23, 25, 24	; tileMap offset from top left corner to up, down, left, right, center
-	
 .moveSpritesPathCounter	skip 1			; counter for number of paths for valid junction
 
 .moveSpritesSaveX	skip 1			; preserve register
@@ -134,7 +130,13 @@
 
 .moveSpritesIndex	skip 1			; index of current sprite
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; move direction table placed in zero page to improve speed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.moveDirMap		equb 1, 47, 23, 25, 24	; tileMap offset from top left corner for up, down, left, right, center
+	
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .spritesImg		skip spritesTotal	; sprite image, position and direction for drawing
 .spritesX		skip spritesTotal
@@ -146,14 +148,14 @@
 .spritesEraseY		skip spritesTotal
 .spritesEraseDir	skip spritesTotal
 
-.spritesImgFrameCounter	equb 1			; timer for sprite animation frame speed
-.spritesImgFrame	equb 0			; current sprite animation frame 0-3
+.spritesImgFrameCounter	equb 1			; timer for sprite animation (spritesAnimationSpeed)
+.spritesImgFrame	equb 0			; current sprite animation frame (3,2,1,0)
 
-.drawSpriteImg		skip 1			; drawSprite img
+.drawSpriteImg		skip 1			; drawSprite image
 .drawSpriteX		skip 1			; drawSprite X position
 .drawSpriteY		skip 1			; drawSprite Y position
 
-.drawSpriteScreenAddr	skip 2			; calculated screen address from sprite x and y position
+.drawSpriteScreenAddr	skip 2			; screen address calculated from sprite x and y position
 
 .drawSpriteSaveX	skip 1			; preserve register
 .drawSpriteSaveY	skip 1			; preserve register
@@ -170,10 +172,10 @@
 
 .redrawSpritesMax	skip 1			; counter for maximum number of sprites processed in 1 frame
 
-.redrawSpritesIndexUpper			; index to current sprite in list for upper sprites
+.redrawSpritesIndexUpper			; index to current sprite in list for screen upper half
 			equb 1
 
-.redrawSpritesIndexLower			; index to current sprite in list for lower half
+.redrawSpritesIndexLower			; index to current sprite in list for screen lower half
 			equb 1
 
 .updateObjectTimerSaveX	skip 1			; preserve register
@@ -181,8 +183,8 @@
 .drawMapTileSaveA	skip 1			; preserve register
 .drawMapTileSaveY	skip 1			; preserve register
 
-soundChannels		= 6			; number of software defined sound channels
-.soundAddrPtr		skip soundChannels * 2	; pointers to sound effect data
+soundChannels		= 6			; number of concurrent sound effects during game play
+.soundAddrPtr		skip soundChannels * 2	; address pointers to sound effect data
 .soundTimers		skip soundChannels	; timers for sound effect data
 
 .playSoundAddr		skip 2			; storage for sound table address

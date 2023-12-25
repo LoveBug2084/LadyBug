@@ -714,7 +714,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #0					; then reset enemy timer back to 0
 	sta enemyTimer
 
-	lda #&ff				; and set enemyTimerZero flag to &ff to show that timer has hit zero (full revolution)
+	lda enemyReleaseEnable			; if enemy release is enabled
+	beq updateEnemyTimerSound
+
+	lda #&ff				; then set enemyTimerZero flag
 	sta enemyTimerZero
 
 .updateEnemyTimerSound
@@ -2201,6 +2204,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr redrawSprites			; erase and redraw sprites (above the center line split lines 0-155)
 	
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
+
 	bcs gameLevelContinue			; continue current level if ladbug death animation has just completed
 
 	jsr drawVegetableScore			; draw the vegetable bonus score in center (if enabled)
