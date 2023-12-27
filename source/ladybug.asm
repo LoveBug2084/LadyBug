@@ -1347,7 +1347,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .drawScoreNext
 
-	jsr drawExtraTile			; print digit tile
+	jsr drawExtraTile			; print digit or blank tile
 	
 	lda drawMapTileAddr			; save screen address for next digit
 	sta drawScoreAddr
