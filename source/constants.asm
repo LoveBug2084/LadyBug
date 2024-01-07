@@ -280,42 +280,36 @@ centerDiamond		= 18
 wallSolid		= %11000000		; bits 7,6 = 1,1 solid tile to enemy and ladybug (timer blocks and maze walls)
 wallTurnstile		= %10000000		; bits 7,6 = 1,0 solid tile to enemy only (turnstiles)
 
-mapTileBlank		= 0			; empty tile
+mapTileBlank		= 0			; blank space
 
-mapTileDot		= 1			; dot tile
+mapTileDot		= 1			; dot
 
-mapTileTimerTopLeft	= 2			; timer tiles
-mapTileTimerTop		= 4
-mapTileTimerTopRight	= 6
-mapTileTimerLeft	= 8
-mapTileTimerRight	= 10
-mapTileTimerBottomLeft	= 12
-mapTileTimerBottom	= 14
-mapTileTimerBottomRight	= 16
+mapTileTimerTopLeft	= 2			; timer top left
+mapTileTimerTop		= 4			; timer top horizontal
+mapTileTimerTopRight	= 6			; timer top right
+mapTileTimerLeft	= 8			; timer left vertical
+mapTileTimerRight	= 10			; timer right vertical
+mapTileTimerBottomLeft	= 12			; timer bottom left
+mapTileTimerBottom	= 14			; timer bottom horizontal
+mapTileTimerBottomRight	= 16			; timer bottom right
 
-mapTileTopLeft		= 18			; maze tiles
-mapTileTopRight		= 19
-mapTileBottomLeft	= 20
-mapTileBottomRight	= 21
-mapTileVertical		= 22
-mapTileHorizontal	= 23
-mapTileVerticalD	= 24
-mapTileVerticalU	= 25
-mapTileHorizontalR	= 26
-mapTileHorizontalL	= 27
+mapTileTopLeft		= 18			; solid wall top left
+mapTileTopRight		= 19			; solid wall top right
+mapTileBottomLeft	= 20			; solid wall bottom left
+mapTileBottomRight	= 21			; solid wall bottom right
+mapTileVertical		= 22			; solid wall vertical
+mapTileHorizontal	= 23			; solid wall horizontal
+mapTileVerticalD	= 24			; solid wall end down
+mapTileVerticalU	= 25			; solid wall end up
+mapTileHorizontalR	= 26			; solid wall end right
+mapTileHorizontalL	= 27			; solid wall end left
 
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; maze turnstile tile codes
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-mapTileTurnstileCV	= 28			; center vertical
-mapTileTurnstileCH	= 29			; center horizontal
-mapTileTurnstileD	= 30			; down
-mapTileTurnstileU	= 31			; up
-mapTileTurnstileR	= 32			; right
-mapTileTurnstileL	= 33			; left
+mapTileTurnstileCV	= 28			; turnstile center vertical
+mapTileTurnstileCH	= 29			; turnstile center horizontal
+mapTileTurnstileD	= 30			; turnstile down
+mapTileTurnstileU	= 31			; turnstile up
+mapTileTurnstileR	= 32			; turnstile right
+mapTileTurnstileL	= 33			; turnstile left
 
 
 
@@ -326,7 +320,7 @@ mapTileTurnstileL	= 33			; left
 objectTileIndex		= 34			; object tile images start at this index
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; letters, heart, skull that change color
+; letters, skull, heart (color changing objects)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 mapTileS		= objectTileIndex + 0	; S
@@ -343,19 +337,19 @@ mapTileSkull		= objectTileIndex + 10	; skull
 mapTileHeart		= objectTileIndex + 11	; heart
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; letters and heart with fixed color (used on level intro screen)
+; heart and letters with fixed color (used on level intro screen)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-mapTileCyanHeart	= objectTileIndex + 12
-mapTileYellowE		= objectTileIndex + 13
-mapTileYellowX		= objectTileIndex + 14
-mapTileYellowT		= objectTileIndex + 15
-mapTileYellowR		= objectTileIndex + 16
-mapTileYellowA		= objectTileIndex + 17
+mapTileCyanHeart	= objectTileIndex + 12	; cyan heart
+mapTileYellowE		= objectTileIndex + 13	; yellow E
+mapTileYellowX		= objectTileIndex + 14	; yellow X
+mapTileYellowT		= objectTileIndex + 15	; yellow T
+mapTileYellowR		= objectTileIndex + 16	; yellow R
+mapTileYellowA		= objectTileIndex + 17	; yellow A
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-mapTileBlankObj		= objectTileIndex + 18
+mapTileBlankObj		= objectTileIndex + 18	; blank object tile used to erase objects from screen
 
 
 
@@ -363,16 +357,16 @@ mapTileBlankObj		= objectTileIndex + 18
 ; extra tiles codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-extraTileDigits		= 0			; digits 0-9
-extraTileBlank		= 10			; blank tile
-extraTileDiamond	= 11			; first tile of large diamond
+extraTileDigits		= 0			; digits 0-9 use for score and highscore in lower info panel
+extraTileBlank		= 10			; blank tile (used for leading zero blanking and ladybug title)
+extraTileDiamond	= 11			; first tile of large diamond (diamond bonus screen)
 extraTileLogo		= 27			; first tile of ladybug logo
 extraTileUpper		= 63			; first tile of upper playfield bonus holders
 
-extraTileLeavesL	= 72			; leaves
-extraTileLeavesR	= 73
+extraTileLeafL	= 72			; leaf tiles common to all flowers
+extraTileLeafR	= 73
 
-extraTileFlower0TL	= 74			; flowers
+extraTileFlower0TL	= 74			; 4 types of flowers
 extraTileFlower0TR	= 75
 extraTileFlower0BL	= 76
 extraTileFlower0BR	= 77
@@ -398,14 +392,14 @@ extraTileFlower3BR	= 89
 ; name registration cursor box tile codes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-registrationTL		= 90			; name registration cursor box
-registrationTR		= 91
-registrationBL		= 92
-registrationBR		= 93
-registrationVL		= 94
-registrationVR		= 95
-registrationTH		= 96
-registrationBH		= 97
+registrationTL		= 90			; top left
+registrationTR		= 91			; top right
+registrationBL		= 92			; bottom left
+registrationBR		= 93			; bottom right
+registrationVL		= 94			; vertical left
+registrationVR		= 95			; vertical rigfht
+registrationTH		= 96			; top horizontal
+registrationBH		= 97			; bottom horizontal
 
 
 

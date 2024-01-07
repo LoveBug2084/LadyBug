@@ -1401,7 +1401,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; eraseSprite					erase the sprite block of 10x14 pixels on screen
-;						redraw the tile at the tail end of the sprite
+;						redraw tile at the tail end of sprite from tile map (redraw background)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			X			sprite number (index into spritesErase table containing x, y, dir information)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5654,10 +5654,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	adc #hi(chrRow - 2 * chrColumn)
 	sta drawMapTileAddr + 1
 
-	lda #extraTileLeavesL			; draw leaves and return
+	lda #extraTileLeafL			; draw leaves and return
 	jsr drawExtraTile
 
-	lda #extraTileLeavesR
+	lda #extraTileLeafR
 	jmp drawExtraTile
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7976,8 +7976,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr redrawSprites			; draw ladybug
 
 	jsr updateAnimationFrame		; update the animtion frame number
-
-	jsr updateObjectTimer			; update object timer, mode and palette
 
 	jsr updateBonusColor			; update the bonus letters palette colors
 

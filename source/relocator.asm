@@ -286,7 +286,7 @@
 .bootstrapCrtcData
 	
 	equb 127				; r0  horizontal total
-	equb 0					; r1  horizontal displayed (set to 0 here to blank the display, set later in the game code)
+	equb 0					; r1  horizontal displayed (set to 0 here to blank the display, set to actual width later in the game code)
 	equb 92					; r2  horizontal position
 	equb 40					; r3  sync width
 	equb 38					; r4  vertical total
@@ -310,3 +310,4 @@
 	print
 	print
 	print
+

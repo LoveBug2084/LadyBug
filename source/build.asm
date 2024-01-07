@@ -14,7 +14,7 @@
 
 	include "loader.asm"			; sideways ram and game loader
 
-	include "map.asm"			; 3 default maze map names
+	include "mapnames.asm"			; 3 default maze map names
 
 	include "ladybug.asm"			; main game
 	
