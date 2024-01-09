@@ -7716,6 +7716,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #bonusTime				; set display time
 	sta pauseCounter
 
+	lda #palSkull + palRed			; make sure skulls are red (in case we are drawing the special bonus screen)
+	sta ulaPalette
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; initialize playfieldMiddle
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7733,9 +7736,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jmp drawBonusScreenExtra
 
 .drawBonusScreenSpecialActive
-
-	lda #palSkull + palRed			; make sure skulls are red
-	sta ulaPalette
 
 	jsr drawString				; draw the bonus text
 	equw screenAddr + 2 + 8 + 3 * chrColumn + 16 * chrRow

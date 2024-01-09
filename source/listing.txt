@@ -5006,14 +5006,14 @@ bootstrap     &4800 - &4949 , 330 bytes
 .drawBonusScreen
      1F14   A9 AF      LDA #&AF
      1F16   85 01      STA &01
-     1F18   20 A1 08   JSR &08A1
-     1F1B   20 D4 1E   JSR &1ED4
-     1F1E   A5 17      LDA &17
-     1F20   D0 03      BNE &1F25
-     1F22   4C AA 1F   JMP &1FAA
+     1F18   A9 E6      LDA #&E6
+     1F1A   8D 21 FE   STA &FE21
+     1F1D   20 A1 08   JSR &08A1
+     1F20   20 D4 1E   JSR &1ED4
+     1F23   A5 17      LDA &17
+     1F25   D0 03      BNE &1F2A
+     1F27   4C AA 1F   JMP &1FAA
 .drawBonusScreenSpecialActive
-     1F25   A9 E6      LDA #&E6
-     1F27   8D 21 FE   STA &FE21
      1F2A   20 FA 21   JSR &21FA
      1F2D   C2 6A
      1F2F   01
