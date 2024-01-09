@@ -3830,7 +3830,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawMapTileAddrAdvance			advance the screen address by value in accumilator
+; drawMapTileAddrAdvance			advance the drawMapTileAddr by value in accumilator
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawMapTileAddrAdvance
@@ -3909,8 +3909,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updatePauseTimers				update ladybug and enemy pause timers
-;						erasure of object score if required
-;						erasure of vegetable score if required
+;                                               unblank ladybug (if required)
+;						erase object score (if required)
+;						erase vegetable score (if required)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .updatePauseTimers
