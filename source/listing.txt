@@ -4449,7 +4449,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      1B1E   A5 AA      LDA &AA
      1B20   D0 F6      BNE &1B18
      1B22   20 A4 22   JSR &22A4
-     1B25   20 14 1F   JSR &1F14
+     1B25   20 19 1F   JSR &1F19
      1B28   20 5B 0D   JSR &0D5B
      1B2B   20 EE 0C   JSR &0CEE
      1B2E   A9 00      LDA #&00
@@ -4462,7 +4462,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      1B39   A5 2C      LDA &2C
      1B3B   05 2D      ORA &2D
      1B3D   D0 D9      BNE &1B18
-     1B3F   20 14 1F   JSR &1F14
+     1B3F   20 19 1F   JSR &1F19
      1B42   20 F4 0C   JSR &0CF4
      1B45   F8         SED
      1B46   18         CLC
@@ -4485,7 +4485,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      1B62   A5 2C      LDA &2C
      1B64   05 2D      ORA &2D
      1B66   D0 B0      BNE &1B18
-     1B68   20 14 1F   JSR &1F14
+     1B68   20 19 1F   JSR &1F19
      1B6B   F8         SED
      1B6C   18         CLC
      1B6D   A9 02      LDA #&02
@@ -4972,42 +4972,42 @@ bootstrap     &4800 - &4949 , 330 bytes
      1ED2   60 5F
 .drawBonusGraphics
      1ED4   A5 17      LDA &17
-     1ED6   F0 24      BEQ &1EFC
-     1ED8   A9 30      LDA #&30
-     1EDA   8D 3A 06   STA &063A
-     1EDD   A9 5C      LDA #&5C
-     1EDF   8D 3B 06   STA &063B
-     1EE2   A2 03      LDX #&03
+     1ED6   F0 29      BEQ &1F01
+     1ED8   A9 E6      LDA #&E6
+     1EDA   8D 21 FE   STA &FE21
+     1EDD   A9 30      LDA #&30
+     1EDF   8D 3A 06   STA &063A
+     1EE2   A9 5C      LDA #&5C
+     1EE4   8D 3B 06   STA &063B
+     1EE7   A2 03      LDX #&03
 .drawBonusGraphicsSkulls
-     1EE4   A9 2C      LDA #&2C
-     1EE6   20 18 06   JSR &0618
-     1EE9   A9 18      LDA #&18
-     1EEB   20 4E 0D   JSR &0D4E
-     1EEE   CA         DEX
-     1EEF   D0 F3      BNE &1EE4
-     1EF1   A9 2C      LDA #&2C
-     1EF3   8D E8 3B   STA &3BE8
-     1EF6   8D EA 3B   STA &3BEA
-     1EF9   8D EC 3B   STA &3BEC
+     1EE9   A9 2C      LDA #&2C
+     1EEB   20 18 06   JSR &0618
+     1EEE   A9 18      LDA #&18
+     1EF0   20 4E 0D   JSR &0D4E
+     1EF3   CA         DEX
+     1EF4   D0 F3      BNE &1EE9
+     1EF6   A9 2C      LDA #&2C
+     1EF8   8D E8 3B   STA &3BE8
+     1EFB   8D EA 3B   STA &3BEA
+     1EFE   8D EC 3B   STA &3BEC
 .drawBonusGraphicsFlowers
-     1EFC   A2 00      LDX #&00
+     1F01   A2 00      LDX #&00
 .drawBonusGraphicsLoop
-     1EFE   BD B4 1E   LDA &1EB4,X
-     1F01   8D 3A 06   STA &063A
-     1F04   E8         INX
-     1F05   BD B4 1E   LDA &1EB4,X
-     1F08   8D 3B 06   STA &063B
-     1F0B   E8         INX
-     1F0C   20 11 16   JSR &1611
-     1F0F   E0 20      CPX #&20
-     1F11   D0 EB      BNE &1EFE
+     1F03   BD B4 1E   LDA &1EB4,X
+     1F06   8D 3A 06   STA &063A
+     1F09   E8         INX
+     1F0A   BD B4 1E   LDA &1EB4,X
+     1F0D   8D 3B 06   STA &063B
+     1F10   E8         INX
+     1F11   20 11 16   JSR &1611
+     1F14   E0 20      CPX #&20
+     1F16   D0 EB      BNE &1F03
 .drawBonusGraphicsExit
-     1F13   60         RTS
+     1F18   60         RTS
 .drawBonusScreen
-     1F14   A9 AF      LDA #&AF
-     1F16   85 01      STA &01
-     1F18   A9 E6      LDA #&E6
-     1F1A   8D 21 FE   STA &FE21
+     1F19   A9 AF      LDA #&AF
+     1F1B   85 01      STA &01
      1F1D   20 A1 08   JSR &08A1
      1F20   20 D4 1E   JSR &1ED4
      1F23   A5 17      LDA &17

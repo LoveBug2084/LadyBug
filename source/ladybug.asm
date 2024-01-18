@@ -7657,8 +7657,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusGraphics
 
-	lda bonusSpecialActive			; if special bonus is active then draw some skulls in ladybugs path
+	lda bonusSpecialActive			; if special bonus is active then set skull palette to red and draw some skulls in ladybugs path
 	beq drawBonusGraphicsFlowers
+
+	lda #palSkull + palRed			; set skull palette to red
+	sta ulaPalette
 
 	lda #lo(screenAddr + 9 * chrRow + 9 * chrColumn)
 	sta drawMapTileAddr
@@ -7716,9 +7719,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #bonusTime				; set display time
 	sta pauseCounter
-
-	lda #palSkull + palRed			; make sure skulls are red (in case we are drawing the special bonus screen)
-	sta ulaPalette
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; initialize playfieldMiddle
@@ -8528,7 +8528,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; playSoundSilence				shut down all sound effecr types and psg channels
+; playSoundSilence				shut down all sound effect types and psg channels
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundSilence
