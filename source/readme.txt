@@ -16,6 +16,6 @@
 ;-----------------------------------------------------------------------------
 
 ;-----------------------------------------------------------------------------
-; thanks to everyone @ stardot forums for their kind words and support
+; Thanks to everyone @ Stardot Forums for their kind words and support
 ;-----------------------------------------------------------------------------
 
