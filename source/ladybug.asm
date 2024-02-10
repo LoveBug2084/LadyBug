@@ -346,7 +346,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .waitIntLower					; repeat
 
-	bit screenHalf				; until raster is in lower area linex 156-311
+	bit screenHalf				; until raster is in lower area lines 156-311
 	bpl waitIntLower
 	
 	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
@@ -397,18 +397,18 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	ldx objectMode				; get current objectMode
 
 	inx					; add 1
-	cpx #3					; if its >= 3 then set it back to 0
+	cpx #3					; if its = 3 then set it back to 0
 	bne updateObjectTimerColor
 	ldx #0
 	
 .updateObjectTimerColor
 
-	stx objectMode				; update objectMode
+	stx objectMode				; update new objectMode
 	
-	lda updateObjectTimerPalette, x		; update object color palette
+	lda updateObjectTimerPalette, x		; update new object color palette
 	sta ulaPalette
 	
-	lda updateObjectTimerFrames, x		; update timer
+	lda updateObjectTimerFrames, x		; set object timer for new mode duration
 	sta objectModeTimer
 
 	ldx updateObjectTimerSaveX		; restore register
@@ -694,7 +694,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .updateEnemyTimer
 
-	lda pauseEnemy				; if enemy movement is paused then exit
+	lda pauseEnemy				; if enemy movement is paused then return
 	bne updateEnemyTimerExit
 
 	dec enemyTimerSpeedCounter		; bump enemy timer speed counter
@@ -1035,7 +1035,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .tileMapFindDotY
 
-	lda pauseCounter			; if timed out then exit with failed status
+	lda pauseCounter			; if timed out then return with failed status
 	beq tileMapFindDotFailed
 
 	jsr random				; get random value 0-255 and mask to become 0-28 in steps of 4
@@ -1144,7 +1144,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
-	bcc placeTileMapHeartsExit		; if location not found (bad maze design) then exit
+	bcc placeTileMapHeartsExit		; if location not found (bad maze design) then return with failed status (carry clear)
 
 	lda #mapTileHeart			; else replace it with a heart
 	ldy #0
@@ -1180,7 +1180,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
-	bcc placeTileMapLettersExit		; if location not found (bad maze design) then exit
+	bcc placeTileMapLettersExit		; if location not found (bad maze design) then return with failed status (carry clear)
 
 	lda levelLetters - 1, x			; replace dot with a letter from the levelLetters table
 	ldy #0					; use levelLetters - 1 address because x index is 3,2,1 not 2,1,0
@@ -1216,7 +1216,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
-	bcc placeTileMapSkullsExit		; if location not found (bad maze design) then exit
+	bcc placeTileMapSkullsExit		; if location not found (bad maze design) then return with failed status (carry clear)
 
 	lda #mapTileSkull			; replace it with a skull
 	ldy #0
@@ -1478,9 +1478,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	ldy #1					; then check the next tile to the right
 	lda (tileMapAddr), y
 
-	bmi eraseSpriteExit			; if its a maze tile then exit
+	bmi eraseSpriteExit			; if its a maze tile then return
 
-	cmp #objectTileIndex			; if its not an object then then exit
+	cmp #objectTileIndex			; if its not an object then then return
 	bcc eraseSpriteExit
 
 	jsr drawMapTile				; else draw the object tile to prevent cropping a column on objects caused by the previous tile draw
@@ -1508,7 +1508,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	ldy #23					; then check tile below
 	lda (tileMapAddr), y
 
-	bmi eraseSpriteExit			; if its a maze tile then exit
+	bmi eraseSpriteExit			; if its a maze tile then return
 
 	cmp #objectTileIndex			; if its an object tile
 	bcc eraseSpriteExit
@@ -1571,7 +1571,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	sta dummy16				; write to screen (address previously setup)
 
-	dec eraseBlockBytes			; if all bytes written then exit
+	dec eraseBlockBytes			; if all bytes written then return
 	beq eraseBlockExit
 
 	inc eraseBlockWrite + 1			; inc screen write address
@@ -2377,7 +2377,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .checkHighScoreEntry
 
-	cpx #0					; if the entry is last in the table then no need to shift scores, go directly to registration and exit
+	cpx #0					; if the entry is last in the table then no need to shift scores, go directly to registration
 	beq checkHighScoreRegister
 
 	ldy #lo(highScoreTableEnd - 15)		; else we need to shift high score data down to make room for high score entry
@@ -2476,7 +2476,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .ladybugEntryAnimationExit
 
-	rts
+	rts					; return
 
 
 
@@ -2490,7 +2490,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda levelEndActive			; if level has ended then advance level and exit with true status
 	bne checkLevelEndTrue
 
-	lda levelEdibles			; if there are still edible objects then exit with false status
+	lda levelEdibles			; if there are still edible objects then return with false status
 	bne checkLevelEndFalse
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -2785,10 +2785,6 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	lda #spriteBlanking			; disable the current enemy
 	sta spritesDir, x
 
-	lda #0					; disable enemy release
-	sta enemyTimerZero
-	sta enemyReleaseEnable
-
 	jsr enemySpawn				; spawn new enemy in center box
 
 	jmp moveSpritesNext			; skip to next sprite
@@ -2908,7 +2904,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .moveSpritesCheckVerticalExit
 
-	rts
+	rts					; return
 
 
 
@@ -2928,7 +2924,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .moveSpritesCheckHorizontalExit
 
-	rts
+	rts					; return
 
 
 
@@ -3633,7 +3629,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	adc score + 2				; add the hundred thousands/millions (with carry)
 	sta score + 2
 
-	bcc addScoreExit			; if no score overflow ( > 999999 ) then exit
+	bcc addScoreExit			; if no score overflow ( > 999999 ) then return
 	
 	lda #&99				; else set score to 999999
 	sta score
@@ -4005,7 +4001,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .updateAnimationFrameExit
 
-	rts
+	rts					; return
 
 
 
@@ -4070,13 +4066,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #hi(screenAddr + 8 + 3 * chrColumn + 10 * chrRow)
 	sta drawMapTileAddr + 1
 
-	ldx #0					; draw the special and extra letters
+	ldx #0					; set index to special/extra object tile table
 
 .instructionsLettersLoop			; repeat
 
-	lda instructionsLetters, x		; get a letter from table
+	lda instructionsLetters, x		; get object tile from table
 
-	bmi instructionsLettersAddrAdjust	; if its a letter the draw it, if its a -1 then do nothing
+	bmi instructionsLettersAddrAdjust	; if its an object tile then draw it, if its a -1 then do nothing
 
 	jsr drawMapTile
 
@@ -4087,7 +4083,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	inx					; move to next entry in table
 
-	cpx #15					; until all letters done
+	cpx #15					; until done
 	bne instructionsLettersLoop
 
 	jsr drawString				; draw "collect for bonus" in green
@@ -4140,10 +4136,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	beq instructionsPress			; until an input bit is active
 
-	cmp #keyBitStart			; if start key was pressed then exit with true status (start game)
+	cmp #keyBitStart			; if start key was pressed then return with true status (start game)
 	beq instructionsReturnTrue
 
-	cmp #keyBitEsc				; if esc key was pressed then exit with false status (return to menu)
+	cmp #keyBitEsc				; if esc key was pressed then return with false status (return to menu)
 	beq instructionsReturnFalse
 	
 	bne instructionsRelease			; else loop back and wait for release again
@@ -4212,7 +4208,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr inputScan				; read keyboard input and joystick (if enabled)
 
 	lda playerInput				; return with input bits
-
 	rts
 
 
@@ -4231,7 +4226,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .instructionsLadybugAnimationExit
 
-	rts
+	rts					; return
 
 
 
@@ -4521,7 +4516,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	lda via1PortA				; read key pressed status from bit 7
 
-	bmi keyboardScanPressed			; if pressed then exit with scancode
+	bmi keyboardScanPressed			; if pressed then return with scancode
 
 	dex					; until all tested
 	bpl keyboardScanLoop
@@ -4885,7 +4880,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda mainMenuCursor			; update old cursor position with current cursor position
 	sta mainMenuCursorOld
 
-	rts
+	rts					; return
 
 
 
@@ -4944,7 +4939,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 .mainMenuFunctionsExit
 
 	lda playerInput				; return with input bits
-
 	rts
 
 
@@ -5171,7 +5165,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs colorMultiplier1, "UP", &ff
 	
-	jsr mainMenuProcessKeyboardKey		; get key index
+	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
 	
 	tay					; get key scan code
 	lda keyScanCodes, y
@@ -5199,7 +5193,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 .mainMenuProcessKeyboardDown
 
-	jsr mainMenuProcessKeyboardKey		; get key index
+	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
 	
 	tay					; get key scan code
 	lda keyScanCodes, y
@@ -5230,7 +5224,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 .mainMenuProcessKeyboardLeft
 
-	jsr mainMenuProcessKeyboardKey		; get key index
+	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
 	
 	tay					; get key scan code
 	lda keyScanCodes, y
@@ -5263,7 +5257,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 .mainMenuProcessKeyboardRight
 
-	jsr mainMenuProcessKeyboardKey		; get key index
+	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
 	
 	tay					; get key scan code
 	lda keyScanCodes, y
@@ -5781,7 +5775,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr drawScoreTableFunctions		; update colors and scan keyboard
 
-	cmp #keyBitStart			; if start or esc pressed then exit else loop back and wait for key press
+	cmp #keyBitStart			; if start or esc pressed then return else loop back and wait for key press
 	beq drawScoreTableExit
 
 	cmp #keyBitEsc
@@ -5885,7 +5879,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	jsr inputScan				; read keyboard input and joystick (if enabled)
 
 	lda playerInput				; return with input bits
-
 	rts
 
 
@@ -5981,10 +5974,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	sta pauseLadybug			; unpause ladybug so that it will animate
 
-	sta shield				; make sure the "END" character is flashing (skull color) by setting shield to 0
+	sta shield				; make sure the "Enter Name" character is flashing (skull color) by setting shield to 0
 
-	lda #0					; set active enemies to 0 so that the enemy release flag will trip when timer hits top left
-	sta enemiesActive			; which will trigger the enemy release sound to warn the player that registration time is running out
+	sta enemiesActive			; set active enemies to 0 so that the enemy release will sound at timer top left (time running out warning)
 
 	lda #4					; draw two random flowers at screen row 4
 	jsr drawFlowers
@@ -6064,7 +6056,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr nameRegFunctions			; update timer, colors and scan keyboard
 
-	bcs nameRegExit				; if enemy timer timed out then exit
+	bcs nameRegExit				; if enemy timer timed out then return
 
 	bne nameRegWaitRelease			; if key is pressed then loop back and wait for release
 	
@@ -6076,7 +6068,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr nameRegFunctions			; update timer, colors and scan keyboard
 
-	bcs nameRegExit				; if enemy timer timed out then exit
+	bcs nameRegExit				; if enemy timer timed out then return
 
 	beq nameRegWaitPress			; if key not pressed then loop back and wait for key press
 
@@ -6122,15 +6114,15 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr inputScan				; read keyboard input and joystick (if enabled)
 
-	lda enemyReleaseEnable			; if timer has passed the top left
-	beq nameRegTimerActive
-	lda enemyTimer				; and if timer is at position 1
+	lda enemyTimer				; if timer is at position 1
 	cmp #1
-	beq nameRegTimerTimeout			; then exit with timer timeout status
-	
+	bne nameRegTimerActive
+	lda enemyReleaseEnable			; and if timer has passed top left
+	bne nameRegTimerTimeout			; then return with timer timeout status
+
 .nameRegTimerActive
 
-	lda playerInput				; read keyboard/joystick status and exit with timer active status
+	lda playerInput				; read keyboard/joystick status and return with timer active status
 	clc
 	rts
 
@@ -6138,7 +6130,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .nameRegTimerTimeout
 
-	lda playerInput				; read keyboard/joystick status and exit with timer timeout status
+	lda playerInput				; read keyboard/joystick status and return with timer timeout status
 	sec
 	rts
 
@@ -6484,7 +6476,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .checkBonus
 
-	lda ladybugEntryEnable			; if ladybug entry animation is enabled then exit
+	lda ladybugEntryEnable			; if ladybug entry animation is enabled then return
 	bne checkBonusExit
 
 
@@ -6515,10 +6507,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sta pauseLadybug
 	sta pauseEnemy
 
-	lda soundTimers + 0			; if sound effect playing on channel 0 (music) then exit
+	lda soundTimers + 0			; if sound effect playing on channel 0 (music) then return
 	bne checkBonusExit
 
-	lda soundTimers + 3			; if sound effects playing on channel 3 (object) then exit
+	lda soundTimers + 3			; if sound effects playing on channel 3 (object) then return
 	bne checkBonusExit
 
 	lda #&ff				; flag special bonus as active
@@ -6548,10 +6540,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sta pauseLadybug
 	sta pauseEnemy
 
-	lda soundTimers + 0			; if sound effect playing on channel 0 (music) then exit
+	lda soundTimers + 0			; if sound effect playing on channel 0 (music) then return
 	bne checkBonusExit
 
-	lda soundTimers + 3			; if sound effects playing on channel 3 (object) then exit
+	lda soundTimers + 3			; if sound effects playing on channel 3 (object) then return
 	bne checkBonusExit
 
 	lda #&ff				; flag special bonus as active
@@ -6914,10 +6906,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda enemyTimerZero			; and if timer has hit zero position top center
 	beq enemyReleaseExit
 
-	lda enemiesActive			; and if all enemies are not yet active (enemiesActive < spritesTotal - 1)
-	cmp #spritesTotal - 1
-	bcs enemyReleaseExit
-
 	ldx #spritesTotal - 1			; start with last enemy in list
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6944,7 +6932,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	asl a
 	sta enemyReleaseFrame
 	
-	lda vsyncCounter			; if (vsyncCounter & 15) != enemyReleaseFrame then exit (delay the release)
+	lda vsyncCounter			; if (vsyncCounter & 15) != enemyReleaseFrame then return (delay the release)
 	and #15
 	cmp enemyReleaseFrame
 	bne enemyReleaseExit
@@ -6956,9 +6944,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	inc enemiesActive			; increase enemies active count
 
-	lda #0					; disable enemy release until timer re-enables it
+	lda #0					; disable enemy release and timer zero flags
 	sta enemyReleaseEnable
-	sta enemyTimerZero			; disable timer zero flag until timer re-enables it
+	sta enemyTimerZero
 
 	lda enemiesActive			; if maximum number of enemys not yet released then spawn an enemy
 	cmp #spritesTotal - 1
@@ -7394,7 +7382,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSpritesCheckDrawn
 
-	lda redrawSpritesMax			; if max sprites drawn then exit saving current index so that the remaining sprites will continue to be
+	lda redrawSpritesMax			; if max sprites drawn then return saving current index so that the remaining sprites will continue to be
 	beq redrawSpritesUpdateIndex		; processed next frame (frameskip)
 
 .redrawSpritesCheckDone	
@@ -7707,7 +7695,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusGraphicsExit
 
-	rts
+	rts					; return
 
 
 
@@ -8566,17 +8554,17 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .playSoundTimer
 
-	lda optionTimerVolume			; if optionTimerVolume != 0
+	lda optionTimerVolume			; if optionTimerVolume = 0
 	bne playSoundTimerVolume
 
-	rts
+	rts					; then return
 	
 .playSoundTimerVolume
 
-	clc					; then add optionTimerVolume to #sfxTimerLow - 1 to select the required volume Low/Medium/High
+	clc					; else add optionTimerVolume to #sfxTimerLow - 1 to select the required volume Low/Medium/High
 	adc #sfxTimerLow - 1
 
-	; contine down to play sound		; play timer sound effect and exit
+	; contine down to play sound		; play timer sound effect and return
 
 
 
@@ -9100,7 +9088,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	adc #ImgPoints
 	sta objectScoreImg
 
-	rts
+	rts					; return
 
 
 
@@ -9165,10 +9153,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybug
 
-	lda pauseLadybug			; if ladybug movement is paused then exit
+	lda pauseLadybug			; if ladybug movement is paused then return
 	bne updateLadybugReturn
 
-	lda ladybugEntryEnable			; if ladybug entry movement is enabled then exit
+	lda ladybugEntryEnable			; if ladybug entry movement is enabled then return
 	beq updateLadybugInit
 	
 .updateLadybugReturn
@@ -9476,7 +9464,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugTurnstile
 
-	lda updateLadybugSave			; if saved tile is not a turnstile then exit
+	lda updateLadybugSave			; if saved tile is not a turnstile then return
 	and #wallSolid
 	cmp #wallTurnstile
 	bne updateLadybugExit
@@ -10380,6 +10368,5 @@ include "soundtables.asm"
 	print
 	print
 	print
-
 
 
