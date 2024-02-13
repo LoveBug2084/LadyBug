@@ -8,7 +8,7 @@
 	print
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; page0100 functions
+; page0100 functions and stack
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	org page0100
@@ -101,7 +101,7 @@
 	skip 1					; validation of cleanResetBank and cleanResetMachine (checksum)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; storage for keyboard/joystick mode (not preserved after reset)
+	; storage for keyboard/joystick mode (not preserved after reset but just in a handy place)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .joystickEnable
@@ -127,9 +127,9 @@
 	
 	ldx cleanResetMachine			; get machine index
 
-	jmp swrCleanReset			; run reset code in high ram to clear memory (in loader.asm) which then jumps into
+	jmp swrCleanReset			; run reset code in high ram to clear memory (see loader.asm) which then jumps into
 						; one of the following functions to setup the jump into the original os
-						; setup so that the beeb behaves normally
+						; so that the beeb behaves normally
 
 
 
@@ -469,10 +469,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .inputScan
 
-	lda #%01111111				; set port A bit 7 as input ( from keyboard output )
+	lda #%01111111				; set port A bit 7 as input (from keyboard output)
 	sta via1PortDdrA
 	
-	lda #sbKeyboard + sbLow			; keyboard output -enable low
+	lda #sbKeyboard + sbLow			; keyboard output -enable low (enable keyboard output)
 	sta via1PortB
 	
 	lda #0					; clear player input flags
@@ -682,6 +682,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updateEnemyTimer				update the enemy timer, draw timer tile when needed
+;						handle setting of the enemy release and zero crossing
+;						also the enemy release warning sound
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -749,7 +751,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;						place hearts in the map replacing dots (hearts are edible so no change to levelEdibles)
 ;						place letters in the map replacing dots (letters are edible so no change to levelEdibles)
 ;						place skulls in map replacing dots
-;						skulls are not edible so decrease levelEdibles by the number of skulls (in .placeTileMapSkulls)
+;						(skulls are not edible so decrease levelEdibles by the number of skulls (in .placeTileMapSkulls)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -762,7 +764,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .initPlayfieldMiddleMazeTable
 
-	equw map1, map2, map3			; list of available maze maps
+	equw map1, map2, map3			; address locations of the three maze maps
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1144,9 +1146,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
-	bcc placeTileMapHeartsExit		; if location not found (bad maze design) then return with failed status (carry clear)
+	bcc placeTileMapHeartsExit		; if location not found (bad maze design) then return
 
-	lda #mapTileHeart			; else replace it with a heart
+	lda #mapTileHeart			; else replace dot with a heart
 	ldy #0
 	sta (tileMapAddr), y
 	
@@ -1180,7 +1182,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
-	bcc placeTileMapLettersExit		; if location not found (bad maze design) then return with failed status (carry clear)
+	bcc placeTileMapLettersExit		; if location not found (bad maze design) then return
 
 	lda levelLetters - 1, x			; replace dot with a letter from the levelLetters table
 	ldy #0					; use levelLetters - 1 address because x index is 3,2,1 not 2,1,0
@@ -1216,13 +1218,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr tileMapFindDot			; pick a random tileMap location containing a dot that isnt near a turnstile
 
-	bcc placeTileMapSkullsExit		; if location not found (bad maze design) then return with failed status (carry clear)
+	bcc placeTileMapSkullsExit		; if location not found (bad maze design) then return
 
-	lda #mapTileSkull			; replace it with a skull
+	lda #mapTileSkull			; replace dot with a skull
 	ldy #0
 	sta (tileMapAddr), y
 	
-	dec levelEdibles			; and decrement number of edible objects
+	dec levelEdibles			; decrement number of edible objects
 
 .placeTileMapSkullsNext
 
@@ -1979,9 +1981,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ; main						main entry point to program
 ;
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .main
@@ -2023,9 +2027,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;
 ; setup a new game for level 1
-;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLevel1
@@ -2077,9 +2079,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;
 ; start current game level, setup level settings and initialize the tileMap with mazeMap layout
-;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLevelStart
@@ -2101,9 +2101,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;
 ; continue current level
-;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLevelContinue
@@ -2144,9 +2142,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;
 ; game main loop
-;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -2325,6 +2321,10 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda pauseCounter			; until pause time expires
 	bne gameOverLoop
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; check if highscore needs to be entered
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	jsr checkHighScore			; check if highScore was beaten (handles score position and the high score entry)
 
 	jmp gameIntroScreen			; return to game intro screen
@@ -2422,6 +2422,14 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;						clear tilemap
 ;						fill tilemap edges with with timer tiles
 ;						draw tilemap
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry			none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			destroyed
+;			y			destroyed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .playfieldMiddleWithTimer
@@ -2565,35 +2573,33 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;						temporary storage for sprite direction
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy control table
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid location to be valid junction
 						; at a valid junction an enemy will either turn to ladybugs direction (attack)
 						; or will choose a random available direction
 						; if the attack direction is not available then a random available direction is chosen
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; enemy ai control table
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemyRandomChance
 
-	equb (99.96 * 256) / 100		; percentage chance of enemy turning randomly instead of towards ladybug
-	equb (91.63 * 256) / 100		; enemy attack value on game menu (0-9) is added to the enemy number (0-3)
-	equb (83.30 * 256) / 100		; and used as an index into this table to give the enemy its random percentage
-	equb (74.97 * 256) / 100		; lower random percentage = higher attack percentage. example 05.00% random = 95.00% attack
-	equb (66.64 * 256) / 100
-	equb (58.31 * 256) / 100
-	equb (49.98 * 256) / 100
-	equb (41.65 * 256) / 100
-	equb (33.32 * 256) / 100
-	equb (20.00 * 256) / 100
-	equb (15.00 * 256) / 100
-	equb (10.00 * 256) / 100
-	equb (05.00 * 256) / 100
+	equb (99.96 * 256) / 100		; 00 percentage chance of enemy turning randomly instead of towards ladybug
+	equb (91.63 * 256) / 100		; 01 enemy attack value on game menu (0-9) is added to the enemy number (0-3)
+	equb (83.30 * 256) / 100		; 02 and used as an index into this table to give the enemy its random percentage
+	equb (74.97 * 256) / 100		; 03 lower random percentage = higher attack percentage. example 05.00% random = 95.00% attack
+	equb (66.64 * 256) / 100		; 04
+	equb (58.31 * 256) / 100		; 05
+	equb (49.98 * 256) / 100		; 05
+	equb (41.65 * 256) / 100		; 05
+	equb (33.32 * 256) / 100		; 05
+	equb (20.00 * 256) / 100		; 05
+	equb (15.00 * 256) / 100		; 05
+	equb (10.00 * 256) / 100		; 05
+	equb (05.00 * 256) / 100		; 05
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; x and y for the four possible directions
+	; x and y delta for the four possible directions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesDirX
@@ -6889,13 +6895,11 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; enemyRelease					if release is enabled then
+; enemyRelease					if release is enabled (enemyReleaseEnable and enemyTimerZero both set) then
+;						if frame delay is correct
 ;						release an enemy from the center box
 ;						increase active enemy count
-;						disable enemy release (enabled by timer hitting top left when there is a pending release)
-;
-;						enemy release is delayed by the staggered release frame so allow a window of 10 timer blocks
-;						to ensure that the enemy does get released
+;						clear enemy release
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemyRelease
@@ -7619,7 +7623,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawBonusGraphics				draw the bonus screen flowers from the list
+; drawBonusGraphics				draw the bonus screen flowers from the list and also 3 skulls if its a special bonus
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawBonusGraphicsList				; screen positions for 16 flowers
@@ -7641,6 +7645,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 11 * chrRow + 18 * chrColumn
 	equw screenAddr + 10 * chrRow + 20 * chrColumn
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; draw 3 skulls if its a special bonus screen
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawBonusGraphics
@@ -7673,6 +7679,10 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta tileMap + 8 * 23 + 9
 	sta tileMap + 8 * 23 + 11
 	sta tileMap + 8 * 23 + 13
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; draw the flowers (same for all bonus screens)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawBonusGraphicsFlowers
 
