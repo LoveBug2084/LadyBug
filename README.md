@@ -1,4 +1,4 @@
-**Build - 003375 - Tue 13 Feb 11:58:14 GMT 2024**
+**Build - 003375 - Wed 14 Feb 10:27:14 GMT 2024**
 #
 # Lady Bug
 A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the [Acorn BBC Micro Computer](https://en.wikipedia.org/wiki/BBC_Micro) systems, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler ( run asm.bat in windows or ./build in linux )\

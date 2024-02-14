@@ -5925,7 +5925,8 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 	jsr drawString				; draw paused message
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs colorMultiplier0, "  PAUSED  ", &ff
+	equs colorMultiplier0, "  P", colorMultiplier1, "A", colorMultiplier0, "U"
+	equs colorMultiplier1, "S", colorMultiplier0, "E", colorMultiplier1, "D  ", &ff
 	
 .checkPauseGameReturnTrue
 
