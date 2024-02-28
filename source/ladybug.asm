@@ -4748,11 +4748,11 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .optionsMin
 
-	equb  1,  0,  0,  0,  0			; minimum value for lives, speed, attack, volume, sound
+	equb  1,  0,  0,  0,  0			; minimum value for ladybug lives, enemy speed, enemy attack, timer volume, sound off/on
 	
 .optionsMax
 
-	equb  10, 6, 10,  4,  2			; maximum value + 1 for lives, speed, attack, volume, sound
+	equb  10, 6, 10,  4,  2			; maximum value + 1 for ladybug lives, enemy speed, enemy attack, timer volume, sound off/on
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4796,7 +4796,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
-	beq mainMenuWaitPress			; if key/joystick not pressed then loop back and wait for press
+	beq mainMenuWaitPress			; until player input
 
 	jsr mainMenuProcess			; process the key/joystick pressed option
 
@@ -5925,8 +5925,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 	jsr drawString				; draw paused message
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs colorMultiplier0, "  P", colorMultiplier1, "A", colorMultiplier0, "U"
-	equs colorMultiplier1, "S", colorMultiplier0, "E", colorMultiplier1, "D  ", &ff
+	equs colorMultiplier0, "  PAUSED  ", &ff
 	
 .checkPauseGameReturnTrue
 
@@ -6111,7 +6110,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr redrawSprites			; draw ladybug
 
-	jsr updateAnimationFrame		; update the animtion frame number
+	jsr updateAnimationFrame		; update the animation frame number
 
 	jsr updateEnemyTimer			; update the enemy timer and draw tile when needed
 

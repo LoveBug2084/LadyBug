@@ -12,7 +12,7 @@
 
 	include "config.asm"			; default game configs and high score table
 
-	include "loader.asm"			; sideways ram and game loader
+	include "loader.asm"			; graphics, utils, sideways ram and maingame loader
 
 	include "mapnames.asm"			; 3 default maze map names
 
