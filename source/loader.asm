@@ -592,7 +592,7 @@ masterMos350 = &e374
 .loaderUsingBank
 
 	equb 31,7,13				; position cursor
-	equs 132,"Using sideways ram bank",135,"0"
+	equs 132,"Using sideways ram bank",135
 	equb &ff				; end
 
 .loaderUsingWorkspace
@@ -600,10 +600,6 @@ masterMos350 = &e374
 	equb 31,9,13				; position cursor
 	equs 132, "Using B+ workspace ram"
 	equb &ff				; end
-
-.loaderBank
-
-	equs "0123456789ABCDEF"			; hexadecimal bank number
 
 .loaderRamFailed
 
@@ -720,8 +716,27 @@ screenCenterY	= &7e71				; address of tail of the 'y' below the center block tha
 	ldy #loaderUsingBank - loaderMessages	; else display sideways bank message
 	jsr loaderPrint - loaderReloc
 
-	ldy swrBank				; display bank number
-	lda loaderBank - loaderReloc, y
+	ldy swrBank				; if swrbank < 10
+	cpy #10
+	bcs loaderBankTen
+
+	lda #'0'				; then display '0' followed by bank number
+	jsr oswrch
+
+	tya
+	clc
+	adc #'0'
+	jsr oswrch
+	bne loaderCopyData
+
+.loaderBankTen
+
+	lda #'1'				; else display '1' followed by bank number - 10
+	jsr oswrch
+
+	tya
+	clc
+	adc #'0' - 10
 	jsr oswrch
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
