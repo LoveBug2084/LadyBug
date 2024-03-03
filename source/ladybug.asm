@@ -2770,7 +2770,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	bne moveSpritesCheckValidJunction
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy hit a skull so remove skull from map, remove skull from screen, kill enemy, disable enemy release flags and spawn new enemy in center box
+	; enemy hit a skull so remove skull from map, remove skull from screen, kill enemy, spawn new enemy in center box
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesKillEnemy
