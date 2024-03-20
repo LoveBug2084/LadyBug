@@ -397,9 +397,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	ldx objectMode				; get current objectMode
 
 	inx					; add 1
-	cpx #3					; if its = 3 then set it back to 0
+	cpx #objectModeYellow + 1		; if = objectModeYellow + 1 then set it back to objectModeCyan
 	bne updateObjectTimerColor
-	ldx #0
+	ldx #objectModeCyan
 	
 .updateObjectTimerColor
 
@@ -718,9 +718,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	lda enemyReleaseEnable			; if enemy release is enabled
 	beq updateEnemyTimerSound
-
-	lda #&ff				; then set enemyTimerZero flag
-	sta enemyTimerZero
+	sta enemyTimerZero			; then set enemyTimerZero flag
 
 .updateEnemyTimerSound
 
@@ -734,10 +732,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	cmp #spritesTotal - 1
 	beq updateEnemyTimerExit
 
-	lda #sfxEnemyWarning			; then play enemy release warning
+	lda #sfxEnemyWarning			; then play enemy release warning and set enemy release flag
 	jsr playSound
 
-	lda #&ff				; enable enemy release
+	lda #&ff
 	sta enemyReleaseEnable
 
 .updateEnemyTimerExit
@@ -2093,6 +2091,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr drawLevelIntro			; draw the level intro screen showing information about current level
 
 	jsr initPlayfieldMiddle			; copy current maze map to the background tileMap and count number of edible items (dots/hearts/letters)
+
+	ldx #objectModeRed			; red object mode 
+	jsr updateObjectTimerColor
 
 	lda levelEdibles			; if there are no edible objects (bad maze design)
 	bne gameLevelContinue
@@ -4683,18 +4684,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 	lda #0					; zero enemy timer position
 	sta enemyTimer
-	sta enemyTimerZero			; disable timer zero flag until next full revolution
-	sta enemyReleaseEnable			; disable enemy release
+	sta enemyTimerZero			; clear timer zero and enemy release flags
+	sta enemyReleaseEnable
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set object mode to start with red
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	lda #objectModeCyan			; set object mode to cyan and object mode timer to 1
-	sta objectMode				; to force the object mode to instantly change to red and the color to be updated
-	lda #1
-	sta objectModeTimer
-	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; clear the x2 x3 x5 flags, clear the score multiplier and the special/extra/diamond bonus active flags
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6952,7 +6944,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	sta enemyReleaseEnable
 	sta enemyTimerZero
 
-	lda enemiesActive			; if maximum number of enemys not yet released then spawn an enemy
+	lda enemiesActive			; if maximum number of enemys not yet released then spawn another enemy into the center box
 	cmp #spritesTotal - 1
 	bne enemySpawn
 	
@@ -7965,8 +7957,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; wait for timer1 interrupt and process
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-;.drawBonusScreenWaitTimer1
 
 	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
