@@ -453,22 +453,22 @@ masterMos350 = &e374
 	equb pal6 + palCyan
 	equb pal7 + palWhite
 
-	equb palMultiplier0 + palCyan		; color 8 multiplier (flashing cyan/blue)
-	equb palMultiplier1 + palBlue		; color 9 multiplier (flashing blue/cyan)
+	equb palMultiplier0 + palCyan		; color 8 multiplier (flashing cyan / blue)
+	equb palMultiplier1 + palBlue		; color 9 multiplier (flashing blue / cyan)
 
-	equb palSpecial0 + palRed		; color 10 special (flashing red/magenta)
-	equb palSpecial1 + palMagenta		; color 11 special (flashing magenta/red)
+	equb palSpecial0 + palRed		; color 10 special (flashing red / magenta)
+	equb palSpecial1 + palMagenta		; color 11 special (flashing magenta / red)
 
-	equb palExtra0 + palYellow		; color 12 extra (flashing yellow/green)
-	equb palExtra1 + palGreen		; color 13 extra (flashing green/yellow)
+	equb palExtra0 + palYellow		; color 12 extra (flashing yellow / green)
+	equb palExtra1 + palGreen		; color 13 extra (flashing green / yellow)
 
 	equb palSkull + palWhite		; color 14 skull (fade effect or red when shield is active)
-	equb palObject + palCyan		; color 15 object (red,yellow,cyan)
+	equb palObject + palCyan		; color 15 object (cyan / red / yellow)
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrJoystickControl				combine playerInput with joystickInput
+; swrJoystickControl				combine playerInput (keyboard) with joystickInput
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrJoystickControl
@@ -522,10 +522,9 @@ masterMos350 = &e374
 	lda #0					; draw column from 0
 	sta drawSpriteColumnVinit + 1
 
-	lda #diamondTileHeight			; done when height = diamondTileHeight
+	lda #diamondTileHeight			; set height to diamondTileHeight
+	sta drawSpriteColumnTileHeight + 1
 	sta drawSpriteColumnVtest + 1
-
-	sta drawSpriteColumnTileHeight + 1	; set sprite column height to diamondTileHeight
 
 	lda #opcodeINX				; drawing normal so use INX instruction
 	sta drawSpriteNextLineInstruction

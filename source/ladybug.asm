@@ -3333,7 +3333,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	bcc drawBonusItemVegetable
 	
 	lda #centerDiamond			; then draw a diamond and return
-	bne drawSprite10x10
+	bne drawSprite10x10			; (bne used as branch always)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -3369,7 +3369,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	lda #sprite10x10Bytes			; store number of bytes for sprite in counter
 	sta drawByteCount
 
-	bpl drawSpriteGetX			; draw the 10x10 pixel sprite
+	bne drawSpriteGetX			; draw the 10x10 pixel sprite (bne used as branch always)
 
 
 
@@ -3964,14 +3964,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #hi(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
 	sta drawMapTileAddr + 1
 	
-						; redraw the 3 tiles that were over written by vegetable bonus score
-	lda tileMap + ((vegetableScoreY - 1) * 23) + vegetableScoreX + 0
+	lda tileMap + centerBoxLeft		; redraw the 3 tiles that were over written by vegetable bonus score
 	jsr drawMapTile
 	
-	lda tileMap + ((vegetableScoreY - 1) * 23) + vegetableScoreX + 1
+	lda tileMap + centerBoxCenter
 	jsr drawMapTile
 	
-	lda tileMap + ((vegetableScoreY - 1) * 23) + vegetableScoreX + 2
+	lda tileMap + centerBoxRight
 	jsr drawMapTile
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6935,8 +6934,30 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda #moveUp				; pending enemy found so release it by setting it moving upwards out of the box
-	sta spritesDir, x
+	lda tileMap + centerBoxUp		; if all exits blocked then dont bother trying to release the enemy
+	and tileMap + centerBoxDown 
+	and tileMap + centerBoxLeft
+	and tileMap + centerBoxRight
+	bmi enemyReleaseSpawn
+
+	txa					; we got here so there is at least 1 exit available so save enemy sprite index
+	tay
+
+.enemyReleaseChooseDirection
+
+	jsr random				; choose a random value 0,2,4,6 as index into direction table
+	and #%00000110
+	tax
+
+	lda (enemyReleaseDir, x)		; if chosen direction is blocked then choose another
+	bmi enemyReleaseChooseDirection
+
+	txa					; convert the chosen direction index (0,2,4,6) to a direction (0,1,2,3) 
+	lsr a
+
+	sta spritesDir, y			; set enemy to chosen direction so it can be released from the center box
+
+.enemyReleaseSpawn
 
 	inc enemiesActive			; increase enemies active count
 

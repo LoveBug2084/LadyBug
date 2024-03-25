@@ -76,6 +76,13 @@
 .enemyReleaseEnable	skip 1			; set to &ff when timer hits top left
 .enemyReleaseFrame	skip 1			; frame number to release enemy
 
+.enemyReleaseDir				; 4 directions to test in tile map for releasing an enemy
+
+			equw tileMap + centerBoxUp
+			equw tileMap + centerBoxDown 
+			equw tileMap + centerBoxLeft
+			equw tileMap + centerBoxRight
+
 .enemiesActive		skip 1			; number of enemies currectly active
 .enemyTimer		skip 1			; enemy release timer counter 0-87, enemy released when = 0 set enemyTimerZero
 .enemyTimerZero		skip 1			; set to &ff when enemyTimer = 0, cleared to &00 when enemy released

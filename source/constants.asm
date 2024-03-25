@@ -93,13 +93,17 @@ ladybugStartY		= 136
 lowerDiamondX		= 20			; sprite coordinates for diamond available indicator
 lowerDiamondY		= 197
 
-centerBoxX		= 88			; sprite coordinates for center box
-centerBoxY		= 88
-
 vegetableScoreX		= 10			; tile coordinates for vegetable score
 vegetableScoreY		= 12
 
+centerBoxX		= 88			; sprite coordinates for center box
+centerBoxY		= 88
 
+centerBoxUp		= 10 * 23 + 11		; map coordinate for above box center
+centerBoxDown		= 12 * 23 + 11		; map coordinate for below box center
+centerBoxLeft		= 11 * 23 + 10		; map coordinate for left of box center
+centerBoxRight		= 11 * 23 + 12		; map coordinate for right of box center
+centerBoxCenter		= 11 * 23 + 11		; map coordinate for box center
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; analogue and digital joystick
