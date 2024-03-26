@@ -29,11 +29,7 @@ PROCshrink
 
 IF k$="I" THEN PROCinstructionsGame
 
-IF k$="E" THEN CHAIN"Editor"
-
 IF k$="W" THEN PROCinstructionsEditor
-
-IF k$="R" THEN CHAIN"Reset"
 
 IF k$="K" THEN ?J%=0
 
@@ -41,14 +37,26 @@ IF k$="J" THEN ?J%=1
 
 IF k$="U" THEN ?J%=2
 
-UNTIL k$="K" OR k$="J" OR k$="U"
+UNTIL k$="E" OR k$="R" OR k$="K" OR k$="J" OR k$="U"
 
-PROCsplash
-PROCexpand
+IF k$="R" THEN CHAIN"Reset"
 
 Z%=OPENIN("_Maps")
 INPUT#Z%,map1$,map2$,map3$
 CLOSE#Z%
+
+Z%=OPENIN(map1$):IF Z%<>0 THENCLOSE#Z% ELSE map1$="_Map1"
+Z%=OPENIN(map2$):IF Z%<>0 THENCLOSE#Z% ELSE map2$="_Map2"
+Z%=OPENIN(map3$):IF Z%<>0 THENCLOSE#Z% ELSE map3$="_Map3"
+
+*ACCESS _Maps
+Z%=OPENOUT("_Maps"):PRINT#Z%,map1$,map2$,map3$:CLOSE#Z%
+*ACCESS _Maps L
+
+IF k$="E" THEN CHAIN"Editor"
+
+PROCsplash
+PROCexpand
 
 OSCLI("LOAD "+map1$+" 7800")
 OSCLI("LOAD "+map2$+" 7900")
