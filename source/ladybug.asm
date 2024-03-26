@@ -7139,7 +7139,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; redrawSprites					process sprite list for upper or lower area, erase and redraw each sprite
+; redrawSprites					process sprite list for upper or lower area
+;						erase sprite and redraw background tile at tail end of sprite
+;						then redraw sprite
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry			none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
