@@ -45,13 +45,12 @@ Z%=OPENIN("_Maps")
 INPUT#Z%,map1$,map2$,map3$
 CLOSE#Z%
 
-Z%=OPENIN(map1$):IF Z%<>0 THEN CLOSE#Z% ELSE map1$="_Map1"
-Z%=OPENIN(map2$):IF Z%<>0 THEN CLOSE#Z% ELSE map2$="_Map2"
-Z%=OPENIN(map3$):IF Z%<>0 THEN CLOSE#Z% ELSE map3$="_Map3"
+A%=FALSE
+Z%=OPENIN(map1$):IF Z%<>0 THEN CLOSE#Z% ELSE map1$="_Map1":A%=TRUE
+Z%=OPENIN(map2$):IF Z%<>0 THEN CLOSE#Z% ELSE map2$="_Map2":A%=TRUE
+Z%=OPENIN(map3$):IF Z%<>0 THEN CLOSE#Z% ELSE map3$="_Map3":A%=TRUE
 
-*ACCESS _Maps
-Z%=OPENOUT("_Maps"):PRINT#Z%,map1$,map2$,map3$:CLOSE#Z%
-*ACCESS _Maps L
+IF A% THEN OSCLI("ACCESS _Maps"):Z%=OPENOUT("_Maps"):PRINT#Z%,map1$,map2$,map3$:CLOSE#Z%:OSCLI("ACCESS _Maps L")
 
 IF k$="E" THEN CHAIN"Editor"
 
