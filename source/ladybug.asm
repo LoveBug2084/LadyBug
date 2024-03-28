@@ -6891,6 +6891,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;						release an enemy from the center box
 ;						increase active enemy count
 ;						clear enemy release
+;						if enemies < maximum then spawn a new enemy into center box else activate the center bonus item
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemyRelease
@@ -6971,7 +6972,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.enemyReleaseMax
+.enemyReleaseBonusItem
 
 	lda #&ff				; else activate center bonus item (vegetable/diamond)
 	sta bonusItemActive
@@ -6991,42 +6992,27 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .enemySpawn
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; first check that there are currently no enemies in the box
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+	ldx #spritesTotal - 1			; start at last enemy in list
 
-	ldx #spritesTotal - 1			; check that there are currently no enemies in the box
+.enemySpawnCheck
 
-.enemySpawnCheckEmpty
-
-	lda spritesDir, x			; if enemy is active but stopped
+	lda spritesDir, x			; get enemy blanking and stopped bits
 	and #spriteBlanking + moveStop
-	cmp #moveStop
+
+	cmp #moveStop				; if enemy is visible and not moving
 	beq enemySpawnExit			; then its waiting in the box so exit this function
 
+	and #spriteBlanking			; if enemy is blanked
+	bne enemySpawnType			; then its available to be spawned into center box 
+
 	dex					; else check next
-	bne enemySpawnCheckEmpty		; until all checked
+	bne enemySpawnCheck			; until all checked (bne used as branch always, enemy will be found before x = 0)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; next find an inactive enemy and use it
+	; an inactive enemy was found so we spawn it into the center box with the correct enemy type for current level
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx #spritesTotal - 1			; find an inactive sprite
-
-.enemySpawnFindInactive
-
-	lda spritesDir, x			; if enemy is blanked
-	and #spriteBlanking
-	bne enemySpawnCurrent			; then go spawn an enemy
-	
-	dex					; else try next
-	bne enemySpawnFindInactive		; (this is a branch always, enemy will be found before x = 0)
-	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; an inactive enemy was found so we spawn it into the center box with the correct image for current level
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.enemySpawnCurrent
+.enemySpawnType
 
 	lda level				; if level >= 9
 	cmp #&09
@@ -7086,7 +7072,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda #centerBoxY
 	sta spritesY, x
 
-	lda #moveUp + moveStop			; set enemy direction up + stopped
+	lda #moveUp + moveStop			; set enemy direction up + stopped (enemy sits in box facing upwards)
 	sta spritesDir, x
 
 	lda #0					; disable center bonus item vegetable/diamond
