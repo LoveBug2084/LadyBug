@@ -12,5 +12,5 @@ bbcProjectName=$(<./projectName.txt)
 # run the project
 #-----------------
 
-b-em -fullscreen -autoboot -disc "$bbcProjectName.ssd"
+b-em -fullscreen -autoboot -disc "$(realpath "$bbcProjectName.ssd")"
 

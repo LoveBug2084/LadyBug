@@ -21,7 +21,7 @@ bonusDiamondScore	= &10			; diamond bonus score value 10 * 100,000
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-magicNumber		= &69			; used for random seed initialization, data validation code generation and swr test
+magicNumber		= %01101001		; used for random seed initialization, data validation code generation and swr test
 
 spritesTotal		= 5			; total number of sprites in game (1 for lady bug and 4 for enemies)
 
@@ -360,13 +360,13 @@ mapTileBlankObj		= objectTileIndex + 18	; blank object tile used to erase object
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 extraTileDigits		= 0			; digits 0-9 use for score and highscore in lower info panel
-extraTileBlank		= 10			; blank tile (used for leading zero blanking and ladybug title)
+extraTileBlank		= 10			; blank tile (used for leading zero blanking and ladybug logo)
 extraTileDiamond	= 11			; first tile of large diamond (diamond bonus screen)
 extraTileLogo		= 27			; first tile of ladybug logo
 extraTileUpper		= 63			; first tile of upper playfield bonus holders
 
-extraTileLeafL	= 72			; leaf tiles common to all flowers
-extraTileLeafR	= 73
+extraTileLeafL		= 72			; leaf tiles common to all flowers
+extraTileLeafR		= 73
 
 extraTileFlower0TL	= 74			; 4 types of flowers
 extraTileFlower0TR	= 75
@@ -588,7 +588,7 @@ pixelsObject		= &ff
 ; os vectors and functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-irqAcc			= &00fc			; bbc os irq1 interrupt stores accumilator here
+irqA			= &00fc			; bbc os irq1 interrupt stores accumilator here
 irqVector		= &0204			; bbc os irq1 interrupt vector
 fx200			= &0258			; bbc os reads the *fx 200 value from here
 breakVector		= &0287			; bbc os jumps here on break key reset

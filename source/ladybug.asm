@@ -18,7 +18,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; random					generate an 8 bit random number
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			8 bit random number from address randomSeed + 1
 ;			X			preserved
@@ -49,7 +49,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawVegetableScore				draws vegetable score in the center box if enabled
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -113,7 +113,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; cleanReset (break key)			simulated power on reset while preserving the stack and high ram
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			jumps into high ram to select one of the following clean reset functions for each machine (see loader.asm)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; cleanResetMaster320				page in bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			jumps into os rom to continue with machine setup
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -158,7 +158,7 @@ continueMaster320	= &8073			; master 3.20 entry point
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; cleanResetMaster350				page in extra mos code at fc00 and bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			jumps into os rom to continue with machine setup
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -183,7 +183,7 @@ continueMaster350	= &fc76			; master 3.50 entry point
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; cleanResetCompact				page in bank 15, jump into mos to continue
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			jumps into os rom to continue with machine setup
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -242,7 +242,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #&ff				; screenHalf = lower (raster now at line 156)
 	sta screenHalf
 
-	lda irqAcc				; restore A
+	lda irqA				; restore A
 
 	rti					; return to main program
 
@@ -274,7 +274,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
  .irqVsyncExit
 
-	lda irqAcc				; restore A
+	lda irqA				; restore A
 	
 	rti					; return to main program
 
@@ -283,7 +283,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; psgWrite 					write to sound chip
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			data to be written to 76489 psg
+; entry parameters	A			data to be written to 76489 psg
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -314,7 +314,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; waitIntUpper					wait for interrupt for upper raster lines 0-155 and read analogue joystick (if enabled)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed (.joytickAnalogue function)
@@ -335,7 +335,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; waitIntLower					wait for interrupt for lower raster lines 156-311 and read analogue joystick (if enabled)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed (.joystickAnalog function)
@@ -356,7 +356,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updateObjectTimer				update object timer (25Hz), change object mode and palette color
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -373,7 +373,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateObjectTimerFrames			; duration of the colors for letters and hearts
+.updateObjectTimerDuration			; duration of the colors for letters and hearts
 
 	equb objectModeCyanTime
 	equb objectModeRedTime
@@ -389,7 +389,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	and #1
 	bne updateObjectTimerExit
 	
-	dec objectModeTimer			; then objectTimerMode -= 1
+	dec objectModeTimer			; then objectModeTimer -= 1
 	bne updateObjectTimerExit		; if objectModeTimer = 0
 
 	stx updateObjectTimerSaveX		; save register
@@ -397,7 +397,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	ldx objectMode				; get current objectMode
 
 	inx					; add 1
-	cpx #objectModeYellow + 1		; if = objectModeYellow + 1 then set it back to objectModeCyan
+	cpx #objectModeYellow + 1		; if objectMode > objectModeYellow then objectMode = objectModeCyan
 	bne updateObjectTimerColor
 	ldx #objectModeCyan
 	
@@ -408,7 +408,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda updateObjectTimerPalette, x		; update new object color palette
 	sta ulaPalette
 	
-	lda updateObjectTimerFrames, x		; set object timer for new mode duration
+	lda updateObjectTimerDuration, x	; set objectModeTimer for new mode duration
 	sta objectModeTimer
 
 	ldx updateObjectTimerSaveX		; restore register
@@ -457,7 +457,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; inputScan					check up down left right start and esc keys
 ;						combine with joystickInput so either keyboard or joystick can control the game
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			playerInput		bit 0=start 1=left 2=down 3=up 4=right 5=esc
 ;			A			destroyed
@@ -472,7 +472,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #%01111111				; set port A bit 7 as input (from keyboard output)
 	sta via1PortDdrA
 	
-	lda #sbKeyboard + sbLow			; keyboard output -enable low (enable keyboard output)
+	lda #sbKeyboard + sbLow			; keyboard output -enable low (connect keyboard output to port A bit 7)
 	sta via1PortB
 	
 	lda #0					; clear player input flags
@@ -501,20 +501,20 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #keyReturn				; read start key (return) into playerInput bits
 	jsr readKey
 
-	lda #sbKeyboard + sbHigh		; slow bus keyboard -enable high (disable keyboard output)
+	lda #sbKeyboard + sbHigh		; slow bus keyboard -enable high (disconnect keyboard output)
 	sta via1PortB
 	
 	lda #%11111111				; set port A all bits output
 	sta via1PortDdrA
 
-	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled) (see loader.asm)
+	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled, see loader.asm)
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; readKey					place key onto slow bus port a and read key status into player input bits
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			key matrix scan code
+; entry parameters	A			key matrix scan code
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			playerInput		shifted left and key status placed into bit 0
 ;			A			destroyed
@@ -541,7 +541,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawObjectScore				draws objectScoreImg at objectScoreX, objectScoreY (if enabled)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -557,10 +557,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda objectScoreY
 	sta drawSpriteY
 
-	lda objectScoreImg			; if objectScoreImg != 0 (active)
+	lda objectScoreImg			; if objectScoreImg != 0 (if active (image != 0))
 	beq drawObjectScoreExit
 
-	jmp drawSprite10x10			; then draw it
+	jmp drawSprite10x10			; then draw object score image
 	
 .drawObjectScoreExit
 
@@ -592,7 +592,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; chooseLetters					choose 3 random letters, make sure there are no duplicates
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			levelLetters + 0	random letter tile id
 ;			levelLetters + 1	random letter tile id
@@ -637,7 +637,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; chooseLetterRandom				pick a random number (0-9) and return with one of the 10 letter tile id's in A
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			random letter tile id
 ;			X			preserved
@@ -685,7 +685,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;						handle setting of the enemy release and zero crossing
 ;						also the enemy release warning sound
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed (call to changeTimerTile)
@@ -751,7 +751,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;						place skulls in map replacing dots
 ;						(skulls are not edible so decrease levelEdibles by the number of skulls (in .placeTileMapSkulls)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -931,7 +931,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; initTimerTiles				fill the outer edges of tileMap with timer tiles and initialize enemyTimer to 0
 ;						clear enemy release flag and timer crossed zero flag
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -1015,7 +1015,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; tileMapfindDot				find a random tileMap location that contains a dot and isnt near a turnstile
 ;						if location hasnt been found within 0.16 seconds then timeout (bad maze design)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			tileMapAddr		contains the address of the dot in the tileMap
 ;			carry			set if location found, clear if not found (timed out)
@@ -1127,7 +1127,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; placeTileMapHearts				place 3 hearts at random locations in the map
 ;						exit if location not found within 0.16 seconds
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -1163,7 +1163,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; placeTileMapLetters				place 3 letters at random locations in the map
 ;						exit if location not found within 0.16 seconds
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -1199,7 +1199,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; placeTileMapSkulls				place skulls at random locations in the map, decrement edibles for each skull placed
 ;						exit if location not found within 0.16 seconds
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -1241,7 +1241,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;						set no active enemies
 ;						disable ladybug movement animation
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -1278,7 +1278,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawScore					draw a single score digit allowing for leading zero blanking
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawScoreAddr		points to next tile position on screen
 ;			drawScoreIndex		points to the next score digit
@@ -1361,7 +1361,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawHighScore					draw highScore using 6 calls to drawscore
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -1403,7 +1403,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; eraseSprite					erase the sprite block of 10x14 pixels on screen
 ;						redraw tile at the tail end of sprite from tile map (redraw background)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			X			sprite number (index into spritesErase table containing x, y, dir information)
+; entry parameters	X			sprite number (index into spritesErase table containing x, y, dir information)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -1531,7 +1531,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; eraseBlock					erase a 10x14 block of pixels
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			spriteX			sprite coordinates for erasure
+; entry parameters	spriteX			sprite coordinates for erasure
 ;			spriteY
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
@@ -1621,7 +1621,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawExtraTile					draw tile to screen, move to next tile position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			tile img to be drawn
+; entry parameters	A			tile img to be drawn
 ;			drawMapTileAddr		current screen location for tile
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawMapTileAddr		points to next tile position on screen
@@ -1653,7 +1653,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawMapTile4Pixel				draw only 4 pixels wide tile skipping the last 2 pixel columns to screen, move to next tile position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			tile img to be drawn
+; entry parameters	A			tile img to be drawn
 ;			drawMapTileAddr		current screen location for tile
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawMapTileAddr		points to next tile position on screen
@@ -1689,7 +1689,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawMapTile					draw map tile to screen, move to next tile position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			tile img to be drawn (bits 7,6 not used)
+; entry parameters	A			tile img to be drawn (bits 7,6 not used)
 ;			drawMapTileAddr		current screen location for tile
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawMapTileAddr		points to next tile position on screen
@@ -1766,7 +1766,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawObjectTile				draw 8 pixel wide object tile to screen, move to next tile position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			tile img to be drawn
+; entry parameters	A			tile img to be drawn
 ;			drawObjectTileAddr	current screen location for tile
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawObjectTileAddr	points to next tile position on screen
@@ -1805,7 +1805,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawBcd					draw A as 2 digits of BCD characters
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			bcd value to display
+; entry parameters	A			bcd value to display
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawChrAddr		points to next chr position on screen
 ;			A			destroyed
@@ -1838,7 +1838,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawChr					draw chr to screen, move to next chr position ready for next
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			chr to be drawn
+; entry parameters	A			chr to be drawn
 ;			drawChrAddr		current screen location for chr
 ;			drawChrColor		bit mask for pixel colors
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2152,7 +2152,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .gameLoopWaitIntUpper
 
-	jsr waitIntUpper			; wait for interrupt and read analogue joystick (if enabled)
+	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr ladybugEntryAnimation		; ladybug entry movement animation (if enabled)
 
@@ -2201,7 +2201,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr redrawSprites			; erase and redraw sprites (above the center line split lines 0-155)
 	
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
-
 	bcs gameLevelContinue			; continue current level if ladbug death animation has just completed
 
 	jsr drawVegetableScore			; draw the vegetable bonus score in center (if enabled)
@@ -2242,7 +2241,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;						if esc key pressed then decrement esc counter
 ;						if counter = 0 then return true else return false
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -2287,7 +2286,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ; gameOver					clear the screen and display game over message
 ;						check if score needs to be registered in the high score table
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			jumps to gameIntroScreen
 ;			A			destroyed
@@ -2424,7 +2423,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;						fill tilemap edges with with timer tiles
 ;						draw tilemap
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -2561,7 +2560,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; moveSprites					update coordinates of all sprites, enemy ai and ladybug collision with enemy
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -2938,7 +2937,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawPlayfieldUpper				draws the top red, yellow and cyan bars with text "special" "extra" "x2 x3 x5"
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -3028,7 +3027,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawPlayfieldUpperBonus			draws the bonus letters and multipliers in the correct colors from bonusBits flags
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -3124,7 +3123,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ; drawPlayfieldLower				draws the bottom info panel showing
 ;						ladybug, lives, diamond available, vegetable, vegetable score, level, score, highScore, highScore name
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -3243,7 +3242,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawPlayfieldMiddle				draw middle playfield tiles
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -3302,7 +3301,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ; drawBonusItemCenter				draw vegetable sprite in center bug box (if enabled)
 ;						or draw diamond sprite (if enabled and correct level)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -3377,7 +3376,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ; drawSprite					draw sprite on screen
 ; drawSpriteFlipped				draw sprite on screen vertically flipped
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			drawSpriteImg		sprite to be drawn
+; entry parameters	drawSpriteImg		sprite to be drawn
 ;			drawSpriteX		x position of sprite
 ;			drawSpriteY		y position of sprite
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3569,7 +3568,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; addScoreMultiply				add A to score in bcd mode with multiplier
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			score value
+; entry parameters	A			score value
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -3609,7 +3608,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ; addScore					add A to score in bcd mode
 ;						score is stored as 6 digits in 3 bcd bytes, last digit (units) not stored and is always 0 on screen
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			LSB
+; entry parameters	A			LSB
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3654,7 +3653,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; addScoreVegetable				multiply vegetable score by 10(bcd) and add to score
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry						none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3737,7 +3736,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawBcdMini					draw 2 digits of BCD mini chr tiles
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			value to display
+; entry parameters	A			value to display
 ;			drawChrMiniAddr		screen address to draw
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawChrMiniAddr		points to next mini chr tile position on screen
@@ -3769,7 +3768,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawChrMini					draw mini chr to screen, move to next chr position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			chr to be drawn 0-9
+; entry parameters	A			chr to be drawn 0-9
 ;			drawChrMiniAddr		screen address for chr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
@@ -4476,7 +4475,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; keyboardScan					scan all keys (used when redefining input keys)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			C			clear if no key pressed, set if key pressed
 ;			A			key index if key was pressed
@@ -4554,7 +4553,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; initLevelSettings				setup letters, skulls and enemy settings etc, everything for the current level
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -5574,7 +5573,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawFlowers					draw two flowers at supplied row
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			vertical row for flowers
+; entry parameters	A			vertical row for flowers
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawFlowers
@@ -6680,7 +6679,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; changeTimerTile				change timer tile in tileMap (invert bit 0) and redraw tile on screen
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			A			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -6756,7 +6755,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ; spriteToScreen				convert x y coordinates to screen address
 ;						adjust sprite image number for 1 pixel shifted alternate image if x = odd
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			drawSpriteX		sprite x coordinate
+; entry parameters	drawSpriteX		sprite x coordinate
 ;			drawSpriteY		sprite y coordinate
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
@@ -6837,7 +6836,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updateSkullColor				update the skull palette color
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -6892,6 +6891,12 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;						increase active enemy count
 ;						clear enemy release
 ;						if enemies < maximum then spawn a new enemy into center box else activate the center bonus item
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			destroyed
+;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemyRelease
@@ -6999,10 +7004,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda spritesDir, x			; get enemy blanking and stopped bits
 	and #spriteBlanking + moveStop
 
-	cmp #moveStop				; if enemy is visible and not moving
+	cmp #moveStop				; if enemy is visible and has the stop flag set
 	beq enemySpawnExit			; then its waiting in the box so exit this function
 
-	and #spriteBlanking			; if enemy is blanked
+	and #spriteBlanking			; if enemy is not visible
 	bne enemySpawnType			; then its available to be spawned into center box 
 
 	dex					; else check next
@@ -7018,10 +7023,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	cmp #&09
 	bcc enemySpawnLevelImage
 
-	lda #&ff				; mark current sprite as invalid image number
+	lda #&ff				; set enemy image as invalid
 	sta spritesImg, x
 
-	stx enemySpawnSaveX			; save current sprite index
+	stx enemySpawnSaveX			; save enemy index
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; level is 9 or higher so pick a random enemy type that isnt already active to make sure that all 4 enemys on screen will be different
@@ -7034,7 +7039,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	tay
 	iny
 
-	lda spriteBaseImg, y			; get enemy sprite image id for chosen type
+	lda spriteBaseImg, y			; get enemy image id for chosen type
 	
 	ldx #spritesTotal - 1			; check all enemy sprites make sure that random enemy isnt already in list
 	
@@ -7046,9 +7051,8 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	dex					; until done
 	bne enemySpawnCheckImage
 
-	ldx enemySpawnSaveX			; restore the current sprite index
-
-	bne enemySpawnImage			; and store sprite
+	ldx enemySpawnSaveX			; get enemy number
+	bne enemySpawnImage			; and setup enemy image and position (bne used as branch always as enemy number > 0)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; level is 1 to 8 so pick the enemy type to match the level number
@@ -7125,11 +7129,12 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; redrawSprites					process sprite list for upper or lower area
-;						erase sprite and redraw background tile at tail end of sprite
-;						then redraw sprite
+; redrawSprites					process sprite list for upper or lower area, for each sprite in the list
+;						erase sprite
+;						redraw background tile at tail end of sprite
+;						redraw sprite
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -7144,6 +7149,7 @@ upperLowerThreshold	= 92 - (spriteTileHeight / 2)
 
 spritesPerFrame		= 3			; maximum number of sprites in each half of the screen that can be safely
 						; erased and drawn without tearing
+						; if there are more than this to be redrawn then they will be processed next frame (auto frame-skip)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7152,7 +7158,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSprites
 
-	lda #spritesTotal - 1			; set length of sprites list to parse (enemies)
+	lda #spritesTotal - 1			; set length of sprites list to parse (start with enemies)
 	sta redrawSpritesCount
 	
 	lda #spritesPerFrame			; maximum number of sprites to process within 1 frame before using frame skip
@@ -7201,7 +7207,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	beq redrawSpritesEraseLoop
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; process enemy sprites
+	; process enemy sprites (auto frame skip active) 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .redrawSpritesErase
@@ -7234,7 +7240,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	
 .redrawSpritesEraseSprite
 
-	jsr eraseSprite				; erase sprite and redraw tile
+	jsr eraseSprite				; erase sprite and redraw background tile at tail end of sprite
 
 	lda #&ff				; mark it as erased
 	sta spritesErased, x
@@ -7266,7 +7272,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	
 	lda spritesErased, x			; if theres still a pending erase caused by the sprite crossing upper/lower boundary
 	beq redrawSpritesEraseSprite		; then we must ignore the sprite y and do an emergency erase
-						; otherwise part of the sprite will be left on screen just below the boundary crossing
+						; otherwise part of the sprite will be left on screen just below the upper/lower boundary crossing
 
 	lda spritesX, x				; store sprite x for drawing and erasing
 	sta drawSpriteX
@@ -7304,7 +7310,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	
 	sta spritesEraseDir, x			; save direction for later erasure
 
-	and #&03				; use just the direction bits only
+						; use just the direction bits only
+	and #moveUp or moveDown or moveLeft or moveRight
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; direction = up so draw sprite normal
@@ -7372,7 +7379,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	dec redrawSpritesMax			; reduce the drawn sprites counter by 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if we were processing enemies then move on to next sprite else loop back to start processing enemies
+	; if we just processed ladybug then jump back and start processing enemies else continue processing enemies
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .redrawSpritesNext
@@ -7380,7 +7387,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	cpx #0					; if we just processed ladybug
 	beq redrawSpritesErase			; then loop back and start processing enemies
 
-	dex					; point index to next sprite
+	dex					; else point index to next enemy sprite
 
 	bne redrawSpritesCheckDrawn		; if index has past the end of the enemy sprite list
 	ldx #spritesTotal - 1			; then index = spritesTotal - 1 (wrap around the sprite buffer)
@@ -7439,7 +7446,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawBcd
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; draw the vegetable image and score value
+	; draw the vegetable image and value
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda #72					; draw vegetable sprite
@@ -8217,7 +8224,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updateBonusColor				update the special/extra/multiplier color palette
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -8281,7 +8288,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; clearTileMap					fill tileMap with blank tile (23 * 23 tiles = &211 bytes)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -8312,7 +8319,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawString					draw text string terminanated by byte with bit 7 set
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			string			string is read from memory following the jsr
+; entry parameters	addr, data		addr is read from memory following the jsr
 ;						format is
 ;						2 bytes screen address
 ;						text string terminated with a byte with bit 7 set (not printed)
@@ -8369,7 +8376,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ; drawText					draw text string terminanated by byte with bit 7 set (not drawn)
 ;						if text contains value 0-15 then select draw color
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			drawTextAddr		points to first character of string
+; entry parameters	drawTextAddr		points to first character of string
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			drawChrAddr		points to next chr position on screen
 ;			A			destroyed
@@ -8453,7 +8460,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; processSound					process sound effect/music tables and send data to psg
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -8580,7 +8587,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; playSound					send sound data to soundEffect to trigger sound
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -8729,7 +8736,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ; checkForObject				check if ladybug is over the bonus vegetable/diamond
 ;						also read tile under ladybug and handle any objects found (dots, hearts, letters, skulls)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
@@ -9014,7 +9021,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	jsr drawPlayfieldUpperBonus		; update upper bonus display
 
-	jmp checkForObjectScore			; add the object score
+	jmp checkForObjectScore			; add the object score and return
 
 
 
@@ -9034,7 +9041,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	jsr drawPlayfieldUpperBonus		; update upper bonus display
 
-	jmp checkForObjectScore
+	jmp checkForObjectScore			; add the object score and return
 
 
 
@@ -9149,7 +9156,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;						handle objects under ladybug
 ;						handle turnstile movement (rewrite background map tile id's only, drawing is handled by mainloop)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			destroyed
@@ -9183,7 +9190,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	sta spritesDir + 0
 
 	and #moveStop eor &ff			; save current direction and blanking but with movement enabled
-	sta updateLadybugOldDir			; ( used later when to slide ladybug when turned early for junction or turnstile )
+	sta updateLadybugOldDir			; ( used later to slide ladybug when turned early for junction or turnstile )
 
 	lda #&ff				; clear new x and y directions
 	sta updateLadybugNewDirX
@@ -9626,7 +9633,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawTurnstile					draw a vertical or horizontal turnstile if required
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			drawTurnstileAddr	screen address for top left corner of 3x3 turnstile block or high byte >= &80 for no draw
+; entry parameters	drawTurnstileAddr	screen address for top left corner of 3x3 turnstile block or high byte >= &80 for no draw
 ;			drawTurnstileDir	direction to draw turnstile, 0=vertical
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
@@ -9763,7 +9770,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; spriteToAddr					convert spriteX + offset, spriteY + offset to tileMapAddr and drawTileAddr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			spriteToAddrX		sprite x position
+; entry parameters	spriteToAddrX		sprite x position
 ;			spriteToAddrY		sprite y position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			tileMapAddr		tile map address for top left corner of sprite
@@ -10283,7 +10290,7 @@ include "soundtables.asm"
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; joystickAnalogue				read analogue joystick values, convert to player input bits
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry			none
+; entry parameters	none
 ; exit			A			destroyed
 ;			X			destroyed
 ;			Y			preserved

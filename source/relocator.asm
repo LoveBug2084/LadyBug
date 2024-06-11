@@ -74,10 +74,10 @@
 	txs
 
 	lda #magicNumber			; initialize random seed
-	sta randomSeed + progOffset
+	sta randomSeed + 0 + progOffset
 	sta randomSeed + 1 + progOffset
 
-	lda #0					; timer 1 timed interupt mode
+	lda #%00000000				; timer 1 timed interupt mode
 	sta via1Acr
 
 	lda #%01111111				; disable all interrupts

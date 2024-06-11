@@ -1067,7 +1067,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      01B5   F1
      01B6   F6
      01B7   F4
-.updateObjectTimerFrames
+.updateObjectTimerDuration
      01B8   AF
      01B9   0F
      01BA   3E
