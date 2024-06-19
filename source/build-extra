@@ -7,15 +7,15 @@ echo
 #-------------------
 
 echo "Building fontmaker"
-gcc -o ./utils/fontmaker ./fontmaker/fontmaker.c
+gcc -o ./utils/fontmaker ./utilsSource/fontmaker.c
 echo
 
 echo "Building pixels"
-gcc -o ./utils/pixels ./pixels/pixels.c
+gcc -o ./utils/pixels ./utilsSource/pixels.c
 echo
 
 echo "Building filelocker"
-gcc -o ./utils/filelocker ./filelocker/filelocker.c
+gcc -o ./utils/filelocker ./utilsSource/filelocker.c
 echo
 
 #--------------------------------
