@@ -3995,7 +3995,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	dec spritesImgFrameCounter		; animation timer -= 1
 	bne updateAnimationFrameExit		; if animation timer = 0
 	
-	lda #spritesAnimationSpeed		; then animation timer = animation speed
+	lda #spritesAnimationTime		; then reset animation timer
 	sta spritesImgFrameCounter
 	
 	dec spritesImgFrame			; animation frame -= 1

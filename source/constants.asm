@@ -23,14 +23,14 @@ bonusDiamondScore	= &10			; diamond bonus score value 10 * 100,000
 
 magicNumber		= %01101001		; used for random seed initialization, data validation code generation and swr test
 
-spritesTotal		= 5			; total number of sprites in game (1 for lady bug and 4 for enemies)
-
-spritesAnimationSpeed	= 8			; number of vsyncs per animation frame (animation speed = 6.25Hz (50Hz / 8))
-
-ladybugEnemyRange	= 6			; range allowed between enemy and ladybug to detect as a hit
-
 frame			= 50			; 1 second = 50 * 50Hz vsync frames
 pause			= 25			; 1 second pause = 25 * 25Hz
+
+spritesTotal		= 5			; total number of sprites in game, 1 for lady bug and 4 for enemies (its probably a bad idea to change this value)
+
+spritesAnimationTime	= frame * 0.16		; 0.16 seconds time betweeen sprite animation frames
+
+ladybugEnemyRange	= 6			; range allowed between enemy and ladybug to detect as a hit
 
 escTime			= frame * 2.00		; hold esc for 2.00 seconds to quit game and return back to menu
 
