@@ -624,7 +624,7 @@ pageHigh		= &8000			; high ram / sideways ram
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 progReloc		= &0000			; relocation address of program
-progLoad		= &2000			; load address of program
+progLoad		= &1900			; load address of program
 progOffset		= progLoad - progReloc	; relocation offset
 
 swramStart		= pageHigh		; high/sideways ram start address

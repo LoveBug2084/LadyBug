@@ -682,7 +682,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; updateEnemyTimer				update the enemy timer, draw timer tile when needed
-;						handle setting of the enemy release and zero crossing
+;						handle setting of the enemy release and zero crossing flags
 ;						also the enemy release warning sound
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
@@ -4415,11 +4415,11 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	cmp #256 - ladybugDeathFlashTime - ladybugDeathWaitTime
 	bcs ladybugDeathAnimationDrawAngelExit
 
-	ldx ladybugDeathAnimationIndex		; adjust angel x postion using direction table
+	ldx ladybugDeathAnimationIndex		; get index into animation table
 
 	lda spritesX + 0			; get signed x direction and add to sprite x
 	clc
-	adc ladybugDeathAnimationTable, x
+	adc ladybugDeathAnimationTable, x	; adjust angel x postion using direction table
 
 	cmp #angelMinX				; clip x to stay within the playfield area
 	bcs ladybugDeathAnimationLimitXhi
@@ -4436,11 +4436,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	sta spritesX + 0			; save new sprite x position
 
-	inx					; adjust angel y position using direction table
-
 	lda spritesY + 0			; get signed y direction and add to sprite y
 	clc
-	adc ladybugDeathAnimationTable, x
+	adc ladybugDeathAnimationTable + 1, x	; adjust angel y position using direction table
 
 	cmp #angelMinY				; clip y to stay within the playfield area
 	bcs ladybugDeathAnimationLimitYstore
@@ -4451,12 +4449,13 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	sta spritesY + 0			; save new sprite y position
 
-	inx					; index now points to next pair of directions
-
 	lda vsyncCounter			; after 8 vsync frames have counted
 	and #7
 	bne ladybugDeathAnimationDrawAngelExit
 	
+	inx					; index now points to next pair of directions
+	inx
+
 	cpx #12					; if index at end of table
 	bne ladybugDeathAnimationFrame
 

@@ -792,7 +792,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      AF8C   8D 71 7E   STA &7E71
      AF8F   8D 72 7E   STA &7E72
      AF92   A0 00      LDY #&00
-     AF94   20 FD 4F   JSR &4FFD
+     AF94   20 FD 48   JSR &48FD
      AF97   78         SEI
      AF98   A5 F4      LDA &F4
      AF9A   8D FF 7F   STA &7FFF
@@ -802,19 +802,19 @@ bootstrap     &4800 - &4949 , 330 bytes
      AFA4   8E FD 7F   STX &7FFD
      AFA7   E0 02      CPX #&02
      AFA9   D0 12      BNE &AFBD
-     AFAB   20 1A 50   JSR &501A
+     AFAB   20 1A 49   JSR &491A
      AFAE   F0 05      BEQ &AFB5
      AFB0   CE FD 7F   DEC &7FFD
      AFB3   D0 08      BNE &AFBD
 .loaderBplus
      AFB5   A0 39      LDY #&39
-     AFB7   20 FD 4F   JSR &4FFD
-     AFBA   4C E8 4F   JMP &4FE8
+     AFB7   20 FD 48   JSR &48FD
+     AFBA   4C E8 48   JMP &48E8
 .loaderNotBplus
-     AFBD   20 0B 50   JSR &500B
+     AFBD   20 0B 49   JSR &490B
      AFC0   D0 33      BNE &AFF5
      AFC2   A0 1C      LDY #&1C
-     AFC4   20 FD 4F   JSR &4FFD
+     AFC4   20 FD 48   JSR &48FD
      AFC7   AC FE 7F   LDY &7FFE
      AFCA   C0 0A      CPY #&0A
      AFCC   B0 0E      BCS &AFDC
@@ -833,18 +833,18 @@ bootstrap     &4800 - &4949 , 330 bytes
      AFE3   69 26      ADC #&26
      AFE5   20 EE FF   JSR &FFEE
 .loaderCopyData
-     AFE8   20 88 50   JSR &5088
+     AFE8   20 88 49   JSR &4988
      AFEB   0E FD 7F   ASL &7FFD
      AFEE   A2 72      LDX #&72
-     AFF0   A0 4F      LDY #&4F
+     AFF0   A0 48      LDY #&48
      AFF2   4C F7 FF   JMP &FFF7
 .loaderFailed
      AFF5   A0 54      LDY #&54
-     AFF7   20 FD 4F   JSR &4FFD
+     AFF7   20 FD 48   JSR &48FD
 .loaderFailedLoop
-     AFFA   4C FA 4F   JMP &4FFA
+     AFFA   4C FA 48   JMP &48FA
 .loaderPrint
-     AFFD   B9 00 4F   LDA &4F00,Y
+     AFFD   B9 00 48   LDA &4800,Y
      B000   C9 FF      CMP #&FF
      B002   F0 06      BEQ &B00A
      B004   20 EE FF   JSR &FFEE
@@ -855,7 +855,7 @@ bootstrap     &4800 - &4949 , 330 bytes
 .swrTest
      B00B   A0 00      LDY #&00
 .swrTestLoop
-     B00D   20 44 50   JSR &5044
+     B00D   20 44 49   JSR &4944
      B010   F0 07      BEQ &B019
      B012   C8         INY
      B013   C0 10      CPY #&10
@@ -869,7 +869,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      B01F   AD 08 80   LDA &8008
      B022   48         PHA
      B023   A0 80      LDY #&80
-     B025   20 44 50   JSR &5044
+     B025   20 44 49   JSR &4944
      B028   D0 13      BNE &B03D
      B02A   A0 00      LDY #&00
      B02C   8C 30 FE   STY &FE30
@@ -924,12 +924,12 @@ bootstrap     &4800 - &4949 , 330 bytes
      B088   A2 2F      LDX #&2F
      B08A   A0 00      LDY #&00
 .swramCopyLoop
-     B08C   B9 00 20   LDA &2000,Y
+     B08C   B9 00 19   LDA &1900,Y
      B08F   99 00 80   STA &8000,Y
      B092   C8         INY
      B093   D0 F7      BNE &B08C
-     B095   EE 8E 50   INC &508E
-     B098   EE 91 50   INC &5091
+     B095   EE 8E 49   INC &498E
+     B098   EE 91 49   INC &4991
      B09B   CA         DEX
      B09C   D0 EE      BNE &B08C
      B09E   60         RTS
@@ -3103,19 +3103,19 @@ bootstrap     &4800 - &4949 , 330 bytes
      1057   A9 A8      LDA #&A8
 .ladybugDeathAnimationLimitXstore
      1059   85 6B      STA &6B
-     105B   E8         INX
-     105C   A5 70      LDA &70
-     105E   18         CLC
-     105F   7D 58 0F   ADC &0F58,X
-     1062   C9 08      CMP #&08
-     1064   B0 02      BCS &1068
-     1066   A9 08      LDA #&08
+     105B   A5 70      LDA &70
+     105D   18         CLC
+     105E   7D 59 0F   ADC &0F59,X
+     1061   C9 08      CMP #&08
+     1063   B0 02      BCS &1067
+     1065   A9 08      LDA #&08
 .ladybugDeathAnimationLimitYstore
-     1068   85 70      STA &70
-     106A   E8         INX
-     106B   A5 00      LDA &00
-     106D   29 07      AND #&07
-     106F   D0 08      BNE &1079
+     1067   85 70      STA &70
+     1069   A5 00      LDA &00
+     106B   29 07      AND #&07
+     106D   D0 0A      BNE &1079
+     106F   E8         INX
+     1070   E8         INX
      1071   E0 0C      CPX #&0C
      1073   D0 02      BNE &1077
      1075   A2 00      LDX #&00
@@ -8903,21 +8903,21 @@ bootstrap     &4800 - &4949 , 330 bytes
      4819   8D 00 FE   STA &FE00
      481C   A9 00      LDA #&00
      481E   8D 01 FE   STA &FE01
-     4821   20 22 69   JSR &6922
+     4821   20 22 62   JSR &6222
      4824   A2 0D      LDX #&0D
 .bootstrapCrtc
      4826   8E 00 FE   STX &FE00
-     4829   BD 3C 69   LDA &693C,X
+     4829   BD 3C 62   LDA &623C,X
      482C   8D 01 FE   STA &FE01
      482F   CA         DEX
      4830   10 F4      BPL &4826
-     4832   20 22 69   JSR &6922
+     4832   20 22 62   JSR &6222
      4835   78         SEI
      4836   A2 FF      LDX #&FF
      4838   9A         TXS
      4839   A9 69      LDA #&69
-     483B   8D 40 20   STA &2040
-     483E   8D 41 20   STA &2041
+     483B   8D 40 19   STA &1940
+     483E   8D 41 19   STA &1941
      4841   A9 00      LDA #&00
      4843   8D 4B FE   STA &FE4B
      4846   A9 7F      LDA #&7F
@@ -8932,7 +8932,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      485E   A9 FF      LDA #&FF
      4860   8D 43 FE   STA &FE43
      4863   AD FE 7F   LDA &7FFE
-     4866   8D 30 21   STA &2130
+     4866   8D 30 1A   STA &1A30
      4869   8D 30 FE   STA &FE30
      486C   30 07      BMI &4875
      486E   8D 32 FE   STA &FE32
@@ -8940,15 +8940,15 @@ bootstrap     &4800 - &4949 , 330 bytes
      4872   9D 30 FF   STA &FF30,X
 .bootstrapResetValidation
      4875   49 69      EOR #&69
-     4877   8D 32 21   STA &2132
+     4877   8D 32 1A   STA &1A32
      487A   AD FD 7F   LDA &7FFD
-     487D   8D 31 21   STA &2131
+     487D   8D 31 1A   STA &1A31
      4880   49 69      EOR #&69
      4882   18         CLC
-     4883   6D 32 21   ADC &2132
-     4886   8D 32 21   STA &2132
+     4883   6D 32 1A   ADC &1A32
+     4886   8D 32 1A   STA &1A32
      4889   AD 33 01   LDA &0133
-     488C   8D 33 21   STA &2133
+     488C   8D 33 1A   STA &1A33
      488F   F0 4F      BEQ &48E0
      4891   AD 33 01   LDA &0133
      4894   C9 01      CMP #&01
@@ -8957,43 +8957,43 @@ bootstrap     &4800 - &4949 , 330 bytes
      4898   AD 62 FE   LDA &FE62
      489B   29 E0      AND #&E0
      489D   8D 62 FE   STA &FE62
-     48A0   4C E0 68   JMP &68E0
+     48A0   4C E0 61   JMP &61E0
 .bootstrapJoystickAnalogue
      48A3   AD FD 7F   LDA &7FFD
      48A6   C9 06      CMP #&06
      48A8   F0 1C      BEQ &48C6
      48AA   A9 C1      LDA #&C1
-     48AC   8D 65 67   STA &6765
+     48AC   8D 65 60   STA &6065
      48AF   A9 FE      LDA #&FE
-     48B1   8D 66 67   STA &6766
+     48B1   8D 66 60   STA &6066
      48B4   A9 C0      LDA #&C0
-     48B6   8D 6A 67   STA &676A
-     48B9   8D 71 67   STA &6771
+     48B6   8D 6A 60   STA &606A
+     48B9   8D 71 60   STA &6071
      48BC   A9 FE      LDA #&FE
-     48BE   8D 6B 67   STA &676B
-     48C1   8D 72 67   STA &6772
+     48BE   8D 6B 60   STA &606B
+     48C1   8D 72 60   STA &6072
      48C4   D0 1A      BNE &48E0
 .bootstrapJoystickAnalogueMaster
      48C6   A9 19      LDA #&19
-     48C8   8D 65 67   STA &6765
+     48C8   8D 65 60   STA &6065
      48CB   A9 FE      LDA #&FE
-     48CD   8D 66 67   STA &6766
+     48CD   8D 66 60   STA &6066
      48D0   A9 18      LDA #&18
-     48D2   8D 6A 67   STA &676A
-     48D5   8D 71 67   STA &6771
+     48D2   8D 6A 60   STA &606A
+     48D5   8D 71 60   STA &6071
      48D8   A9 FE      LDA #&FE
-     48DA   8D 6B 67   STA &676B
-     48DD   8D 72 67   STA &6772
+     48DA   8D 6B 60   STA &606B
+     48DD   8D 72 60   STA &6072
 .bootstrapRelocate
      48E0   A2 48      LDX #&48
      48E2   A0 00      LDY #&00
 .relocateProgram
-     48E4   B9 00 20   LDA &2000,Y
+     48E4   B9 00 19   LDA &1900,Y
      48E7   99 00 00   STA &0000,Y
      48EA   C8         INY
      48EB   D0 F7      BNE &48E4
-     48ED   EE E6 68   INC &68E6
-     48F0   EE E9 68   INC &68E9
+     48ED   EE E6 61   INC &61E6
+     48F0   EE E9 61   INC &61E9
      48F3   CA         DEX
      48F4   D0 EE      BNE &48E4
 .relocateProgramConfig
