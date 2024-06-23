@@ -9236,26 +9236,62 @@ bootstrap     &4800 - &4949 , 330 bytes
      F4F3   C8         INY
      F4F4   F0 03      BEQ &F4F9
      F4F6   4C 03 2B   JMP &2B03
-.clsExit
-     F4F9   A9 16      LDA #&16
-     F4FB   20 EE FF   JSR &FFEE
-     F4FE   A9 01      LDA #&01
-     F500   20 EE FF   JSR &FFEE
-     F503   A9 17      LDA #&17
-     F505   20 EE FF   JSR &FFEE
-     F508   A9 01      LDA #&01
-     F50A   20 EE FF   JSR &FFEE
-     F50D   A9 00      LDA #&00
-     F50F   20 EE FF   JSR &FFEE
-     F512   20 EE FF   JSR &FFEE
-     F515   20 EE FF   JSR &FFEE
-     F518   20 EE FF   JSR &FFEE
-     F51B   20 EE FF   JSR &FFEE
-     F51E   20 EE FF   JSR &FFEE
-     F521   20 EE FF   JSR &FFEE
-     F524   4C EE FF   JMP &FFEE
+.graphicsMode
+     F4F9   A2 00      LDX #&00
+.graphicsModeLoop
+     F4FB   BD 07 2C   LDA &2C07,X
+     F4FE   20 EE FF   JSR &FFEE
+     F501   E8         INX
+     F502   E0 2A      CPX #&2A
+     F504   D0 F5      BNE &F4FB
+     F506   60         RTS
+.graphicsModeData
+     F507   16
+     F508   01
+     F509   17
+     F50A   01
+     F50B   00
+     F50C   00
+     F50D   00
+     F50E   00
+     F50F   00
+     F510   00
+     F511   00
+     F512   00
+     F513   13
+     F514   01
+     F515   04
+     F516   00
+     F517   00
+     F518   00
+     F519   00
+     F51A   00
+     F51B   00
+     F51C   00
+     F51D   13
+     F51E   02
+     F51F   05
+     F520   00
+     F521   00
+     F522   00
+     F523   00
+     F524   00
+     F525   00
+     F526   00
+     F527   13
+     F528   03
+     F529   02
+     F52A   00
+     F52B   00
+     F52C   00
+     F52D   00
+     F52E   00
+     F52F   00
+     F530   00
+.graphicsModeDataEnd
+     F531
 .clsEnd
-     F527
+     F531
 
 
 
