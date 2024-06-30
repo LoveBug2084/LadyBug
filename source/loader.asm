@@ -1,6 +1,5 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; loader	check for available sideways and copy data
-;		*/LadyBug
+; loader	check for available sideways ram, copy data and then */LadyBug
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
@@ -547,7 +546,7 @@ masterMos350 = &e374
 
 .swrDrawPlayfieldLowerDiamondExit
 
-	jmp drawSpriteGetX			; draw the diamond/blank image and return
+	jmp drawSpriteGetAddr			; draw the diamond/blank image and return
 
 
 
@@ -583,9 +582,9 @@ masterMos350 = &e374
 
 .loaderBuild
 
-	equb 31,9,11				; position cursor
+	equb 31,6,11				; position cursor
 	equs 129,"Lady Bug ",132,"Build",135
-	incbin "buildNumber.bin"
+	incbin "buildNumber.txt"
 	equb &ff				; end
 
 .loaderUsingBank

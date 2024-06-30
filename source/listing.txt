@@ -745,196 +745,196 @@ bootstrap     &4800 - &4949 , 330 bytes
      AF00
 .loaderBuild
      AF00   1F
-     AF01   09
+     AF01   06
      AF02   0B
      AF03   81
      AF04   4C 61 64 ...
      AF0D   84
      AF0E   42 75 69 ...
      AF13   87
-     AF1B   FF
+     AF21   FF
 .loaderUsingBank
-     AF1C   1F
-     AF1D   07
-     AF1E   0D
-     AF1F   84
-     AF20   55 73 69 ...
-     AF37   87
-     AF38   FF
+     AF22   1F
+     AF23   07
+     AF24   0D
+     AF25   84
+     AF26   55 73 69 ...
+     AF3D   87
+     AF3E   FF
 .loaderUsingWorkspace
-     AF39   1F
-     AF3A   09
-     AF3B   0D
-     AF3C   84
-     AF3D   55 73 69 ...
-     AF53   FF
+     AF3F   1F
+     AF40   09
+     AF41   0D
+     AF42   84
+     AF43   55 73 69 ...
+     AF59   FF
 .loaderRamFailed
-     AF54   1F
-     AF55   07
-     AF56   0D
-     AF57   88
-     AF58   84
-     AF59   53 69 64 ...
-     AF71   FF
+     AF5A   1F
+     AF5B   07
+     AF5C   0D
+     AF5D   88
+     AF5E   84
+     AF5F   53 69 64 ...
+     AF77   FF
 .runLadybug
-     AF72   2F 4C 61 ...
-     AF7A   0D
+     AF78   2F 4C 61 ...
+     AF80   0D
 .loaderStart
-     AF7B   A9 13      LDA #&13
-     AF7D   20 F4 FF   JSR &FFF4
-     AF80   A2 00      LDX #&00
-     AF82   A9 20      LDA #&20
+     AF81   A9 13      LDA #&13
+     AF83   20 F4 FF   JSR &FFF4
+     AF86   A2 00      LDX #&00
+     AF88   A9 20      LDA #&20
 .loaderClearCenter
-     AF84   9D 90 7D   STA &7D90,X
-     AF87   E8         INX
-     AF88   E0 C8      CPX #&C8
-     AF8A   D0 F8      BNE &AF84
-     AF8C   8D 71 7E   STA &7E71
-     AF8F   8D 72 7E   STA &7E72
-     AF92   A0 00      LDY #&00
-     AF94   20 FD 48   JSR &48FD
-     AF97   78         SEI
-     AF98   A5 F4      LDA &F4
-     AF9A   8D FF 7F   STA &7FFF
-     AF9D   A9 00      LDA #&00
-     AF9F   A2 01      LDX #&01
-     AFA1   20 F4 FF   JSR &FFF4
-     AFA4   8E FD 7F   STX &7FFD
-     AFA7   E0 02      CPX #&02
-     AFA9   D0 12      BNE &AFBD
-     AFAB   20 1A 49   JSR &491A
-     AFAE   F0 05      BEQ &AFB5
-     AFB0   CE FD 7F   DEC &7FFD
-     AFB3   D0 08      BNE &AFBD
+     AF8A   9D 90 7D   STA &7D90,X
+     AF8D   E8         INX
+     AF8E   E0 C8      CPX #&C8
+     AF90   D0 F8      BNE &AF8A
+     AF92   8D 71 7E   STA &7E71
+     AF95   8D 72 7E   STA &7E72
+     AF98   A0 00      LDY #&00
+     AF9A   20 03 49   JSR &4903
+     AF9D   78         SEI
+     AF9E   A5 F4      LDA &F4
+     AFA0   8D FF 7F   STA &7FFF
+     AFA3   A9 00      LDA #&00
+     AFA5   A2 01      LDX #&01
+     AFA7   20 F4 FF   JSR &FFF4
+     AFAA   8E FD 7F   STX &7FFD
+     AFAD   E0 02      CPX #&02
+     AFAF   D0 12      BNE &AFC3
+     AFB1   20 20 49   JSR &4920
+     AFB4   F0 05      BEQ &AFBB
+     AFB6   CE FD 7F   DEC &7FFD
+     AFB9   D0 08      BNE &AFC3
 .loaderBplus
-     AFB5   A0 39      LDY #&39
-     AFB7   20 FD 48   JSR &48FD
-     AFBA   4C E8 48   JMP &48E8
+     AFBB   A0 3F      LDY #&3F
+     AFBD   20 03 49   JSR &4903
+     AFC0   4C EE 48   JMP &48EE
 .loaderNotBplus
-     AFBD   20 0B 49   JSR &490B
-     AFC0   D0 33      BNE &AFF5
-     AFC2   A0 1C      LDY #&1C
-     AFC4   20 FD 48   JSR &48FD
-     AFC7   AC FE 7F   LDY &7FFE
-     AFCA   C0 0A      CPY #&0A
-     AFCC   B0 0E      BCS &AFDC
-     AFCE   A9 30      LDA #&30
-     AFD0   20 EE FF   JSR &FFEE
-     AFD3   98         TYA
-     AFD4   18         CLC
-     AFD5   69 30      ADC #&30
-     AFD7   20 EE FF   JSR &FFEE
-     AFDA   D0 0C      BNE &AFE8
+     AFC3   20 11 49   JSR &4911
+     AFC6   D0 33      BNE &AFFB
+     AFC8   A0 22      LDY #&22
+     AFCA   20 03 49   JSR &4903
+     AFCD   AC FE 7F   LDY &7FFE
+     AFD0   C0 0A      CPY #&0A
+     AFD2   B0 0E      BCS &AFE2
+     AFD4   A9 30      LDA #&30
+     AFD6   20 EE FF   JSR &FFEE
+     AFD9   98         TYA
+     AFDA   18         CLC
+     AFDB   69 30      ADC #&30
+     AFDD   20 EE FF   JSR &FFEE
+     AFE0   D0 0C      BNE &AFEE
 .loaderBankTen
-     AFDC   A9 31      LDA #&31
-     AFDE   20 EE FF   JSR &FFEE
-     AFE1   98         TYA
-     AFE2   18         CLC
-     AFE3   69 26      ADC #&26
-     AFE5   20 EE FF   JSR &FFEE
+     AFE2   A9 31      LDA #&31
+     AFE4   20 EE FF   JSR &FFEE
+     AFE7   98         TYA
+     AFE8   18         CLC
+     AFE9   69 26      ADC #&26
+     AFEB   20 EE FF   JSR &FFEE
 .loaderCopyData
-     AFE8   20 88 49   JSR &4988
-     AFEB   0E FD 7F   ASL &7FFD
-     AFEE   A2 72      LDX #&72
-     AFF0   A0 48      LDY #&48
-     AFF2   4C F7 FF   JMP &FFF7
+     AFEE   20 8E 49   JSR &498E
+     AFF1   0E FD 7F   ASL &7FFD
+     AFF4   A2 78      LDX #&78
+     AFF6   A0 48      LDY #&48
+     AFF8   4C F7 FF   JMP &FFF7
 .loaderFailed
-     AFF5   A0 54      LDY #&54
-     AFF7   20 FD 48   JSR &48FD
+     AFFB   A0 5A      LDY #&5A
+     AFFD   20 03 49   JSR &4903
 .loaderFailedLoop
-     AFFA   4C FA 48   JMP &48FA
+     B000   4C 00 49   JMP &4900
 .loaderPrint
-     AFFD   B9 00 48   LDA &4800,Y
-     B000   C9 FF      CMP #&FF
-     B002   F0 06      BEQ &B00A
-     B004   20 EE FF   JSR &FFEE
-     B007   C8         INY
-     B008   D0 F3      BNE &AFFD
+     B003   B9 00 48   LDA &4800,Y
+     B006   C9 FF      CMP #&FF
+     B008   F0 06      BEQ &B010
+     B00A   20 EE FF   JSR &FFEE
+     B00D   C8         INY
+     B00E   D0 F3      BNE &B003
 .loaderPrintExit
-     B00A   60         RTS
+     B010   60         RTS
 .swrTest
-     B00B   A0 00      LDY #&00
+     B011   A0 00      LDY #&00
 .swrTestLoop
-     B00D   20 44 49   JSR &4944
-     B010   F0 07      BEQ &B019
-     B012   C8         INY
-     B013   C0 10      CPY #&10
-     B015   D0 F6      BNE &B00D
-     B017   A9 FF      LDA #&FF
+     B013   20 4A 49   JSR &494A
+     B016   F0 07      BEQ &B01F
+     B018   C8         INY
+     B019   C0 10      CPY #&10
+     B01B   D0 F6      BNE &B013
+     B01D   A9 FF      LDA #&FF
 .swrTestExit
-     B019   60         RTS
+     B01F   60         RTS
 .swrTestBplus
-     B01A   A0 00      LDY #&00
-     B01C   8C 30 FE   STY &FE30
-     B01F   AD 08 80   LDA &8008
-     B022   48         PHA
-     B023   A0 80      LDY #&80
-     B025   20 44 49   JSR &4944
-     B028   D0 13      BNE &B03D
-     B02A   A0 00      LDY #&00
-     B02C   8C 30 FE   STY &FE30
-     B02F   CD 08 80   CMP &8008
-     B032   F0 09      BEQ &B03D
-     B034   68         PLA
-     B035   A0 80      LDY #&80
-     B037   8C 30 FE   STY &FE30
-     B03A   A9 00      LDA #&00
-     B03C   60         RTS
+     B020   A0 00      LDY #&00
+     B022   8C 30 FE   STY &FE30
+     B025   AD 08 80   LDA &8008
+     B028   48         PHA
+     B029   A0 80      LDY #&80
+     B02B   20 4A 49   JSR &494A
+     B02E   D0 13      BNE &B043
+     B030   A0 00      LDY #&00
+     B032   8C 30 FE   STY &FE30
+     B035   CD 08 80   CMP &8008
+     B038   F0 09      BEQ &B043
+     B03A   68         PLA
+     B03B   A0 80      LDY #&80
+     B03D   8C 30 FE   STY &FE30
+     B040   A9 00      LDA #&00
+     B042   60         RTS
 .swrTestBplusFailed
-     B03D   68         PLA
-     B03E   8D 08 80   STA &8008
-     B041   A9 FF      LDA #&FF
-     B043   60         RTS
+     B043   68         PLA
+     B044   8D 08 80   STA &8008
+     B047   A9 FF      LDA #&FF
+     B049   60         RTS
 .swrTestByte
-     B044   84 F4      STY &F4
-     B046   8C FE 7F   STY &7FFE
-     B049   98         TYA
-     B04A   29 0F      AND #&0F
-     B04C   8D 32 FE   STA &FE32
-     B04F   AA         TAX
-     B050   9D 30 FF   STA &FF30,X
-     B053   8C 30 FE   STY &FE30
-     B056   AE 07 80   LDX &8007
-     B059   BD 00 80   LDA &8000,X
-     B05C   D0 15      BNE &B073
-     B05E   BD 01 80   LDA &8001,X
-     B061   C9 28      CMP #&28
-     B063   D0 0E      BNE &B073
-     B065   BD 02 80   LDA &8002,X
-     B068   C9 43      CMP #&43
-     B06A   D0 07      BNE &B073
-     B06C   BD 03 80   LDA &8003,X
-     B06F   C9 29      CMP #&29
-     B071   F0 12      BEQ &B085
+     B04A   84 F4      STY &F4
+     B04C   8C FE 7F   STY &7FFE
+     B04F   98         TYA
+     B050   29 0F      AND #&0F
+     B052   8D 32 FE   STA &FE32
+     B055   AA         TAX
+     B056   9D 30 FF   STA &FF30,X
+     B059   8C 30 FE   STY &FE30
+     B05C   AE 07 80   LDX &8007
+     B05F   BD 00 80   LDA &8000,X
+     B062   D0 15      BNE &B079
+     B064   BD 01 80   LDA &8001,X
+     B067   C9 28      CMP #&28
+     B069   D0 0E      BNE &B079
+     B06B   BD 02 80   LDA &8002,X
+     B06E   C9 43      CMP #&43
+     B070   D0 07      BNE &B079
+     B072   BD 03 80   LDA &8003,X
+     B075   C9 29      CMP #&29
+     B077   F0 12      BEQ &B08B
 .swrTestByteWrite
-     B073   98         TYA
-     B074   49 69      EOR #&69
-     B076   4D 08 80   EOR &8008
-     B079   8D 08 80   STA &8008
-     B07C   A2 00      LDX #&00
+     B079   98         TYA
+     B07A   49 69      EOR #&69
+     B07C   4D 08 80   EOR &8008
+     B07F   8D 08 80   STA &8008
+     B082   A2 00      LDX #&00
 .swrTestByteDelay
-     B07E   CA         DEX
-     B07F   D0 FD      BNE &B07E
-     B081   CD 08 80   CMP &8008
-     B084   60         RTS
+     B084   CA         DEX
+     B085   D0 FD      BNE &B084
+     B087   CD 08 80   CMP &8008
+     B08A   60         RTS
 .swrTestFailed
-     B085   A9 FF      LDA #&FF
-     B087   60         RTS
+     B08B   A9 FF      LDA #&FF
+     B08D   60         RTS
 .swramCopy
-     B088   A2 2F      LDX #&2F
-     B08A   A0 00      LDY #&00
+     B08E   A2 2F      LDX #&2F
+     B090   A0 00      LDY #&00
 .swramCopyLoop
-     B08C   B9 00 19   LDA &1900,Y
-     B08F   99 00 80   STA &8000,Y
-     B092   C8         INY
-     B093   D0 F7      BNE &B08C
-     B095   EE 8E 49   INC &498E
-     B098   EE 91 49   INC &4991
-     B09B   CA         DEX
-     B09C   D0 EE      BNE &B08C
-     B09E   60         RTS
+     B092   B9 00 19   LDA &1900,Y
+     B095   99 00 80   STA &8000,Y
+     B098   C8         INY
+     B099   D0 F7      BNE &B092
+     B09B   EE 94 49   INC &4994
+     B09E   EE 97 49   INC &4997
+     B0A1   CA         DEX
+     B0A2   D0 EE      BNE &B092
+     B0A4   60         RTS
 .loaderEnd
-     B09F
+     B0A5
 
 
 
@@ -1096,7 +1096,6 @@ bootstrap     &4800 - &4949 , 330 bytes
      01E0
 .stack
      01E0
-.irqVectorAddress
      0204   64 01
 .inputScan
      0206   A9 7F      LDA #&7F
@@ -2548,7 +2547,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      0C2F   8D 7C 0C   STA &0C7C
      0C32   A9 46      LDA #&46
      0C34   85 53      STA &53
-.drawSpriteGetX
+.drawSpriteGetAddr
      0C36   20 CE 1B   JSR &1BCE
      0C39   A5 90      LDA &90
      0C3B   A8         TAY

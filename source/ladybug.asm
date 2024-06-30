@@ -447,8 +447,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	org irqVector
 
-.irqVectorAddress
-
 	equw irqInterrupt			; set bbc os irq1v interrupt vector to our irqInterrupt function
 
 
@@ -3368,7 +3366,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	lda #sprite10x10Bytes			; store number of bytes for sprite in counter
 	sta drawByteCount
 
-	bne drawSpriteGetX			; draw the 10x10 pixel sprite (bne used as branch always)
+	bne drawSpriteGetAddr			; draw the 10x10 pixel sprite (bne used as branch always)
 
 
 
@@ -3408,7 +3406,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	lda #spriteTileBytes			; store number of bytes in sprite in counter
 	sta drawByteCount
 
-	bne drawSpriteGetX			; contine to drawSprite code
+	bne drawSpriteGetAddr			; contine to drawSprite code
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup drawing vertically mirrored sprite (flipped)
@@ -3438,7 +3436,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	; convert sprite x and y coordinates to screen address
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawSpriteGetX
+.drawSpriteGetAddr
 
 	jsr spriteToScreen			; convert sprite XY to screen address
 

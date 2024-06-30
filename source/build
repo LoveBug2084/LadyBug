@@ -1,15 +1,13 @@
 #!/bin/bash
 
-#--------------------------------------------------------------------------------------------
-# read project name and current build number, output 6 digit build number with leading zeros
-#--------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------
+# read project name and create build number from current date and time
+#----------------------------------------------------------------------
 
 echo
 bbcProjectName=$(<./projectName.txt)
-#declare -i bbcProjectBuildTxt
-bbcProjectBuildTxt=$(<./buildNumber.txt)
-printf -v bbcProjectBuildBin '%06d' "$bbcProjectBuildTxt"
-echo $bbcProjectBuildBin>./buildNumber.bin
+bbcProjectBuild=$(date +%Y%m%d%H%M)
+echo $bbcProjectBuild>./buildNumber.txt
 
 #-------------------
 # build extra stuff
@@ -48,7 +46,7 @@ echo
 # --------------------------------------------------
 
 echo "Updating README.md"
-printf '**Build - %s - %s**\n' "$bbcProjectBuildBin" "$(date)">../README.build.md
+printf '**Build - %s**\n' "$bbcProjectBuild">../README.build.md
 tail -n +2 ../README.md>>../README.build.md
 rm ../README.md
 mv ../README.build.md ../README.md
@@ -60,16 +58,7 @@ echo
 # display project name and build number
 #---------------------------------------
 
-printf '%s - Build %06d\n' "$bbcProjectName" "$bbcProjectBuildTxt"
-
-
-
-#------------------------
-# increment build number
-#------------------------
-
-((++bbcProjectBuildTxt))
-echo $bbcProjectBuildTxt>./buildNumber.txt
+printf '%s - Build %s\n' "$bbcProjectName" "$bbcProjectBuild"
 
 
 
