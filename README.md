@@ -5,7 +5,7 @@ A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki
 \
 I've included fontmaker, pixels and filelocker utilities ( C source code included ) for converting the gimp/photoshop font, sprites and tile image files from .raw to a bbc compatible .bin format required during assembly and for locking the dfs filenames after assembly ( see ./build for details )\
 \
-**How to build (linux)**/
+**How to build (linux)**\
 type ./build in terminal from within the source directory\
 \
 \
