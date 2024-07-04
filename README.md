@@ -3,11 +3,8 @@
 # Lady Bug
 A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the [Acorn BBC Micro Computer](https://en.wikipedia.org/wiki/BBC_Micro) systems, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler\
 \
-I've included fontmaker, pixels and filelocker utilities ( C source code included ) for converting the gimp/photoshop font, sprites and tile image files from .raw to a bbc compatible .bin format required during assembly and for locking the dfs filenames after assembly ( see ./build for details )\
-\
 **How to build (linux)**\
 type ./build in terminal from within the source directory\
-\
 \
 **A map editor is now included on disk allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next. Every six rounds the map sequence repeats.**\
 \
@@ -18,7 +15,7 @@ B+ 64K/128K OS 2.00 using 12K of workspace ram ( no sideways ram required )\
 Master 128K MOS 3.20/3.50 using 12K of sideways ram\
 Master Compact MOS 5.00/5.10 using 12K of sideways ram\
 \
-Keyboard (All Models), Analogue Port Joysick (B/B+/Master) and Digital User Port Joystick (Compact) Supported\
+Support for Keyboard and Digital User Port Joystick (All Models) and Analogue Port Joysick (B/B+/Master)\
 \
 **The full game development diary can be viewed at the** [Stardot forums](https://stardot.org.uk/forums/viewtopic.php?f=53&t=21812)
 \
