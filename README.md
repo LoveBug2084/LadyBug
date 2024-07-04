@@ -15,11 +15,15 @@ B+ 64K/128K OS 2.00 using 12K of workspace ram ( no sideways ram required )\
 Master 128K MOS 3.20/3.50 using 12K of sideways ram\
 Master Compact MOS 5.00/5.10 using 12K of sideways ram\
 \
-Support for Keyboard and Digital User Port Joystick (All Models) and Analogue Port Joysick (B/B+/Master)\
-\
+Supports the following control input\
+Keyboard (All Models)\
+Digital User Port Joystick (All Models)\
+Analogue Port Joysick (B/B+/Master)
+
 **The full game development diary can be viewed at the** [Stardot forums](https://stardot.org.uk/forums/viewtopic.php?f=53&t=21812)
-\
 #
+
+
 ```
 A big thank you to
  
