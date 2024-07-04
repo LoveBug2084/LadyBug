@@ -582,8 +582,8 @@ masterMos350 = &e374
 
 .loaderBuild
 
-	equb 31,6,11				; position cursor
-	equs 129,"Lady Bug ",132,"Build",135
+	equb 31,7,11				; position cursor
+	equs 129,"Lady Bug ",132,"Build ",135
 	incbin "buildNumber.txt"
 	equb &ff				; end
 

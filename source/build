@@ -6,7 +6,7 @@
 
 echo
 bbcProjectName=$(<./projectName.txt)
-bbcProjectBuild=$(date +%Y%m%d%H%M)
+bbcProjectBuild=$(date +%y%j%H%M)
 echo $bbcProjectBuild>./buildNumber.txt
 
 #-------------------
