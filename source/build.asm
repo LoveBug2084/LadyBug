@@ -66,7 +66,7 @@
 	org 0					; clear 20K of space for the bbc mode 1 image file
 	clear 0, (20 * 1024) - 1
 
-	incbin		"img-editor-tiles.bin"	; load the image file
+	incbin		"./img/editor-tiles.bin"	; load the image file
 
 						; save the 19 tiles of 12x8 pixels @ 4 pixels per byte (mode 1)
 	save		"EditorT", 0, 19 * 12 * 8 / 4, &ffffff, 0

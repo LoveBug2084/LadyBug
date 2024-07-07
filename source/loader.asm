@@ -104,7 +104,7 @@
 .vegetablesBin
 	skip 0					; show this address in listing
 
-	incbin "img-vegetables.bin"		; load the 10x10 pixel vegetable sprites into memory
+	incbin "./img/vegetables.bin"		; load the 10x10 pixel vegetable sprites into memory
 
 .vegetablesBinEnd
 	skip 0					; show this address in listing
@@ -112,7 +112,7 @@
 .pointsBin
 	skip 0					; show this address in listing
 
-	incbin "img-points.bin"			; load the 10x10 pixel points sprites into memory
+	incbin "./img/points.bin"			; load the 10x10 pixel points sprites into memory
 
 .pointsBinEnd
 	skip 0					; show this address in listing
@@ -123,57 +123,57 @@
 .ladybugBin
 	skip 0					; show this address in listing
 
-	incbin "img-ladybug.bin"		; load ladybug sprite set into memory
+	incbin "./img/ladybug.bin"		; load ladybug sprite set into memory
 
 .enemy1Bin
 	skip 0					; show this address in listing
 
-	incbin "img-enemy1.bin"			; load 1st enemy sprite set into memory
+	incbin "./img/enemy1.bin"			; load 1st enemy sprite set into memory
 
 .enemy2Bin
 	skip 0					; show this address in listing
 
-	incbin "img-enemy2.bin"			; load 2nd enemy sprite set into memory
+	incbin "./img/enemy2.bin"			; load 2nd enemy sprite set into memory
 
 .enemy3Bin
 	skip 0					; show this address in listing
 
-	incbin "img-enemy3.bin"			; load 3rd enemy sprite set into memory
+	incbin "./img/enemy3.bin"			; load 3rd enemy sprite set into memory
 
 .enemy4Bin
 	skip 0					; show this address in listing
 
-	incbin "img-enemy4.bin"			; load 4th enemy sprite set into memory
+	incbin "./img/enemy4.bin"			; load 4th enemy sprite set into memory
 
 .enemy5Bin
 	skip 0					; show this address in listing
 
-	incbin "img-enemy5.bin"			; load 5th enemy sprite set into memory
+	incbin "./img/enemy5.bin"			; load 5th enemy sprite set into memory
 
 .enemy6Bin
 	skip 0					; show this address in listing
 
-	incbin "img-enemy6.bin"			; load 6th enemy sprite set into memory
+	incbin "./img/enemy6.bin"			; load 6th enemy sprite set into memory
 
 .enemy7Bin
 	skip 0					; show this address in listing
 
-	incbin "img-enemy7.bin"			; load 7th enemy sprite set into memory
+	incbin "./img/enemy7.bin"			; load 7th enemy sprite set into memory
 
 .enemy8Bin
 	skip 0					; show this address in listing
 
-	incbin "img-enemy8.bin"			; load 8th enemy sprite set into memory
+	incbin "./img/enemy8.bin"			; load 8th enemy sprite set into memory
 
 .angel0Bin
 	skip 0					; show this address in listing
 	
-	incbin "img-angel0.bin"			; load ladybug angel sprite set (1st part) into memory
+	incbin "./img/angel0.bin"			; load ladybug angel sprite set (1st part) into memory
 
 .diamondBin
 	skip 0					; show this address in listing
 
-	incbin "img-diamond.bin"		; load diamond sprite set into memory
+	incbin "./img/diamond.bin"		; load diamond sprite set into memory
 	
 .diamondFiller					; fill remaining space so that 2nd part angel address is correctly aligned
 	skip spriteTileBytes - (2 * diamondTileBytes)
@@ -181,7 +181,7 @@
 .angel1Bin
 	skip 0					; show this address in listing
 	
-	incbin "img-angel1.bin"			; load ladybug angel sprite set (2nd part) into memory
+	incbin "./img/angel1.bin"			; load ladybug angel sprite set (2nd part) into memory
 
 .spriteBinEnd
 	skip 0					; show this address in listing

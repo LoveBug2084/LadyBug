@@ -9992,7 +9992,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .fontBin
 	skip 0					; show this address in listing
 
-	incbin "img-font.bin"			; main font 6x6 pixels (1 bit per pixel)
+	incbin "./img/font.bin"			; main font 6x6 pixels (1 bit per pixel)
 
 .fontBinEnd
 	skip 0					; show this address in listing
@@ -10006,7 +10006,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .miniFontBin
 	skip 0					; show this address in listing
 	
-	incbin "img-font-vegetable.bin"		; mini vegetable font 4x8 pixels (4 bits per pixel)
+	incbin "./img/font-vegetable.bin"		; mini vegetable font 4x8 pixels (4 bits per pixel)
 
 .miniFontBinEnd
 	skip 0					; show this address in listing
@@ -10020,7 +10020,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .mapTileBin
 	skip 0					; show this address in listing
 
-	incbin "img-tiles.bin"			; maze map tiles 6x8 pixels (4 bits per pixel)
+	incbin "./img/tiles.bin"			; maze map tiles 6x8 pixels (4 bits per pixel)
 
 .mapTileBinEnd
 	skip 0					; show this address in listing
@@ -10034,7 +10034,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .objectTileBin
 	skip 0					; show this address in listing
 
-	incbin "img-objects.bin"		; maze object tiles hearts, letters, skulls 8x8 pixels (4 bits per pixel)
+	incbin "./img/objects.bin"		; maze object tiles hearts, letters, skulls 8x8 pixels (4 bits per pixel)
 
 .objectTileBinEnd
 	skip 0					; show this address in listing
@@ -10048,7 +10048,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .extraTileBin
 	skip 0					; show this address in listing
 
-	incbin "img-extra.bin"			; extra tiles 6x8 pixels (4 bits per pixel)
+	incbin "./img/extra.bin"			; extra tiles 6x8 pixels (4 bits per pixel)
 
 .extraTileBinEnd
 	skip 0					; show this address in listing
