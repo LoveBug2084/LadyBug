@@ -6049,6 +6049,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr nameRegCursorUpdate			; display the initial cursor position
 
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; do functions and wait for key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
