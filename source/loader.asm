@@ -435,6 +435,9 @@ masterMos350 = &e374
 	dex					; until done
 	bpl swrInitScreenPalette
 	
+	lda #%11110100				; put ula into 16 color mode
+	sta ulaMode
+
 	rts					; return
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------

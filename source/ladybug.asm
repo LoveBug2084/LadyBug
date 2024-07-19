@@ -658,6 +658,14 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; move direction table squeezed here into unused bytes
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.moveDirMap		equb 1, 47, 23, 25, 24	; tileMap offset from top left corner for up, down, left, right, center
+	
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pagefx200
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .pagefx200End
@@ -1988,11 +1996,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	cli					; enable interrupts
 
-	jsr swrInitScreen			; full screen erase, setup palette colors (see loader.asm)
+	jsr swrInitScreen			; full screen erase, setup palette colors, put ula into 16 color mode (see loader.asm)
 	
-	lda #%11110100				; put ula into 16 color mode
-	sta ulaMode
-
 	lda #pause * 0.5			; set pause time to 0.5 seconds
 	sta pauseCounter
 	
@@ -2018,7 +2023,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr updateHighScoreFirstPlace		; copy first place high score from table to lower panel and display it
 
-	jsr mainMenu				; display the main menu screen, handle game setting adjustments and return when start game is selected
+	jsr mainMenu				; display the main menu screen, handle high score table selection,
+						; game setting adjustments and return when start game is selected
 
 
 
@@ -2055,6 +2061,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta ladybugEntryEnable			; enable ladybug entry movement animation
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
+
+
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup level settings for level 1 so that instructions page shows correct settings
