@@ -6,7 +6,7 @@ A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki
 **How to build (linux)**\
 type ./build in terminal from within the source directory\
 \
-**A map editor is now included on disk allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next. Every six rounds the map sequence repeats.**\
+**A map editor is now included with the game allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next. Every six rounds the map sequence repeats.**\
 \
 **Tested on the following computer models using emulators**\
 \
