@@ -137,6 +137,14 @@
 
 .moveSpritesIndex	skip 1			; index of current sprite
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; move direction table placed in zero page to improve speed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.moveDirMap		equb 1, 47, 23, 25, 24	; tileMap offset from top left corner for up, down, left, right, center
+	
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 .spritesImg		skip spritesTotal	; sprite image, position and direction for drawing
 .spritesX		skip spritesTotal
 .spritesY		skip spritesTotal

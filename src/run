@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#-----------------
+# run the project
+#-----------------
+
+b-em -fullscreen -autoboot -disc "$(realpath "$(<projectName.txt).ssd")"
+

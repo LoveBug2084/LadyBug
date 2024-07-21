@@ -1,0 +1,80 @@
+#!/bin/bash
+
+echo
+
+#------------------------------------------------
+# create build number from current date and time
+#------------------------------------------------
+
+echo
+echo "$(date +%y%j%H%M)">projectBuild.txt
+
+
+
+#-----------------------------------------------
+# setup pre-build stuff required by the project
+#-----------------------------------------------
+
+./buildPre
+
+
+
+#---------------
+# build project
+#---------------
+
+echo "Building project"
+echo
+if beebasm -title "$(<projectName.txt)" -v -i asm/build.asm -do "$(<projectName.txt).ssd" -opt 3 -dd -labels projectLabels.txt>./projectListing.txt
+then
+echo
+
+
+
+#------------------------------------------------
+# setup post-build stuff required by the project
+#------------------------------------------------
+
+if ./buildPost
+then
+echo
+
+
+
+#--------------------------------------------------
+# update README.md with new build number
+# --------------------------------------------------
+
+echo "Updating README.md"
+echo "**Build $(<projectBuild.txt)**">../README.md.build
+tail -n +2 ../README.md>>../README.md.build
+rm ../README.md
+mv ../README.md.build ../README.md
+echo
+
+
+
+#---------------------------------------
+# display project name and build number
+#---------------------------------------
+
+echo "$(<projectName.txt)" - Build "$(<projectBuild.txt)"
+
+
+
+#------------------
+# run the project
+#------------------
+
+./run
+
+
+
+#-----
+# end
+#-----
+
+fi
+fi
+echo
+

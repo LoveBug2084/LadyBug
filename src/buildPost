@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo
+
+#--------------------------------------------------
+# lock the dfs file names
+#--------------------------------------------------
+
+echo "Locking files in $(<projectName.txt).ssd"
+echo
+if ./utils/filelocker "./$(<projectName.txt).ssd" "!Boot  $" "Boot   $" "_Bonus $" "_Conf  $" "_Maps  $" "_Map1  $" "_Map2  $" "_Map3  $" "Loader $" "LadyBug$" "Reset  $" "_ConfR $" "Editor $" "Cls    $" "EditorM$" "EditorT$" "ReadMe $"
+then
+echo
+exit 0
+else
+exit 1
+fi
+

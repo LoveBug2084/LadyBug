@@ -658,14 +658,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; move direction table squeezed here into unused bytes
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.moveDirMap		equb 1, 47, 23, 25, 24	; tileMap offset from top left corner for up, down, left, right, center
-	
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pagefx200
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .pagefx200End
@@ -1996,8 +1988,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	cli					; enable interrupts
 
-	jsr swrInitScreen			; full screen erase, setup palette colors, put ula into 16 color mode (see loader.asm)
+	jsr swrInitScreen			; full screen erase, setup palette colors (see loader.asm)
 	
+	lda #%11110100				; put ula into 16 color mode
+	sta ulaMode
+
 	lda #pause * 0.5			; set pause time to 0.5 seconds
 	sta pauseCounter
 	
@@ -2023,8 +2018,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr updateHighScoreFirstPlace		; copy first place high score from table to lower panel and display it
 
-	jsr mainMenu				; display the main menu screen, handle high score table selection,
-						; game setting adjustments and return when start game is selected
+	jsr mainMenu				; display the main menu screen, handle game setting adjustments and return when start game is selected
 
 
 
@@ -2061,8 +2055,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta ladybugEntryEnable			; enable ladybug entry movement animation
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
-
-
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup level settings for level 1 so that instructions page shows correct settings
@@ -6049,7 +6041,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr nameRegCursorUpdate			; display the initial cursor position
 
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; do functions and wait for key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -10001,7 +9992,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .fontBin
 	skip 0					; show this address in listing
 
-	incbin "./img/font.bin"			; main font 6x6 pixels (1 bit per pixel)
+	incbin "bin/font.bin"			; main font 6x6 pixels (1 bit per pixel)
 
 .fontBinEnd
 	skip 0					; show this address in listing
@@ -10015,7 +10006,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .miniFontBin
 	skip 0					; show this address in listing
 	
-	incbin "./img/font-vegetable.bin"		; mini vegetable font 4x8 pixels (4 bits per pixel)
+	incbin "bin/fontVegetable.bin"		; mini vegetable font 4x8 pixels (4 bits per pixel)
 
 .miniFontBinEnd
 	skip 0					; show this address in listing
@@ -10029,7 +10020,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .mapTileBin
 	skip 0					; show this address in listing
 
-	incbin "./img/tiles.bin"			; maze map tiles 6x8 pixels (4 bits per pixel)
+	incbin "bin/tiles.bin"			; maze map tiles 6x8 pixels (4 bits per pixel)
 
 .mapTileBinEnd
 	skip 0					; show this address in listing
@@ -10043,7 +10034,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .objectTileBin
 	skip 0					; show this address in listing
 
-	incbin "./img/objects.bin"		; maze object tiles hearts, letters, skulls 8x8 pixels (4 bits per pixel)
+	incbin "bin/objects.bin"		; maze object tiles hearts, letters, skulls 8x8 pixels (4 bits per pixel)
 
 .objectTileBinEnd
 	skip 0					; show this address in listing
@@ -10057,7 +10048,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .extraTileBin
 	skip 0					; show this address in listing
 
-	incbin "./img/extra.bin"			; extra tiles 6x8 pixels (4 bits per pixel)
+	incbin "bin/extra.bin"			; extra tiles 6x8 pixels (4 bits per pixel)
 
 .extraTileBinEnd
 	skip 0					; show this address in listing
@@ -10215,7 +10206,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 ; game sound effects and music tables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-include "soundtables.asm"
+	include "asm/soundtables.asm"
 
 
 
