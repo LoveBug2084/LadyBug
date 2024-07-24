@@ -7,15 +7,15 @@ echo
 #-----------------------
 
 echo "Building fontmaker"
-gcc -o ./utils/fontmaker ./utils/fontmaker.c
+gcc -o utils/fontmaker utils/fontmaker.c
 echo
 
 echo "Building pixels"
-gcc -o ./utils/pixels ./utils/pixels.c
+gcc -o utils/pixels utils/pixels.c
 echo
 
 echo "Building filelocker"
-gcc -o ./utils/filelocker ./utils/filelocker.c
+gcc -o utils/filelocker utils/filelocker.c
 echo
 
 
@@ -26,24 +26,24 @@ echo
 
 echo "Converting images"
 echo
-./utils/fontmaker	./img/font.raw					./bin/font.bin
-./utils/pixels		./img/fontVegetable.raw		4	8	./bin/fontVegetable.bin
-./utils/pixels		./img/points.raw		10	10	./bin/points.bin
-./utils/pixels		./img/vegetables.raw		10	10	./bin/vegetables.bin
-./utils/pixels		./img/objects.raw		8	8	./bin/objects.bin
-./utils/pixels		./img/tiles.raw			6	8	./bin/tiles.bin
-./utils/pixels		./img/extra.raw			6	8	./bin/extra.bin
-./utils/pixels		./img/ladybug.raw		10	14	./bin/ladybug.bin
-./utils/pixels		./img/enemy1.raw		10	14	./bin/enemy1.bin
-./utils/pixels		./img/enemy2.raw		10	14	./bin/enemy2.bin
-./utils/pixels		./img/enemy3.raw		10	14	./bin/enemy3.bin
-./utils/pixels		./img/enemy4.raw		10	14	./bin/enemy4.bin
-./utils/pixels		./img/enemy5.raw		10	14	./bin/enemy5.bin
-./utils/pixels		./img/enemy6.raw		10	14	./bin/enemy6.bin
-./utils/pixels		./img/enemy7.raw		10	14	./bin/enemy7.bin
-./utils/pixels		./img/enemy8.raw		10	14	./bin/enemy8.bin
-./utils/pixels		./img/angel0.raw		10	14	./bin/angel0.bin
-./utils/pixels		./img/angel1.raw		10	14	./bin/angel1.bin
-./utils/pixels		./img/diamond.raw		8	6	./bin/diamond.bin
+utils/fontmaker		img/font.raw				bin/font.bin
+utils/pixels		img/fontVegetable.raw	4	8	bin/fontVegetable.bin
+utils/pixels		img/points.raw		10	10	bin/points.bin
+utils/pixels		img/vegetables.raw	10	10	bin/vegetables.bin
+utils/pixels		img/objects.raw		8	8	bin/objects.bin
+utils/pixels		img/tiles.raw		6	8	bin/tiles.bin
+utils/pixels		img/extra.raw		6	8	bin/extra.bin
+utils/pixels		img/ladybug.raw		10	14	bin/ladybug.bin
+utils/pixels		img/enemy1.raw		10	14	bin/enemy1.bin
+utils/pixels		img/enemy2.raw		10	14	bin/enemy2.bin
+utils/pixels		img/enemy3.raw		10	14	bin/enemy3.bin
+utils/pixels		img/enemy4.raw		10	14	bin/enemy4.bin
+utils/pixels		img/enemy5.raw		10	14	bin/enemy5.bin
+utils/pixels		img/enemy6.raw		10	14	bin/enemy6.bin
+utils/pixels		img/enemy7.raw		10	14	bin/enemy7.bin
+utils/pixels		img/enemy8.raw		10	14	bin/enemy8.bin
+utils/pixels		img/angel0.raw		10	14	bin/angel0.bin
+utils/pixels		img/angel1.raw		10	14	bin/angel1.bin
+utils/pixels		img/diamond.raw		8	6	bin/diamond.bin
 echo
 
