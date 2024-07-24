@@ -9310,11 +9310,11 @@ bootstrap     &4800 - &4949 , 330 bytes
 
 Saving file '!Boot'
 Saving file '_Bonus'
-Saving file '_Conf'
+Saving file '_Config'
 Saving file '_Maps'
 Saving file 'Loader'
 Saving file 'LadyBug'
-Saving file '_ConfR'
+Saving file '_Reset'
 Saving file 'Cls'
 Saving file 'EditorM'
 Saving file 'EditorT'

@@ -328,7 +328,7 @@ Y%=BGET#Z%:X%=BGET#Z%:W%=BGET#Z%:U%=BGET#Z%:Q%=BGET#Z%
 CLOSE#Z%
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-IF F%?2<>V% THEN OSCLI("LOAD _Conf " + STR$~(&FF0000 + C%)):ENDPROC
+IF F%?2<>V% THEN OSCLI("LOAD _Config " + STR$~(&FF0000 + C%)):ENDPROC
 
 P%=&7B00
 [OPT 0

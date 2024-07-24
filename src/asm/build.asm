@@ -37,7 +37,7 @@
 
 	save		"_Bonus", bonusBin, bonusBinEnd, &ffffff, 0
 
-	save		"_Conf", config, configEnd, &ffffff, 0
+	save		"_Config", config, configEnd, &ffffff, 0
 
 	save		"_Maps", mapFilenames, mapFilenamesEnd, &ffffff, 0
 
@@ -51,7 +51,7 @@
 
 	putbasic	"bas/reset.bas", "Reset"
 
-	save		"_ConfR", config, configEnd, &ffffff, 0
+	save		"_Reset", config, configEnd, &ffffff, 0
 
 	putbasic	"bas/editor.bas", "Editor"
 
