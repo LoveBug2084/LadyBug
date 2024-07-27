@@ -359,9 +359,9 @@ DEF PROCsaveConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
 IF F%?2<>V% THEN ENDPROC
 
-OSCLI("ACCESS _Conf")
-OSCLI("SAVE _Conf " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0")
-OSCLI("ACCESS _Conf L")
+OSCLI("ACCESS _Config")
+OSCLI("SAVE _Config " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0")
+OSCLI("ACCESS _Config L")
 
 PROCeraseCenter
 
