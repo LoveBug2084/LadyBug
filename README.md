@@ -4,7 +4,7 @@
 A remake of [Universals 1981 Lady Bug arcade game](https://en.wikipedia.org/wiki/Lady_Bug_(video_game)) written in 6502 assembly language for the [Acorn BBC Micro Computer](https://en.wikipedia.org/wiki/BBC_Micro) systems, assembles with the excellent [BeebAsm](https://github.com/stardot/beebasm) assembler\
 \
 **How to build (linux)**\
-open terminal in the src directory and ./build\
+open terminal in the src directory and type ./build\
 \
 **A map editor is now included with the game allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next. Every six rounds the map sequence repeats.**\
 \
