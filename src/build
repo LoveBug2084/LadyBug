@@ -25,7 +25,7 @@ echo "$(date +%y%j%H%M)">projectBuild.txt
 
 echo "Building project"
 echo
-if beebasm -title "$(<projectName.txt)" -v -i asm/build.asm -do "$(<projectName.txt).ssd" -opt 3 -dd -labels projectLabels.txt>./projectListing.txt
+if beebasm -title "$(<projectName.txt)" -v -i asm/build.asm -do "$(<projectName.txt).ssd" -opt 3 -dd -labels projectLabels.txt>projectListing.txt
 then
 echo
 
