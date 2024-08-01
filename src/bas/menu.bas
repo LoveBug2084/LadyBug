@@ -8,6 +8,8 @@ F%=&130
 J%=&133
 M%=&69
 
+IF B% THEN u$="WR":l$="LR" ELSE u$="":l$="L"
+
 ON ERROR PROCerror
 
 PROCreadConfig
@@ -50,11 +52,7 @@ Z%=OPENIN(map1$):IF Z%<>0 THEN CLOSE#Z% ELSE map1$="_Map1":A%=TRUE
 Z%=OPENIN(map2$):IF Z%<>0 THEN CLOSE#Z% ELSE map2$="_Map2":A%=TRUE
 Z%=OPENIN(map3$):IF Z%<>0 THEN CLOSE#Z% ELSE map3$="_Map3":A%=TRUE
 
-IF A% THEN IF B% THEN OSCLI("ACCESS _Maps WR")
-IF A% THEN IF NOT B% THEN OSCLI("ACCESS _Maps")
-IF A% THEN Z%=OPENOUT("_Maps"):PRINT#Z%,map1$,map2$,map3$:CLOSE#Z%
-IF A% THEN IF B% THEN OSCLI("ACCESS _Maps LR")
-IF A% THEN IF NOT B% THEN OSCLI("ACCESS _Maps L")
+IF A% THEN OSCLI("ACCESS _Maps "+u$):Z%=OPENOUT("_Maps"):PRINT#Z%,map1$,map2$,map3$:CLOSE#Z%:OSCLI("ACCESS _Maps "+l$)
 
 IF k$="E" THEN CHAIN"Editor"
 
@@ -363,9 +361,9 @@ DEF PROCsaveConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
 IF F%?2<>V% THEN ENDPROC
 
-IF B% THEN OSCLI("ACCESS _Config WR") ELSE OSCLI("ACCESS _Config")
+OSCLI("ACCESS _Config "+u$)
 OSCLI("SAVE _Config " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0")
-IF B% THEN OSCLI("ACCESS _Config LR") ELSE OSCLI("ACCESS _Config L")
+OSCLI("ACCESS _Config "+l$)
 
 PROCeraseCenter
 
