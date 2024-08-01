@@ -632,7 +632,7 @@ swramEnd		= pageHigh + &3000	; high/sideways ram end address (12K only for compa
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-map1Load		= &7800			; map addresses used by boot.bas to load the 3 maps before running lady bug
+map1Load		= &7800			; map addresses used by menu.bas to load the 3 maps before running lady bug
 map2Load		= &7900
 map3Load		= &7a00
 

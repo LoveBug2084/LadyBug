@@ -1,5 +1,5 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; bonus settings for boot.bas
+; bonus settings for menu.bas
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
@@ -9,7 +9,7 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org canvasBonusSettings			; temporary canvas for creating _Bonus file used by boot.bas to display in the instruction pages
+	org canvasBonusSettings			; temporary canvas for creating _Bonus file used by menu.bas to display in the instruction pages
 	
 .bonusBin
 

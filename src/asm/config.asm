@@ -67,7 +67,7 @@
 	equs "XZ/:"				; ascii text for keys
 
 	equb &00				; validation code, no need to calculate it here
-						; it is calculated in game and by boot.bas, reset.bas
+						; it is calculated in game and by menu.bas, reset.bas
 
 
 

@@ -8,7 +8,7 @@ echo
 
 echo "Locking files in $(<projectName.txt).ssd"
 echo
-if ./utils/filelocker "./$(<projectName.txt).ssd" "!Boot  $" "Boot   $" "_Bonus $" "_Config$" "_Maps  $" "_Map1  $" "_Map2  $" "_Map3  $" "Loader $" "LadyBug$" "Reset  $" "_Reset $" "Editor $" "Cls    $" "EditorM$" "EditorT$" "ReadMe $"
+if ./utils/filelocker "./$(<projectName.txt).ssd" "!Boot  $" "CheckFS$" "Menu   $" "_Bonus $" "_Config$" "_Maps  $" "_Map1  $" "_Map2  $" "_Map3  $" "Loader $" "LadyBug$" "Reset  $" "_Reset $" "Editor $" "Cls    $" "EditorM$" "EditorT$" "ReadMe $"
 then
 echo
 exit 0

@@ -54,13 +54,19 @@ INPUT "" S$:IF S$="y" THEN S$="Y"
 
 PRINT TAB(0,16);
 
-IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":OSCLI("ACCESS _Maps"):Z%=OPENOUT("_Maps"):PRINT#Z%,"_Map1","_Map2","_Map3":CLOSE#Z%:OSCLI("ACCESS _Maps L")
+IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting maps":IF B% THEN OSCLI("ACCESS _Maps WR")
+IF M$="Y" THEN IF NOT B% THEN OSCLI("ACCESS _Maps")
+IF M$="Y" THEN Z%=OPENOUT("_Maps"):PRINT#Z%,"_Map1","_Map2","_Map3":CLOSE#Z%:IF B% THEN OSCLI("ACCESS _Maps LR")
+IF M$="Y" THEN IF NOT B% THEN OSCLI("ACCESS _Maps L")
 
 IF H$="Y" THEN PRINT " ";CHR$(129);"Resetting high scores":FOR Z%=&00 TO &6F:Z%?H%=Z%?D%:NEXT Z%
 
 IF S$="Y" THEN PRINT " ";CHR$(129);"Resetting controls and settings":FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%
 
-IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("ACCESS _Config"):OSCLI("SAVE _Config " + STR$~(&FF0000 + H%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Config L"):F%?0=0:F%?1=0:F%?2=0
+IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:IF B% THEN OSCLI("ACCESS _Config WR")
+IF H$="Y" OR S$="Y" THEN IF NOT B% THEN OSCLI("ACCESS _Config")
+IF H$="Y" OR S$="Y" THEN OSCLI("SAVE _Config " + STR$~(&FF0000 + H%) + " +7E FFFFFF 0"):F%?0=0:F%?1=0:F%?2=0:IF B% THEN OSCLI("ACCESS _Maps LR")
+IF H$="Y" OR S$="Y" THEN IF NOT B% THEN OSCLI("ACCESS _Config L")
 
 PRINT:PRINT " ";CHR$(132);
 

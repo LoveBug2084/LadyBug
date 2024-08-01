@@ -1,0 +1,6 @@
+B%=FALSE
+ON ERROR CHAIN "Menu"
+*ACCESS * LR
+B%=TRUE
+CHAIN "Menu"
+

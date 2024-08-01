@@ -24,7 +24,7 @@
 
 	include "asm/cls.asm"			; mode 1 clear screen function for editor.bas
 
-	include "asm/bonus.asm"			; game bonus settings for game instructions in boot.bas
+	include "asm/bonus.asm"			; game bonus settings for game instructions in menu.bas
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -33,7 +33,9 @@
 
 	save		"!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 
-	putbasic	"bas/boot.bas", "Boot"
+	putbasic	"bas/checkfs.bas", "CheckFS"
+
+	putbasic	"bas/menu.bas", "Menu"
 
 	save		"_Bonus", bonusBin, bonusBinEnd, &ffffff, 0
 
