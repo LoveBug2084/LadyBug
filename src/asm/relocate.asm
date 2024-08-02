@@ -1,9 +1,9 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; relocator - initialise hardware and relocate main game to runtime address
+; relocate - initialise hardware and relocate main game to runtime address
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
-	print " relocator.asm"
+	print " relocate.asm"
 	print "----------------------------------------------------"
 	print
 
@@ -41,7 +41,7 @@
 
 	lda #1					; set columns to 1 (blank display)
 	sta crtcAddr
-	lda #0
+	lda #1
 	sta crtcData
 
 	jsr bootstrapVsync + progOffset		; wait 8 vsyncs

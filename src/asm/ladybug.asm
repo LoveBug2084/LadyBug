@@ -10343,20 +10343,20 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 .joystickAnalogueChannelRead
 
-	lda dummy16				; read value from adc and save (addr setup by relocator.asm)
+	lda dummy16				; read value from adc and save (addr setup by relocate.asm)
 	sta joystickAnalogueSave
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .joystickAnalogueControlRead
 
-	lda dummy16				; read current channel and flip bit to select other channel (addr setup by relocator.asm)
+	lda dummy16				; read current channel and flip bit to select other channel (addr setup by relocate.asm)
 	and #%00000001
 	eor #%00000001
 
 .joystickAnalogueControlWrite
 
-	sta dummy16				; start new adc conversion (addr setup by relocator.asm)
+	sta dummy16				; start new adc conversion (addr setup by relocate.asm)
 
 	lsr a					; put channel (0 or 1) into carry (note inverted channel from previous eor instruction)
 

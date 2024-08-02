@@ -18,7 +18,7 @@
 
 	include "asm/ladybug.asm"		; main game
 	
-	include "asm/relocator.asm"		; initialization and game relocation
+	include "asm/relocate.asm"		; initialization and game relocation
 
 	include "asm/editor.asm"		; tile drawing functions for editor.bas
 
