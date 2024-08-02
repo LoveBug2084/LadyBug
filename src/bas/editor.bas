@@ -118,13 +118,13 @@ COLOUR3
 
 IFM%?&2B00<>0THENm$="Unsaved map, save it now":IFFNc THENPROCs:ENDPROC
 
-VDU28,0,31,39,29,23,1,1;0;0;0;:INPUTTAB(5,0);"Load file name ";l$:VDU23,1,0;0;0;0;26
+VDU28,0,31,39,29,23,1,1;0;0;0;:INPUTTAB(5,0);"Load file name ";x$:VDU23,1,0;0;0;0;26
 PROCb
 
-IFl$=""THENl$=f$(M%)
+IFx$=""THENx$=f$(M%)
 
-OSCLI("LOAD "+l$+" "+STR$~(&2F19-M%*&E7))
-f$(M%)=l$
+OSCLI("LOAD "+x$+" "+STR$~(&2F19-M%*&E7))
+f$(M%)=x$
 
 M%?&2B00=0
 
@@ -139,15 +139,15 @@ ENDPROC
 
 DEFPROCs
 
-COLOUR3:VDU28,0,31,39,29,23,1,1;0;0;0;:INPUTTAB(5,0);"Save file name ";s$:VDU23,1,0;0;0;0;26
+COLOUR3:VDU28,0,31,39,29,23,1,1;0;0;0;:INPUTTAB(5,0);"Save file name ";x$:VDU23,1,0;0;0;0;26
 PROCb
 
-IFs$=""THENs$=f$(M%)
+IFx$=""THENx$=f$(M%)
 
-F%=OPENIN(s$):IFF%<>0THENCLOSE#F%:m$=s$+" exists,overwrite":IFNOTFNc THENENDPROC
+F%=OPENIN(x$):IFF%<>0THENCLOSE#F%:m$=x$+" exists,overwrite":IFNOTFNc THENENDPROC
 
-OSCLI("SAVE "+s$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
-f$(M%)=s$
+OSCLI("SAVE "+x$+" "+STR$~(&2F19-M%*&E7)+" +E7 FFFFFF 0")
+f$(M%)=x$
 
 PROCf
 
