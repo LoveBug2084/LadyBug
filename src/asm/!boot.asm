@@ -32,7 +32,7 @@
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
 	equb 23,0,1,0,0,0,0,0,0,0		; disable display
 
-	equs "CHAIN",quote,"Menu",quote,13	; CHAIN"Menu"
+	equs "CHAIN",quote,"CheckFS",quote,13	; CHAIN"CheckFS"
 
 
 
