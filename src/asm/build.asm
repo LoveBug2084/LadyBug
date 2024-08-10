@@ -2,7 +2,7 @@
 ; build everything
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	include "asm/memoryusage.asm"		; show memory usage details
+	include "asm/memoryUsage.asm"		; show memory usage details
 
 	include "asm/constants.asm"		; game constants
 
@@ -14,7 +14,7 @@
 
 	include "asm/loader.asm"		; graphics, utils, sideways ram and maingame loader
 
-	include "asm/mapnames.asm"		; 3 default maze map names
+	include "asm/mapNames.asm"		; 3 default maze map names
 
 	include "asm/ladybug.asm"		; main game
 	
@@ -33,7 +33,7 @@
 
 	save		"!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 
-	putbasic	"bas/checkfs.bas", "CheckFS"
+	putbasic	"bas/checkFs.bas", "CheckFs"
 
 	putbasic	"bas/menu.bas", "Menu"
 
@@ -77,7 +77,7 @@
 	; copy the readme.txt
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	puttext		"txt/readme.txt", "ReadMe", 0, &ffffff
+	puttext		"txt/readMe.txt", "ReadMe", 0, &ffffff
 
 
 

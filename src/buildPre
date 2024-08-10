@@ -6,16 +6,16 @@ echo
 # build supporting code
 #-----------------------
 
-echo "Building fontmaker"
-gcc -o utils/fontmaker utils/fontmaker.c
+echo "Building font"
+gcc -o utils/font utils/font.c
 echo
 
 echo "Building pixels"
 gcc -o utils/pixels utils/pixels.c
 echo
 
-echo "Building filelocker"
-gcc -o utils/filelocker utils/filelocker.c
+echo "Building locker"
+gcc -o utils/locker utils/locker.c
 echo
 
 
@@ -26,7 +26,7 @@ echo
 
 echo "Converting images"
 echo
-utils/fontmaker		img/font.raw				bin/font.bin
+utils/font		img/font.raw				bin/font.bin
 utils/pixels		img/fontVegetable.raw	4	8	bin/fontVegetable.bin
 utils/pixels		img/points.raw		10	10	bin/points.bin
 utils/pixels		img/vegetables.raw	10	10	bin/vegetables.bin

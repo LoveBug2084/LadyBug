@@ -447,6 +447,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	org irqVector
 
+.irq1vector
 	equw irqInterrupt			; set bbc os irq1v interrupt vector to our irqInterrupt function
 
 
@@ -766,12 +767,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.initPlayfieldMiddleMazeTable
-
-	equw map1, map2, map3			; address locations of the three maze maps
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 .initPlayfieldMiddleTilesLeft			; left side tile translation table (left/right order normal)
 
 	equb mapTileBlank
@@ -815,6 +810,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	equb mapTileVerticalU + wallSolid
 	equb mapTileHorizontalL + wallSolid	; left
 	equb mapTileHorizontalR + wallSolid	; right
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.initPlayfieldMiddleMazeTable
+
+	equw map1, map2, map3			; address locations of the three maze maps
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -10214,7 +10215,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 ; game sound effects and music tables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	include "asm/soundtables.asm"
+	include "asm/soundTables.asm"
 
 
 
