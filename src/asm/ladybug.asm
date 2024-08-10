@@ -2065,6 +2065,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
 
+
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup level settings for level 1 so that instructions page shows correct settings
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7772,6 +7774,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equs colorMagenta, "PTS", &ff
 
 	if (bonusSpecialShield and 15) = 1
+	{
 
 	jsr drawString
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
@@ -7796,8 +7799,10 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #mapTileSkull
 	jsr drawMapTile
 
+	}
 	else
-	
+	{	
+
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs colorYellow, "AND", &ff
@@ -7821,6 +7826,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #mapTileSkull
 	jsr drawMapTile
 
+	}
 	endif
 
 	lda #sfxMusicSpecial			; play special bonus music
@@ -7849,17 +7855,21 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 
 	if (bonusExtraLives and 15) = 1
-	
+	{	
+
 	jsr drawString
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs colorYellow, "EXTRA LADY BUG", &ff
 
+	}
 	else
+	{
 
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs colorYellow, "EXTRA LADY BUGS", &ff
 
+	}
 	endif
 
 	lda #sfxMusicExtra			; play extra bonus music
@@ -10212,7 +10222,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; game sound effects and music tables
+; sound effects and music tables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	include "asm/soundTables.asm"
@@ -10220,7 +10230,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; sprite address tables
+; sprite image base and address tables
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .spriteBaseImg
