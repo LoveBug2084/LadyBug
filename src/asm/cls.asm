@@ -57,11 +57,11 @@
 
 	equb 23,1,0,0,0,0,0,0,0,0		; cursor off
 
-	equb 19,1,4,0,0,0,0,0,0,0		; color 1 blue
+	equb 19,1,4,0,0,0			; color 1 blue
 
-	equb 19,2,5,0,0,0,0,0,0,0		; color 2 magenta
+	equb 19,2,5,0,0,0			; color 2 magenta
 
-	equb 19,3,2,0,0,0,0,0,0,0		; color 3 green
+	equb 19,3,2,0,0,0			; color 3 green
 
 .graphicsModeDataEnd
 	skip 0					; show this address in listing

@@ -9242,7 +9242,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      F4FB   BD 07 2C   LDA &2C07,X
      F4FE   20 EE FF   JSR &FFEE
      F501   E8         INX
-     F502   E0 2A      CPX #&2A
+     F502   E0 1E      CPX #&1E
      F504   D0 F5      BNE &F4FB
      F506   60         RTS
 .graphicsModeData
@@ -9264,34 +9264,22 @@ bootstrap     &4800 - &4949 , 330 bytes
      F516   00
      F517   00
      F518   00
-     F519   00
-     F51A   00
-     F51B   00
+     F519   13
+     F51A   02
+     F51B   05
      F51C   00
-     F51D   13
-     F51E   02
-     F51F   05
-     F520   00
-     F521   00
+     F51D   00
+     F51E   00
+     F51F   13
+     F520   03
+     F521   02
      F522   00
      F523   00
      F524   00
-     F525   00
-     F526   00
-     F527   13
-     F528   03
-     F529   02
-     F52A   00
-     F52B   00
-     F52C   00
-     F52D   00
-     F52E   00
-     F52F   00
-     F530   00
 .graphicsModeDataEnd
-     F531
+     F525
 .clsEnd
-     F531
+     F525
 
 
 

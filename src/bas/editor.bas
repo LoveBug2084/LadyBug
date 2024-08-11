@@ -106,7 +106,7 @@ DEFPROCx
 
 IF!&2B00<>0THEN!&2B04=-1:PROCw:m$="Unsaved map data"+CHR$(13)+CHR$(10)+"     Exit without saving":IFNOTFNc THENENDPROC
 
-OSCLI("/Cls"):VDU21:OSCLI("EXEC !Boot"):END
+VDU12,21:OSCLI("EXEC !Boot"):END
 
 ENDPROC
 

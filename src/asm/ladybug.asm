@@ -31,12 +31,12 @@
 .random
 
 	lda randomSeed + 1			; get hi 8 bits of seed
-	lsr a					; shift it right to put bit 0 into carry
+	lsr a					; shift it right to put bit 0 if hi into carry
 	lda randomSeed				; get lo 8 bits of seed
-	ror a					; rotate it right putting carry into bit 7 and bit 0 into carry
+	ror a					; rotate it right putting carry (bit 0 of hi) into bit 7 and bit 0 into carry
 	eor randomSeed + 1			; eor with hi 8 bits
 	sta randomSeed + 1			; store in hi 8 bits
-	ror a					; rotate it right putting and put bit 0 of lo 8 bits into bit 7
+	ror a					; rotate it right putting carry (bit 0 of lo) into bit 7 and bit 0 into carry (unused)
 	eor randomSeed				; eor with lo 8 bits
 	sta randomSeed				; store in lo 8 bits
 	eor randomSeed + 1			; eor with hi 8 bits
@@ -86,8 +86,6 @@
 
 	org page0130
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 .cleanResetBank
 
 	skip 1					; swr bank number for program and data
@@ -100,9 +98,9 @@
 
 	skip 1					; validation of cleanResetBank and cleanResetMachine (checksum)
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; storage for keyboard/joystick mode (not preserved after reset but just in a handy place)
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; storage for keyboard/joystick mode (not preserved after reset but just in a handy place)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .joystickEnable
 
