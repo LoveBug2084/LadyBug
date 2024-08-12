@@ -4142,8 +4142,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .instructionsPress				; repeat
 
-	jsr random				; call random so that when game is started objects are randomized
-
 	jsr instructionsFunctions		; update colors and get input bits (keyboard/joystick)
 
 	beq instructionsPress			; until an input bit is active
@@ -4216,6 +4214,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr updateBonusColor			; update the bonus letters palette colors (also used for lower diamond)
 
 	jsr drawScore				; draw score (1 digit per loop)
+
+	jsr random				; call random so that when game is started objects are randomized
 
 	jsr inputScan				; read keyboard input and joystick (if enabled)
 

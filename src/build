@@ -7,7 +7,7 @@ echo
 #------------------------------------------------
 
 echo
-echo "$(date +%y%j%H%M)">projectBuild.txt
+echo "$(date +%y.%j.%H%M)">projectBuild.txt
 
 
 

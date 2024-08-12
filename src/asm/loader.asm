@@ -582,7 +582,7 @@ masterMos350 = &e374
 
 .loaderBuild
 
-	equb 31,8,11				; position cursor
+	equb 31,7,11				; position cursor
 	equs 129,"Lady Bug",132,"Build",135
 	incbin "projectBuild.txt"
 	equb &ff				; end
