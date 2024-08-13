@@ -31,7 +31,7 @@
 .random
 
 	lda randomSeed + 1			; get hi 8 bits of seed
-	lsr a					; shift it right to put bit 0 if hi into carry
+	lsr a					; shift it right to put bit 0 of hi into carry
 	lda randomSeed				; get lo 8 bits of seed
 	ror a					; rotate it right putting carry (bit 0 of hi) into bit 7 and bit 0 into carry
 	eor randomSeed + 1			; eor with hi 8 bits
