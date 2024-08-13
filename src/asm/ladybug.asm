@@ -649,8 +649,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	and #15
 	cmp #10					; if its >= 10 then pick another
 	bcs chooseLetterRandom
-	
-	adc #objectTileIndex			; add object tile index for letters (carry is clear here so no need for clc)
+			 			; (carry is clear here so no need for clc)
+	adc #objectTileIndex			; add object tile index for letters
 
 	rts					; return
 
@@ -1064,9 +1064,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	cmp #21					; if its higher than 20 then try again
 	bcs tileMapFindDotX
-	
+						; (carry is clear so no need for clc)
 	adc tileMapAddr				; add to tileMapAddr so that it points to the top left of the 3x3 tile cube to investigate
-	sta tileMapAddr				; (carry is clear so no need to use clc before adc)
+	sta tileMapAddr
 	bcc tileMapFindDotCheck
 	inc tileMapAddr + 1
 
@@ -1116,14 +1116,14 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .tileMapFindDotExit
 
-	sec					; return with location found status and tile address in tileMapAddr
+	sec					; return with carry set (found) and tile address in tileMapAddr
 	rts
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .tileMapFindDotFailed
 
-	clc					; return with location failed status (timed out)
+	clc					; return with carry clear (timed out, failed)
 	rts
 
 
@@ -1518,12 +1518,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	cmp #objectTileIndex			; if its an object tile
 	bcc eraseSpriteExit
 
-	clc					; adjust screen address to 1 tile below
-	lda drawMapTileAddr
-	adc #lo(chrRow - chrColumn)
+	lda drawMapTileAddr			; adjust screen address to 1 tile below
+	adc #lo(chrRow - chrColumn - 1)		; (carry is set here so use value - 1)
 	sta drawMapTileAddr
 	lda drawMapTileAddr + 1
-	adc #hi(chrRow - chrColumn)
+	adc #hi(chrRow - chrColumn - 1)
 	sta drawMapTileAddr + 1
 
 	lda (tileMapAddr), y			; draw tile to prevent cropping the top of the object tile
@@ -1891,7 +1890,7 @@ pixelRight		= &55			; bit mask for right pixel
 	sta drawChrFontRead + 1			; multiply A by 5 (5 bytes per character)
 	asl a
 	asl a
-	adc drawChrFontRead + 1			; no need for clc as carry is already clear
+	adc drawChrFontRead + 1			; (carry is clear here so no need for clc)
 	sta drawChrFontRead + 1
 	bcc drawChrFont
 	inc drawChrFontRead + 2
@@ -2366,9 +2365,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sbc score + 2
 	bcc checkHighScoreEntry			; if there was a borrow then score > current score we are checking so do the name registration and return
 	
-	lda #14					; else move to the next score in the table
-	clc					; (cannot cross page boundry so no need to adjust high byte)
-	adc highScorePtr
+	lda #14 - 1				; else move to the next score in the table (14 bytes to next highscore but carry is set so use 13 instead)
+	adc highScorePtr			; (cannot cross page boundry so no need to adjust high byte address)
 	sta highScorePtr
 	
 	dex					; until end of table
@@ -2720,7 +2718,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	sbc spritesX + 0
 	bcs moveSpritesCollisionX
 	eor #&ff
-	adc #1					; (carry is clear, clc not needed)
+	adc #1					; (carry is clear here so no need for clc)
 
 .moveSpritesCollisionX
 
@@ -2732,7 +2730,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	sbc spritesY + 0
 	bcs moveSpritesCollisionY
 	eor #&ff
-	adc #1					; (carry is clear, clc not needed)
+	adc #1					; (carry is clear here so no need for clc)
 
 .moveSpritesCollisionY
 
@@ -3796,7 +3794,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	asl a
 	asl a
 	asl a
-	adc #lo(miniFontBin)			; (clc not needed as its already clear)
+	adc #lo(miniFontBin)			; (carry is clear here so no need for clc)
 	sta drawChrMiniLoop + 1
 	lda #0
 	adc #hi(miniFontBin)
@@ -6446,18 +6444,15 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	and #&38
 	lsr a
 	lsr a
-	clc
-	adc #12
+	adc #12					; (carry is clear here, no need for clc)
 	tay
 	lda nameRegCursorOld
 	and #&07
 	asl a
-	clc
-	adc #3
+	adc #3					; (carry is clear here, no need for clc)
 	tax
-	clc
 	lda screenRowLo, y
-	adc screenColumnLo, x
+	adc screenColumnLo, x			; (carry is clear here, no need for clc)
 	sta drawMapTileAddr
 	lda screenRowHi, y
 	adc screenColumnHi, x
@@ -9114,7 +9109,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	lda objectMode				; calculate which object score image to display based on object mode and multiplier
 	asl a					; objectScoreImg = objectMode * 4 + scoreMultiplier + ImgPoints
 	asl a
-	adc scoreMultiplier			; no need for clc (carry is already clear)
+	adc scoreMultiplier			; (carry is clear here, no need for clc)
 	adc #ImgPoints
 	sta objectScoreImg
 
