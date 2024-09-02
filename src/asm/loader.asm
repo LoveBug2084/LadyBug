@@ -584,7 +584,7 @@ masterMos350 = &e374
 
 	equb 31,7,11				; position cursor
 	equs 129,"Lady Bug",132,"Build",135
-	incbin "projectBuild.txt"
+	incbin "output/projectBuild"
 	equb &ff				; end
 
 .loaderUsingBank
@@ -596,7 +596,7 @@ masterMos350 = &e374
 .loaderUsingWorkspace
 
 	equb 31,9,13				; position cursor
-	equs 132, "Using B+ workspace ram"
+	equs 132, "Using",135,"B+",132,"workspace ram"
 	equb &ff				; end
 
 .loaderRamFailed

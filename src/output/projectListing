@@ -761,6 +761,10 @@ bootstrap     &4800 - &4949 , 330 bytes
      AF3F   0D
      AF40   84
      AF41   55 73 69 ...
+     AF46   87
+     AF47   42 2B 
+     AF49   84
+     AF4A   77 6F 72 ...
      AF57   FF
 .loaderRamFailed
      AF58   1F

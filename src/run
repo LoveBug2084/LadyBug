@@ -4,5 +4,5 @@
 # run the project
 #-----------------
 
-b-em -fullscreen -autoboot -disc "$(realpath "$(<projectName.txt).ssd")"
+b-em -fullscreen -autoboot -disc "$(realpath "$(<projectName).ssd")"
 

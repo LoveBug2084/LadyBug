@@ -2589,19 +2589,19 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .enemyRandomChance
 
-	equb (99.96 * 256) / 100		; 00 percentage chance of enemy turning randomly instead of towards ladybug
-	equb (91.63 * 256) / 100		; 01 enemy attack value on game menu (0-9) is added to the enemy number (0-3)
-	equb (83.30 * 256) / 100		; 02 and used as an index into this table to give the enemy its random percentage
-	equb (74.97 * 256) / 100		; 03 lower random percentage = higher attack percentage. example 05.00% random = 95.00% attack
-	equb (66.64 * 256) / 100		; 04
-	equb (58.31 * 256) / 100		; 05
-	equb (49.98 * 256) / 100		; 05
-	equb (41.65 * 256) / 100		; 05
-	equb (33.32 * 256) / 100		; 05
-	equb (20.00 * 256) / 100		; 05
-	equb (15.00 * 256) / 100		; 05
-	equb (10.00 * 256) / 100		; 05
-	equb (05.00 * 256) / 100		; 05
+	equb (99.96 * 256) / 100		; percentage chance of enemy turning randomly instead of towards ladybug
+	equb (91.63 * 256) / 100		; enemy attack value on game menu (0-9) is added to the enemy number (0-3)
+	equb (83.30 * 256) / 100		; and used as an index (0-12) into this table to give the enemy its random percentage
+	equb (74.97 * 256) / 100		; lower random percentage = higher attack percentage. example 05.00% random = 95.00% attack
+	equb (66.64 * 256) / 100
+	equb (58.31 * 256) / 100
+	equb (49.98 * 256) / 100
+	equb (41.65 * 256) / 100
+	equb (33.32 * 256) / 100
+	equb (20.00 * 256) / 100
+	equb (15.00 * 256) / 100
+	equb (10.00 * 256) / 100
+	equb (05.00 * 256) / 100
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; x and y delta for the four possible directions
@@ -10012,13 +10012,13 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; minifont used for vegetable bonus
+; small font used for vegetable bonus
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .miniFontBin
 	skip 0					; show this address in listing
 	
-	incbin "bin/fontVegetable.bin"		; mini vegetable font 4x8 pixels (4 bits per pixel)
+	incbin "bin/fontBonus.bin"		; 4x8 pixels (4 bits per pixel)
 
 .miniFontBinEnd
 	skip 0					; show this address in listing

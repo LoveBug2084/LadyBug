@@ -7,7 +7,7 @@ echo
 #------------------------------------------------
 
 echo
-echo "$(date +%y.%j.%H%M)">projectBuild.txt
+echo "$(date +%y.%j.%H%M)">output/projectBuild
 
 
 
@@ -25,7 +25,7 @@ echo "$(date +%y.%j.%H%M)">projectBuild.txt
 
 echo "Building project"
 echo
-if beebasm -title "$(<projectName.txt)" -v -i asm/build.asm -do "$(<projectName.txt).ssd" -opt 3 -dd -labels projectLabels.txt>projectListing.txt
+if beebasm -title "$(<projectName)" -v -i asm/build.asm -do "$(<projectName).ssd" -opt 3 -dd -labels output/projectLabels>output/projectListing
 then
 echo
 
@@ -46,7 +46,7 @@ echo
 # --------------------------------------------------
 
 echo "Updating README.md"
-echo "**Build $(<projectBuild.txt)**">../README.md.build
+echo "**Build $(<output/projectBuild)**">../README.md.build
 tail -n +2 ../README.md>>../README.md.build
 rm ../README.md
 mv ../README.md.build ../README.md
@@ -58,7 +58,7 @@ echo
 # display project name and build number
 #---------------------------------------
 
-echo "$(<projectName.txt)" - Build "$(<projectBuild.txt)"
+echo "$(<projectName)" - Build "$(<output/projectBuild)"
 
 
 

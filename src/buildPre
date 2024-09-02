@@ -27,7 +27,7 @@ echo
 echo "Converting images"
 echo
 utils/font		img/font.raw				bin/font.bin
-utils/pixels		img/fontVegetable.raw	4	8	bin/fontVegetable.bin
+utils/pixels		img/fontBonus.raw	4	8	bin/fontBonus.bin
 utils/pixels		img/points.raw		10	10	bin/points.bin
 utils/pixels		img/vegetables.raw	10	10	bin/vegetables.bin
 utils/pixels		img/objects.raw		8	8	bin/objects.bin
