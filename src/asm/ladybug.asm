@@ -5538,10 +5538,11 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 .mainMenuDrawEnemies
 
 	jsr random				; pick a random direction and enemy for the draw loop
-	lda randomSeed + 0
-	sta mainMenuDrawEnemiesSeed + 0
-	lda randomSeed + 1
-	sta mainMenuDrawEnemiesSeed + 1
+
+	lda randomSeed + 0			; backup random seed as it gets modified by this draw loop
+	pha					; and there is a possibility that the seed could contain 0
+	lda randomSeed + 1			; after drawing if the seed contained &fcfc at entry to this function
+	pha					; and this would break the random number generator
 
 	ldx #3					; 4 enemies to draw
 	
@@ -5552,24 +5553,29 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda mainMenuEnemiesY, x
 	sta spritesY + 1, x
 	
-	lda mainMenuDrawEnemiesSeed + 0		; set enemy sprite image
+	lda randomSeed + 0			; set enemy sprite image
 	and #7
 	tay
 	lda spriteBaseImg + 1, y
 	sta spritesImg + 1, x
 	
-	lda mainMenuDrawEnemiesSeed + 1		; set sprite direction (not moving)
+	lda randomSeed + 1			; set sprite direction (not moving)
 	and #3
 	ora #moveStop
 	sta spritesDir + 1, x
 
-	inc mainMenuDrawEnemiesSeed + 0		; increment sprite image for next sprite
+	inc randomSeed + 0			; increment sprite image for next sprite
 
-	inc mainMenuDrawEnemiesSeed + 1		; increment direction for next sprite
+	inc randomSeed + 1			; increment direction for next sprite
 
 	dex					; until all enemies placed
 	bpl mainMenuDrawEnemiesLoop
 	
+	pla					; restore the original random seed
+	sta randomSeed + 1
+	pla
+	sta randomSeed + 0
+
 	rts					; return
 
 
@@ -9858,6 +9864,93 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; joystickAnalogue				read analogue joystick values, convert to player input bits
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	none
+; exit			A			destroyed
+;			X			destroyed
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		joystickAnalogueSave	temporary storage for value read from analogue register
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.joystickBitSet
+
+	equb keyBitDown				; y channel bit set mask
+	equb 0
+	equb 0
+	equb keyBitUp
+
+	equb keyBitRight			; x channel bit set mask
+	equb 0
+	equb 0
+	equb keyBitLeft
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.joystickBitClear
+
+	equb &ff eor (keyBitUp + keyBitDown)	; y channel bit clear mask
+	equb &ff eor (keyBitUp + keyBitDown)
+	equb &ff eor (keyBitUp + keyBitDown)
+	equb &ff eor (keyBitUp + keyBitDown)
+
+	equb &ff eor (keyBitLeft + keyBitRight)	; x channel bit clear mask
+	equb &ff eor (keyBitLeft + keyBitRight)
+	equb &ff eor (keyBitLeft + keyBitRight)
+	equb &ff eor (keyBitLeft + keyBitRight)
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; analogue joystick function, read channel and convert to input bits
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.joystickAnalogue
+
+	lda joystickEnable			; if analogue joystick enabled
+	cmp #1
+	bne joystickAnalogueExit
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.joystickAnalogueChannelRead
+
+	lda dummy16				; read value from adc and save (addr setup by relocate.asm)
+	sta joystickAnalogueSave
+	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.joystickAnalogueControlRead
+
+	lda dummy16				; read current channel and flip bit to select other channel (addr setup by relocate.asm)
+	and #%00000001
+	eor #%00000001
+
+.joystickAnalogueControlWrite
+
+	sta dummy16				; start new adc conversion (addr setup by relocate.asm)
+
+	lsr a					; put channel (0 or 1) into carry (note inverted channel from previous eor instruction)
+
+	rol joystickAnalogueSave		; rotate analogue value so that
+	rol joystickAnalogueSave		; bit 2 contains the channel (inverted)
+	rol joystickAnalogueSave		; bits 1,0 contain bits 7,6 of the analogue value
+
+	lda joystickAnalogueSave		; mask bits for index value
+	and #%00000111
+	tax
+
+	lda joystickInput			; convert joystick direction and channel index into keyboard bit flags using tables
+	and joystickBitClear, x
+	ora joystickBitSet, x
+	sta joystickInput
+
+.joystickAnalogueExit
+
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; vegetable names
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -10293,93 +10386,6 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 .map1	skip 21*11
 .map2	skip 21*11
 .map3	skip 21*11
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; joystickAnalogue				read analogue joystick values, convert to player input bits
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry parameters	none
-; exit			A			destroyed
-;			X			destroyed
-;			Y			preserved
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; workspace		joystickAnalogueSave	temporary storage for value read from analogue register
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.joystickBitSet
-
-	equb keyBitDown				; y channel bit set mask
-	equb 0
-	equb 0
-	equb keyBitUp
-
-	equb keyBitRight			; x channel bit set mask
-	equb 0
-	equb 0
-	equb keyBitLeft
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.joystickBitClear
-
-	equb &ff eor (keyBitUp + keyBitDown)	; y channel bit clear mask
-	equb &ff eor (keyBitUp + keyBitDown)
-	equb &ff eor (keyBitUp + keyBitDown)
-	equb &ff eor (keyBitUp + keyBitDown)
-
-	equb &ff eor (keyBitLeft + keyBitRight)	; x channel bit clear mask
-	equb &ff eor (keyBitLeft + keyBitRight)
-	equb &ff eor (keyBitLeft + keyBitRight)
-	equb &ff eor (keyBitLeft + keyBitRight)
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; analogue joystick function, read channel and convert to input bits
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.joystickAnalogue
-
-	lda joystickEnable			; if analogue joystick enabled
-	cmp #1
-	bne joystickAnalogueExit
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.joystickAnalogueChannelRead
-
-	lda dummy16				; read value from adc and save (addr setup by relocate.asm)
-	sta joystickAnalogueSave
-	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.joystickAnalogueControlRead
-
-	lda dummy16				; read current channel and flip bit to select other channel (addr setup by relocate.asm)
-	and #%00000001
-	eor #%00000001
-
-.joystickAnalogueControlWrite
-
-	sta dummy16				; start new adc conversion (addr setup by relocate.asm)
-
-	lsr a					; put channel (0 or 1) into carry (note inverted channel from previous eor instruction)
-
-	rol joystickAnalogueSave		; rotate analogue value so that
-	rol joystickAnalogueSave		; bit 2 contains the channel (inverted)
-	rol joystickAnalogueSave		; bits 1,0 contain bits 7,6 of the analogue value
-
-	lda joystickAnalogueSave		; mask bits for index value
-	and #%00000111
-	tax
-
-	lda joystickInput			; convert joystick direction and channel index into keyboard bit flags using tables
-	and joystickBitClear, x
-	ora joystickBitSet, x
-	sta joystickInput
-
-.joystickAnalogueExit
-
-	rts					; return
 
 
 
