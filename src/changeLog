@@ -1,0 +1,26 @@
+2021/03/22	Experimenting with interrupt timing
+		Added some code to remove the left over pixel when a sprite croses from the bottom half to the top half
+
+2021/03/21	Test sprite erasure code to reduce flicker
+		Manually entered 529 bytes of hex data for the maze, looks nice
+
+2021/03/20	Running out of cycles when trying to draw 5 sprites
+		Trying a new auto-frameskip
+		Split the screen vertically into an upper and a lower half
+		Draw a maximum of 3 sprites in anyh half screen per frame
+		If 4 or more sprites in same half screen then postpone extra for next frame to keep a maximum
+		of 3 sprites per half frame (auto frame skip)
+
+2021/03/16	Score/high score characters shifted 1 pixel left to better fit with right border edge 
+		Thinking about enemy aim logic...
+		Changed custom screen resolution to 69x208 bytes, rewrote all screen drawing functions for new resolution
+
+2021/03/11	Test Keyboard scanning
+		Test Drawing 5 sprites
+
+2021/03/07	Test screen border, bonus text, score and level text, single sprite drawing
+
+2021/02/22	Test various prng functions
+
+2021/02/20	Test printString function
+		Test custom resolution 72x216 bytes, drawing text on screen
