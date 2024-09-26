@@ -1,5 +1,5 @@
 2021/03/22	Experimenting with interrupt timing
-		Added some code to remove the left over pixel when a sprite croses from the bottom half to the top half
+		Added emergency erase to remove the left over pixels when a sprite croses the boundary from the bottom half to the top half
 
 2021/03/21	Test sprite erasure code to reduce flicker
 		Manually entered 529 bytes of hex data for the maze, looks nice
@@ -7,7 +7,7 @@
 2021/03/20	Running out of cycles when trying to draw 5 sprites
 		Trying a new auto-frameskip
 		Split the screen vertically into an upper and a lower half
-		Draw a maximum of 3 sprites in anyh half screen per frame
+		Draw a maximum of 3 sprites in any half screen per frame
 		If 4 or more sprites in same half screen then postpone extra for next frame to keep a maximum
 		of 3 sprites per half frame (auto frame skip)
 

@@ -3391,7 +3391,8 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		drawSpriteScreenAddr	calculated screen position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; additional information: 3 will be automatically added to spriteImg when the x position requires a pixel shifted image
+; additional info:	3 will be automatically added to spriteImg when the x position requires a pixel shifted image
+;			to select the alternate 1 pixel shifted version of the sprite
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawSprite

@@ -21,13 +21,13 @@ PROCintro
 
 REPEAT
 
-PROCshrink
+PROCshrink(2)
 PROCoptions
-PROCexpand
+PROCexpand(3)
 
 k$=FNwaitKey
 
-PROCshrink
+PROCshrink(2)
 
 IF k$="I" THEN PROCinstructionsGame
 
@@ -40,6 +40,8 @@ IF k$="J" THEN ?J%=1
 IF k$="U" THEN ?J%=2
 
 UNTIL k$="E" OR k$="R" OR k$="K" OR k$="J" OR k$="U"
+
+VDU 23;1,1,0;0;0;
 
 IF k$="R" THEN CHAIN"Reset"
 
@@ -57,7 +59,7 @@ IF A% THEN OSCLI("ACCESS _Maps "+u$):Z%=OPENOUT("_Maps"):PRINT#Z%,map1$,map2$,ma
 IF k$="E" THEN CHAIN"Editor"
 
 PROCsplash
-PROCexpand
+PROCexpand(1)
 
 OSCLI("LOAD "+map1$+" 7800")
 OSCLI("LOAD "+map2$+" 7900")
@@ -73,7 +75,7 @@ DEF PROCintro
 IF ?E%=33 THEN PROCanyKey(400):ENDPROC
 
 PROCsplash
-PROCexpand
+PROCexpand(1)
 
 PROCsaveConfig
 
@@ -124,10 +126,10 @@ ENDPROC
 
 DEF PROCoptions
 
-CLS
-
 PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+
+PROCeraseScreen(2)
 
 PRINT TAB(7,3);CHR$(131);"A remake of the original";
 PRINT TAB(6,4);CHR$(129);"Universal 1981 arcade game";
@@ -150,7 +152,6 @@ PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Editor control keys";
 
 PRINT TAB(6,21);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset settings";
 
-
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option          ";CHR$(156);
 
 ENDPROC
@@ -159,10 +160,7 @@ ENDPROC
 
 DEF PROCinstructionsGame
 
-CLS
-
-PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
-PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
+PROCeraseScreen(2)
 
 PRINT TAB(13,3);CHR$(135);"Instructions";TAB(34,3);CHR$(131);"1/2";
 
@@ -187,15 +185,11 @@ PRINT TAB(2,22);CHR$(132);"enemies and earn bonus points";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
-PROCexpand
+PROCexpand(3)
 PROCanyKey(360000)
 
-L%=0
-FOR R%=22 TO 5 STEP -1
-L%=L%+1
-IF L%>2 THEN L%=L%-3:*FX 19
-PRINT TAB(0,R%);SPC(40);
-NEXT R%
+PROCshrink(3)
+PROCeraseScreen(5)
 
 PRINT TAB(34,3);CHR$(131);"2";:*FX 19
 
@@ -218,6 +212,9 @@ PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"ESC";CHR$(133);"to quit the current 
 PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";:*FX 19
 PRINT TAB(2,22);CHR$(135);"high scores";CHR$(132);"and";CHR$(135);"game settings";
 
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
+
+PROCexpand(5)
 PROCanyKey(360000)
 
 ENDPROC
@@ -226,14 +223,9 @@ ENDPROC
 
 DEF PROCinstructionsEditor
 
-CLS
-
-PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
-PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);"            Lady Bug              ";CHR$(156);
-
+PROCeraseScreen(2)
 
 PRINT TAB(11,4);"Editor control keys";
-
 
 PRINT TAB(5, 7);CHR$(134);"123   ";CHR$(135);"-";CHR$(129);"Select map";
 
@@ -251,32 +243,29 @@ PRINT TAB(5,19);CHR$(132);"C     ";CHR$(135);"-";CHR$(131);"Catalogue disk";
 
 PRINT TAB(5,21);CHR$(130);"B     ";CHR$(135);"-";CHR$(133);"Boot disk";
 
-
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
-PROCexpand
+PROCexpand(3)
 PROCanyKey(360000)
 
 ENDPROC
 
 
 
-DEF PROCshrink
+DEF PROCshrink(O%)
 
-FOR R%=24 TO 2 STEP -2
+FOR R%=24 TO O% STEP -2
 *FX 19
 VDU 23;6,R%,0;0;0;
 NEXT R%
-*FX 19
-VDU 23;1,0,0;0;0;
 
 ENDPROC
 
 
 
-DEF PROCexpand
+DEF PROCexpand(O%)
 
-FOR R%=1 TO 25 STEP 2
+FOR R%=O% TO 25 STEP 2
 *FX 19
 VDU 23;6,R%,0;0;0;
 VDU 23;1,40,0;0;0;
@@ -291,7 +280,7 @@ DEF PROCerror
 
 ?E%=33
 
-PROCeraseCenter
+PROCeraseLogo
 
 IF ERR<>201 THEN PROCunexpectedError
 
@@ -365,7 +354,7 @@ OSCLI("ACCESS _Config "+u$)
 OSCLI("SAVE _Config " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0")
 OSCLI("ACCESS _Config "+l$)
 
-PROCeraseCenter
+PROCeraseLogo
 
 PRINT TAB(5,11);CHR$(135);"High scores";CHR$(132);"and";CHR$(135);"game settings";
 PRINT TAB(11,13);CHR$(132);"saved successfully";
@@ -374,7 +363,7 @@ ENDPROC
 
 
 
-DEF PROCeraseCenter
+DEF PROCeraseLogo
 
 *FX 19
 PRINT TAB(26,15);" ";TAB(25,15);" ";
@@ -390,6 +379,15 @@ PRINT TAB(0,R%);"  ";
 NEXT R%
 
 ENDPROC
+
+
+
+DEF PROCeraseScreen(O%)
+
+FOR R%=O% TO 24:PRINT TAB(0,R%);SPC(39);:NEXT R%
+
+ENDPROC
+
 
 
 DEF PROCanyKey(T%)
