@@ -1,9 +1,8 @@
-REM *
+E%=FALSE
 HIMEM=&7800
 
 C%=&7B80
 S%=&8010
-E%=PAGE+6
 F%=&130
 J%=&133
 M%=&69
@@ -72,7 +71,7 @@ END
 
 DEF PROCintro
 
-IF ?E%=33 THEN PROCanyKey(400):ENDPROC
+IF E% THEN PROCanyKey(400):ENDPROC
 
 PROCsplash
 PROCexpand(1)
@@ -278,7 +277,7 @@ ENDPROC
 
 DEF PROCerror
 
-?E%=33
+E%=TRUE
 
 PROCeraseLogo
 
