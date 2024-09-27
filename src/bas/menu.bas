@@ -357,6 +357,7 @@ PROCeraseLogo
 
 PRINT TAB(5,11);CHR$(135);"High scores";CHR$(132);"and";CHR$(135);"game settings";
 PRINT TAB(11,13);CHR$(132);"saved successfully";
+!F%=0
 
 ENDPROC
 

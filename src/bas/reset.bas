@@ -62,7 +62,7 @@ IF H$="Y" THEN PRINT " ";CHR$(129);"Resetting high scores":FOR Z%=&00 TO &6F:Z%?
 
 IF S$="Y" THEN PRINT " ";CHR$(129);"Resetting controls and settings":FOR Z%=&70 TO &7C:Z%?H%=Z%?D%:NEXT Z%
 
-IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("ACCESS _Config "+u$):OSCLI("SAVE _Config " + STR$~(&FF0000 + H%) + " +7E FFFFFF 0"):F%?0=0:F%?1=0:F%?2=0:OSCLI("ACCESS _Config "+l$)
+IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("ACCESS _Config "+u$):OSCLI("SAVE _Config " + STR$~(&FF0000 + H%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Config "+l$):!F%=0
 
 PRINT:PRINT " ";CHR$(132);
 
