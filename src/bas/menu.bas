@@ -145,9 +145,9 @@ PRINT TAB(6,14);CHR$(132);"U";CHR$(135);"-";CHR$(134);"Play";CHR$(132);"Joystick
 
 PRINT TAB(6,16);CHR$(131);"I";CHR$(135);"-";CHR$(129);"Instructions";
 
-PRINT TAB(6,18);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Map Editor";
+PRINT TAB(6,18);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Level Editor";
 
-PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Editor control keys";
+PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Level Editor keys";
 
 PRINT TAB(6,21);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset settings";
 
