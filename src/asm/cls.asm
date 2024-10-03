@@ -35,16 +35,16 @@
 
 .graphicsMode
 
-	ldx #0					; index to oswrch data to setup graphics mode
+	ldy #0					; index to oswrch data to setup graphics mode
 
 .graphicsModeLoop
 
 						; output graphics mode data to oswrch
-	lda graphicsModeData - canvasCls + pageCls, x
+	lda graphicsModeData - canvasCls + pageCls, y
 	jsr oswrch
 
-	inx					; until done
-	cpx #graphicsModeDataEnd - graphicsModeData
+	iny					; until done
+	cpy #graphicsModeDataEnd - graphicsModeData
 	bne graphicsModeLoop
 
 	rts					; return

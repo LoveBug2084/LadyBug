@@ -9238,12 +9238,12 @@ bootstrap     &4800 - &4949 , 330 bytes
      F4F4   F0 03      BEQ &F4F9
      F4F6   4C 03 2B   JMP &2B03
 .graphicsMode
-     F4F9   A2 00      LDX #&00
+     F4F9   A0 00      LDY #&00
 .graphicsModeLoop
-     F4FB   BD 07 2C   LDA &2C07,X
+     F4FB   B9 07 2C   LDA &2C07,Y
      F4FE   20 EE FF   JSR &FFEE
-     F501   E8         INX
-     F502   E0 1E      CPX #&1E
+     F501   C8         INY
+     F502   C0 1E      CPY #&1E
      F504   D0 F5      BNE &F4FB
      F506   60         RTS
 .graphicsModeData
