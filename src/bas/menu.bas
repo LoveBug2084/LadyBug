@@ -147,7 +147,7 @@ PRINT TAB(6,16);CHR$(131);"I";CHR$(135);"-";CHR$(129);"Instructions";
 
 PRINT TAB(6,18);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Map Editor";
 
-PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Map Editor keys";
+PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Map Editor Keys";
 
 PRINT TAB(6,21);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset settings";
 
@@ -188,9 +188,8 @@ PROCexpand(3)
 PROCanyKey(360000)
 
 PROCshrink(3)
-PROCeraseScreen(5)
-
 PRINT TAB(34,3);CHR$(131);"2";
+PROCeraseScreen(5)
 
 PRINT TAB(2,5);CHR$(132);"A special diamond bonus worth";
 PRINT TAB(2,6);CHR$(135);~U%;"00000 points";CHR$(132);"will appear if";
@@ -224,7 +223,7 @@ DEF PROCinstructionsEditor
 
 PROCeraseScreen(2)
 
-PRINT TAB(11,4);"Editor control keys";
+PRINT TAB(13,4);"Map Editor keys";
 
 PRINT TAB(5, 7);CHR$(134);"123   ";CHR$(135);"-";CHR$(129);"Select map";
 
