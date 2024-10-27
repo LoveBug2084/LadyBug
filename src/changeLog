@@ -1,3 +1,24 @@
+stardot.4
+
+2021/04/01	I've decided to finish off the maze generation once and for all so I added the code to place hearts, skulls and letters onto the map
+		This funtion checks for random maze locations containg a dots that are not located near a turnstile and replaced the dot with the object
+
+		Collectable objects were too large and just looked off scale in the maze
+		Collectable vegetables were 1 pixel too wide and when displayed in the center maze bug box they touched the right hand wall
+ 		Because the collectable objects are 8 pixels wide they overlap 2 pixels into the previous column and can cause objects to get cropped
+		Also maze wall detection is a bit broken
+
+2021/03/30	Working on the enemy processing function to handle the xy direction and direction change at a junction but its not ready yet
+		Testing 4 frame sprite animation
+		Drew some collectable objects and 1/2 written the code to display them
+
+2021/03/26	Work started on checking the tileMap for paths and walls, its totally buggy
+		Wrote some test code thats drawing onto the tilemap under ladybug just for checking that the sprite coordinates are correctly centered
+		I'll have some enemy bugs wizzing around the map soon
+
+2021/03/24	I'm starting to realize that I will probably run out of memory and might need sideways ram, thinking...
+		Added some self modifying code to the sprite drawinf function to allow for vertically flipped sprites
+
 2021/03/22	Experimenting with interrupt timing
 		Added emergency erase to remove the left over pixels when a sprite croses the boundary from the bottom half to the top half
 
@@ -16,7 +37,8 @@
 		Changed custom screen resolution to 69x208 bytes, rewrote all screen drawing functions for new resolution
 
 2021/03/11	Test Keyboard scanning
-		Test Drawing 5 sprites
+
+2021/03/08	Test drawing 5 sprites
 
 2021/03/07	Test screen border, bonus text, score and level text, single sprite drawing
 
@@ -24,3 +46,6 @@
 
 2021/02/20	Test printString function
 		Test custom resolution 72x216 bytes, drawing text on screen
+
+2021/02/18	Sketching out ideas of how things will be, no code written yet
+

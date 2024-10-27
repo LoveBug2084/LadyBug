@@ -985,7 +985,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .initTimerTilesVertical				; repeat
 
-	lda #mapTileTimerLeft + wallSolid	; store left timer tile in column 1 of tileMap
+	lda #mapTileTimerLeft + wallSolid	; store left timer tile in column 0 of tileMap
 	ldy #0
 	sta (tileMapAddr), y
 
@@ -1022,8 +1022,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			tileMapAddr		contains the address of the dot in the tileMap
-;			carry			set if location found, clear if not found (timed out)
+; exit			carry			set if location found, clear if not found (timed out)
+;			tileMapAddr		contains the address of the dot in the tileMap (if found)
 ;			A			destroyed
 ;			X			preserved
 ;			Y			destroyed
@@ -1065,7 +1065,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	cmp #21					; if its higher than 20 then try again
 	bcs tileMapFindDotX
 						; (carry is clear so no need for clc)
-	adc tileMapAddr				; add to tileMapAddr so that it points to the top left of the 3x3 tile cube to investigate
+	adc tileMapAddr				; add to tileMapAddr so that it points to the top left of the 3x3 tile square to investigate
 	sta tileMapAddr
 	bcc tileMapFindDotCheck
 	inc tileMapAddr + 1
@@ -1265,7 +1265,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #spriteBlanking + moveStop		; sprite blanked and not moving
 	sta spritesDir, x
 
-	lda #&ff				; sprite marks as already erased
+	lda #&ff				; sprite marked as already erased
 	sta spritesErased, x
 
 	dex
