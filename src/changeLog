@@ -1,4 +1,16 @@
-stardot.4
+stardot.5
+
+2021/04/01	It was all going so well but then....
+
+		I realised that the super fast code I wrote to display 9x10 pixel vegetables in the center of enemy bug box couldnt display it down on the lower
+			info panel so I made some changes and it displays down there but its not vertically centered because of the hacky way it works
+			and much head scratching later I realised its not gonna be possible so I scrap all the new code
+			As a temporary fix i've moved the vegetable sprites into the main sprite file but this is wasting space and will be fixed later 
+
+		I also added the center vegetable to the sprites list but this caused a new issue as I cannot control the draw priority and often ladybug wiil
+			be drawn under the vegetable !, will fix this in the next build
+
+		I've made it pick a random vegetable every boot for testing and a random level number up to 19 to check the number of skulls, seems to be working
 
 2021/04/01	I've decided to finish off the maze generation once and for all so I added the code to place hearts, skulls and letters onto the map
 		This funtion checks for random maze locations containg a dots that are not located near a turnstile and replaced the dot with the object
