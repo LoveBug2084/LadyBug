@@ -3438,7 +3438,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      119E   04
      119F   03
 .mainMenu
-     11A0   A9 1F      LDA #&1F
+     11A0   A9 BB      LDA #&BB
      11A2   85 02      STA &02
      11A4   A9 00      LDA #&00
      11A6   85 CD      STA &CD
@@ -3462,7 +3462,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      11C9   F0 11      BEQ &11DC
      11CB   20 51 12   JSR &1251
      11CE   F0 F7      BEQ &11C7
-     11D0   A9 1F      LDA #&1F
+     11D0   A9 BB      LDA #&BB
      11D2   85 02      STA &02
      11D4   20 8F 12   JSR &128F
      11D7   90 DF      BCC &11B8
@@ -3740,7 +3740,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      140F   03
      1410   43 4F 4E ...
      141B   FF
-     141C   A9 1F      LDA #&1F
+     141C   A9 BB      LDA #&BB
      141E   85 02      STA &02
      1420   18         CLC
      1421   60         RTS
@@ -4068,7 +4068,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      16B2   20 76 15   JSR &1576
      16B5   4C EC 15   JMP &15EC
 .drawScoreTable
-     16B8   A9 1F      LDA #&1F
+     16B8   A9 BB      LDA #&BB
      16BA   85 02      STA &02
      16BC   A9 00      LDA #&00
      16BE   85 CD      STA &CD
