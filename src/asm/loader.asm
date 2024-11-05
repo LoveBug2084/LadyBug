@@ -551,6 +551,201 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrGameLevel					choose level 1 for regular game or random level for demo game
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrGameLevel
+
+	lda #&01				; start game on level 1
+	sta level
+
+	lda #centerCucumber			; start with a cucumber at 1000 points
+	sta vegetableImg
+	lda #&10
+	sta vegetableScore
+
+	lda #0					; no shield at start, ladybug is vulnerable to skulls
+	sta shield
+
+	sta score				; zero the player score
+	sta score + 1
+	sta score + 2
+
+	sta mazeMap				; start with mazeMap 0
+
+	lda optionLives				; initialize player lives
+	sta lives
+
+	lda #&ff				; clear the special, extra and multiplier bonus flag bits
+	sta bonusBits + 0
+	sta bonusBits + 1
+
+	sta ladybugEntryEnable			; enable ladybug entry movement animation
+
+	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
+
+	lda demoMode				; if demo mode is active then choose a random starting level
+	beq swrGameLevelExit
+
+.swrGameLevelChoose				; choose a random level 1 - 18
+
+	jsr random				; pick random number 0 - 17
+	beq swrGameLevelExit			; if = 0 then exit (start on level 1)
+
+	cmp #18					; if > 17 then choose another random number
+	bcs swrGameLevelChoose
+
+	tay					; set the number of loops to advance the level
+
+.swrGameLevelAdvance
+
+	jsr levelAdvance			; advance game level by 1
+
+	dey					; and repeat until done
+	bne swrGameLevelAdvance
+
+.swrGameLevelExit
+
+	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrDemo					; move ladybug for demo mode (early test code)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+;*** xy limits 08-a8
+
+.swrDemoDirBits					; used to simulate key demo presses, convert direction 0-3 to key bit
+
+	equb keyBitUp, keyBitDown, keyBitLeft, keyBitRight
+
+.swrDemoMapDir
+
+	equb 2, 94, 46, 50			; tileMap offset from top left corner for up, down, left, right (2 tiles)
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemo
+
+	lda demoMode				; if demo mode is enabled
+	beq swrDemoExit
+
+	lda updateLadybugGridX			; if ladybug is off grid then use current demo direction
+	ora updateLadybugGridY
+	bne swrDemoSetDir
+	
+	ldx demoDir				; get current demo direction
+
+	jsr updateLadybugCheckPath		; if tile in front of ladybug is a solid wall
+	beq swrDemoRandomDir			; then choose a random direction
+
+	sec					; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for dots and skulls
+	lda tileMapAddr + 0
+	sbc #24
+	sta demoMapAddr + 0
+	lda tileMapAddr + 1
+	sbc #0
+	sta demoMapAddr + 1
+
+.swrDemoUp
+
+	cpx #moveUp				; if moving up
+	bne swrDemoDown
+	lda spritesY + 0			; and were on the top row
+	cmp #&08
+	beq swrDemoRandomDir			; then choose a random direction
+	bne swrDemoCheckSkull			; else check for skull
+
+.swrDemoDown
+
+	cpx #moveDown				; if moving down
+	bne swrDemoCheckSkull
+	lda spritesY + 0			; and were on the bottom row
+	cmp #&a8
+	beq swrDemoRandomDir			; then choose a randpm direction
+						; else check for skull
+.swrDemoCheckSkull
+
+	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
+
+	lda (demoMapAddr), y			; if skull is in front of ladybug
+	sta screenAddr
+	cmp #mapTileSkull
+	bne swrDemoMaybeRandom
+
+	txa					; flip direction
+	eor #%0000001
+	sta demoDir
+	jmp swrDemoSetDir
+
+.swrDemoMaybeRandom
+
+	jsr random
+	cmp #0.15 * 256				; else have a 15% chance of a random turn
+	bcs swrDemoSetDir
+
+.swrDemoRandomDir
+
+	ldy #1
+	lda (tileMapAddr), y			; if all directions are blocked then give up
+	ldy #23
+	and (tileMapAddr), y
+	ldy #25
+	and (tileMapAddr), y
+	ldy #47
+	and (tileMapAddr), y
+	bmi swrDemoSetDir
+
+.swrDemoRandomDirLoop
+
+	jsr random				; pick a random direction that is not a solid wall
+	and #%00000011
+	tax
+	jsr updateLadybugCheckPath
+	beq swrDemoRandomDirLoop
+	stx demoDir
+	jmp swrDemoCheckSkull			; and check that its not a skull
+
+.swrDemoSetDir
+
+	lda playerInput				; remove all inputs except esc and combine with demo direction
+	and #keyBitEsc
+	ldx demoDir
+	ora swrDemoDirBits, x
+	sta playerInput
+
+.swrDemoExit
+
+	rts					; return
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+; regular 3x3 box
+; ---------------
+; |    | 01 |    |
+; ---------------
+; | 23 |    | 25 |
+; ---------------
+; |    | 47 |    |
+; ---------------
+
+; 5x5 box tileMapAddr - 24
+; --------------------------
+; |    |    | 02 |    |    |
+; --------------------------
+; |    |    |    |    |    |
+; --------------------------
+; | 46 |    |    |    | 50 |
+; --------------------------
+; |    |    |    |    |    |
+; --------------------------
+; |    |    | 94 |    |    |
+; --------------------------
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of sideways ram code
 
 .swramLastAddr

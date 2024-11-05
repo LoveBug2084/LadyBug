@@ -1,3 +1,3 @@
 #!/bin/bash
-xed 'changeLog' 'output/projectListing' 'asm/ladybug.asm' 'bas/menu.bas' 'asm/bonus.asm' 'asm/variables.asm' 'asm/constants.asm' 'asm/config.asm' 'bas/reset.bas' 'asm/!boot.asm' 'bas/checkFs.bas' 'asm/loader.asm' 'asm/relocate.asm' 'asm/soundTables.asm' 'asm/editor.asm' 'bas/editor.bas' 'asm/mapNames.asm' 'asm/cls.asm' 'txt/readMe' 'asm/build.asm' 'asm/memoryUsage.asm' &
+xed 'changeLog' 'output/projectListing' 'asm/ladybug.asm' 'asm/loader.asm' 'bas/menu.bas' 'asm/bonus.asm' 'asm/variables.asm' 'asm/constants.asm' 'asm/config.asm' 'bas/reset.bas' 'asm/!boot.asm' 'bas/checkFs.bas' 'asm/relocate.asm' 'asm/soundTables.asm' 'asm/editor.asm' 'bas/editor.bas' 'asm/mapNames.asm' 'asm/cls.asm' 'txt/readMe' 'asm/build.asm' 'asm/memoryUsage.asm' &
 

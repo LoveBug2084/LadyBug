@@ -99,7 +99,7 @@
 	skip 1					; validation of cleanResetBank and cleanResetMachine (checksum)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; storage for keyboard/joystick mode (not preserved after reset but just in a handy place)
+; storage for keyboard/joystick mode (not preserved after reset but just in a handy place for menu.bas)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .joystickEnable
@@ -206,6 +206,7 @@ continueCompact		= &8068			; master compact entry point
 ; exit			screenHalf		set to 00 for upper half (raster lines 0-155) or ff for lower half (raster lines 156-311)
 ;			vsyncCounter		incremented every vsync (50Hz)
 ;			pauseCounter		decremented every 2 * vsync (25Hz)
+;			idleCounter		decremented every 8 * vsync (6.25Hz)
 ;			P			preserved
 ;			A			preserved
 ;			X			preserved
@@ -262,8 +263,15 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	inc vsyncCounter			; vsyncCounter += 1
 
-	lda vsyncCounter			; if vsyncCounter & 1 == 0
-	and #1
+	lda vsyncCounter			; if vsyncCounter & 7 == 0
+	and #7
+	bne irqVsyncPause
+
+	dec idleCounter				; then idleCounter -= 1
+
+.irqVsyncPause
+
+	and #1					; if vsyncCounter & 1 == 0
 	bne irqVsyncExit
 	
 	dec pauseCounter			; then pauseCounter -= 1
@@ -660,7 +668,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; move direction table squeezed in here
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.moveDirMap		equb 1, 47, 23, 25, 24	; tileMap offset from top left corner for up, down, left, right, center
+.mapDir	equb 1, 47, 23, 25, 24	; tileMap offset from top left corner for up, down, left, right, center
 
 
 
@@ -2029,44 +2037,12 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; setup a new game for level 1
+; setup a new game, Level 1 for regular game or random level for demo mode
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.gameLevel1
+.gameNew
 
-	lda #&01				; start game on level 1
-	sta level
-
-	lda #centerCucumber			; start with a cucumber at 1000 points
-	sta vegetableImg
-	lda #&10
-	sta vegetableScore
-
-	lda #0					; no shield at start, ladybug is vulnerable to skulls
-	sta shield
-
-	sta score				; zero the player score
-	sta score + 1
-	sta score + 2
-
-	sta mazeMap				; start with mazeMap 0
-
-	lda optionLives				; initialize player lives
-	sta lives
-
-	lda #&ff				; clear the special, extra and multiplier bonus flag bits
-	sta bonusBits + 0
-	sta bonusBits + 1
-
-	sta ladybugEntryEnable			; enable ladybug entry movement animation
-
-	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
-
-
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; setup level settings for level 1 so that instructions page shows correct settings
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+	jsr swrGameLevel			; choose the game level (see loader.asm)
 
 	jsr initLevelSettings			; setup skulls, letters, enemy settings etc for current level
 
@@ -2074,7 +2050,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr drawPlayfieldLower			; draw playfield lower section (info panel)
 
-	jsr instructions			; display the game instructions and wait for return or esc to be pressed
+	jsr instructions			; display the game instructions and wait for return or esc to be pressed (if demo mode it returns carry set)
 	bcc gameIntroScreen			; if esc was pressed then return to intro
 
 	lda #sfxTwinkle				; play twinkle sound effect for first level
@@ -2273,6 +2249,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	
 .checkEscPressed
 
+	lda demoMode				; if demo mode is enabled then skip waiting for escCounter to timeout
+	bne checkEscReturnTrue
+
 	dec escCounter				; else decrement escCounter
 	bne checkEscReturnFalse			; if escCounter != 0 then return false
 	
@@ -2291,6 +2270,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; gameOver					clear the screen and display game over message
 ;						check if score needs to be registered in the high score table
+;						but if the game was a demo then just exit without doing anything
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2303,6 +2283,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameOver
+
+	lda demoMode				; if game was a demo then skip over checking for high score
+	bne gameOverExit
 
 	lda #gameOverTime			; set display time
 	sta pauseCounter
@@ -2333,8 +2316,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr checkHighScore			; check if highScore was beaten (handles score position and the high score entry)
 
-	jmp gameIntroScreen			; return to game intro screen
+.gameOverExit
 
+	jmp gameIntroScreen			; return to game intro screen
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2813,7 +2797,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	
 .moveSpritesCountPathsLoop			; repeat
 
-	ldy moveDirMap, x			; read the tileMap
+	ldy mapDir, x				; read the tileMap
 	lda (tileMapAddr), y
 	bmi moveSpritesCountPathsNext		; if its a path then decrement the path counter
 	dec moveSpritesPathCounter
@@ -2876,7 +2860,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	sty moveSpritesSaveDirection		; save the chosen direction
 	
-	lda moveDirMap, y			; get direction offset for tile map
+	lda mapDir, y				; get direction offset for tile map
 
 	tay					; if theres a wall at the chosen direction then choose a random direction instead
 	lda (tileMapAddr), y
@@ -2940,7 +2924,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawPlayfieldUpper				draws the top red, yellow and cyan bars with text "special" "extra" "x2 x3 x5"
+; drawPlayfieldUpper				draws the top red, yellow and cyan boxes with text "special" "extra" "x2 x3 x5"
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3206,13 +3190,24 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	jsr drawHighScore			; draw high score points
 
-	; continue down to drawHighScoreName
+	; continue down to draw demo mode or highscore name
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawHighScoreName				draw the high score name in red on the lower playfield panel
+; drawDemoModeOrName				draw demo mode or high score name
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawDemoModeOrName
+
+	lda demoMode				; if demo mode then draw "DEMO MODE"
+	beq drawHighScoreName			; else draw high score name
+
+	jsr drawString				; draw demo mode message
+	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
+	equs colorMultiplier0, " DEMO GAME", &ff
+
+	rts
 
 .drawHighScoreName
 
@@ -4032,6 +4027,14 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr playSoundSilence			; kill any current sounds
 
+	lda demoMode				; if demo mode
+	beq instructionsDrawAll
+
+	sec					; then return with carry set (start demo game)
+	rts
+
+.instructionsDrawAll
+
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	lda #palObject + palRed			; set object color to red so that "SPECIAL" tiles are red
@@ -4753,6 +4756,14 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .mainMenu
 
+	lda #idleTime				; reset the idle timeout
+	sta idleCounter
+
+	lda #0					; disable demo mode
+	sta demoMode
+
+	jsr drawHighScoreName			; redraw the high score name
+
 	jsr mainMenuDraw			; draw the main menu screen
 
 	lda #0					; make sure the "START GAME" text is flashing (skull color) by setting shield to 0
@@ -4779,6 +4790,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .mainMenuWaitRelease				; repeat
 
+	lda idleCounter				; if idle counter timed out then return and start a demo game
+	beq mainMenuIdleTimeout
+
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
 	bne mainMenuWaitRelease			; until no player input
@@ -4789,22 +4803,36 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .mainMenuWaitPress				; repeat
 
+	lda idleCounter				; if idle counter timed out then return and start a demo game
+	beq mainMenuIdleTimeout
+
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
 	beq mainMenuWaitPress			; until player input
 
+	lda #idleTime				; reset the idle timeout
+	sta idleCounter
+
 	jsr mainMenuProcess			; process the key/joystick pressed option
 
-	bcc mainMenuUpdateCursor		; until start game selected (carry set)
+	bcc mainMenuUpdateCursor		; until start pressed
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; return to start a new game
+	; return to start a new game or demo game
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuExit
 
 	jmp generateValidation			; update the validation code and return
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuIdleTimeout
+
+	lda #&ff				; enable demo mode and return to start demo game
+	sta demoMode
+
+	bne mainMenuExit
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4939,7 +4967,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .mainMenuFunctionsExit
 
-	lda playerInput				; return with input bits
+	lda playerInput				; return with input bits (esc key bit removed)
+	and #keyBitEsc eor &ff
+
 	rts
 
 
@@ -5140,6 +5170,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr drawScoreTable			; draw the high scores page and wait for start or esc to be pressed
 	
+	lda demoMode				; if high score page idle timed out then do demo mode
+	bne mainMenuProcessReturnTrue
+
 	jsr mainMenuDraw			; redraw main menu
 
 	clc					; return false
@@ -5290,6 +5323,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	jsr drawString				; restore original text
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs colorYellow, "CONTROLS   ", &ff
+
+	lda #idleTime				; reset the idle timeout
+	sta idleCounter
 
 	clc					; return
 	rts
@@ -5695,10 +5731,16 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawScoreTable				draw the high score table page and wait for start or esc to be pressed
+; drawScoreTable				draw the high score table page and wait for start or esc to be pressed or idle timer timeout
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawScoreTable
+
+	lda #idleTime				; reset the idle timeout
+	sta idleCounter
+
+	lda #0					; disable demo mode
+	sta demoMode
 
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
@@ -5770,9 +5812,12 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .drawScoreTableRelease
 
+	lda idleCounter				; if idle counter timed out then enable demo and return
+	beq drawScoreTableEnableDemo
+
 	jsr drawScoreTableFunctions		; update colors and scan keyboard
 
-	bne drawScoreTableRelease		; if key is pressed then loop back and wait for release
+	bne drawScoreTableRelease			; if key pressed then wait for key release
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; do functions and wait for start/esc pressed
@@ -5782,11 +5827,19 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr drawScoreTableFunctions		; update colors and scan keyboard
 
-	cmp #keyBitStart			; if start or esc pressed then return else loop back and wait for key press
+	cmp #keyBitStart			; if start or esc pressed then return
 	beq drawScoreTableExit
 
 	cmp #keyBitEsc
-	bne drawScoreTablePress
+	beq drawScoreTableExit
+
+	lda idleCounter				; else if idle counter timed out then return
+	bne drawScoreTablePress			; else loop back and wait for key press
+
+.drawScoreTableEnableDemo
+
+	lda #&ff				; enable demoMode
+	sta demoMode
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -5902,6 +5955,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda ladybugDeathEnable			; if ladybug death animation active then return false
 	bne checkPauseGameReturnFalse
 
+	lda demoMode				; if game is in demo mode then return false
+	bne checkPauseGameReturnFalse
+
 	lda pauseGame				; if game is currently paused then handle unpausing if needed
 	bne checkPauseGameTrue
 
@@ -5950,7 +6006,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda #0					; disable game pause
 	sta pauseGame
 	
-	jsr drawHighScoreName			; redraw the high score name to replace the paused text
+	jsr drawDemoModeOrName			; redraw the demo mode or high score name text to replace the paused text
 
 	clc					; return false
 	rts
@@ -6897,8 +6953,8 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ;						if frame delay is correct
 ;						release an enemy from the center box
 ;						increase active enemy count
-;						clear enemy release
-;						if enemies < maximum then spawn a new enemy into center box else activate the center bonus item
+;						clear enemyReleaseEnable and enemyTimerZero
+;						if enemies < maximum then spawn a new enemy into center box else set bonusItemActive to enable the center item
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -9032,12 +9088,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	tax					; get red letter bit value and highlight it
 	lda objectLetterBitsRed, x
-	and bonusBits + 1
-	sta bonusBits + 1
-	
-	jsr drawPlayfieldUpperBonus		; update upper bonus display
-
-	jmp checkForObjectScore			; add the object score and return
+	bne checkForObjectLetterUpdate		; (bne used as branch always)
 
 
 
@@ -9052,6 +9103,17 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	tax					; get yellow letter bit value and highlight it
 	lda objectLetterBitsYellow, x
+
+	; continue down to update letter bit
+
+
+
+	;-------------------------------------------------------------------------------------------------------------------------------------------------
+	; update letter bit
+	;-------------------------------------------------------------------------------------------------------------------------------------------------
+
+.checkForObjectLetterUpdate
+
 	and bonusBits + 0
 	sta bonusBits + 0
 	
@@ -9129,7 +9191,9 @@ animateLadybugInstructions	= 4		; instructions animation index
 ;						enable ladybug death animation
 ;						disable center bonus item
 ;						remove the possibility of getting a diamond bonus
+;						remove diamond from lower playfield
 ;						reduce lives by 1
+;						pause ladybug and enemies
 ;						play death music
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -9233,7 +9297,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	jsr checkForObject			; check for object under ladybug (dot/heart/letter/skull) and do required action (points/multiplier/death)
 
-
+	jsr swrDemo				; use demo mode controls (if enabled)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check inputs and store selected directions
@@ -9635,7 +9699,7 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .updateLadybugCheckPath
 
-	ldy moveDirMap, x			; get tile in front of ladybug from supplied direction in x
+	ldy mapDir, x				; get tile in front of ladybug from supplied direction in x
 	lda (tileMapAddr), y
 	tay
 

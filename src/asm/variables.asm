@@ -11,8 +11,9 @@
 
 	org pageZero
 
-.vsyncCounter		skip 1			; 50Hz vsync counter (counts up and wraps around)
-.pauseCounter		skip 1			; 25Hz pause counter (counts down every 2 vsyncs and wraps around)
+.vsyncCounter		skip 1			; 50Hz vsync counter (increments every vsync)
+.pauseCounter		skip 1			; 25Hz pause counter (decrements every 2 vsyncs)
+.idleCounter		skip 1			; 6.25Hz idle counter (decrements every 8 vsyncs)
 .screenHalf		skip 1			; &00 = upper scanlines 0 to 155, &ff = lower scanlines 156 to 311
 
 .escCounter		skip 1			; escape key counter (times how long esc is pressed)
@@ -226,6 +227,10 @@ soundChannels		= 6			; number of concurrent sound effects during game play
 .updateLadybugTileY	skip 1			; tile found in front of ladybug vertically
 
 .updateLadybugSave	skip 1			; preserve tile
+
+.demoMode		equb 0			; = 0 normal game mode, != 0 demo game mode
+.demoDir		equb 0			; contains chosen direction 0-3
+.demoMapAddr		skip 2			; used to search map for dots and skulls
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero
