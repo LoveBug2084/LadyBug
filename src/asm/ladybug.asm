@@ -2268,9 +2268,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; gameOver					clear the screen and display game over message
-;						check if score needs to be registered in the high score table
-;						but if the game was a demo then just exit without doing anything
+; gameOver					if the game was a demo then just jmp back to the game intro
+;						for a regular game clear the screen and display game over message
+;						then check if score needs to be registered in the high score table
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2284,7 +2284,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .gameOver
 
-	lda demoMode				; if game was a demo then skip over checking for high score
+	lda demoMode				; if game was a demo then just jump to game intro (dont show game over screen or check high score)
 	bne gameOverExit
 
 	lda #gameOverTime			; set display time
