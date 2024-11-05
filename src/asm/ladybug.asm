@@ -4746,11 +4746,11 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .optionsMin
 
-	equb  1,  0,  0,  0,  0			; minimum value for ladybug lives, enemy speed, enemy attack, timer volume, sound off/on
+	equb  1,  0,  0,  0,  0			; minimum value for ladybug lives, enemy speed, enemy attack, timer volume, sound
 	
 .optionsMax
 
-	equb  10, 6, 10,  4,  2			; maximum value + 1 for ladybug lives, enemy speed, enemy attack, timer volume, sound off/on
+	equb  10, 6, 10,  4,  3			; maximum value + 1 for ladybug lives, enemy speed, enemy attack, timer volume, sound
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -5539,22 +5539,37 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	ora #'0'
 	jsr drawChr
 
-	lda optionSound				; if sound enabled
-	beq mainMenuDrawSettingsMute
+	lda optionSound				; read sound option
 
-	jsr drawString				; draw " ON" and return
-	equw screenAddr + 2 + 16 * chrColumn + 19 * chrRow
-	equs " ON", &ff
+.mainMenuDrawSettingsOff
+
+	bne mainMenuDrawSettingsDemoOff		; if sound = 0 (off)
+
+	jsr drawString				; draw "    OFF"
+	equw screenAddr + 2 + 12 * chrColumn + 19 * chrRow
+	equs "    OFF", &ff
+
+	jmp playSoundSilence			; mute the sound and return
+
+.mainMenuDrawSettingsDemoOff
+
+	cmp #1					; if sound = 1 (on)
+	bne mainMenuDrawSettingsDemoOn
+
+	jsr drawString				; draw "     ON" and return
+	equw screenAddr + 2 + 12 * chrColumn + 19 * chrRow
+	equs "     ON", &ff
 
 	rts
 	
-.mainMenuDrawSettingsMute
+.mainMenuDrawSettingsDemoOn			; sound = 2 (demo on)
 
-	jsr drawString				; else draw "OFF"
-	equw screenAddr + 2 + 16 * chrColumn + 19 * chrRow
-	equs "OFF", &ff
+	jsr drawString				; draw "DEMO ON" and return
+	equw screenAddr + 2 + 12 * chrColumn + 19 * chrRow
+	equs "DEMO ON", &ff
 
-	jmp playSoundSilence			; mute the sound and return
+	rts
+	
 
 
 
@@ -8565,11 +8580,16 @@ animateLadybugInstructions	= 4		; instructions animation index
 	cmp #&40
 	beq processSoundGetTimer
 
-	lda demoMode				; if its not a demo game
+	lda optionSound				; if sound mode = 0 (off) then skip write to psg
+	beq processSoundNextByte
+
+	cmp #2					; if sound mode = 2 (demo on) then write to psg
+	beq processSoundWritePsg
+
+	lda demoMode				; sound mode = 1 (demo off) if demo mode then skip write to psg
 	bne processSoundNextByte	
 
-	lda optionSound				; and if sound enabled
-	beq processSoundNextByte
+.processSoundWritePsg
 
 	lda (soundAddrPtr, x)			; write data to psg chip
 	jsr psgWrite

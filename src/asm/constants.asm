@@ -68,8 +68,8 @@ objectModeYellow	= 2
 enemyTimerTopLeft	= 78			; top left tile index for enemy timer for triggering enemy release warning
 enemyTimerMax		= 87			; highest index for enemy timer, index reset to 0 when it increments to enemyTimerMax + 1
 
-idleTime		= (30 * frame) / 8	; demo starts after 30 seconds of inactivity
-;idleTime		= (5 * frame) / 8	; demo starts after 3 seconds of inactivity (for quick testing)
+;idleTime		= (30 * frame) / 8	; demo starts after 30 seconds of inactivity
+idleTime		= (5 * frame) / 8	; demo starts after 3 seconds of inactivity (for quick testing)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ascii character reassignment for special game characters
