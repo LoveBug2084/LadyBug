@@ -8565,7 +8565,10 @@ animateLadybugInstructions	= 4		; instructions animation index
 	cmp #&40
 	beq processSoundGetTimer
 
-	lda optionSound				; else if sound enabled
+	lda demoMode				; if its not a demo game
+	bne processSoundNextByte	
+
+	lda optionSound				; and if sound enabled
 	beq processSoundNextByte
 
 	lda (soundAddrPtr, x)			; write data to psg chip
