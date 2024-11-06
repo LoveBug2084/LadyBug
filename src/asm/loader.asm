@@ -556,13 +556,6 @@ masterMos350 = &e374
 
 .swrGameLevel
 
-;*** debug code set random seed for same demo game for testing
-;*** I think I also need to set vsyncCounter because of the delayed enemy release
-;	lda #&d6
-;	sta randomSeed + 0
-;	lda #&c6
-;	sta randomSeed + 1
-
 	lda #&01				; start game on level 1
 	sta level
 
@@ -629,7 +622,7 @@ masterMos350 = &e374
 
 .swrDemoMapDir
 
-	equb 2, 94, 46, 50			; tileMap offset from top left corner for up, down, left, right (2 tiles)
+	equb 2, 94, 46, 50			; tileMap offset from top left corner of 5x5 square for up, down, left, right (2 tiles)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -662,32 +655,33 @@ masterMos350 = &e374
 	lda spritesY + 0			; and were on the top row
 	cmp #&08
 	beq swrDemoRandomDir			; then choose a random direction
-	bne swrDemoCheckSkull			; else check for skull
+
+	jsr swrDemoCheckSkull			; if skull found
+	beq swrDemoRandomDir			; then choose random direction
+
+	bne swrDemoRandomPercentage		; else choose current direction or random direction
 
 .swrDemoDown
 
 	cpx #moveDown				; if moving down
-	bne swrDemoCheckSkull
+	bne swrDemoLeftRight
 	lda spritesY + 0			; and were on the bottom row
 	cmp #&a8
 	beq swrDemoRandomDir			; then choose a randpm direction
-						; else check for skull
-.swrDemoCheckSkull
 
-	ldx demoDir				; read direction
-	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
+	jsr swrDemoCheckSkull			; if skull found
+	beq swrDemoRandomDir			; then choose random direction
 
-	lda (demoMapAddr), y			; if skull is in front of ladybug
-	sta screenAddr
-	cmp #mapTileSkull
-	bne swrDemoMaybeRandom
+	bne swrDemoRandomPercentage		; else choose current direction or random direction
 
-	txa					; flip direction
-	eor #%0000001
-	sta demoDir
-	jmp swrDemoSetDir
+.swrDemoLeftRight
 
-.swrDemoMaybeRandom
+	jsr swrDemoCheckSkull			; if skull found
+	beq swrDemoRandomDir			; then choose random direction
+
+						; else choose current direction or random direction
+
+.swrDemoRandomPercentage
 
 	jsr random
 	cmp #0.15 * 256				; else have a 15% chance of a random turn
@@ -703,6 +697,7 @@ masterMos350 = &e374
 	and (tileMapAddr), y
 	ldy #47
 	and (tileMapAddr), y
+
 	bmi swrDemoSetDir
 
 .swrDemoRandomDirLoop
@@ -727,6 +722,18 @@ masterMos350 = &e374
 .swrDemoExit
 
 	rts					; return
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoCheckSkull
+
+	ldx demoDir				; read direction
+	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
+
+	lda (demoMapAddr), y			; check for skull aand return with result
+	cmp #mapTileSkull
+
+	rts					
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
