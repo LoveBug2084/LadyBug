@@ -556,6 +556,13 @@ masterMos350 = &e374
 
 .swrGameLevel
 
+;*** debug code set random seed for same demo game for testing
+;*** I think I also need to set vsyncCounter because of the delayed enemy release
+;	lda #&d6
+;	sta randomSeed + 0
+;	lda #&c6
+;	sta randomSeed + 1
+
 	lda #&01				; start game on level 1
 	sta level
 
@@ -667,6 +674,7 @@ masterMos350 = &e374
 						; else check for skull
 .swrDemoCheckSkull
 
+	ldx demoDir				; read direction
 	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
 
 	lda (demoMapAddr), y			; if skull is in front of ladybug
@@ -674,10 +682,7 @@ masterMos350 = &e374
 	cmp #mapTileSkull
 	bne swrDemoMaybeRandom
 
-;*** try reading direction from sprite as it may be different to the currently selected direction (slide)
-;	txa					; flip direction
-	lda spritesDir + 0
-	and #%0000011
+	txa					; flip direction
 	eor #%0000001
 	sta demoDir
 	jmp swrDemoSetDir
@@ -708,6 +713,7 @@ masterMos350 = &e374
 	jsr updateLadybugCheckPath
 	beq swrDemoRandomDirLoop
 	stx demoDir
+
 	jmp swrDemoCheckSkull			; and check that its not a skull
 
 .swrDemoSetDir
