@@ -5545,9 +5545,9 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	bne mainMenuDrawSettingsDemoOff		; if sound = 0 (off)
 
-	jsr drawString				; draw "    OFF"
-	equw screenAddr + 2 + 12 * chrColumn + 19 * chrRow
-	equs "    OFF", &ff
+	jsr drawString				; draw " OFF"
+	equw screenAddr + 2 + 15 * chrColumn + 19 * chrRow
+	equs " OFF", &ff
 
 	jmp playSoundSilence			; mute the sound and return
 
@@ -5556,17 +5556,17 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	cmp #1					; if sound = 1 (on)
 	bne mainMenuDrawSettingsDemoOn
 
-	jsr drawString				; draw "     ON" and return
-	equw screenAddr + 2 + 12 * chrColumn + 19 * chrRow
-	equs "     ON", &ff
+	jsr drawString				; draw "  ON" and return
+	equw screenAddr + 2 + 15 * chrColumn + 19 * chrRow
+	equs "  ON", &ff
 
 	rts
 	
 .mainMenuDrawSettingsDemoOn			; sound = 2 (demo on)
 
-	jsr drawString				; draw "DEMO ON" and return
-	equw screenAddr + 2 + 12 * chrColumn + 19 * chrRow
-	equs "DEMO ON", &ff
+	jsr drawString				; draw "DEMO" and return
+	equw screenAddr + 2 + 15 * chrColumn + 19 * chrRow
+	equs "DEMO", &ff
 
 	rts
 	

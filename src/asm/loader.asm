@@ -674,7 +674,10 @@ masterMos350 = &e374
 	cmp #mapTileSkull
 	bne swrDemoMaybeRandom
 
-	txa					; flip direction
+;*** try reading direction from sprite as it may be different to the currently selected direction (slide)
+;	txa					; flip direction
+	lda spritesDir + 0
+	and #%0000011
 	eor #%0000001
 	sta demoDir
 	jmp swrDemoSetDir
