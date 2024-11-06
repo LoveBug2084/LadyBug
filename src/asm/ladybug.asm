@@ -2759,7 +2759,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	bne moveSpritesCheckValidJunction
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy hit a skull so remove skull from map, remove skull from screen, kill enemy, spawn new enemy in center box
+	; enemy hit a skull so remove skull from map, remove skull from screen, kill enemy, spawn new enemy in center box (if its empty)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesKillEnemy
@@ -2780,7 +2780,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	lda #spriteBlanking			; disable the current enemy
 	sta spritesDir, x
 
-	jsr enemySpawn				; spawn new enemy in center box
+	jsr enemySpawn				; spawn new enemy in center box (if its empty)
 
 	jmp moveSpritesNext			; skip to next sprite
 
@@ -7078,7 +7078,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	ldx #spritesTotal - 1			; start at last enemy in list
 
-.enemySpawnCheck
+.enemySpawnCheckEmpty
 
 	lda spritesDir, x			; get enemy blanking and stopped bits
 	and #spriteBlanking + moveStop
@@ -7086,11 +7086,20 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	cmp #moveStop				; if enemy is visible and has the stop flag set
 	beq enemySpawnExit			; then its waiting in the box so exit this function
 
-	and #spriteBlanking			; if enemy is not visible
-	bne enemySpawnType			; then its available to be spawned into center box 
+	dex					; else check next
+	bne enemySpawnCheckEmpty		; until all checked
+
+	ldx #spritesTotal - 1			; start at last enemy in list
+
+.enemySpawnCheckAvailable
+
+	lda spritesDir, x			; get enemy blanking
+	and #spriteBlanking
+
+	bne enemySpawnType			; if enemy is not visible then its available to be spawned into center box 
 
 	dex					; else check next
-	bne enemySpawnCheck			; until all checked (bne used as branch always, enemy will be found before x = 0)
+	bne enemySpawnCheckAvailable		; until all checked (bne used as branch always, enemy will be found before x = 0)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; an inactive enemy was found so we spawn it into the center box with the correct enemy type for current level
