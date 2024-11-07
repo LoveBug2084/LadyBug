@@ -629,17 +629,16 @@ masterMos350 = &e374
 .swrDemo
 
 	lda demoMode				; if demo mode is enabled
-	beq swrDemoExit
+	bne swrDemoCheckGrid
+
+	rts
+
+.swrDemoCheckGrid
 
 	lda updateLadybugGridX			; if ladybug is off grid then use current demo direction
 	ora updateLadybugGridY
 	bne swrDemoSetDir
 	
-	ldx demoDir				; get current demo direction
-
-	jsr updateLadybugCheckPath		; if tile in front of ladybug is a solid wall
-	beq swrDemoRandomDir			; then choose a random direction
-
 	sec					; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for dots and skulls
 	lda tileMapAddr + 0
 	sbc #24
@@ -648,6 +647,10 @@ masterMos350 = &e374
 	sbc #0
 	sta demoMapAddr + 1
 
+	ldx demoDir				; get current demo direction
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .swrDemoUp
 
 	cpx #moveUp				; if moving up
@@ -655,37 +658,91 @@ masterMos350 = &e374
 	lda spritesY + 0			; and were on the top row
 	cmp #&08
 	beq swrDemoRandomDir			; then choose a random direction
+	bne swrDemoCheckSkull			; else check for skull
 
-	jsr swrDemoCheckSkull			; if skull found
-	beq swrDemoRandomDir			; then choose random direction
-
-	bne swrDemoRandomPercentage		; else choose current direction or random direction
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoDown
 
 	cpx #moveDown				; if moving down
-	bne swrDemoLeftRight
+	bne swrDemoCheckSkull
+
 	lda spritesY + 0			; and were on the bottom row
 	cmp #&a8
 	beq swrDemoRandomDir			; then choose a randpm direction
+	bne swrDemoCheckSkull			; else check for skull
 
-	jsr swrDemoCheckSkull			; if skull found
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoCheckSkull
+
+	lda #mapTileSkull			; if 2 tiles in front of ladybug is a skull
+	jsr swrDemoCheckAhead
 	beq swrDemoRandomDir			; then choose random direction
 
-	bne swrDemoRandomPercentage		; else choose current direction or random direction
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoLeftRight
+.swrDemoCheckSide1
 
-	jsr swrDemoCheckSkull			; if skull found
-	beq swrDemoRandomDir			; then choose random direction
+	txa					; check side 1 of ladybug
+	eor #%00000010
+	tax
 
-						; else choose current direction or random direction
+	jsr updateLadybugCheckPath		; if its a solid wall
+	beq swrDemoCheckSide2			; then try side 2
+
+	lda #mapTileDot				; now check for dot
+	jsr swrDemoCheckAhead
+	bne swrDemoCheckSide2			; if not found try side 2
+
+	stx demoDir				; if dot found then set turn direction
+	jmp swrDemoSetDir
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoCheckSide2
+
+	txa					; check side 2 of ladybug
+	eor #%00000001
+	tax
+
+	jsr updateLadybugCheckPath		; if its a solid wall
+	beq swrDemoRandomPercentage		; then choose current direction or random direction
+
+	lda #mapTileDot				; now check for dot
+	jsr swrDemoCheckAhead
+	beq swrDemoCheckSide2Found		; if not found then
+
+	ldx demoDir				; get current demo direction
+
+	jsr updateLadybugCheckPath		; if 1 tile in front of ladybug is a solid wall
+	beq swrDemoRandomDir			; then choose a random direction else continue in the current direction
+
+.swrDemoCheckSide2Found	
+
+	stx demoDir				; if dot found so set turn direction
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoSetDir
+
+	lda playerInput				; remove all inputs except esc and combine with demo direction
+	and #keyBitEsc
+	ldx demoDir
+	ora swrDemoDirBits, x
+	sta playerInput
+
+	rts					; return
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoRandomPercentage
 
 	jsr random
-	cmp #0.15 * 256				; else have a 15% chance of a random turn
+	cmp #0.35 * 256				; else have a 35% chance of a random turn
 	bcs swrDemoSetDir
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoRandomDir
 
@@ -711,27 +768,12 @@ masterMos350 = &e374
 
 	jmp swrDemoCheckSkull			; and check that its not a skull
 
-.swrDemoSetDir
-
-	lda playerInput				; remove all inputs except esc and combine with demo direction
-	and #keyBitEsc
-	ldx demoDir
-	ora swrDemoDirBits, x
-	sta playerInput
-
-.swrDemoExit
-
-	rts					; return
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoCheckSkull
+.swrDemoCheckAhead
 
-	ldx demoDir				; read direction
 	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
-
-	lda (demoMapAddr), y			; check for skull aand return with result
-	cmp #mapTileSkull
+	cmp (demoMapAddr), y			; check for tile and return with result
 
 	rts					
 

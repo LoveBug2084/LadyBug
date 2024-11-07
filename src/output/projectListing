@@ -13,8 +13,8 @@ screen ram    &47F0 - &7FFF , 14352 bytes
 ----------------------------------------------------
 high ram      &8000 - &AFFF , 12288 bytes
 ----------------------------------------------------
-used          &8000 - &AEDC , 11997  bytes
-free          &AEDD - &AFFF , 291 bytes
+used          &8000 - &AEFA , 12027  bytes
+free          &AEFB - &AFFF , 261 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -783,79 +783,98 @@ bootstrap     &4800 - &4949 , 330 bytes
      AE58   32
 .swrDemo
      AE59   A5 CD      LDA &CD
-     AE5B   F0 75      BEQ &AED2
-     AE5D   A5 C8      LDA &C8
-     AE5F   05 C9      ORA &C9
-     AE61   D0 64      BNE &AEC7
-     AE63   A6 CE      LDX &CE
-     AE65   20 95 26   JSR &2695
-     AE68   F0 3B      BEQ &AEA5
-     AE6A   38         SEC
-     AE6B   A5 5C      LDA &5C
-     AE6D   E9 18      SBC #&18
-     AE6F   85 CF      STA &CF
-     AE71   A5 5D      LDA &5D
-     AE73   E9 00      SBC #&00
-     AE75   85 D0      STA &D0
+     AE5B   D0 01      BNE &AE5E
+     AE5D   60         RTS
+.swrDemoCheckGrid
+     AE5E   A5 C8      LDA &C8
+     AE60   05 C9      ORA &C9
+     AE62   D0 5C      BNE &AEC0
+     AE64   38         SEC
+     AE65   A5 5C      LDA &5C
+     AE67   E9 18      SBC #&18
+     AE69   85 CF      STA &CF
+     AE6B   A5 5D      LDA &5D
+     AE6D   E9 00      SBC #&00
+     AE6F   85 D0      STA &D0
+     AE71   A6 CE      LDX &CE
 .swrDemoUp
-     AE77   E0 00      CPX #&00
-     AE79   D0 0D      BNE &AE88
-     AE7B   A5 6C      LDA &6C
-     AE7D   C9 08      CMP #&08
-     AE7F   F0 24      BEQ &AEA5
-     AE81   20 D3 AE   JSR &AED3
-     AE84   F0 1F      BEQ &AEA5
-     AE86   D0 16      BNE &AE9E
+     AE73   E0 00      CPX #&00
+     AE75   D0 08      BNE &AE7F
+     AE77   A5 6C      LDA &6C
+     AE79   C9 08      CMP #&08
+     AE7B   F0 56      BEQ &AED3
+     AE7D   D0 0C      BNE &AE8B
 .swrDemoDown
-     AE88   E0 01      CPX #&01
-     AE8A   D0 0D      BNE &AE99
-     AE8C   A5 6C      LDA &6C
-     AE8E   C9 A8      CMP #&A8
-     AE90   F0 13      BEQ &AEA5
-     AE92   20 D3 AE   JSR &AED3
-     AE95   F0 0E      BEQ &AEA5
-     AE97   D0 05      BNE &AE9E
-.swrDemoLeftRight
-     AE99   20 D3 AE   JSR &AED3
-     AE9C   F0 07      BEQ &AEA5
-.swrDemoRandomPercentage
-     AE9E   20 00 01   JSR &0100
-     AEA1   C9 26      CMP #&26
-     AEA3   B0 22      BCS &AEC7
-.swrDemoRandomDir
-     AEA5   A0 01      LDY #&01
-     AEA7   B1 5C      LDA (&5C),Y
-     AEA9   A0 17      LDY #&17
-     AEAB   31 5C      AND (&5C),Y
-     AEAD   A0 19      LDY #&19
-     AEAF   31 5C      AND (&5C),Y
-     AEB1   A0 2F      LDY #&2F
-     AEB3   31 5C      AND (&5C),Y
-     AEB5   30 10      BMI &AEC7
-.swrDemoRandomDirLoop
-     AEB7   20 00 01   JSR &0100
-     AEBA   29 03      AND #&03
-     AEBC   AA         TAX
-     AEBD   20 95 26   JSR &2695
-     AEC0   F0 F5      BEQ &AEB7
-     AEC2   86 CE      STX &CE
-     AEC4   4C D3 AE   JMP &AED3
-.swrDemoSetDir
-     AEC7   A5 C2      LDA &C2
-     AEC9   29 20      AND #&20
-     AECB   A6 CE      LDX &CE
-     AECD   1D 51 AE   ORA &AE51,X
-     AED0   85 C2      STA &C2
-.swrDemoExit
-     AED2   60         RTS
+     AE7F   E0 01      CPX #&01
+     AE81   D0 08      BNE &AE8B
+     AE83   A5 6C      LDA &6C
+     AE85   C9 A8      CMP #&A8
+     AE87   F0 4A      BEQ &AED3
+     AE89   D0 00      BNE &AE8B
 .swrDemoCheckSkull
-     AED3   A6 CE      LDX &CE
-     AED5   BC 55 AE   LDY &AE55,X
-     AED8   B1 CF      LDA (&CF),Y
-     AEDA   C9 2C      CMP #&2C
-     AEDC   60         RTS
+     AE8B   A9 2C      LDA #&2C
+     AE8D   20 F5 AE   JSR &AEF5
+     AE90   F0 41      BEQ &AED3
+.swrDemoCheckSide1
+     AE92   8A         TXA
+     AE93   49 02      EOR #&02
+     AE95   AA         TAX
+     AE96   20 95 26   JSR &2695
+     AE99   F0 0C      BEQ &AEA7
+     AE9B   A9 01      LDA #&01
+     AE9D   20 F5 AE   JSR &AEF5
+     AEA0   D0 05      BNE &AEA7
+     AEA2   86 CE      STX &CE
+     AEA4   4C C0 AE   JMP &AEC0
+.swrDemoCheckSide2
+     AEA7   8A         TXA
+     AEA8   49 01      EOR #&01
+     AEAA   AA         TAX
+     AEAB   20 95 26   JSR &2695
+     AEAE   F0 1C      BEQ &AECC
+     AEB0   A9 01      LDA #&01
+     AEB2   20 F5 AE   JSR &AEF5
+     AEB5   F0 07      BEQ &AEBE
+     AEB7   A6 CE      LDX &CE
+     AEB9   20 95 26   JSR &2695
+     AEBC   F0 15      BEQ &AED3
+.swrDemoCheckSide2Found
+     AEBE   86 CE      STX &CE
+.swrDemoSetDir
+     AEC0   A5 C2      LDA &C2
+     AEC2   29 20      AND #&20
+     AEC4   A6 CE      LDX &CE
+     AEC6   1D 51 AE   ORA &AE51,X
+     AEC9   85 C2      STA &C2
+     AECB   60         RTS
+.swrDemoRandomPercentage
+     AECC   20 00 01   JSR &0100
+     AECF   C9 59      CMP #&59
+     AED1   B0 ED      BCS &AEC0
+.swrDemoRandomDir
+     AED3   A0 01      LDY #&01
+     AED5   B1 5C      LDA (&5C),Y
+     AED7   A0 17      LDY #&17
+     AED9   31 5C      AND (&5C),Y
+     AEDB   A0 19      LDY #&19
+     AEDD   31 5C      AND (&5C),Y
+     AEDF   A0 2F      LDY #&2F
+     AEE1   31 5C      AND (&5C),Y
+     AEE3   30 DB      BMI &AEC0
+.swrDemoRandomDirLoop
+     AEE5   20 00 01   JSR &0100
+     AEE8   29 03      AND #&03
+     AEEA   AA         TAX
+     AEEB   20 95 26   JSR &2695
+     AEEE   F0 F5      BEQ &AEE5
+     AEF0   86 CE      STX &CE
+     AEF2   4C 8B AE   JMP &AE8B
+.swrDemoCheckAhead
+     AEF5   BC 55 AE   LDY &AE55,X
+     AEF8   D1 CF      CMP (&CF),Y
+     AEFA   60         RTS
 .swramLastAddr
-     AEDD
+     AEFB
 .loaderMain
      AF00
 .loaderMessages
@@ -3442,7 +3461,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      119E   04
      119F   03
 .mainMenu
-     11A0   A9 06      LDA #&06
+     11A0   A9 89      LDA #&89
      11A2   85 02      STA &02
      11A4   A9 00      LDA #&00
      11A6   85 CD      STA &CD
@@ -3466,7 +3485,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      11C9   F0 11      BEQ &11DC
      11CB   20 51 12   JSR &1251
      11CE   F0 F7      BEQ &11C7
-     11D0   A9 06      LDA #&06
+     11D0   A9 89      LDA #&89
      11D2   85 02      STA &02
      11D4   20 8F 12   JSR &128F
      11D7   90 DF      BCC &11B8
@@ -3744,7 +3763,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      140F   03
      1410   43 4F 4E ...
      141B   FF
-     141C   A9 06      LDA #&06
+     141C   A9 89      LDA #&89
      141E   85 02      STA &02
      1420   18         CLC
      1421   60         RTS
@@ -4072,7 +4091,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      16A9   20 76 15   JSR &1576
      16AC   4C E3 15   JMP &15E3
 .drawScoreTable
-     16AF   A9 06      LDA #&06
+     16AF   A9 89      LDA #&89
      16B1   85 02      STA &02
      16B3   A9 00      LDA #&00
      16B5   85 CD      STA &CD
