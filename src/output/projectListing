@@ -13,8 +13,8 @@ screen ram    &47F0 - &7FFF , 14352 bytes
 ----------------------------------------------------
 high ram      &8000 - &AFFF , 12288 bytes
 ----------------------------------------------------
-used          &8000 - &AEFA , 12027  bytes
-free          &AEFB - &AFFF , 261 bytes
+used          &8000 - &AEF3 , 12020  bytes
+free          &AEF4 - &AFFF , 268 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -788,7 +788,7 @@ bootstrap     &4800 - &4949 , 330 bytes
 .swrDemoCheckGrid
      AE5E   A5 C8      LDA &C8
      AE60   05 C9      ORA &C9
-     AE62   D0 5C      BNE &AEC0
+     AE62   D0 55      BNE &AEB9
      AE64   38         SEC
      AE65   A5 5C      LDA &5C
      AE67   E9 18      SBC #&18
@@ -802,19 +802,19 @@ bootstrap     &4800 - &4949 , 330 bytes
      AE75   D0 08      BNE &AE7F
      AE77   A5 6C      LDA &6C
      AE79   C9 08      CMP #&08
-     AE7B   F0 56      BEQ &AED3
+     AE7B   F0 4F      BEQ &AECC
      AE7D   D0 0C      BNE &AE8B
 .swrDemoDown
      AE7F   E0 01      CPX #&01
      AE81   D0 08      BNE &AE8B
      AE83   A5 6C      LDA &6C
      AE85   C9 A8      CMP #&A8
-     AE87   F0 4A      BEQ &AED3
+     AE87   F0 43      BEQ &AECC
      AE89   D0 00      BNE &AE8B
 .swrDemoCheckSkull
      AE8B   A9 2C      LDA #&2C
-     AE8D   20 F5 AE   JSR &AEF5
-     AE90   F0 41      BEQ &AED3
+     AE8D   20 EE AE   JSR &AEEE
+     AE90   F0 3A      BEQ &AECC
 .swrDemoCheckSide1
      AE92   8A         TXA
      AE93   49 02      EOR #&02
@@ -822,59 +822,55 @@ bootstrap     &4800 - &4949 , 330 bytes
      AE96   20 95 26   JSR &2695
      AE99   F0 0C      BEQ &AEA7
      AE9B   A9 01      LDA #&01
-     AE9D   20 F5 AE   JSR &AEF5
+     AE9D   20 EE AE   JSR &AEEE
      AEA0   D0 05      BNE &AEA7
      AEA2   86 CE      STX &CE
-     AEA4   4C C0 AE   JMP &AEC0
+     AEA4   4C B9 AE   JMP &AEB9
 .swrDemoCheckSide2
      AEA7   8A         TXA
      AEA8   49 01      EOR #&01
      AEAA   AA         TAX
      AEAB   20 95 26   JSR &2695
-     AEAE   F0 1C      BEQ &AECC
+     AEAE   F0 15      BEQ &AEC5
      AEB0   A9 01      LDA #&01
-     AEB2   20 F5 AE   JSR &AEF5
-     AEB5   F0 07      BEQ &AEBE
-     AEB7   A6 CE      LDX &CE
-     AEB9   20 95 26   JSR &2695
-     AEBC   F0 15      BEQ &AED3
-.swrDemoCheckSide2Found
-     AEBE   86 CE      STX &CE
+     AEB2   20 EE AE   JSR &AEEE
+     AEB5   D0 0E      BNE &AEC5
+     AEB7   86 CE      STX &CE
 .swrDemoSetDir
-     AEC0   A5 C2      LDA &C2
-     AEC2   29 20      AND #&20
-     AEC4   A6 CE      LDX &CE
-     AEC6   1D 51 AE   ORA &AE51,X
-     AEC9   85 C2      STA &C2
-     AECB   60         RTS
+     AEB9   A5 C2      LDA &C2
+     AEBB   29 20      AND #&20
+     AEBD   A6 CE      LDX &CE
+     AEBF   1D 51 AE   ORA &AE51,X
+     AEC2   85 C2      STA &C2
+     AEC4   60         RTS
 .swrDemoRandomPercentage
-     AECC   20 00 01   JSR &0100
-     AECF   C9 59      CMP #&59
-     AED1   B0 ED      BCS &AEC0
+     AEC5   20 00 01   JSR &0100
+     AEC8   C9 26      CMP #&26
+     AECA   B0 ED      BCS &AEB9
 .swrDemoRandomDir
-     AED3   A0 01      LDY #&01
-     AED5   B1 5C      LDA (&5C),Y
-     AED7   A0 17      LDY #&17
-     AED9   31 5C      AND (&5C),Y
-     AEDB   A0 19      LDY #&19
-     AEDD   31 5C      AND (&5C),Y
-     AEDF   A0 2F      LDY #&2F
-     AEE1   31 5C      AND (&5C),Y
-     AEE3   30 DB      BMI &AEC0
+     AECC   A0 01      LDY #&01
+     AECE   B1 5C      LDA (&5C),Y
+     AED0   A0 17      LDY #&17
+     AED2   31 5C      AND (&5C),Y
+     AED4   A0 19      LDY #&19
+     AED6   31 5C      AND (&5C),Y
+     AED8   A0 2F      LDY #&2F
+     AEDA   31 5C      AND (&5C),Y
+     AEDC   30 DB      BMI &AEB9
 .swrDemoRandomDirLoop
-     AEE5   20 00 01   JSR &0100
-     AEE8   29 03      AND #&03
-     AEEA   AA         TAX
-     AEEB   20 95 26   JSR &2695
-     AEEE   F0 F5      BEQ &AEE5
-     AEF0   86 CE      STX &CE
-     AEF2   4C 8B AE   JMP &AE8B
+     AEDE   20 00 01   JSR &0100
+     AEE1   29 03      AND #&03
+     AEE3   AA         TAX
+     AEE4   20 95 26   JSR &2695
+     AEE7   F0 F5      BEQ &AEDE
+     AEE9   86 CE      STX &CE
+     AEEB   4C 8B AE   JMP &AE8B
 .swrDemoCheckAhead
-     AEF5   BC 55 AE   LDY &AE55,X
-     AEF8   D1 CF      CMP (&CF),Y
-     AEFA   60         RTS
+     AEEE   BC 55 AE   LDY &AE55,X
+     AEF1   D1 CF      CMP (&CF),Y
+     AEF3   60         RTS
 .swramLastAddr
-     AEFB
+     AEF4
 .loaderMain
      AF00
 .loaderMessages

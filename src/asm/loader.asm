@@ -688,10 +688,10 @@ masterMos350 = &e374
 	eor #%00000010
 	tax
 
-	jsr updateLadybugCheckPath		; if its a solid wall
+	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
 	beq swrDemoCheckSide2			; then try side 2
 
-	lda #mapTileDot				; now check for dot
+	lda #mapTileDot				; now check 2 tiles to the side for a dot
 	jsr swrDemoCheckAhead
 	bne swrDemoCheckSide2			; if not found try side 2
 
@@ -706,21 +706,15 @@ masterMos350 = &e374
 	eor #%00000001
 	tax
 
-	jsr updateLadybugCheckPath		; if its a solid wall
-	beq swrDemoRandomPercentage		; then choose current direction or random direction
+	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
+	beq swrDemoRandomPercentage		; then choose a random percentage turn
 
-	lda #mapTileDot				; now check for dot
+	lda #mapTileDot				; now check 2 tiles to the side for a dot
 	jsr swrDemoCheckAhead
-	beq swrDemoCheckSide2Found		; if not found then
+	bne swrDemoRandomPercentage		; if not found then choose a random percentage turn
 
-	ldx demoDir				; get current demo direction
-
-	jsr updateLadybugCheckPath		; if 1 tile in front of ladybug is a solid wall
-	beq swrDemoRandomDir			; then choose a random direction else continue in the current direction
-
-.swrDemoCheckSide2Found	
-
-	stx demoDir				; if dot found so set turn direction
+	stx demoDir				; if dot found then set turn direction
+	; continue down to set direction
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -739,7 +733,7 @@ masterMos350 = &e374
 .swrDemoRandomPercentage
 
 	jsr random
-	cmp #0.35 * 256				; else have a 35% chance of a random turn
+	cmp #0.15 * 256				; 15% chance to turn randomly otherwise stay on current direction
 	bcs swrDemoSetDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -747,7 +741,7 @@ masterMos350 = &e374
 .swrDemoRandomDir
 
 	ldy #1
-	lda (tileMapAddr), y			; if all directions are blocked then give up
+	lda (tileMapAddr), y			; if all directions are blocked by a solid wall then give up and stay on current direction
 	ldy #23
 	and (tileMapAddr), y
 	ldy #25
@@ -759,14 +753,14 @@ masterMos350 = &e374
 
 .swrDemoRandomDirLoop
 
-	jsr random				; pick a random direction that is not a solid wall
+	jsr random				; else pick a random direction that is not a solid wall
 	and #%00000011
 	tax
 	jsr updateLadybugCheckPath
 	beq swrDemoRandomDirLoop
 	stx demoDir
 
-	jmp swrDemoCheckSkull			; and check that its not a skull
+	jmp swrDemoCheckSkull			; and go check for skulls and dots again
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -779,7 +773,7 @@ masterMos350 = &e374
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-; regular 3x3 box
+; regular 3x3 box (tileMapAddr)
 ; ---------------
 ; |    | 01 |    |
 ; ---------------
@@ -788,7 +782,7 @@ masterMos350 = &e374
 ; |    | 47 |    |
 ; ---------------
 
-; 5x5 box tileMapAddr - 24
+; extended 5x5 box (demoMapAddr) = tileMapAddr - 24
 ; --------------------------
 ; |    |    | 02 |    |    |
 ; --------------------------
