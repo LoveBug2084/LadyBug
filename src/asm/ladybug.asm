@@ -4030,7 +4030,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda demoMode				; if demo mode
 	beq instructionsDrawAll
 
-	sec					; then return with carry set (start demo game)
+	sec					; then return with carry set (skip instructions, start demo game)
 	rts
 
 .instructionsDrawAll
@@ -5098,8 +5098,8 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr drawScoreTable			; draw the high scores page and wait for start or esc to be pressed
 	
-	lda demoMode				; if high score page idle timed out then do demo mode
-	bne mainMenuProcessReturnTrue
+	lda demoMode				; if high score page idle timed out then back to main menu
+	bne mainMenuProcessReturnFalse
 
 	jsr mainMenuDraw			; redraw main menu
 
@@ -5682,9 +5682,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda #idleTime				; reset the idle timeout
 	sta idleCounter
 
-	lda #0					; disable demo mode
-	sta demoMode
-
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	jsr drawString				; draw 3 red hearts, "BEST PLAYERS" in skull color, 3 red hearts
@@ -5755,12 +5752,12 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 .drawScoreTableRelease
 
-	lda idleCounter				; if idle counter timed out then enable demo and return
-	beq drawScoreTableEnableDemo
+	lda idleCounter				; if idle counter timed out then return
+	beq drawScoreTableExit
 
 	jsr drawScoreTableFunctions		; update colors and scan keyboard
 
-	bne drawScoreTableRelease			; if key pressed then wait for key release
+	bne drawScoreTableRelease		; if key pressed then wait for key release
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; do functions and wait for start/esc pressed
@@ -5779,14 +5776,12 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda idleCounter				; else if idle counter timed out then return
 	bne drawScoreTablePress			; else loop back and wait for key press
 
-.drawScoreTableEnableDemo
-
-	lda #&ff				; enable demoMode
-	sta demoMode
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawScoreTableExit
+
+	lda #idleTime				; reset the idle timeout
+	sta idleCounter
 
 	jsr playSoundSilence			; kill any sounds playing
 	
