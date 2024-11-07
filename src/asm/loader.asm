@@ -798,6 +798,84 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrKeyboardScan					scan all keys (used when redefining input keys)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			C			clear if no key pressed, set if key pressed
+;			A			key index if key was pressed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.keyScanAscii
+
+	equs "0123456789-^\", chrLeft, chrRight
+	equs "QWERTYUIOP@[_", chrUp, chrDown
+	equs "ASDFGHJKL;:]"
+	equs "ZXCVBNM,./"
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.keyScanCodes
+
+	equb key0, key1, key2, key3, key4, key5, key6, key7, key8, key9, keyMinus, keyRaise, keyBackslash, keyLeft, keyRight
+	equb keyQ, keyW, keyE, keyR, keyT, keyY, keyU, keyI, keyO, keyP, keyAt, keyBracketOpen, keyUnderscore, keyUp, keyDown
+	equb keyA, keyS, keyD, keyF, keyG, keyH, keyJ, keyK, keyL, keySemicolon, keyColon, keyBracketClosed
+	equb keyZ, keyX, keyC, keyV, keyB, keyN, keyM, keyComma, keyPeriod, keySlash
+
+.keyScanCodesEnd
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrKeyboardScan
+
+	stx swrKeyboardScanSaveX			; save register
+
+	lda #%01111111				; set port A bit 7 as input ( from keyboard output )
+	sta via1PortDdrA
+	
+	lda #sbKeyboard + sbLow			; keyboard -enable low (enable keyboard output to port a bit 7 input)
+	sta via1PortB
+	
+	ldx #(keyScanCodesEnd - keyScanCodes) - 1; start at end of table
+	
+.swrKeyboardScanLoop				; repeat
+
+	lda keyScanCodes, x			; get key scan code from table
+
+	sta via1PortA				; select key in keyboard matrix
+
+	lda via1PortA				; read key pressed status from bit 7
+
+	bmi swrKeyboardScanPressed			; if pressed then return with scancode
+
+	dex					; until all tested
+	bpl swrKeyboardScanLoop
+
+	clc					; no key pressed so return with false
+
+.swrKeyboardScanExit
+
+	lda #sbKeyboard + sbHigh		; keyboard -enable high (disable keyboard output)
+	sta via1PortB
+	
+	lda #%11111111				; set port A all bits output
+	sta via1PortDdrA
+
+	txa					; A = scan index or ff (no key pressed)
+
+	ldx swrKeyboardScanSaveX			; restore register
+
+	rts					; return
+
+.swrKeyboardScanPressed
+
+	sec					; key pressed so set true status
+	
+	bcs swrKeyboardScanExit			; return with keyboard scan code
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of sideways ram code
 
 .swramLastAddr

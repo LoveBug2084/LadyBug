@@ -4012,7 +4012,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; instructions					display game instructions and wait for start or esc to be pressed
+; instructions					display game instructions and wait for start, esc to be pressed or idle timeout
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .instructionsLetters
@@ -4127,12 +4127,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #sfxObject				; play object sound effect
 	jsr playSound
 
+	lda #idleTime				; reset the idle timeout
+	sta idleCounter
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait keyboard/joystick released
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .instructionsRelease				; repeat
+
+	lda idleCounter				; if idle counter timed out then return to main menu
+	beq instructionsReturnFalse
 
 	jsr instructionsFunctions		; update colors and get input bits (keyboard/joystick)
 
@@ -4143,6 +4148,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .instructionsPress				; repeat
+
+	lda idleCounter				; if idle counter timed out then return to main menu
+	beq instructionsReturnFalse
 
 	jsr instructionsFunctions		; update colors and get input bits (keyboard/joystick)
 
@@ -4176,8 +4184,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	sec					; return true
 	rts
-
-
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; functions used in instructions
@@ -4477,84 +4483,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 .ladybugDeathAnimationDrawAngelExit
 
 	jmp ladybugDeathAnimationCheckMusic	; go check if death animation music is complete (end of animation)
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; keyboardScan					scan all keys (used when redefining input keys)
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry parameters	none
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			C			clear if no key pressed, set if key pressed
-;			A			key index if key was pressed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.keyScanAscii
-
-	equs "0123456789-^\", chrLeft, chrRight
-	equs "QWERTYUIOP@[_", chrUp, chrDown
-	equs "ASDFGHJKL;:]"
-	equs "ZXCVBNM,./"
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.keyScanCodes
-
-	equb key0, key1, key2, key3, key4, key5, key6, key7, key8, key9, keyMinus, keyRaise, keyBackslash, keyLeft, keyRight
-	equb keyQ, keyW, keyE, keyR, keyT, keyY, keyU, keyI, keyO, keyP, keyAt, keyBracketOpen, keyUnderscore, keyUp, keyDown
-	equb keyA, keyS, keyD, keyF, keyG, keyH, keyJ, keyK, keyL, keySemicolon, keyColon, keyBracketClosed
-	equb keyZ, keyX, keyC, keyV, keyB, keyN, keyM, keyComma, keyPeriod, keySlash
-
-.keyScanCodesEnd
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.keyboardScan
-
-	stx keyboardScanSaveX			; save register
-
-	lda #%01111111				; set port A bit 7 as input ( from keyboard output )
-	sta via1PortDdrA
-	
-	lda #sbKeyboard + sbLow			; keyboard -enable low (enable keyboard output to port a bit 7 input)
-	sta via1PortB
-	
-	ldx #(keyScanCodesEnd - keyScanCodes) - 1; start at end of table
-	
-.keyboardScanLoop				; repeat
-
-	lda keyScanCodes, x			; get key scan code from table
-
-	sta via1PortA				; select key in keyboard matrix
-
-	lda via1PortA				; read key pressed status from bit 7
-
-	bmi keyboardScanPressed			; if pressed then return with scancode
-
-	dex					; until all tested
-	bpl keyboardScanLoop
-
-	clc					; no key pressed so return with false
-
-.keyboardScanExit
-
-	lda #sbKeyboard + sbHigh		; keyboard -enable high (disable keyboard output)
-	sta via1PortB
-	
-	lda #%11111111				; set port A all bits output
-	sta via1PortDdrA
-
-	txa					; A = scan index or ff (no key pressed)
-
-	ldx keyboardScanSaveX			; restore register
-
-	rts					; return
-
-.keyboardScanPressed
-
-	sec					; key pressed so set true status
-	
-	bcs keyboardScanExit			; return with keyboard scan code
 
 
 
@@ -5340,7 +5268,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr mainMenuFunctions			; update colors animation movement etc
 
-	jsr keyboardScan			; wait for key release
+	jsr swrKeyboardScan			; wait for key release
 	bcs mainMenuProcessKeyboardKey
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5351,7 +5279,7 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 
 	jsr mainMenuFunctions			; update colors animation movement etc
 
-	jsr keyboardScan			; wait for key press
+	jsr swrKeyboardScan			; wait for key press
 	bcc mainMenuProcessKeyboardKeyWaitPress
 
 	rts					; return with key press index in A

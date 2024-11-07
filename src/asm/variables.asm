@@ -203,7 +203,7 @@ soundChannels		= 6			; number of concurrent sound effects during game play
 .mainMenuCursor		skip 1			; main menu cursor position
 .mainMenuCursorOld	skip 1			; main menu previous cursor position
 
-.keyboardScanSaveX	skip 1			; preserve register
+.swrKeyboardScanSaveX	skip 1			; preserve register
 
 .drawScoreTableZero	skip 1			; leading zero blanking flag for drawing score table
 
