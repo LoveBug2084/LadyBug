@@ -10,8 +10,10 @@ open terminal in the src directory and type **./build**
 
 
 #
-**A map editor is now included with the game allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next. Every six rounds the map sequence repeats.**
-
+A map editor is now included with the game allowing the player to create/edit/save their own mazes to disk, choose any 3 of the available mazes to be played in game with each maze played for 2 rounds before advancing to the next. Every six rounds the map sequence repeats.\
+\
+A demo mode has been added and starts if the game is left idle on the main menu for 22 seconds\
+The main menu sound option now has 3 settings OFF, ON (Game sounds only), DEMO (Game and Demo sounds).
 
 #
 **Tested on the following computer models using emulators**\
