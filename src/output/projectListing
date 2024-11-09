@@ -13,8 +13,8 @@ screen ram    &47F0 - &7FFF , 14352 bytes
 ----------------------------------------------------
 high ram      &8000 - &AFFF , 12288 bytes
 ----------------------------------------------------
-used          &8000 - &AF89 , 12170  bytes
-free          &AF8A - &AFFF , 118 bytes
+used          &8000 - &AF76 , 12151  bytes
+free          &AF77 - &AFFF , 137 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -788,7 +788,7 @@ bootstrap     &4800 - &4949 , 330 bytes
 .swrDemoCheckGrid
      AE5E   A5 C8      LDA &C8
      AE60   05 C9      ORA &C9
-     AE62   D0 55      BNE &AEB9
+     AE62   D0 42      BNE &AEA6
      AE64   38         SEC
      AE65   A5 5C      LDA &5C
      AE67   E9 18      SBC #&18
@@ -797,169 +797,157 @@ bootstrap     &4800 - &4949 , 330 bytes
      AE6D   E9 00      SBC #&00
      AE6F   85 D0      STA &D0
      AE71   A6 CE      LDX &CE
-.swrDemoUp
-     AE73   E0 00      CPX #&00
-     AE75   D0 08      BNE &AE7F
-     AE77   A5 6C      LDA &6C
-     AE79   C9 08      CMP #&08
-     AE7B   F0 4F      BEQ &AECC
-     AE7D   D0 0C      BNE &AE8B
-.swrDemoDown
-     AE7F   E0 01      CPX #&01
-     AE81   D0 08      BNE &AE8B
-     AE83   A5 6C      LDA &6C
-     AE85   C9 A8      CMP #&A8
-     AE87   F0 43      BEQ &AECC
-     AE89   D0 00      BNE &AE8B
+     AE73   20 07 26   JSR &2607
+     AE76   F0 41      BEQ &AEB9
 .swrDemoCheckSkull
-     AE8B   A9 2C      LDA #&2C
-     AE8D   20 EE AE   JSR &AEEE
-     AE90   F0 3A      BEQ &AECC
+     AE78   A9 2C      LDA #&2C
+     AE7A   20 DB AE   JSR &AEDB
+     AE7D   F0 3A      BEQ &AEB9
 .swrDemoCheckSide1
-     AE92   8A         TXA
-     AE93   49 02      EOR #&02
-     AE95   AA         TAX
-     AE96   20 07 26   JSR &2607
-     AE99   F0 0C      BEQ &AEA7
-     AE9B   A9 01      LDA #&01
-     AE9D   20 EE AE   JSR &AEEE
-     AEA0   D0 05      BNE &AEA7
-     AEA2   86 CE      STX &CE
-     AEA4   4C B9 AE   JMP &AEB9
+     AE7F   8A         TXA
+     AE80   49 02      EOR #&02
+     AE82   AA         TAX
+     AE83   20 07 26   JSR &2607
+     AE86   F0 0C      BEQ &AE94
+     AE88   A9 01      LDA #&01
+     AE8A   20 DB AE   JSR &AEDB
+     AE8D   D0 05      BNE &AE94
+     AE8F   86 CE      STX &CE
+     AE91   4C A6 AE   JMP &AEA6
 .swrDemoCheckSide2
-     AEA7   8A         TXA
-     AEA8   49 01      EOR #&01
-     AEAA   AA         TAX
-     AEAB   20 07 26   JSR &2607
-     AEAE   F0 15      BEQ &AEC5
-     AEB0   A9 01      LDA #&01
-     AEB2   20 EE AE   JSR &AEEE
-     AEB5   D0 0E      BNE &AEC5
-     AEB7   86 CE      STX &CE
+     AE94   8A         TXA
+     AE95   49 01      EOR #&01
+     AE97   AA         TAX
+     AE98   20 07 26   JSR &2607
+     AE9B   F0 15      BEQ &AEB2
+     AE9D   A9 01      LDA #&01
+     AE9F   20 DB AE   JSR &AEDB
+     AEA2   D0 0E      BNE &AEB2
+     AEA4   86 CE      STX &CE
 .swrDemoSetDir
-     AEB9   A5 C2      LDA &C2
-     AEBB   29 20      AND #&20
-     AEBD   A6 CE      LDX &CE
-     AEBF   1D 51 AE   ORA &AE51,X
-     AEC2   85 C2      STA &C2
-     AEC4   60         RTS
+     AEA6   A5 C2      LDA &C2
+     AEA8   29 20      AND #&20
+     AEAA   A6 CE      LDX &CE
+     AEAC   1D 51 AE   ORA &AE51,X
+     AEAF   85 C2      STA &C2
+     AEB1   60         RTS
 .swrDemoRandomPercentage
-     AEC5   20 00 01   JSR &0100
-     AEC8   C9 26      CMP #&26
-     AECA   B0 ED      BCS &AEB9
+     AEB2   20 00 01   JSR &0100
+     AEB5   C9 26      CMP #&26
+     AEB7   B0 ED      BCS &AEA6
 .swrDemoRandomDir
-     AECC   A0 01      LDY #&01
-     AECE   B1 5C      LDA (&5C),Y
-     AED0   A0 17      LDY #&17
-     AED2   31 5C      AND (&5C),Y
-     AED4   A0 19      LDY #&19
-     AED6   31 5C      AND (&5C),Y
-     AED8   A0 2F      LDY #&2F
-     AEDA   31 5C      AND (&5C),Y
-     AEDC   30 DB      BMI &AEB9
+     AEB9   A0 01      LDY #&01
+     AEBB   B1 5C      LDA (&5C),Y
+     AEBD   A0 17      LDY #&17
+     AEBF   31 5C      AND (&5C),Y
+     AEC1   A0 19      LDY #&19
+     AEC3   31 5C      AND (&5C),Y
+     AEC5   A0 2F      LDY #&2F
+     AEC7   31 5C      AND (&5C),Y
+     AEC9   30 DB      BMI &AEA6
 .swrDemoRandomDirLoop
-     AEDE   20 00 01   JSR &0100
-     AEE1   29 03      AND #&03
-     AEE3   AA         TAX
-     AEE4   20 07 26   JSR &2607
-     AEE7   F0 F5      BEQ &AEDE
-     AEE9   86 CE      STX &CE
-     AEEB   4C 8B AE   JMP &AE8B
-.swrDemoCheckAhead
-     AEEE   BC 55 AE   LDY &AE55,X
-     AEF1   D1 CF      CMP (&CF),Y
-     AEF3   60         RTS
+     AECB   20 00 01   JSR &0100
+     AECE   29 03      AND #&03
+     AED0   AA         TAX
+     AED1   20 07 26   JSR &2607
+     AED4   F0 F5      BEQ &AECB
+     AED6   86 CE      STX &CE
+     AED8   4C 78 AE   JMP &AE78
+.swrDemoCheckTile
+     AEDB   BC 55 AE   LDY &AE55,X
+     AEDE   D1 CF      CMP (&CF),Y
+     AEE0   60         RTS
 .keyScanAscii
-     AEF4   30 31 32 ...
-     AF01   3E
-     AF02   3F
-     AF03   51 57 45 ...
-     AF10   3C
-     AF11   3D
-     AF12   41 53 44 ...
-     AF1E   5A 58 43 ...
+     AEE1   30 31 32 ...
+     AEEE   3E
+     AEEF   3F
+     AEF0   51 57 45 ...
+     AEFD   3C
+     AEFE   3D
+     AEFF   41 53 44 ...
+     AF0B   5A 58 43 ...
 .keyScanCodes
-     AF28   27
-     AF29   30
-     AF2A   31
-     AF2B   11
-     AF2C   12
-     AF2D   13
-     AF2E   34
-     AF2F   24
-     AF30   15
-     AF31   26
-     AF32   17
-     AF33   18
-     AF34   78
-     AF35   19
-     AF36   79
-     AF37   10
-     AF38   21
-     AF39   22
-     AF3A   33
-     AF3B   23
-     AF3C   44
-     AF3D   35
-     AF3E   25
-     AF3F   36
-     AF40   37
-     AF41   47
-     AF42   38
-     AF43   28
-     AF44   39
-     AF45   29
-     AF46   41
-     AF47   51
-     AF48   32
-     AF49   43
-     AF4A   53
-     AF4B   54
-     AF4C   45
-     AF4D   46
-     AF4E   56
-     AF4F   57
-     AF50   48
-     AF51   58
-     AF52   61
-     AF53   42
-     AF54   52
-     AF55   63
-     AF56   64
-     AF57   55
-     AF58   65
-     AF59   66
-     AF5A   67
-     AF5B   68
+     AF15   27
+     AF16   30
+     AF17   31
+     AF18   11
+     AF19   12
+     AF1A   13
+     AF1B   34
+     AF1C   24
+     AF1D   15
+     AF1E   26
+     AF1F   17
+     AF20   18
+     AF21   78
+     AF22   19
+     AF23   79
+     AF24   10
+     AF25   21
+     AF26   22
+     AF27   33
+     AF28   23
+     AF29   44
+     AF2A   35
+     AF2B   25
+     AF2C   36
+     AF2D   37
+     AF2E   47
+     AF2F   38
+     AF30   28
+     AF31   39
+     AF32   29
+     AF33   41
+     AF34   51
+     AF35   32
+     AF36   43
+     AF37   53
+     AF38   54
+     AF39   45
+     AF3A   46
+     AF3B   56
+     AF3C   57
+     AF3D   48
+     AF3E   58
+     AF3F   61
+     AF40   42
+     AF41   52
+     AF42   63
+     AF43   64
+     AF44   55
+     AF45   65
+     AF46   66
+     AF47   67
+     AF48   68
 .keyScanCodesEnd
 .swrKeyboardScan
-     AF5C   86 BF      STX &BF
-     AF5E   A9 7F      LDA #&7F
-     AF60   8D 43 FE   STA &FE43
-     AF63   A9 03      LDA #&03
-     AF65   8D 40 FE   STA &FE40
-     AF68   A2 33      LDX #&33
+     AF49   86 BF      STX &BF
+     AF4B   A9 7F      LDA #&7F
+     AF4D   8D 43 FE   STA &FE43
+     AF50   A9 03      LDA #&03
+     AF52   8D 40 FE   STA &FE40
+     AF55   A2 33      LDX #&33
 .swrKeyboardScanLoop
-     AF6A   BD 28 AF   LDA &AF28,X
-     AF6D   8D 4F FE   STA &FE4F
-     AF70   AD 4F FE   LDA &FE4F
-     AF73   30 12      BMI &AF87
-     AF75   CA         DEX
-     AF76   10 F2      BPL &AF6A
-     AF78   18         CLC
+     AF57   BD 15 AF   LDA &AF15,X
+     AF5A   8D 4F FE   STA &FE4F
+     AF5D   AD 4F FE   LDA &FE4F
+     AF60   30 12      BMI &AF74
+     AF62   CA         DEX
+     AF63   10 F2      BPL &AF57
+     AF65   18         CLC
 .swrKeyboardScanExit
-     AF79   A9 0B      LDA #&0B
-     AF7B   8D 40 FE   STA &FE40
-     AF7E   A9 FF      LDA #&FF
-     AF80   8D 43 FE   STA &FE43
-     AF83   8A         TXA
-     AF84   A6 BF      LDX &BF
-     AF86   60         RTS
+     AF66   A9 0B      LDA #&0B
+     AF68   8D 40 FE   STA &FE40
+     AF6B   A9 FF      LDA #&FF
+     AF6D   8D 43 FE   STA &FE43
+     AF70   8A         TXA
+     AF71   A6 BF      LDX &BF
+     AF73   60         RTS
 .swrKeyboardScanPressed
-     AF87   38         SEC
-     AF88   B0 EF      BCS &AF79
+     AF74   38         SEC
+     AF75   B0 EF      BCS &AF66
 .swramLastAddr
-     AF8A
+     AF77
 .loaderMain
      B000
 .loaderMessages
@@ -3680,13 +3668,13 @@ bootstrap     &4800 - &4949 , 330 bytes
      12C3   FF
      12C4   20 98 13   JSR &1398
      12C7   A8         TAY
-     12C8   B9 28 AF   LDA &AF28,Y
+     12C8   B9 15 AF   LDA &AF15,Y
      12CB   8D 88 80   STA &8088
      12CE   20 C4 21   JSR &21C4
      12D1   7A 74
      12D3   07
      12D4   FF
-     12D5   B9 F4 AE   LDA &AEF4,Y
+     12D5   B9 E1 AE   LDA &AEE1,Y
      12D8   8D 8C 80   STA &808C
      12DB   20 89 06   JSR &0689
      12DE   A9 05      LDA #&05
@@ -3699,7 +3687,7 @@ bootstrap     &4800 - &4949 , 330 bytes
 .mainMenuProcessKeyboardDown
      12EE   20 98 13   JSR &1398
      12F1   A8         TAY
-     12F2   B9 28 AF   LDA &AF28,Y
+     12F2   B9 15 AF   LDA &AF15,Y
      12F5   CD 88 80   CMP &8088
      12F8   F0 F4      BEQ &12EE
      12FA   8D 87 80   STA &8087
@@ -3707,7 +3695,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      1300   92 74
      1302   07
      1303   FF
-     1304   B9 F4 AE   LDA &AEF4,Y
+     1304   B9 E1 AE   LDA &AEE1,Y
      1307   8D 8B 80   STA &808B
      130A   20 89 06   JSR &0689
      130D   A9 05      LDA #&05
@@ -3720,7 +3708,7 @@ bootstrap     &4800 - &4949 , 330 bytes
 .mainMenuProcessKeyboardLeft
      131D   20 98 13   JSR &1398
      1320   A8         TAY
-     1321   B9 28 AF   LDA &AF28,Y
+     1321   B9 15 AF   LDA &AF15,Y
      1324   CD 88 80   CMP &8088
      1327   F0 F4      BEQ &131D
      1329   CD 87 80   CMP &8087
@@ -3730,7 +3718,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      1334   AA 74
      1336   07
      1337   FF
-     1338   B9 F4 AE   LDA &AEF4,Y
+     1338   B9 E1 AE   LDA &AEE1,Y
      133B   8D 8A 80   STA &808A
      133E   20 89 06   JSR &0689
      1341   A9 05      LDA #&05
@@ -3743,7 +3731,7 @@ bootstrap     &4800 - &4949 , 330 bytes
 .mainMenuProcessKeyboardRight
      1352   20 98 13   JSR &1398
      1355   A8         TAY
-     1356   B9 28 AF   LDA &AF28,Y
+     1356   B9 15 AF   LDA &AF15,Y
      1359   CD 88 80   CMP &8088
      135C   F0 F4      BEQ &1352
      135E   CD 87 80   CMP &8087
@@ -3755,7 +3743,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      136E   C2 74
      1370   07
      1371   FF
-     1372   B9 F4 AE   LDA &AEF4,Y
+     1372   B9 E1 AE   LDA &AEE1,Y
      1375   8D 89 80   STA &8089
      1378   20 89 06   JSR &0689
      137B   A9 05      LDA #&05
@@ -3771,11 +3759,11 @@ bootstrap     &4800 - &4949 , 330 bytes
      1397   60         RTS
 .mainMenuProcessKeyboardKey
      1398   20 C7 11   JSR &11C7
-     139B   20 5C AF   JSR &AF5C
+     139B   20 49 AF   JSR &AF49
      139E   B0 F8      BCS &1398
 .mainMenuProcessKeyboardKeyWaitPress
      13A0   20 C7 11   JSR &11C7
-     13A3   20 5C AF   JSR &AF5C
+     13A3   20 49 AF   JSR &AF49
      13A6   90 F8      BCC &13A0
      13A8   60         RTS
 .mainMenuDrawLogoData

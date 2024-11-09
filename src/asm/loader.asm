@@ -647,37 +647,19 @@ masterMos350 = &e374
 	sbc #0
 	sta demoMapAddr + 1
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	ldx demoDir				; get current demo direction
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.swrDemoUp
-
-	cpx #moveUp				; if moving up
-	bne swrDemoDown
-	lda spritesY + 0			; and were on the top row
-	cmp #&08
+	jsr updateLadybugCheckPath		; if 1 tile in front of ladybug is a wall
 	beq swrDemoRandomDir			; then choose a random direction
-	bne swrDemoCheckSkull			; else check for skull
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.swrDemoDown
-
-	cpx #moveDown				; if moving down
-	bne swrDemoCheckSkull
-
-	lda spritesY + 0			; and were on the bottom row
-	cmp #&a8
-	beq swrDemoRandomDir			; then choose a randpm direction
-	bne swrDemoCheckSkull			; else check for skull
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoCheckSkull
 
 	lda #mapTileSkull			; if 2 tiles in front of ladybug is a skull
-	jsr swrDemoCheckAhead
+	jsr swrDemoCheckTile
 	beq swrDemoRandomDir			; then choose random direction
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -691,8 +673,8 @@ masterMos350 = &e374
 	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
 	beq swrDemoCheckSide2			; then try side 2
 
-	lda #mapTileDot				; now check 2 tiles to the side for a dot
-	jsr swrDemoCheckAhead
+	lda #mapTileDot				; check 2 tiles to the side for a dot
+	jsr swrDemoCheckTile
 	bne swrDemoCheckSide2			; if not found try side 2
 
 	stx demoDir				; if dot found then set turn direction
@@ -710,7 +692,7 @@ masterMos350 = &e374
 	beq swrDemoRandomPercentage		; then choose a random percentage turn
 
 	lda #mapTileDot				; now check 2 tiles to the side for a dot
-	jsr swrDemoCheckAhead
+	jsr swrDemoCheckTile
 	bne swrDemoRandomPercentage		; if not found then choose a random percentage turn
 
 	stx demoDir				; if dot found then set turn direction
@@ -764,7 +746,7 @@ masterMos350 = &e374
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoCheckAhead
+.swrDemoCheckTile
 
 	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
 	cmp (demoMapAddr), y			; check for tile and return with result

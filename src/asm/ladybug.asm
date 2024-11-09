@@ -2025,7 +2025,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; display the main screen with player options, wait for start to be pressed
+; display the main screen with player options, wait for start to be pressed or idle timeout
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameIntroScreen
@@ -3200,7 +3200,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 .drawDemoModeOrName
 
-	lda demoMode				; if demo mode then draw "DEMO MODE"
+	lda demoMode				; if demo mode then draw demo mode message
 	beq drawHighScoreName			; else draw high score name
 
 	jsr drawString				; draw demo mode message
