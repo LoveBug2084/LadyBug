@@ -584,20 +584,23 @@ masterMos350 = &e374
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
 
-	lda demoMode				; if demo mode is active then choose a random starting level
+	lda demoMode				; if demo mode is active then
 	beq swrGameLevelExit
+
+	lda #3					; override the menu set player lives and use 3 lives for the demo
+	sta lives
 
 .swrGameLevelChoose				; choose a random level 1 - 18
 
 	jsr random				; pick random number 0 - 17
-	beq swrGameLevelExit			; if = 0 then exit (start on level 1)
+	beq swrGameLevelExit			; if = 0 then exit (level has been previously set to 1 so start on level 1)
 
 	cmp #18					; if > 17 then choose another random number
 	bcs swrGameLevelChoose
 
 	tay					; set the number of loops to advance the level
 
-.swrGameLevelAdvance
+.swrGameLevelAdvance				; loop Y times to advance level
 
 	jsr levelAdvance			; advance game level by 1
 
@@ -613,8 +616,6 @@ masterMos350 = &e374
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; swrDemo					; move ladybug for demo mode (early test code)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-;*** xy limits 08-a8
 
 .swrDemoDirBits					; used to simulate key demo presses, convert direction 0-3 to key bit
 
@@ -859,6 +860,7 @@ masterMos350 = &e374
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of sideways ram code
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swramLastAddr
 	skip 0					; show this address in listing
