@@ -9043,9 +9043,9 @@ animateLadybugInstructions	= 4		; instructions animation index
 	
 	tax					; get red letter bit value and highlight it
 	lda objectLetterBitsRed, x
-	bne checkForObjectLetterUpdate		; (bne used as branch always)
-
-
+	and bonusBits + 1
+	sta bonusBits + 1
+	jmp checkForObjectLetterUpdate
 
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 	; yellow letter mode
@@ -9058,10 +9058,9 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 	tax					; get yellow letter bit value and highlight it
 	lda objectLetterBitsYellow, x
-
+	and bonusBits + 0
+	sta bonusBits + 0
 	; continue down to update letter bit
-
-
 
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 	; update letter bit
@@ -9069,9 +9068,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 
 .checkForObjectLetterUpdate
 
-	and bonusBits + 0
-	sta bonusBits + 0
-	
 	jsr drawPlayfieldUpperBonus		; update upper bonus display
 
 	jmp checkForObjectScore			; add the object score and return
