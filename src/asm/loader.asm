@@ -556,7 +556,7 @@ masterMos350 = &e374
 
 .swrGameLevel
 
-	lda #&01				; start game on level 1
+	lda #&01				; start with level 1
 	sta level
 
 	lda #centerCucumber			; start with a cucumber at 1000 points
@@ -595,7 +595,7 @@ masterMos350 = &e374
 	jsr random				; pick random number 0 - 17
 	beq swrGameLevelExit			; if = 0 then exit (level has been previously set to 1 so start on level 1)
 
-	cmp #18					; if > 17 then choose another random number
+	cmp #18					; if >= 18 then choose another random number
 	bcs swrGameLevelChoose
 
 	tay					; set the number of loops to advance the level
@@ -634,12 +634,16 @@ masterMos350 = &e374
 
 	rts
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .swrDemoCheckGrid
 
 	lda updateLadybugGridX			; if ladybug is off grid then use current demo direction
 	ora updateLadybugGridY
 	bne swrDemoSetDir
 	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	sec					; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for dots and skulls
 	lda tileMapAddr + 0
 	sbc #24
@@ -734,6 +738,8 @@ masterMos350 = &e374
 
 	bmi swrDemoSetDir
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .swrDemoRandomDirLoop
 
 	jsr random				; else pick a random direction that is not a solid wall
@@ -741,8 +747,8 @@ masterMos350 = &e374
 	tax
 	jsr updateLadybugCheckPath
 	beq swrDemoRandomDirLoop
-	stx demoDir
 
+	stx demoDir
 	jmp swrDemoCheckSkull			; and go check for skulls and dots again
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------

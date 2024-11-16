@@ -9038,7 +9038,6 @@ animateLadybugInstructions	= 4		; instructions animation index
 .checkForObjectLetterRed
 
 	cpx #objectModeRed			; if objectMode = objectModeRed
-
 	bne checkForObjectLetterYellow
 	
 	tax					; get red letter bit value and highlight it
