@@ -230,7 +230,7 @@ soundChannels		= 6			; number of concurrent sound effects during game play
 
 .demoMode		equb 0			; = 0 normal game mode, != 0 demo game mode
 .demoDir		equb 0			; contains chosen direction 0-3
-.demoMapAddr		skip 2			; used to search map for dots and skulls
+.demoMapAddr		skip 2			; used to search map for dots and skulls (2 tiles away on next grid position)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero
