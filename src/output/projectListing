@@ -2721,7 +2721,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      0BC9   A5 16      LDA &16
      0BCB   F0 0A      BEQ &0BD7
      0BCD   A5 22      LDA &22
-     0BCF   C9 01      CMP #&01
+     0BCF   C9 06      CMP #&06
      0BD1   90 04      BCC &0BD7
      0BD3   A9 12      LDA #&12
      0BD5   D0 02      BNE &0BD9
@@ -5859,7 +5859,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      233E   A5 16      LDA &16
      2340   F0 15      BEQ &2357
      2342   A5 22      LDA &22
-     2344   C9 01      CMP #&01
+     2344   C9 06      CMP #&06
      2346   90 0F      BCC &2357
      2348   A9 FF      LDA #&FF
      234A   85 17      STA &17
@@ -9506,7 +9506,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      F201   02
      F202   06
      F203   10
-     F204   01
+     F204   06
 .bonusBinEnd
 
 
