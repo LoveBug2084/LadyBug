@@ -16,7 +16,8 @@ bonusSpecialShield	= 6			; special bonus skull shield lasts 6 levels
 
 bonusExtraLives		= 2			; extra bonus 2 extra lives
 
-bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
+;bonusDiamondLevel	= 6			; level for releasing the diamond (if diamond bonus is enabled)
+bonusDiamondLevel	= 1			; level for releasing the diamond (if diamond bonus is enabled)
 bonusDiamondScore	= &10			; diamond bonus score value 10 * 100,000
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------

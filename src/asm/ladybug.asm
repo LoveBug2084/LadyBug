@@ -6575,6 +6575,10 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda soundTimers + 3			; and if sound effects not playing on channel 3 (object)
 	bne checkBonusExit
 
+	lda pauseLadybug			; if pause is over (ladybug and enemy unpaused)
+	ora pauseEnemy
+	bne checkBonusExit
+
 	jsr playSoundSilence			; silence all effects and music
 
 	jsr drawBonusScreen			; draw the diamond bonus screen
@@ -6686,10 +6690,6 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 ; exit			A			destroyed
 ;			X			destroyed
 ;			Y			destroyed
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-; timer value 0-87
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .changeTimerTile
@@ -7835,7 +7835,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #sfxMusicSpecial			; play special bonus music
 	jsr playSound
 
-	jmp drawBonusScreenAnimation
+	jmp drawBonusScreenAnimationSpecialExtra
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; extra bonus text, play extra bonus music
@@ -7878,7 +7878,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #sfxMusicExtra			; play extra bonus music
 	jsr playSound
 
-	jmp drawBonusScreenAnimation
+	jmp drawBonusScreenAnimationSpecialExtra
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; diamond bonus text, play extra bonus music
@@ -7964,15 +7964,22 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #sfxMusicExtra			; play extra bonus music
 	jsr playSound
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup diamond animation for ladybug
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	lda #animateLadybugBonusDiamond		; initialize a ladybug animation
+	jsr animateLadybugInitialize
+
 	jmp drawBonusScreenWaitVsync		; skip the animation
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; setup animation for ladybug
+	; setup special/extra animation for ladybug (same)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.drawBonusScreenAnimation
+.drawBonusScreenAnimationSpecialExtra
 
-	lda #animateLadybugBonus		; initialize a ladybug animation
+	lda #animateLadybugBonusSpecialExtra	; initialize a ladybug animation
 	jsr animateLadybugInitialize
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8032,7 +8039,7 @@ ladybugEntryY		= 168
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.animateLadybugBonusTable
+.animateLadybugBonusSpecialExtraTable
 
 ladybugBonusX		= 168			; starting position
 ladybugBonusY		= 11
@@ -8044,6 +8051,21 @@ ladybugBonusY		= 11
 	equb 36, moveLeft
 	equb 56, moveDown
 	equb 1, moveDown + moveStop + spriteBlanking
+	equb 0
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.animateLadybugBonusDiamondTable
+
+;ladybugBonusX		= 168			; starting position (already defined in special/extra)
+;ladybugBonusY		= 11
+
+	equb 34, moveLeft
+	equb 32, moveDown
+	equb 87, moveLeft
+	equb 30, moveDown
+	equb 16, moveRight
+	equb 1, moveRight + moveStop
 	equb 0
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8125,10 +8147,11 @@ ladybugInstructionsY	= 141
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 animateLadybugEntry		= 0		; entry animation index
-animateLadybugBonus		= 1		; bonus animation index
-animateLadybugNameReg		= 2		; high score animation index
-animateLadybugMainMenu		= 3		; main menu animation index
-animateLadybugInstructions	= 4		; instructions animation index
+animateLadybugBonusSpecialExtra	= 1		; special/extra bonus animation index
+animateLadybugBonusDiamond	= 2		; diamond bonus animation index
+animateLadybugNameReg		= 3		; high score animation index
+animateLadybugMainMenu		= 4		; main menu animation index
+animateLadybugInstructions	= 5		; instructions animation index
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -8138,7 +8161,11 @@ animateLadybugInstructions	= 4		; instructions animation index
 	equb ladybugEntryX
 	equb ladybugEntryY
 	
-	equw animateLadybugBonusTable
+	equw animateLadybugBonusSpecialExtraTable
+	equb ladybugBonusX
+	equb ladybugBonusY
+	
+	equw animateLadybugBonusDiamondTable
 	equb ladybugBonusX
 	equb ladybugBonusY
 	
