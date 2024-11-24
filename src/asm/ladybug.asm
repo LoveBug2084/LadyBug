@@ -2109,6 +2109,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr ladybugSpawn			; spawn ladybug
 
 	lda #0
+
+	sta enemyLadybugKill			; clear enemy that killed ladybug (for the death animation)
+
 	sta bonusItemActive			; disable center bonus item
 
 	sta vegetableScoreActive		; disable center vegetable score display
@@ -2722,6 +2725,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	bcs moveSpritesCheckAlignmentX
 
 	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug
+	stx enemyLadybugKill			; and save the enemy that killed ladybug (for the death animation)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if enemy is exactly aligned with grid
@@ -4283,12 +4287,18 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	and #2					; then flash ladybug
 	bne ladybugDeathAnimationBlank
 	
+	sta ladybugDeathAnimationIndex		; initialize death animation index = 0 for 2nd part
+
 	lda spritesDir + 0
 	and #spriteBlanking eor 255
 	sta spritesDir + 0
 
-	lda #0					; initialize death animation index for 2nd part
-	sta ladybugDeathAnimationIndex
+	ldx enemyLadybugKill			; if enemy killed ladybug then flash enemy too
+	beq ladybugDeathAnimationCheckMusic
+
+	lda spritesDir + 0, x
+	ora #spriteBlanking
+	sta spritesDir + 0, x
 
 	jmp ladybugDeathAnimationCheckMusic
 	
@@ -4297,6 +4307,13 @@ angelMinY	= 8 * 1				; angel sprite minimum y value (keep within playfield)
 	lda spritesDir + 0
 	ora #spriteBlanking
 	sta spritesDir + 0
+
+	ldx enemyLadybugKill			; if enemy killed ladybug then flash enemy too
+	beq ladybugDeathAnimationCheckMusic
+
+	lda spritesDir + 0, x
+	and #spriteBlanking eor 255
+	sta spritesDir + 0, x
 
 .ladybugDeathAnimationCheckMusic
 
@@ -8588,6 +8605,14 @@ animateLadybugInstructions	= 5		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; playSoundSilence				shut down all sound effect types and psg channels
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .playSoundSilence
 
@@ -8621,6 +8646,15 @@ animateLadybugInstructions	= 5		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; .playSoundTimer				play the enemy timer sound at the selected volume
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 .playSoundTimer
 
@@ -9172,6 +9206,14 @@ animateLadybugInstructions	= 5		; instructions animation index
 ;						reduce lives by 1
 ;						pause ladybug and enemies
 ;						play death music
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			preserved
+;			y			preserved
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .ladybugKill
