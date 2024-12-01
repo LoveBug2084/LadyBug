@@ -68,6 +68,10 @@ objectModeYellow	= 2
 enemyTimerTopLeft	= 78			; top left tile index for enemy timer for triggering enemy release warning
 enemyTimerMax		= 87			; highest index for enemy timer, index reset to 0 when it increments to enemyTimerMax + 1
 
+enemyTimerSlow		= 8			; slow enemy timer	= 8 vsyncs per tick
+enemyTimerMedium	= 5			; medium enemy timer	= 5 vsyncs per tick
+enemyTimerFast		= 3			; fast enemy timer	= 3 vsyncs per tick
+
 idleTime		= (22 * frame) / 8	; demo starts after 22 seconds of inactivity
 ;idleTime		= (1 * frame) / 8	; demo starts after 1 second of inactivity (for quick testing)
 
