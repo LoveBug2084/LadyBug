@@ -29,6 +29,8 @@
 .ladybugEntryEnable	skip 1			; enable ladybug entry movement animation
 .ladybugDeathEnable	skip 1			; enable ladybug death movement animation
 
+.enemyLadybugKill	skip 1			; enemy index value for enemy that killed ladybug or 0 if ladybug died on a skull
+
 .ladybugDeathAnimationIndex
 			skip 1			; index into ladybug death movement animation table
 
