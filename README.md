@@ -37,13 +37,9 @@ Analogue Port Joysick (B/B+/Master)
 A big thank you to
  
 HeadHunter for recreating the enemy release sound for 50Hz using math !
- 
 Kieranhj for their image2mode7 utility allowing me to make the lovebyte loading screen
- 
 Dreamland Fantasy's for their image2bbc utility allowing me to make the maze editor tiles
- 
 And to everyone at the stardot forums for their kind words, help and support
- 
 ```
 #
 _**Note: The video and screenshots are from various builds during development, current build may differ slightly**_
