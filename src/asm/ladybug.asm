@@ -4315,9 +4315,8 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	ldx enemyLadybugKill			; if enemy killed ladybug then blank enemy
 	beq ladybugDeathAnimationCheckMusic
 
-	lda spritesDir + 0, x
-	ora #spriteBlanking
-	sta spritesDir + 0, x
+	lda #spriteBlanking
+	sta spritesDir, x
 
 	jmp ladybugDeathAnimationCheckMusic
 	
