@@ -1,67 +1,141 @@
-*** WIP ***
+
+*** WIP *** stardot.5
 
 
 
-stardot.5
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/04/01
+------------------------------------------------------------------------------------------------------------------------------------------------------
+It was all going so well but then....
 
-2021/04/01	It was all going so well but then....
+I realised that the super fast code I wrote to display 9x10 pixel vegetables in the center of enemy bug box couldnt display it down on the lower
+info panel so I made some changes and it displays down there but its not vertically centered because of the hacky way it works
+and much head scratching later I realised its not gonna be possible so I scrap all the new code
+As a temporary fix i've moved the vegetable sprites into the main sprite file but this is wasting space and will be fixed later 
 
-		I realised that the super fast code I wrote to display 9x10 pixel vegetables in the center of enemy bug box couldnt display it down on the lower
-			info panel so I made some changes and it displays down there but its not vertically centered because of the hacky way it works
-			and much head scratching later I realised its not gonna be possible so I scrap all the new code
-			As a temporary fix i've moved the vegetable sprites into the main sprite file but this is wasting space and will be fixed later 
+I also added the center vegetable to the sprites list but this caused a new issue as I cannot control the draw priority and often ladybug wiil
+be drawn under the vegetable !, will fix this in the next build
 
-		I also added the center vegetable to the sprites list but this caused a new issue as I cannot control the draw priority and often ladybug wiil
-			be drawn under the vegetable !, will fix this in the next build
+I've made it pick a random vegetable every boot for testing and a random level number up to 19 to check the number of skulls, seems to be working
 
-		I've made it pick a random vegetable every boot for testing and a random level number up to 19 to check the number of skulls, seems to be working
 
-2021/04/01	I've decided to finish off the maze generation once and for all so I added the code to place hearts, skulls and letters onto the map
-		This funtion checks for random maze locations containg a dots that are not located near a turnstile and replaced the dot with the object
 
-		Collectable objects were too large and just looked off scale in the maze
-		Collectable vegetables were 1 pixel too wide and when displayed in the center maze bug box they touched the right hand wall
- 		Because the collectable objects are 8 pixels wide they overlap 2 pixels into the previous column and can cause objects to get cropped
-		Also maze wall detection is a bit broken
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/04/01
+------------------------------------------------------------------------------------------------------------------------------------------------------
+I've decided to finish off the maze generation once and for all so I added the code to place hearts, skulls and letters onto the map
+This funtion checks for random maze locations containg a dots that are not located near a turnstile and replaced the dot with the object
 
-2021/03/30	Working on the enemy processing function to handle the xy direction and direction change at a junction but its not ready yet
-		Testing 4 frame sprite animation
-		Drew some collectable objects and 1/2 written the code to display them
+Collectable objects were too large and just looked off scale in the maze
+Collectable vegetables were 1 pixel too wide and when displayed in the center maze bug box they touched the right hand wall
+Because the collectable objects are 8 pixels wide they overlap 2 pixels into the previous column and can cause objects to get cropped
+Also maze wall detection is a bit broken
 
-2021/03/26	Work started on checking the tileMap for paths and walls, its totally buggy
-		Wrote some test code thats drawing onto the tilemap under ladybug just for checking that the sprite coordinates are correctly centered
-		I'll have some enemy bugs wizzing around the map soon
 
-2021/03/24	I'm starting to realize that I will probably run out of memory and might need sideways ram, thinking...
-		Added some self modifying code to the sprite drawinf function to allow for vertically flipped sprites
 
-2021/03/22	Experimenting with interrupt timing
-		Added emergency erase to remove the left over pixels when a sprite croses the boundary from the bottom half to the top half
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/30
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Working on the enemy processing function to handle the xy direction and direction change at a junction but its not ready yet
+Testing 4 frame sprite animation
+Drew some collectable objects and 1/2 written the code to display them
 
-2021/03/21	Test sprite erasure code to reduce flicker
-		Manually entered 529 bytes of hex data for the maze, looks nice
 
-2021/03/20	Running out of cycles when trying to draw 5 sprites
-		Trying a new auto-frameskip
-		Split the screen vertically into an upper and a lower half
-		Draw a maximum of 3 sprites in any half screen per frame
-		If 4 or more sprites in same half screen then postpone extra for next frame to keep a maximum
-		of 3 sprites per half frame (auto frame skip)
 
-2021/03/16	Score/high score characters shifted 1 pixel left to better fit with right border edge 
-		Thinking about enemy aim logic...
-		Changed custom screen resolution to 69x208 bytes, rewrote all screen drawing functions for new resolution
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/26
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Work started on checking the tileMap for paths and walls, its totally buggy
+Wrote some test code thats drawing onto the tilemap under ladybug just for checking that the sprite coordinates are correctly centered
+I'll have some enemy bugs wizzing around the map soon
 
-2021/03/11	Test Keyboard scanning
 
-2021/03/08	Test drawing 5 sprites
 
-2021/03/07	Test screen border, bonus text, score and level text, single sprite drawing
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/24
+------------------------------------------------------------------------------------------------------------------------------------------------------
+I'm starting to realize that I will probably run out of memory and might need sideways ram, thinking...
+Added some self modifying code to the sprite drawing function to allow for vertically flipped sprites
 
-2021/02/22	Test various prng functions
 
-2021/02/20	Test printString function
-		Test custom resolution 72x216 bytes, drawing text on screen
 
-2021/02/18	Sketching out ideas of how things will be, no code written yet
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/22
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Experimenting with interrupt timing
+Added emergency erase to remove the left over pixels when a sprite croses the boundary from the bottom half to the top half
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/21
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Manually entered 529 bytes of hex data for the maze, looks nice
+Test sprite erasure code to reduce flicker
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/20
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Running out of cycles when trying to draw 5 sprites
+Trying a new auto-frameskip
+Split the screen vertically into an upper and a lower half
+Draw a maximum of 3 sprites in any half screen per frame
+If 4 or more sprites in same half screen then postpone extra for next frame to keep a maximum
+of 3 sprites per half frame (auto frame skip)
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/16
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Changed custom screen resolution to 69x208 bytes, rewrote all screen drawing functions for new resolution
+Score/high score characters shifted 1 pixel left to better fit with right border edge 
+Thinking about enemy aim logic...
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/11
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Test Keyboard scanning
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/08
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Test drawing 5 sprites
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/03/07
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Test screen border, bonus text, score and level text, single sprite drawing
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/02/22
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Test various prng functions
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/02/20
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Test custom resolution 72x216 bytes, drawing text on screen
+Test printString function
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2021/02/18
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Sketching out ideas of how things will be, no code written yet
+
+
 
