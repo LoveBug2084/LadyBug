@@ -4342,6 +4342,8 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	clc					; return false (level restart not required)
 	rts
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .ladybugDeathAnimationDrawAngelLower
 
 	lda spritesY + 0
@@ -4380,6 +4382,8 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	cmp #upperLowerThreshold
 	bcc ladybugDeathAnimationCheckMusic
 	
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 .ladybugDeathAnimationDrawAngelOk
 
 	lda spritesX + 0			; copy ladybug xy position for address conversion and angel sprite drawing
@@ -4391,7 +4395,13 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr spriteToAddr			; convert xy to tile map address and screen tile address
 	
-	ldy #0					; redraw top 3 background tiles
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	ldy #0					; redraw 3x3 tiles around ladybug
+	ldx #3
+
+.ladybugDeathAnimationDrawTiles
+
 	lda (tileMapAddr), y
 	jsr drawMapTile
 	iny
@@ -4400,6 +4410,10 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	iny
 	lda (tileMapAddr), y
 	jsr drawMapTile
+	tya
+	clc
+	adc #23 - 2
+	tay
 
 	lda #lo(chrRow - 3 * chrColumn)		; move to next row
 	clc
@@ -4409,33 +4423,10 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	adc drawMapTileAddr + 1
 	sta drawMapTileAddr + 1
 	
-	ldy #23					; redraw middle 3 background tiles
-	lda (tileMapAddr), y
-	jsr drawMapTile
-	iny
-	lda (tileMapAddr), y
-	jsr drawMapTile
-	iny
-	lda (tileMapAddr), y
-	jsr drawMapTile
+	dex
+	bne ladybugDeathAnimationDrawTiles
 
-	lda #lo(chrRow - 3 * chrColumn)		; move to next row
-	clc
-	adc drawMapTileAddr
-	sta drawMapTileAddr
-	lda #hi(chrRow - 3 * chrColumn)
-	adc drawMapTileAddr + 1
-	sta drawMapTileAddr + 1
-	
-	ldy #46					; redraw bottom 3 background tiles
-	lda (tileMapAddr), y
-	jsr drawMapTile
-	iny
-	lda (tileMapAddr), y
-	jsr drawMapTile
-	iny
-	lda (tileMapAddr), y
-	jsr drawMapTile
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda spriteBaseImg + 9			; setup angel sprite image and position
 	sta drawSpriteImg
@@ -4453,6 +4444,8 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 .ladybugDeathAnimationDrawAngelSprite
 
 	jsr drawSprite				; draw angel sprite
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda pauseLadybug			; if its time to move
 	cmp #256 - ladybugDeathFlashTime - ladybugDeathWaitTime
@@ -4703,15 +4696,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 .mainMenu
 
-	lda #idleTime				; reset the idle timeout
-	sta idleCounter
-
 	lda #0					; disable demo mode
 	sta demoMode
 
 	jsr drawHighScoreName			; redraw the high score name
 
-	jsr mainMenuDraw			; draw the main menu screen
+	jsr mainMenuDraw			; draw the main menu screen (and reset idle time)
 
 	lda #0					; make sure the "START GAME" text is flashing (skull color) by setting shield to 0
 	sta shield
@@ -5117,10 +5107,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr drawScoreTable			; draw the high scores page and wait for start or esc to be pressed
 	
-	lda demoMode				; if high score page idle timed out then back to main menu
-	bne mainMenuProcessReturnFalse
-
-	jsr mainMenuDraw			; redraw main menu
+	jsr mainMenuDraw			; draw the main menu screen (and reset idle time)
 
 	clc					; return false
 	rts
@@ -5677,6 +5664,9 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 .mainMenuDraw
 
+	lda #idleTime				; reset the idle timeout
+	sta idleCounter
+
 	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	jsr mainMenuDrawLogo			; draw the ladybug logo
@@ -5798,9 +5788,6 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawScoreTableExit
-
-	lda #idleTime				; reset the idle timeout
-	sta idleCounter
 
 	jsr playSoundSilence			; kill any sounds playing
 	

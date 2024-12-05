@@ -73,7 +73,7 @@ enemyTimerMedium	= 5			; medium enemy timer	= 5 vsyncs per tick
 enemyTimerFast		= 3			; fast enemy timer	= 3 vsyncs per tick
 
 idleTime		= (22 * frame) / 8	; demo starts after 22 seconds of inactivity
-;idleTime		= (1 * frame) / 8	; demo starts after 1 second of inactivity (for quick testing)
+;idleTime		= (5 * frame) / 8	; demo starts after 5 second of inactivity (for quick testing)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ascii character reassignment for special game characters
