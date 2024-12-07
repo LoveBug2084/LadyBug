@@ -5926,7 +5926,10 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	
 	jsr drawString				; draw paused message
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs colorMultiplier0, "  PAUSED  ", &ff
+	equs "          ", &ff
+	jsr drawString
+	equw screenAddr + 2 + 8 + 8 * chrColumn + 25 * chrRow
+	equs colorMultiplier0, "PAUSED", &ff
 	
 .checkPauseGameReturnTrue
 
