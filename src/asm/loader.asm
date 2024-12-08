@@ -54,7 +54,7 @@
 .gameSettings					; start of game settings
 	skip 0					; show this address in listing
 
-.optionLives
+.optionLadybugLives
 
 	skip 1					; reserve space for ladybug lives
 	
@@ -72,15 +72,15 @@
 	
 .optionSound
 
-	skip 1					; reserve space for sound off/on
+	skip 1					; reserve space for sound mode off/on/demo
 	
 .optionKeys
 
-	skip 4					; reserve space for control keys scan code
+	skip 4					; reserve space for control keys scan codes
 	
 .optionKeysAscii
 
-	skip 4					; reserve space for control keys ascii code
+	skip 4					; reserve space for control keys ascii codes
 
 .validationCode
 
@@ -581,7 +581,7 @@ masterMos350 = &e374
 
 	sta mazeMap				; start with mazeMap 0
 
-	lda optionLives				; initialize player lives
+	lda optionLadybugLives			; initialize player lives
 	sta lives
 
 	lda #&ff				; clear the special, extra and multiplier bonus flag bits

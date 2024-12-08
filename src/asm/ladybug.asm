@@ -5069,7 +5069,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	cmp #3					; if cursor == 3 (ladybugLives) then
 	bne mainMenuProcessStartEnemySpeed
 
-	lda optionLives				; lives = optionLives (update the game lives value from the new optionLives value)
+	lda optionLadybugLives			; lives = optionLadybugLives (update the game lives value from the new optionLives value)
 	sta lives
 
 	jsr drawPlayfieldLowerLives		; draw the updated lives value in the lower playfield
@@ -5465,7 +5465,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	equw screenAddr + 2 + 18 * chrColumn + 15 * chrRow
 	equb colorWhite, &ff
 	
-	lda optionLives
+	lda optionLadybugLives
 	ora #'0'
 	jsr drawChr
 	
@@ -7023,10 +7023,15 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; enemySpawn					if the box is empty then place enemy waiting to be released
+; enemySpawn					firstly check that there is currently no enemy waiting in the box
+;						then find a blanked (non active) enemy and spawn it into the bix
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemySpawn
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; firstly check box is empty
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #spritesTotal - 1			; start at last enemy in list
 
@@ -7041,6 +7046,10 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	dex					; else check next
 	bne enemySpawnCheckEmpty		; until all checked
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; next find inactive enemy
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	ldx #spritesTotal - 1			; start at last enemy in list
 
 .enemySpawnCheckAvailable
@@ -7054,7 +7063,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	bne enemySpawnCheckAvailable		; until all checked (bne used as branch always, enemy will be found before x = 0)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; an inactive enemy was found so we spawn it into the center box with the correct enemy type for current level
+	; then spawn enemy into the center box with the correct enemy type for current level
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemySpawnType
@@ -7063,14 +7072,14 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	cmp #&09
 	bcc enemySpawnLevelImage
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; level is 9 or higher so pick a random enemy type that isnt already active to make sure that all 4 enemys on screen will be different
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	lda #&ff				; set enemy image as invalid
 	sta spritesImg, x
 
 	stx enemySpawnSaveX			; save enemy index
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; level is 9 or higher so pick a random enemy type that isnt already active to make sure that all 4 enemys on screen will be different
-	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemySpawnRandom
 
@@ -7119,7 +7128,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #moveUp + moveStop			; set enemy direction up + stopped (enemy sits in box facing upwards)
 	sta spritesDir, x
 
-	lda #0					; disable center bonus item vegetable/diamond
+	lda #0					; disable center bonus item vegetable/diamond (enemy now in box so remove bonus item if there was one)
 	sta bonusItemActive
 
 .enemySpawnExit
@@ -7217,7 +7226,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta redrawSpritesEraseThreshold
 	sta redrawSpritesDrawThreshold
 
-	lda #redrawSpritesIndexLower		; use lower index
+	lda #redrawSpritesIndexLower		; use the lower index pointer
 	sta redrawSpritesErase + 1
 	sta redrawSpritesUpdateIndex + 1
 
@@ -7233,7 +7242,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta redrawSpritesEraseThreshold
 	sta redrawSpritesDrawThreshold
 
-	lda #redrawSpritesIndexUpper		; use upper index
+	lda #redrawSpritesIndexUpper		; use the upper index pointer
 	sta redrawSpritesErase + 1
 	sta redrawSpritesUpdateIndex + 1
 
@@ -7282,7 +7291,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr eraseSprite				; erase sprite and redraw background tile at tail end of sprite
 
-	lda #&ff				; mark it as erased
+	lda #&ff				; mark sprite as erased
 	sta spritesErased, x
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7311,18 +7320,18 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 						; (bne instruction replaced by bcc or bcs from above code)
 	
 	lda spritesErased, x			; if theres still a pending erase caused by the sprite crossing upper/lower boundary
-	beq redrawSpritesEraseSprite		; then we must ignore the sprite y and do an emergency erase
-						; otherwise part of the sprite will be left on screen just below the upper/lower boundary crossing
+	beq redrawSpritesEraseSprite		; then we must ignore boundary and do an emergency erase otherwise part of
+						; the sprite will be left on screen just below the upper/lower boundary crossing
 
-	lda spritesX, x				; store sprite x for drawing and erasing
+	lda spritesX, x				; store sprite x for drawing (now) and erasing
 	sta drawSpriteX
 	sta spritesEraseX, x
 	
-	lda spritesY, x				; store sprite y for drawing and erasing
+	lda spritesY, x				; store sprite y for drawing (now) and erasing
 	sta drawSpriteY
 	sta spritesEraseY, x
 
-	lda #0					; enable erasure
+	lda #0					; enable erasure for later
 	sta spritesErased, x
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7434,8 +7443,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .redrawSpritesCheckDrawn
 
-	lda redrawSpritesMax			; if max sprites drawn then return saving current index so that the remaining sprites will continue to be
-	beq redrawSpritesUpdateIndex		; processed next frame (frameskip)
+	lda redrawSpritesMax			; if max sprites drawn then return saving current index so that the remaining sprites
+	beq redrawSpritesUpdateIndex		; will be processed next frame (frameskip)
 
 .redrawSpritesCheckDone	
 
