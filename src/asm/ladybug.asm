@@ -4587,13 +4587,13 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	stx levelSkulls				; set the number of skulls
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy speed			use user set speed option for regular game or speed 1 for demo
+	; set enemy speed			use user set speed option for regular game or default speed for demo
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx optionEnemySpeed			; x = user selected speed for regular game
 	lda demoMode
 	beq initLevelSettingsSpeed
-	ldx #1					; x = 1 for demo game
+	ldx #defaultEnemySpeed			; x = default speed for demo game
 
 .initLevelSettingsSpeed
 
@@ -4622,13 +4622,13 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sta enemySpeed
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy attack			use user set attack for regular game or attack 4 for demo game
+	; set enemy attack			use user set attack for regular game or default attack for demo game
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx optionEnemyAttack			; for regular game use attack option
 	lda demoMode
 	beq initLevelSettingsAttack
-	ldx #4
+	ldx #defaultEnemyAttack
 
 .initLevelSettingsAttack
 

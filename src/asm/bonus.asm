@@ -9,7 +9,8 @@
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org canvasBonusSettings			; temporary canvas for creating _Bonus file used by menu.bas to display in the instruction pages
+	org canvasBonusSettings			; temporary canvas for creating _Bonus file used by menu.bas instruction pages to display
+						; the information about the diamond/special/extra bonus screens
 	
 .bonusBin
 

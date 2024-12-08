@@ -595,7 +595,7 @@ masterMos350 = &e374
 	lda demoMode				; if demo mode is active then
 	beq swrGameLevelExit
 
-	lda #3					; override the menu lives and use 3 lives for the demo
+	lda #defaultLadybugLives		; override the menu lives and use the default lives for the demo
 	sta lives
 
 .swrGameLevelChoose				; choose a random level 1 - 18
