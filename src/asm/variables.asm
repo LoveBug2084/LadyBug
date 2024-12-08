@@ -76,6 +76,8 @@
 .enemySpeed		skip 1			; enemy speed fraction
 .enemySpeedCounter	skip 1			; enemy speed fraction counter
 
+.enemyAttack		skip 1			; enemy attack value (optionEnemyAttack for regular game or 4 for demo game)
+
 .enemyReleaseEnable	skip 1			; set to &ff when timer hits top left
 .enemyReleaseFrame	skip 1			; frame number to release enemy
 

@@ -2797,13 +2797,13 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	stx moveSpritesSaveX			; preserve enemy index
 
-	txa					; enemyAttack tableIndex = optionEnemyAttack + (spriteNumber and 3) 
+	txa					; enemy attack tableIndex = (spriteNumber and 3) + enemyAttack
 	and #3
 	clc
-	adc optionEnemyAttack
+	adc enemyAttack
 	tax
 
-	jsr random				; compare random number with enemyRandomChance table
+	jsr random				; compare random number with percentage table enemyRandomChance, x
 	cmp enemyRandomChance, x
 
 	ldx moveSpritesSaveX			; restore enemy index
@@ -4587,10 +4587,17 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	stx levelSkulls				; set the number of skulls
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy speed
+	; set enemy speed			use user set speed option for regular game or speed 1 for demo
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda optionEnemySpeed			; x = user selected speed option * 4
+	ldx optionEnemySpeed			; x = user selected speed for regular game
+	lda demoMode
+	beq initLevelSettingsSpeed
+	ldx #1					; x = 1 for demo game
+
+.initLevelSettingsSpeed
+
+	txa					; multiply x * 4
 	asl a
 	asl a
 	tax
@@ -4598,21 +4605,34 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda level				; get current level (bcd)
 
 	cmp #&07				; if level >= 7 then add 1 to x
-	bcc initLevelSettingsSpeed
+	bcc initLevelSettingsSetSpeed
 	inx
 
 	cmp #&12				; if level >= 12 the add 1 to x
-	bcc initLevelSettingsSpeed
+	bcc initLevelSettingsSetSpeed
 	inx
 
 	cmp #&18				; if level >= 18 then add 1 to x
-	bcc initLevelSettingsSpeed
+	bcc initLevelSettingsSetSpeed
 	inx
 
-.initLevelSettingsSpeed
+.initLevelSettingsSetSpeed
 
-	lda enemySpeedTable, x			; set the enemy speed from the enemySpeedTable
+	lda enemySpeedTable, x			; set the enemy speed from the enemySpeedTable, x
 	sta enemySpeed
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; set enemy attack			use user set attack for regular game or attack 4 for demo game
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	ldx optionEnemyAttack			; for regular game use attack option
+	lda demoMode
+	beq initLevelSettingsAttack
+	ldx #4
+
+.initLevelSettingsAttack
+
+	stx enemyAttack
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set enemy timer speed (number of vsync frames per timer tick)
