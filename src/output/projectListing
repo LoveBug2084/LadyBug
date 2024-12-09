@@ -503,7 +503,7 @@ bootstrap     &4800 - &4949 , 330 bytes
      8080
 .gameSettings
      8080
-.optionLives
+.optionLadybugLives
      8080
 .optionEnemySpeed
      8081
