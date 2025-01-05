@@ -3003,9 +3003,9 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .drawPlayfieldUpperBonus
 
-	stx drawPlayfieldUpperBonusSaveX	; save x
+	stx drawPlayfieldUpperBonusSaveX	; preserve register
 
-	jsr drawString				; setup screen address
+	jsr drawString				; setup screen address to the bonus first letter position 'S'
 	equw screenAddr + 2 + 16
 	equb &ff
 	
@@ -3032,7 +3032,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	lda upperBonusText, x			; get chr from table and print it
 	jsr drawChr
 	
-	lda upperBonusOffset, x			; add chr offset from table
+	lda upperBonusOffset, x			; add address offset from table to screen position
 	clc
 	adc drawChrAddr
 	sta drawChrAddr
@@ -3048,7 +3048,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	cpx #15
 	bne drawPlayfieldUpperText
 
-	ldx drawPlayfieldUpperBonusSaveX	; restore x
+	ldx drawPlayfieldUpperBonusSaveX	; restore register
 
 	rts					; return
 

@@ -1,5 +1,5 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; loader	check for available sideways ram, copy data and then */LadyBug
+; loader					check for available sideways ram, copy data and then */LadyBug
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
@@ -403,7 +403,11 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrInitScreen					fill screen ram with zero, setup palette
+; swrInitScreen					fill screen ram with zero
+;						setup color palette
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+;						note this function is only run during first run
+;						so the self modifying address doesn't need to be reset
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrInitScreen
@@ -461,7 +465,7 @@ masterMos350 = &e374
 	equb palExtra0 + palYellow		; color 12 extra (flashing yellow / green)
 	equb palExtra1 + palGreen		; color 13 extra (flashing green / yellow)
 
-	equb palSkull + palWhite		; color 14 skull (fade effect or red when shield is active)
+	equb palSkull + palWhite		; color 14 skull (flashing effect or solid red when shield is active)
 	equb palObject + palCyan		; color 15 object (cyan / red / yellow)
 
 
@@ -510,13 +514,13 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrDrawPlayfieldLowerDiamond			; draw a diamond if enabled else draw a space
+; swrDrawPlayfieldLowerDiamond			draw a diamond image (if enabled) or a blank image
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
-;			y			preserved
+;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -592,13 +596,17 @@ masterMos350 = &e374
 
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; if demo mode then use default number of lives and choose a random level 1 - 18
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	lda demoMode				; if demo mode is active then
 	beq swrGameLevelExit
 
 	lda #defaultLadybugLives		; override the menu lives and use the default lives for the demo
 	sta lives
 
-.swrGameLevelChoose				; choose a random level 1 - 18
+.swrGameLevelChoose
 
 	jsr random				; pick random number 0 - 255
 	beq swrGameLevelExit			; if = 0 then exit (level has been previously set to 1 so start on level 1)
@@ -606,9 +614,13 @@ masterMos350 = &e374
 	cmp #18					; if >= 18 then choose another random number
 	bcs swrGameLevelChoose
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; advance the level 1 to 17 times (from random number)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
 	tay					; set the number of loops (1 to 17) to advance the level
 
-.swrGameLevelAdvance				; loop Y times to advance level
+.swrGameLevelAdvance
 
 	jsr levelAdvance			; advance game level by 1
 
@@ -622,16 +634,18 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrDemo					; move ladybug for demo mode (early test code)
+; swrDemo					move ladybug for demo mode
+;						avoid skulls
+;						turn towards dots
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoDirBits					; used to simulate key demo presses, convert direction 0-3 to key bit
+.swrDemoDirBits					; used to simulate key presses, convert demo direction 0-3 to key bit
 
 	equb keyBitUp, keyBitDown, keyBitLeft, keyBitRight
 
 .swrDemoMapDir
 
-	equb 2, 94, 46, 50			; tileMap offset from top left corner of 5x5 square for up, down, left, right (2 tiles)
+	equb 2, 94, 46, 50			; tileMap 2 tile offset from top left corner of 5x5 square for up, down, left, right
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -646,14 +660,14 @@ masterMos350 = &e374
 
 .swrDemoCheckGrid
 
-	lda updateLadybugGridX			; if ladybug is off grid then use current demo direction
+	lda updateLadybugGridX			; if ladybug is off grid then use current demo direction and return
 	ora updateLadybugGridY
 	bne swrDemoSetDir
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	sec					; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for dots and skulls
-	lda tileMapAddr + 0
+	sec					; ladybug is on grid so
+	lda tileMapAddr + 0			; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for dots and skulls
 	sbc #24
 	sta demoMapAddr + 0
 	lda tileMapAddr + 1
@@ -743,7 +757,6 @@ masterMos350 = &e374
 	and (tileMapAddr), y
 	ldy #47
 	and (tileMapAddr), y
-
 	bmi swrDemoSetDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -759,6 +772,20 @@ masterMos350 = &e374
 	stx demoDir
 	jmp swrDemoCheckSkull			; and go check for skulls and dots again
 
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; serDemoCheckTile				check 2 tiles ahead for tile
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	A			tile type
+;			X			direction 0-3
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			preserved
+;			X			preserved
+;			Y			destroyed
+;			Z			result of cmp
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoCheckTile
@@ -770,7 +797,7 @@ masterMos350 = &e374
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-; regular 3x3 box (tileMapAddr)
+; regular 3x3 box offset (tileMapAddr)
 ; ---------------
 ; |    | 01 |    |
 ; ---------------
@@ -779,7 +806,7 @@ masterMos350 = &e374
 ; |    | 47 |    |
 ; ---------------
 
-; extended 5x5 box (demoMapAddr) = tileMapAddr - 24
+; extended 5x5 box offset (demoMapAddr) = tileMapAddr - 24
 ; --------------------------
 ; |    |    | 02 |    |    |
 ; --------------------------
@@ -799,8 +826,10 @@ masterMos350 = &e374
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			C			clear if no key pressed, set if key pressed
-;			A			key index if key was pressed
+; exit			C		clear if no key pressed, set if key pressed
+;			A		key index (if key was pressed)
+;			X		preserved
+;			Y		preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .keyScanAscii
@@ -825,7 +854,7 @@ masterMos350 = &e374
 
 .swrKeyboardScan
 
-	stx swrKeyboardScanSaveX			; save register
+	stx swrKeyboardScanSaveX		; save register
 
 	lda #%01111111				; set port A bit 7 as input ( from keyboard output )
 	sta via1PortDdrA
@@ -843,7 +872,7 @@ masterMos350 = &e374
 
 	lda via1PortA				; read key pressed status from bit 7
 
-	bmi swrKeyboardScanPressed			; if pressed then return with scancode
+	bmi swrKeyboardScanPressed		; if pressed then return with scancode
 
 	dex					; until all tested
 	bpl swrKeyboardScanLoop
@@ -860,7 +889,7 @@ masterMos350 = &e374
 
 	txa					; A = scan index or ff (no key pressed)
 
-	ldx swrKeyboardScanSaveX			; restore register
+	ldx swrKeyboardScanSaveX		; restore register
 
 	rts					; return
 
@@ -897,7 +926,7 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; loaderMessages				; various messages for ram test etc
+; loaderMessages				various messages for ram test etc
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .loaderMessages
