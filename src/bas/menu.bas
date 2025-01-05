@@ -167,7 +167,7 @@ PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the maz
 PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(135);"enemies";CHR$(130);"and";CHR$(135);"skulls";
 
 PRINT TAB(2,8);CHR$(132);"Push the";CHR$(130);"green doors";CHR$(132);"to escape";
-PRINT TAB(2,9);CHR$(132);"enemies and block their attacks";
+PRINT TAB(2,9);CHR$(132);"enemies and to block their attacks";
 
 PRINT TAB(2,11);CHR$(133);"Collect";CHR$(134);"cyan hearts";CHR$(133);"to multiply";
 PRINT TAB(2,12);CHR$(133);"item score values by";CHR$(134);"x2 x3 x5";
@@ -175,9 +175,9 @@ PRINT TAB(2,12);CHR$(133);"item score values by";CHR$(134);"x2 x3 x5";
 PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"to spell";
 PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for";CHR$(135);~Y%;" extra ";:IF Y%=1 THEN PRINT "life"; ELSE PRINT "lives";
 
-PRINT TAB(2,17);CHR$(131);"Collect";CHR$(129);"red letters";CHR$(131);"to spell";
-PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(131);"for";CHR$(135);~X%;"00000 points";CHR$(131);"plus a";
-PRINT TAB(2,19);CHR$(135);"skull shield";CHR$(131);"lasting ";~W%;" rounds";
+PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"to spell";
+PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(134);"for";CHR$(135);~X%;"00000 points";CHR$(134);"plus a";
+PRINT TAB(2,19);CHR$(135);"skull shield";CHR$(134);"lasting ";~W%;" rounds";
 
 PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
 PRINT TAB(2,22);CHR$(132);"enemies and earn bonus points";

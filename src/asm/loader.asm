@@ -406,7 +406,7 @@ masterMos350 = &e374
 ; swrInitScreen					fill screen ram with zero
 ;						setup color palette
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-;						note this function is only run once at first run
+;						note this function is only run during first run
 ;						so the self modifying address doesn't need to be reset
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -520,7 +520,7 @@ masterMos350 = &e374
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
 ;			X			preserved
-;			y			preserved
+;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -634,16 +634,18 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrDemo					move ladybug for demo mode (early test code)
+; swrDemo					move ladybug for demo mode
+;						avoid skulls
+;						turn towards dots
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoDirBits					; used to simulate key demo presses, convert direction 0-3 to key bit
+.swrDemoDirBits					; used to simulate key presses, convert demo direction 0-3 to key bit
 
 	equb keyBitUp, keyBitDown, keyBitLeft, keyBitRight
 
 .swrDemoMapDir
 
-	equb 2, 94, 46, 50			; tileMap 2 tile offset from top left corner of (5x5 square) for up, down, left, right
+	equb 2, 94, 46, 50			; tileMap 2 tile offset from top left corner of 5x5 square for up, down, left, right
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -658,14 +660,14 @@ masterMos350 = &e374
 
 .swrDemoCheckGrid
 
-	lda updateLadybugGridX			; if ladybug is off grid then use current demo direction
+	lda updateLadybugGridX			; if ladybug is off grid then use current demo direction and return
 	ora updateLadybugGridY
 	bne swrDemoSetDir
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	sec					; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for dots and skulls
-	lda tileMapAddr + 0
+	sec					; ladybug is on grid so
+	lda tileMapAddr + 0			; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for dots and skulls
 	sbc #24
 	sta demoMapAddr + 0
 	lda tileMapAddr + 1
@@ -755,7 +757,6 @@ masterMos350 = &e374
 	and (tileMapAddr), y
 	ldy #47
 	and (tileMapAddr), y
-
 	bmi swrDemoSetDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -771,6 +772,20 @@ masterMos350 = &e374
 	stx demoDir
 	jmp swrDemoCheckSkull			; and go check for skulls and dots again
 
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; serDemoCheckTile				check 2 tiles ahead for tile
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	A			tile type
+;			X			direction 0-3
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			preserved
+;			X			preserved
+;			Y			destroyed
+;			Z			result of cmp
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoCheckTile
@@ -813,6 +828,8 @@ masterMos350 = &e374
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			C		clear if no key pressed, set if key pressed
 ;			A		key index (if key was pressed)
+;			X		preserved
+;			Y		preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .keyScanAscii
