@@ -175,11 +175,11 @@ PRINT TAB(2,12);CHR$(133);"item score values by";CHR$(134);"x2 x3 x5";
 PRINT TAB(2,14);CHR$(129);"Collect";CHR$(131);"yellow letters";CHR$(129);"to spell";
 PRINT TAB(2,15);CHR$(131);"EXTRA";CHR$(129);"for";CHR$(135);~Y%;" extra ";:IF Y%=1 THEN PRINT "life"; ELSE PRINT "lives";
 
-PRINT TAB(2,17);CHR$(134);"Collect";CHR$(129);"red letters";CHR$(134);"to spell";
-PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(134);"for";CHR$(135);~X%;"00000 points";CHR$(134);"plus a";
-PRINT TAB(2,19);CHR$(135);"skull shield";CHR$(134);"lasting ";~W%;" rounds";
+PRINT TAB(2,17);CHR$(130);"Collect";CHR$(129);"red letters";CHR$(130);"to spell";
+PRINT TAB(2,18);CHR$(129);"SPECIAL";CHR$(130);"for";CHR$(135);~X%;"00000 points";CHR$(130);"plus a";
+PRINT TAB(2,19);CHR$(135);"skull shield";CHR$(130);"lasting ";~W%;" rounds";
 
-PRINT TAB(2,21);CHR$(132);"Collect";CHR$(130);"vegetables";CHR$(132);"to paralyse the";
+PRINT TAB(2,21);CHR$(132);"Collect";CHR$(131);"vegetables";CHR$(132);"to paralyse the";
 PRINT TAB(2,22);CHR$(132);"enemies and earn bonus points";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
