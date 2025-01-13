@@ -33,8 +33,6 @@
 
 	save		"!Boot", bootasmStart, bootasmEnd, &ffffff, 0
 
-	putbasic	"bas/checkFs.bas", "CheckFs"
-
 	putbasic	"bas/menu.bas", "Menu"
 
 	save		"_Bonus", bonusBin, bonusBinEnd, &ffffff, 0
