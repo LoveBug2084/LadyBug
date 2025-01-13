@@ -7,6 +7,7 @@ F%=&130
 J%=&133
 M%=&69
 
+A%=5:X%=&70:Y%=0:!X%=&0D240072:B%=(USR(&FFDD)AND&FF)=2
 IF B% THEN u$="WR":l$="LR" ELSE u$="":l$="L"
 
 ON ERROR PROCerror

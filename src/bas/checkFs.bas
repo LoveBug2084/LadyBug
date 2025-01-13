@@ -1,2 +1,0 @@
-A%=5:X%=&70:Y%=0:!&70=&0D240072:B%=(USR(&FFDD)AND&FF)=2:CHAIN "Menu"
-
