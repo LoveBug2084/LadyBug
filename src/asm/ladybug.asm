@@ -3187,7 +3187,10 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	jsr drawString				; draw demo mode message
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs colorMultiplier0, " DEMO MODE", &ff
+	equs "          ", &ff
+	jsr drawString
+	equw screenAddr + 2 + 8 + 9 * chrColumn + 25 * chrRow
+	equs colorMultiplier0, "DEMO", &ff
 
 	rts
 
