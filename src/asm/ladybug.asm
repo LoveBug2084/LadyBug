@@ -3185,10 +3185,9 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	lda demoMode				; if demo mode then draw demo mode message
 	beq drawHighScoreName			; else draw high score name
 
-	jsr drawString				; draw demo mode message
-	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs "          ", &ff
-	jsr drawString
+	jsr drawHighScoreNameErase		; erase high score name from lower panel
+
+	jsr drawString				; and replace with "DEMO"
 	equw screenAddr + 2 + 8 + 9 * chrColumn + 25 * chrRow
 	equs colorMultiplier0, "DEMO", &ff
 
@@ -3207,6 +3206,15 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	
 	jmp drawText
 
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawHighScoreNameErase
+
+	jsr drawString				; erase high score name from lower panel
+	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
+	equs "          ", &ff
+
+	rts					; retuen
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5947,10 +5955,9 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #&ff				; else pause game
 	sta pauseGame
 	
-	jsr drawString				; draw paused message
-	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs "          ", &ff
-	jsr drawString
+	jsr drawHighScoreNameErase		; erase high score name from lower panel
+
+	jsr drawString				; and replace with "PAUSED"
 	equw screenAddr + 2 + 8 + 8 * chrColumn + 25 * chrRow
 	equs colorMultiplier0, "PAUSED", &ff
 	
