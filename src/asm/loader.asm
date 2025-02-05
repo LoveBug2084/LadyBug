@@ -597,7 +597,7 @@ masterMos350 = &e374
 	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if demo mode then use default number of lives and choose a random level 1 - 18
+	; if demo mode then use default number of lives and choose a random level 1 - 24
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda demoMode				; if demo mode is active then
@@ -609,16 +609,16 @@ masterMos350 = &e374
 .swrGameLevelChoose
 
 	jsr random				; pick random number 0 - 255
-	beq swrGameLevelExit			; if = 0 then exit (level has been previously set to 1 so start on level 1)
+	beq swrGameLevelExit			; if = 0 then exit (no need to advance level)
 
-	cmp #18					; if >= 18 then choose another random number
+	cmp #24					; if >= 24 then choose another random number
 	bcs swrGameLevelChoose
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; advance the level 1 to 17 times (from random number)
+	; advance the level 1 to 23 times (from chosen random number)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	tay					; set the number of loops (1 to 17) to advance the level
+	tay					; set the number of loops (1 to 23) to advance the level
 
 .swrGameLevelAdvance
 

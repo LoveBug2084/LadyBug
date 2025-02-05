@@ -782,7 +782,7 @@ bootstrap     &4800 - &4949 , 330 bytes
 .swrGameLevelChoose
      AE44   20 00 01   JSR &0100
      AE47   F0 0B      BEQ &AE54
-     AE49   C9 12      CMP #&12
+     AE49   C9 18      CMP #&18
      AE4B   B0 F7      BCS &AE44
      AE4D   A8         TAY
 .swrGameLevelAdvance
