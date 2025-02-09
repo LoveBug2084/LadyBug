@@ -676,25 +676,11 @@ masterMos350 = &e374
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx demoDir				; get current demo direction
-
-	jsr updateLadybugCheckPath		; if 1 tile in front of ladybug is a wall
-	beq swrDemoRandomDir			; then choose a random direction
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.swrDemoCheckSkull
-
-	lda #mapTileSkull			; if 2 tiles in front of ladybug is a skull
-	jsr swrDemoCheckTile
-	beq swrDemoRandomDir			; then choose random direction
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 .swrDemoCheckSide1
 
-	txa					; check side 1 of ladybug
-	eor #%00000010
+	lda demoDir				; get current demo direction
+
+	eor #%10				; check side 1 of ladybug
 	tax
 
 	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
@@ -711,19 +697,37 @@ masterMos350 = &e374
 
 .swrDemoCheckSide2
 
-	txa					; check side 2 of ladybug
-	eor #%00000001
+	lda demoDir				; get current demo direction
+
+	eor #%11				; check side 2 of ladybug
 	tax
 
 	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
-	beq swrDemoRandomPercentage		; then choose a random percentage turn
+	beq swrDemoCheckFront			; then check front
 
 	lda #mapTileDot				; now check 2 tiles to the side for a dot
 	jsr swrDemoCheckTile
-	bne swrDemoRandomPercentage		; if not found then choose a random percentage turn
+	bne swrDemoCheckFront			; if not found then check front
 
 	stx demoDir				; if dot found then set turn direction
-	; continue down to set direction
+	jmp swrDemoSetDir
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoCheckFront
+
+	ldx demoDir				; get current demo direction
+
+	jsr updateLadybugCheckPath		; if 1 tile in front of ladybug is a wall
+	beq swrDemoRandomDir			; then choose a random direction
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoCheckSkull
+
+	lda #mapTileSkull			; if 2 tiles in front of ladybug is a skull
+	jsr swrDemoCheckTile
+	beq swrDemoRandomDir			; then choose random direction
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -739,11 +743,11 @@ masterMos350 = &e374
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoRandomPercentage
+;.swrDemoRandomPercentage
 
-	jsr random
-	cmp #0.15 * 256				; 15% chance to turn randomly otherwise stay on current direction
-	bcs swrDemoSetDir
+;	jsr random
+;	cmp #0.15 * 256				; 15% chance to turn randomly otherwise stay on current direction
+;	bcs swrDemoSetDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
