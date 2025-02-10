@@ -8898,7 +8898,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 .checkForObject
 
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
-	; check for vegetable/diamond is active and that ladybug is in the center box
+	; check if vegetable/diamond is active and that ladybug is in the center box
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda bonusItemActive			; if bonus item is active

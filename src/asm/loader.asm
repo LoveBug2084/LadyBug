@@ -667,7 +667,7 @@ masterMos350 = &e374
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	sec					; ladybug is on grid so
-	lda tileMapAddr + 0			; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for dots and skulls
+	lda tileMapAddr + 0			; set demoMapAddr to tileMapAddr - 24 to be able to search a 5x5 square for tiles
 	sbc #24
 	sta demoMapAddr + 0
 	lda tileMapAddr + 1
@@ -686,8 +686,7 @@ masterMos350 = &e374
 	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
 	beq swrDemoCheckSide2			; then try side 2
 
-	lda #mapTileDot				; check 2 tiles to the side for a dot
-	jsr swrDemoCheckTile
+	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
 	bne swrDemoCheckSide2			; if not found try side 2
 
 	stx demoDir				; if dot found then set turn direction
@@ -705,8 +704,7 @@ masterMos350 = &e374
 	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
 	beq swrDemoCheckFront			; then check front
 
-	lda #mapTileDot				; now check 2 tiles to the side for a dot
-	jsr swrDemoCheckTile
+	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
 	bne swrDemoCheckFront			; if not found then check front
 
 	stx demoDir				; if dot found then set turn direction
@@ -721,13 +719,23 @@ masterMos350 = &e374
 	jsr updateLadybugCheckPath		; if 1 tile in front of ladybug is a wall
 	beq swrDemoRandomDir			; then choose a random direction
 
+	jsr swrDemoCheckTileEdible		; check 2 tiles in front for dot/heart/letters
+	beq swrDemoSetDir			; if found then continue going forward
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoCheckSkull
 
-	lda #mapTileSkull			; if 2 tiles in front of ladybug is a skull
-	jsr swrDemoCheckTile
+	jsr swrDemoCheckTileSkull		; if 2 tiles in front of ladybug is a skull
 	beq swrDemoRandomDir			; then choose random direction
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoRandomPercentage
+
+	jsr random
+	cmp #0.20 * 256				; 20% chance to turn randomly otherwise stay on current direction
+	bcc swrDemoRandomDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -740,14 +748,6 @@ masterMos350 = &e374
 	sta playerInput
 
 	rts					; return
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-;.swrDemoRandomPercentage
-
-;	jsr random
-;	cmp #0.15 * 256				; 15% chance to turn randomly otherwise stay on current direction
-;	bcs swrDemoSetDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -779,10 +779,9 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; serDemoCheckTile				check 2 tiles ahead for tile
+; swrDemoCheckTileSkull				check 2 tiles ahead for skull tile
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry parameters	A			tile type
-;			X			direction 0-3
+; entry parameters	X			direction 0-3
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			preserved
 ;			X			preserved
@@ -792,12 +791,57 @@ masterMos350 = &e374
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoCheckTile
+.swrDemoCheckTileSkull
 
 	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
-	cmp (demoMapAddr), y			; check for tile and return with result
+	lda (demoMapAddr), y			; check for tile and return with result
+	cmp #mapTileSkull
 
 	rts					
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrDemoCheckTileEdible			check 2 tiles ahead for edible tiles
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	X			direction 0-3
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			preserved
+;			X			preserved
+;			Y			destroyed
+;			Z			result of cmp
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; workspace		none
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoCheckTileEdible
+
+	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
+	lda (demoMapAddr), y			; check for tile and return with result
+
+	cmp #mapTileDot				; check for dot
+	beq swrDemoCheckTileEdibleTrue
+
+	cmp #mapTileHeart			; check for heart
+	beq swrDemoCheckTileEdibleTrue
+
+	cmp #mapTileS				; check for letters SPECIALXTR
+	bcc swrDemoCheckTileEdibleFalse
+	
+	cmp #mapTileR + 1
+	bcs swrDemoCheckTileEdibleFalse
+
+.swrDemoCheckTileEdibleTrue
+
+	lda #0
+	rts					
+
+.swrDemoCheckTileEdibleFalse
+
+	lda #&ff
+	rts
+
+
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
