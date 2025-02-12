@@ -689,7 +689,7 @@ masterMos350 = &e374
 	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
 	bne swrDemoCheckSide2			; if not found try side 2
 
-	stx demoDir				; if dot found then set turn direction
+	stx demoDir				; tile found so set turn direction
 	jmp swrDemoSetDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -707,7 +707,7 @@ masterMos350 = &e374
 	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
 	bne swrDemoCheckFront			; if not found then check front
 
-	stx demoDir				; if dot found then set turn direction
+	stx demoDir				; tile found so set turn direction
 	jmp swrDemoSetDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -720,7 +720,7 @@ masterMos350 = &e374
 	beq swrDemoRandomDir			; then choose a random direction
 
 	jsr swrDemoCheckTileEdible		; check 2 tiles in front for dot/heart/letters
-	beq swrDemoSetDir			; if found then continue going forward
+	beq swrDemoSetDir			; if tile found then continue going forward
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -734,7 +734,7 @@ masterMos350 = &e374
 .swrDemoRandomPercentage
 
 	jsr random
-	cmp #0.20 * 256				; 20% chance to turn randomly otherwise stay on current direction
+	cmp #0.20 * 256				; clear path in front so 20% chance to turn randomly otherwise stay on current direction
 	bcc swrDemoRandomDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -753,10 +753,10 @@ masterMos350 = &e374
 
 .swrDemoRandomDir
 
-	ldy #1
-	lda (tileMapAddr), y			; if all directions are blocked by a solid wall then give up and stay on current direction
-	ldy #23					; ( silly maze design, ladybug boxed in at starting position. this test prevents an
-	and (tileMapAddr), y			; infinite loop that would occur while searching for a random direction )
+	ldy #1					; if all directions are blocked by a solid wall then give up and stay on current direction
+	lda (tileMapAddr), y			; this test prevents an infinite loop that would occur while searching for a random direction
+	ldy #23					; if ladybug was boxed in at starting position (unplayable map) 
+	and (tileMapAddr), y
 	ldy #25
 	and (tileMapAddr), y
 	ldy #47
@@ -767,34 +767,34 @@ masterMos350 = &e374
 
 .swrDemoRandomDirLoop
 
-	jsr random				; else pick a random direction that is not a solid wall
-	and #%00000011
+	jsr random				; pick a random direction that is not a solid wall
+	and #%11
 	tax
 	jsr updateLadybugCheckPath
 	beq swrDemoRandomDirLoop
 
-	stx demoDir
-	jmp swrDemoCheckSkull			; and go check for skulls and dots again
+	stx demoDir				; set chosen random direction
+	jmp swrDemoCheckSkull			; and check there is no skull in this direction
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrDemoCheckTileSkull				check 2 tiles ahead for skull tile
+; swrDemoCheckTileSkull				check for skull tile in 2 tiles from ladybug position at supplied direction
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	X			direction 0-3
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			preserved
+; exit			A			destroyed
 ;			X			preserved
-;			Y			destroyed
-;			Z			result of cmp
+;			Y			preserved
+;			Z			= set (skull found), cleared (not found)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoCheckTileSkull
 
-	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
-	lda (demoMapAddr), y			; check for tile and return with result
+	ldy swrDemoMapDir, x			; set index to 2 tiles from ladybug
+	lda (demoMapAddr), y			; check for skull tile and return with result
 	cmp #mapTileSkull
 
 	rts					
@@ -802,22 +802,22 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrDemoCheckTileEdible			check 2 tiles ahead for edible tiles
+; swrDemoCheckTileEdible			check for edible tiles 2 tiles from ladybug at supplied direction
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	X			direction 0-3
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			preserved
+; exit			A			= &00 edible found, = &ff not found
 ;			X			preserved
-;			Y			destroyed
-;			Z			result of cmp
+;			Y			preserved
+;			Z			= set (edible found), = cleared (not found)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoCheckTileEdible
 
-	ldy swrDemoMapDir, x			; set index to 2 tiles ahead of ladybug
-	lda (demoMapAddr), y			; check for tile and return with result
+	ldy swrDemoMapDir, x			; set index to 2 tiles from ladybug
+	lda (demoMapAddr), y			; get tile
 
 	cmp #mapTileDot				; check for dot
 	beq swrDemoCheckTileEdibleTrue
@@ -845,24 +845,24 @@ masterMos350 = &e374
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-; regular 3x3 box offset (tileMapAddr)
+; regular 3x3 box offset (** tileMapAddr)
 ; ---------------
-; |    | 01 |    |
+; | ** | 01 |    |
 ; ---------------
 ; | 23 |    | 25 |
 ; ---------------
 ; |    | 47 |    |
 ; ---------------
 
-; extended 5x5 box offset (demoMapAddr) = tileMapAddr - 24
+; extended 5x5 box offset (@@ demoMapAddr) = tileMapAddr - 24
 ; --------------------------
-; |    |    | 02 |    |    |
+; | @@ |    | 02 |    |    |
 ; --------------------------
-; |    |    |    |    |    |
+; |    | ** | 01 |    |    |
 ; --------------------------
-; | 46 |    |    |    | 50 |
+; | 46 | 23 |    | 25 | 50 |
 ; --------------------------
-; |    |    |    |    |    |
+; |    |    | 47 |    |    |
 ; --------------------------
 ; |    |    | 94 |    |    |
 ; --------------------------
@@ -870,12 +870,12 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrKeyboardScan					scan all keys (used when redefining input keys)
+; swrKeyboardScan			scan all keys (used when redefining input keys)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			C		clear if no key pressed, set if key pressed
-;			A		key index (if key was pressed)
+; exit			C		set if key pressed, clear if no key pressed
+;			A		key index if key was pressed, &ff if no key pressed
 ;			X		preserved
 ;			Y		preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
