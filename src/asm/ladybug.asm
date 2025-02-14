@@ -2076,6 +2076,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	sta playerInput				; clear any previous pending player control inputs
 
+	sta demoDir				; set demo direction to up to match the direction of ladybug at the entry position
+
 	sta pauseLadybug			; unpause ladybug
 	
 	lda #escTime				; reset esc key timer
