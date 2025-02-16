@@ -1948,13 +1948,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 
-;#####################################################################################################################################################
-;#####################################################################################################################################################
+;*****************************************************************************************************************************************************
 ;
 ; main						main entry point to program
 ;
-;#####################################################################################################################################################
-;#####################################################################################################################################################
+;*****************************************************************************************************************************************************
 
 .main
 
@@ -2085,9 +2083,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 
 
-;#####################################################################################################################################################
+;*****************************************************************************************************************************************************
+;
 ; game main loop
-;#####################################################################################################################################################
+;
+;*****************************************************************************************************************************************************
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; gameLoopWaitIntUpper			wait for upper interrupt (raster lines 0-155) then process game functions
@@ -2161,7 +2161,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jmp gameIntroScreen			; then jump back to the game intro screen
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if game is paused then skip enemy timer, enemy release, enemy/ladybug pause timers
+	; if game is paused (return was pressed) then skip enemy timer, enemy release, enemy/ladybug pause timers
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .gameLoopCheckPause
@@ -2248,7 +2248,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #gameOverTime			; set display time
 	sta pauseCounter
 
-	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
+	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	jsr drawString				; draw game over message in red
 	equw screenAddr + 2 + 7 * chrColumn + 12 * chrRow
@@ -2366,7 +2366,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	
 	
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; playfieldMiddleWithTimer			initialize all sprites as blanked and erased
+; initMiddle					initialize all sprites as blanked and erased
 ;						clear tilemap
 ;						fill tilemap edges with with timer tiles
 ;						draw tilemap
@@ -2378,7 +2378,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.playfieldMiddleWithTimer
+.initMiddle
 
 	jsr initSprites				; initialize all sprites as blanked and erased
 
@@ -4058,6 +4058,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equb -1, -1, -1
 	equb mapTileYellowE, mapTileYellowX, mapTileYellowT, mapTileYellowR, mapTileYellowA
 
+.instructionsLettersEnd
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .instructions
@@ -4065,14 +4067,14 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSoundSilence			; kill any current sounds
 
 	lda demoMode				; if demo mode
-	beq instructionsDrawAll
+	beq instructionsInit
 
 	sec					; then return with carry set (skip instructions, start demo game)
 	rts
 
-.instructionsDrawAll
+.instructionsInit
 
-	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
+	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	lda #palObject + palRed			; set object color to red so that "SPECIAL" tiles are red
 	sta ulaPalette
@@ -4080,7 +4082,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #2					; draw two random flowers at screen row 2
 	jsr drawFlowers
 
-	jsr drawString				; draw "instruction" in red
+	jsr drawString				; draw "instructions" in red
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 4 * chrRow
 	equs colorRed, "INSTRUCTIONS", &ff
 	
@@ -4091,11 +4093,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #hi(screenAddr + 8 + 2 * chrColumn + 7 * chrRow)
 	sta drawMapTileAddr + 1
 
-	lda #mapTileCyanHeart			; draw cyan heart
-	jsr drawMapTile
+	ldx #3					; draw 3 cyan hearts
 
-	lda #column				; advance 1 column
-	jsr drawMapTileAddrAdvance
+.instructionsHeartsLoop
 
 	lda #mapTileCyanHeart			; draw cyan heart
 	jsr drawMapTile
@@ -4103,9 +4103,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #column				; advance 1 column
 	jsr drawMapTileAddrAdvance
 
-	lda #mapTileCyanHeart			; draw cyan heart
-	jsr drawMapTile
-	
+	dex
+	bne instructionsHeartsLoop
+
 	jsr drawString				; draw "multiply score" in green
 	equw screenAddr + 2 + 16 + 6 * chrColumn + 7 * chrRow
 	equs colorGreen, "MULTIPLY SCORE", &ff
@@ -4134,8 +4134,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	inx					; move to next entry in table
 
-	cpx #15					; until done
-	bne instructionsLettersLoop
+	cpx #instructionsLettersEnd - instructionsLetters
+	bne instructionsLettersLoop		; until done
 
 	jsr drawString				; draw "collect for bonus" in green
 	equw screenAddr + 2 + 3 * chrColumn + 11 * chrRow
@@ -5700,7 +5700,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #idleTime				; reset the idle timeout
 	sta idleCounter
 
-	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
+	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	jsr mainMenuDrawLogo			; draw the ladybug logo
 
@@ -5724,7 +5724,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #idleTime				; reset the idle timeout
 	sta idleCounter
 
-	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
+	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	jsr drawString				; draw 3 red hearts, "BEST PLAYERS" in skull color, 3 red hearts
 	equw screenAddr + 2 + 8 + 1 * chrColumn + 3 * chrRow
@@ -6006,7 +6006,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 .nameReg
 
-	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
+	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	lda #nameRegTimer			; set enemy timer speed (1 tick per second)
 	sta enemyTimerSpeed
@@ -7488,7 +7488,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; initialize screen, sprites and palette
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
+	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	lda #palObject + palCyan		; set letters and hearts to cyan
 	sta ulaPalette
@@ -7791,7 +7791,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	; initialize playfieldMiddle
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr playfieldMiddleWithTimer		; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
+	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
 	jsr drawBonusGraphics			; draw the bonus screen graphics
 
@@ -9370,7 +9370,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	jsr checkForObject			; check for object under ladybug (dot/heart/letter/skull) and do required action (points/multiplier/death)
 
-	jsr swrDemo				; use demo mode controls (if enabled)
+	jsr swrDemo				; override player input and use demo mode controls (if enabled)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check inputs and store selected directions
