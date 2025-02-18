@@ -3,6 +3,7 @@
 
 
 2025/02/11 issue with .swrDemoCheckTileEdible not finding items could be the map address is incorrect ?
+Fixed: issues was that demoDir variable was uninitialized at level start/continue so it was not always pointing up
 
 
 

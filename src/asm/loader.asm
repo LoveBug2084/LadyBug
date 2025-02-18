@@ -734,7 +734,7 @@ masterMos350 = &e374
 .swrDemoRandomPercentage
 
 	jsr random
-	cmp #0.20 * 256				; clear path in front so 20% chance to turn randomly otherwise stay on current direction
+	cmp #0.10 * 256				; clear path in front so 10% chance to turn randomly otherwise stay on current direction
 	bcc swrDemoRandomDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
