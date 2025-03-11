@@ -2674,7 +2674,13 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	and #spriteBlanking
 	bne moveSpritesCheckAlignmentX
 
-	lda spritesX, x				; if ladybugX is close enough to enemyX .. abs(enemyX - ladybugX) < ladybugEnemyRange
+.moveSpritesCollisionRow
+
+	lda spritesY + 0			; if ladybugY = enemyY
+	cmp spritesY, x
+	bne moveSpritesCollisionColumn
+
+	lda spritesX, x				; and if abs(enemyX - ladybugX) < ladybugEnemyRange
 	sec
 	sbc spritesX + 0
 	bcs moveSpritesCollisionX
@@ -2686,7 +2692,15 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	cmp #ladybugEnemyRange
 	bcs moveSpritesCheckAlignmentX
 
-	lda spritesY, x				; and if ladybugY is close enough to enemyY .. abs(enemyY - ladybugY) < ladyBugEnemyRange
+	bcc moveSpritesCollisionTrue		; then kill ladybug
+
+.moveSpritesCollisionColumn
+
+	lda spritesX + 0			; if ladybugX = enemyX
+	cmp spritesX, x
+	bne moveSpritesCheckAlignmentX
+
+	lda spritesY, x				; and if abs(enemyY - ladybugY) < ladyBugEnemyRange
 	sec
 	sbc spritesY + 0
 	bcs moveSpritesCollisionY
@@ -2697,6 +2711,8 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	cmp #ladybugEnemyRange
 	bcs moveSpritesCheckAlignmentX
+
+.moveSpritesCollisionTrue
 
 	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug
 	stx enemyLadybugKill			; and save the enemy that killed ladybug (for the death animation)
