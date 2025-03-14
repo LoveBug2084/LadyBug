@@ -676,39 +676,26 @@ masterMos350 = &e374
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoCheckSide1
+.swrdemoCheckSides
 
-	lda demoDir				; get current demo direction
+	bit vsyncCounter			; choose to test side1/side2 or reversed side2/side1
+	bmi swrDemoCheckSidesReversed
 
-	eor #%10				; check side 1 of ladybug
-	tax
+	jsr swrDemoCheckSide1			; check side 1 for tile
+	bcs swrDemoSetDir
 
-	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
-	beq swrDemoCheckSide2			; then try side 2
+	jsr swrDemoCheckSide2			; check side 2 for tile
+	bcs swrDemoSetDir
 
-	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
-	bne swrDemoCheckSide2			; if not found try side 2
+	bcc swrDemoCheckFront			; check front for tile
 
-	stx demoDir				; tile found so set turn direction
-	jmp swrDemoSetDir
+.swrDemoCheckSidesReversed
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+	jsr swrDemoCheckSide2			; check side 2 for tile
+	bcs swrDemoSetDir
 
-.swrDemoCheckSide2
-
-	lda demoDir				; get current demo direction
-
-	eor #%11				; check side 2 of ladybug
-	tax
-
-	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
-	beq swrDemoCheckFront			; then check front
-
-	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
-	bne swrDemoCheckFront			; if not found then check front
-
-	stx demoDir				; tile found so set turn direction
-	jmp swrDemoSetDir
+	jsr swrDemoCheckSide1			; check side 1 for tile
+	bcs swrDemoSetDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -748,6 +735,51 @@ masterMos350 = &e374
 	sta playerInput
 
 	rts					; return
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoCheckSide1
+
+	lda demoDir				; get current demo direction
+
+	eor #%10				; check side 1 of ladybug
+	tax
+
+	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
+	beq swrDemoCheckSideFalse		; then return false
+
+	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
+	bne swrDemoCheckSideFalse		; then return false
+
+	stx demoDir				; tile found so set turn direction
+
+.swrDemoCheckSideTrue
+
+	sec					; return true
+	rts
+
+.swrDemoCheckSideFalse
+
+	clc					; return false
+	rts
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoCheckSide2
+
+	lda demoDir				; get current demo direction
+
+	eor #%11				; check side 2 of ladybug
+	tax
+
+	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
+	beq swrDemoCheckSideFalse		; then return false
+
+	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
+	bne swrDemoCheckSideFalse		; then return false
+
+	stx demoDir				; tile found so set turn direction
+	jmp swrDemoCheckSideTrue
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
