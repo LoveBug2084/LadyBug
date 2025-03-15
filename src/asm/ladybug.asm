@@ -4396,6 +4396,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	dex
 	bne ladybugDeathAnimationDrawAngelLoop
 
+	lda bonusItemActive			; if center bonus item is active
+	beq ladybugDeathAnimationCheckUpperLower
+
+	lda #0					; disable bonus item
+	sta bonusItemActive
+
 	lda #centerBoxX				; erase center box (remove vegetable or diamond)
 	sta drawSpriteX
 	lda #centerBoxY
@@ -9270,7 +9276,6 @@ animateLadybugInstructions	= 6		; instructions animation index
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ladybugKill					blank ladybug sprite
 ;						enable ladybug death animation
-;						disable center bonus item
 ;						remove the possibility of getting a diamond bonus
 ;						remove diamond from lower playfield
 ;						reduce lives by 1
@@ -9295,9 +9300,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda #&ff				; enable death animation
 	sta ladybugDeathEnable
 
-	lda #0					; disable vegetable/diamond
-	sta bonusItemActive
-
+	lda #0
 	sta bonusDiamondEnable			; remove the possibility of getting a diamond bonus
 
 	jsr swrDrawPlayfieldLowerDiamond	; remove diamond from lower playfield
