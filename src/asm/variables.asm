@@ -142,6 +142,10 @@
 
 .moveSpritesIndex	skip 1			; index of current sprite
 
+.moveSpritesDistanceSave
+
+			skip 1			; temporary store for distance squared
+
 .spritesImg		skip spritesTotal	; sprite image, position and direction for drawing
 .spritesX		skip spritesTotal
 .spritesY		skip spritesTotal
