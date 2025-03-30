@@ -2577,16 +2577,6 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	equb -1, 1, 0, 0			; Y up down left right
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; distance squared table for ladybug enemy collision test
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.moveSpritesDistance
-
-	for n, 0, collisionRange - 1		; build distance squared table
-	equb n * n
-	next
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; move ladybug and enemies 1 pixel
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2676,9 +2666,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check for enemy collision with ladybug which is true when
-	; if abs(ladybugx - enemyx) < collisionRange and
-	; if abs(ladybugy - enemyy) < collisionRange and
-	; if square(abs(ladybugx - enemyx)) + square(abs(ladybugy - enemyy)) < collisionRangeSquared
+	; if abs(ladybugx - enemyx) + abs(ladybugy - enemyy) < collisionRange
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesCollision
@@ -2687,7 +2675,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	and #spriteBlanking
 	bne moveSpritesCheckAlignmentX
 
-	lda spritesX, x				; if abs(enemyX - ladybugX) < collisionRange
+	lda spritesX, x				; calculate abs(enemyX - ladybugX)
 	sec
 	sbc spritesX + 0
 	bcs moveSpritesCollisionX
@@ -2696,15 +2684,9 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .moveSpritesCollisionX
 
-	cmp #collisionRange
-	bcs moveSpritesCheckAlignmentX
+	sta moveSpritesDistanceSave		; save x distance
 
-	tay					; then get the square of the distance
-	lda moveSpritesDistance, y
-
-	sta moveSpritesDistanceSave		; save it for final distance calculation
-
-	lda spritesY, x				; if abs(enemyY - ladybugY) < collisionRange
+	lda spritesY, x				; calculate abs(enemyY - ladybugY)
 	sec
 	sbc spritesY + 0
 	bcs moveSpritesCollisionY
@@ -2713,15 +2695,9 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .moveSpritesCollisionY
 
-	cmp #collisionRange
-	bcs moveSpritesCheckAlignmentX
+	adc moveSpritesDistanceSave		; add together both x and y distances
 
-	tay					; then get the square of the distance
-	lda moveSpritesDistance, y
-
-	adc moveSpritesDistanceSave		; add y squared to x squared (clc already clear, no need for clc)
-
-	cmp #collisionRangeSquared		; if distance < collisionRangeSquared then kill ladybug
+	cmp #collisionRange			; if combined distance is less than collisionRange
 	bcs moveSpritesCheckAlignmentX
 
 	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug

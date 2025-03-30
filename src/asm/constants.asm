@@ -32,8 +32,6 @@ spritesAnimationTime	= frame * 0.16		; 0.16 seconds time betweeen sprite animati
 
 collisionRange		= 6			; range allowed between enemy and ladybug to detect as a hit
 
-collisionRangeSquared	= collisionRange * collisionRange
-
 escTime			= frame * 2.00		; hold esc for 2.00 seconds to quit game and return back to menu
 
 levelIntroTime		= pause * 3.00		; 3.00 seconds level intro screen time
