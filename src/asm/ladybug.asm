@@ -2675,9 +2675,10 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	jmp moveSpritesNext
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; check for enemy collision with ladybug
+	; check for enemy collision with ladybug which is true when
 	; if abs(ladybugx - enemyx) < collisionRange and
 	; if abs(ladybugy - enemyy) < collisionRange and
+	; if square(abs(ladybugx - enemyx)) + square(abs(ladybugy - enemyy)) < collisionRangeSquared
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesCollision
