@@ -2684,6 +2684,9 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .moveSpritesCollisionX
 
+	cmp #collisionRange			; if x distance < collisionRange
+	bcs moveSpritesCheckAlignmentX
+
 	sta moveSpritesDistanceSave		; save x distance
 
 	lda spritesY, x				; calculate abs(enemyY - ladybugY)
@@ -2694,6 +2697,9 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	adc #1					; (carry is clear here so no need for clc)
 
 .moveSpritesCollisionY
+
+	cmp #collisionRange			; if y distance < collisionRange
+	bcs moveSpritesCheckAlignmentX
 
 	adc moveSpritesDistanceSave		; add together both x and y distances
 
