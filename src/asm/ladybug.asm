@@ -2830,8 +2830,8 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	
 .moveSpritesAttack
 
-	bit vsyncCounter			; else choose attack order either vertical/horizontal or horizontal/vertical
-	bvs moveSpritesAttackReversedOrder
+	jsr random				; else choose attack order either vertical/horizontal or horizontal/vertical
+	bmi moveSpritesAttackReversedOrder
 
 	jsr moveSpritesCheckHorizontal		; check horizontal
 	jsr moveSpritesCheckVertical		; check vertical
