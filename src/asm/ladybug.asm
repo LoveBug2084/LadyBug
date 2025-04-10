@@ -7,6 +7,7 @@
 	print "----------------------------------------------------"
 	print
 
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; page0100 functions and stack
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -463,7 +464,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; exit			A			destroyed
 ;			X			destroyed
 ;			Y			destroyed
-;			playerInput		bit 0=start 1=left 2=down 3=up 4=right 5=esc
+;			playerInput		bit 0=start 1=left 2=down 3=up 4=right 5=esc 6=space
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .inputScan
@@ -476,6 +477,9 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	
 	lda #0					; clear player input flags
 	sta playerInput
+
+	lda #keySpace				; read space key into playerInput bits
+	jsr readKey
 
 	lda #keyEsc				; read esc key into playerInput bits
 	jsr readKey
@@ -507,31 +511,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	sta via1PortDdrA
 
 	jmp swrJoystickControl			; combine keyboard input with joystick input (if enabled, see loader.asm)
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; readKey					place key onto slow bus port a and read key status into player input bits
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; entry parameters	A			key matrix scan code
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			destroyed
-;			X			preserved
-;			Y			preserved
-;			playerInput		shifted left and key status placed into bit 0
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-.readKey
-
-	sta via1PortA				; select key
-
-	lda via1PortA				; read key status (bit 7)
-
-	asl a					; shift bit 7 into carry
-	rol playerInput				; and shift carry into playerInput bits
-	
-	rts					; return
 
 
 
@@ -3727,11 +3706,14 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 .addScoreSpecial
 
+	bit highScoreChallenge			; if high score challenge mode
+	bpl addScoreExit			; then exit without adding special bonus score
+
 	sed					; bcd mode
 
 	clc					; add the special bonus score to score
 	lda #bonusSpecialScore and 15
-	bcc addScoreTop
+	bcc addScoreTop				; (bcc used as branch always)
 
 
 
@@ -4750,7 +4732,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr mainMenuDraw			; draw the main menu screen (and reset idle time)
 
-	lda #0					; make sure the "START GAME" text is flashing (skull color) by setting shield to 0
+	lda #0					; make sure the "STANDARD GAME"/"CHALLENGE GAME" text is flashing (skull color) by setting shield to 0
 	sta shield
 
 	sta pauseLadybug			; unpause ladybug so that it will animate
@@ -4975,10 +4957,24 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	cmp #keyBitStart			; if start pressed then run start function
 	beq mainMenuProcessStart
 
+	cmp #keyBitMode				; if mode pressed then run mode function
+	beq mainMenuProcessMode
+
 .mainMenuProcessFalse
 
 	clc					; else return false
 	rts
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; .mainMenuProcessMode				; toggle STANDARD/CHALLENGE game, update settings and screen
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuProcessMode
+
+	jmp swrMainMenuProcessMode		; this function had to be moved into sideways ram as we ran out of space
+						; see loader.asm
 
 
 
@@ -4993,7 +4989,17 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1 then we need to decrement again
-	beq mainMenuProcessUp			; (skip over blank line between "high scores" and "start game")
+	beq mainMenuProcessUp			; (skip over blank line between "HIGH SCORES" and "STANDARD/CHALLANGE GAME")
+
+	bit highScoreChallenge			; if high score challenge mode
+	bmi mainMenuProcessUpWrapAround
+
+	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
+	sbc #3
+	cmp #6-3
+	bcc mainMenuProcessUp			; then decrement again
+
+.mainMenuProcessUpWrapAround
 
 	lda mainMenuCursor			; if mainMenuCursor < 0
 	bpl mainMenuProcessUpExit
@@ -5023,7 +5029,19 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1 then increment again
-	beq mainMenuProcessDown			; (skip over the blank line between "start game" and "high scores")
+	beq mainMenuProcessDown			; (skip over the blank line between "STANDARD/CHALLENGE GAME" and "HIGH SCORES")
+
+	bit highScoreChallenge			; if high score challenge mode
+	bmi mainMenuProcessDownWrapAround
+
+	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
+	sbc #3
+	cmp #6-3
+	bcc mainMenuProcessDown			; the increment again
+
+.mainMenuProcessDownWrapAround
+
+	lda mainMenuCursor
 
 	cmp #9					; if mainMenuCursor >= 9
 	bcc mainMenuProcessDownExit
@@ -5050,12 +5068,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	ldx mainMenuCursor			; get mainMenuCursor position
 
-	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 (start game) then return true
+	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 ("START/CHALLENGE GAME") then return true
 	
-	cpx #2					; if mainMenuCursor = 2 (high scores) then display high score table
+	cpx #2					; if mainMenuCursor = 2 ("HIGH SCORES") then display high score table
 	beq mainMenuHighScores
 
-	cpx #8					; if mainMenuCursor == 8 (controls) then redefine the keyboard
+	cpx #8					; if mainMenuCursor == 8 ("CONTROLS") then redefine the keyboard
 	beq mainMenuProcessKeyboard
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -5066,7 +5084,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 						; x index is offset by 3
-						; first entrys in menu are 0:"start game", 1:"blank line", 2:"high scores"
+						; first entrys in menu are 0:"START/CHALLENGE GAME", 1:"blank line", 2:"HIGH SCORES"
 						; so subtract 3 from table addresses to compensate for the offset
 
 	inc gameSettings - 3, x			; gameSettings[x - 3] += 1
@@ -5428,9 +5446,21 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 10 * chrRow
 	equs colorYellow, "LOVEBUG 2021", &ff
 
+	lda highScoreChallenge			; display "STANDARD GAME" or "CHALLENGE GAME" for high score challenge game
+	bne mainMenuDrawTextStandardGame
+
 	jsr drawString
-	equw screenAddr + 2 + 8 + 6 * chrColumn + 12 * chrRow
-	equs colorSkull, "START GAME", &ff
+	equw screenAddr + 2 + 4 * chrColumn + 12 * chrRow
+	equs colorSkull, "CHALLENGE GAME", &ff
+	jmp mainMenuDrawTextHighScores
+
+.mainMenuDrawTextStandardGame
+
+	jsr drawString
+	equw screenAddr + 2 + 4 * chrColumn + 12 * chrRow
+	equs colorSkull, "STANDARD GAME ", &ff
+
+.mainMenuDrawTextHighScores
 
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 14 * chrRow
@@ -7827,6 +7857,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 18 * chrRow
 	equs colorMagenta, "YOU WIN ", colorWhite, &ff
 
+	bit highScoreChallenge			; if high score challenge mode then skip points display and "AND"
+	bpl drawBonusScreenSpecialActiveShields
+
 	lda #(bonusSpecialScore and 15) + '0'
 	jsr drawChr
 	lda #&00
@@ -7840,12 +7873,14 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 17 * chrColumn + 18 * chrRow
 	equs colorMagenta, "PTS", &ff
 
-	if (bonusSpecialShield and 15) = 1
-	{
-
 	jsr drawString
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs colorYellow, "AND", &ff
+
+.drawBonusScreenSpecialActiveShields
+
+	if (bonusSpecialShield and 15) = 1
+	{
 
 	jsr drawString
 	equw screenAddr + 2 + 8 + 8 * chrColumn + 20 * chrRow
@@ -7869,10 +7904,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	}
 	else
 	{	
-
-	jsr drawString
-	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
-	equs colorYellow, "AND", &ff
 
 	jsr drawString
 	equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
@@ -10009,6 +10040,31 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 	sta highScore + 2
 
 	jmp drawPlayfieldLower			; display it and return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; readKey					place key onto slow bus port a and read key status into player input bits
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	A			key matrix scan code
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			preserved
+;			Y			preserved
+;			playerInput		shifted left and key status placed into bit 0
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+.readKey
+
+	sta via1PortA				; select key
+
+	lda via1PortA				; read key status (bit 7)
+
+	asl a					; shift bit 7 into carry
+	rol playerInput				; and shift carry into playerInput bits
+	
+	rts					; return
 
 
 

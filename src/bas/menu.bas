@@ -162,7 +162,7 @@ DEF PROCinstructionsGame
 
 PROCeraseScreen(2)
 
-PRINT TAB(13,3);CHR$(135);"Instructions";TAB(34,3);CHR$(131);"1/2";
+PRINT TAB(13,3);CHR$(135);"Instructions";TAB(34,3);CHR$(131);"1/3";
 
 PRINT TAB(2,5);CHR$(130);"Guide";CHR$(129);"Lady Bug";CHR$(130);"through the mazes";
 PRINT TAB(2,6);CHR$(130);"avoiding deadly";CHR$(135);"enemies";CHR$(130);"and";CHR$(135);"skulls";
@@ -203,13 +203,37 @@ PRINT TAB(2,12);CHR$(129);"navigate the game menu and";CHR$(131);"RETURN";
 PRINT TAB(2,13);CHR$(129);"to adjust the settings and/or";
 PRINT TAB(2,14);CHR$(129);"redefine the controls";
 
-PRINT TAB(2,16);CHR$(130);"During the game press";CHR$(129);"RETURN";CHR$(130);"to"
+PRINT TAB(2,16);CHR$(130);"During the game press";CHR$(129);"RETURN";CHR$(130);"to";
 PRINT TAB(2,17);CHR$(130);"pause, move";CHR$(129);"Lady Bug";CHR$(130);"to unpause";
 
 PRINT TAB(2,19);CHR$(133);"Hold";CHR$(135);"ESC";CHR$(133);"to quit the current game";
 
 PRINT TAB(2,21);CHR$(132);"Reboot the disk to save your";
 PRINT TAB(2,22);CHR$(135);"high scores";CHR$(132);"and";CHR$(135);"game settings";
+
+PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
+
+PROCexpand(5)
+PROCanyKey(360000)
+
+PROCshrink(3)
+PRINT TAB(34,3);CHR$(131);"3";
+PROCeraseScreen(5)
+
+PRINT TAB(2,6);CHR$(131);"Standard";CHR$(132);"or";CHR$(133);"Challenge";CHR$(132);"game modes";
+PRINT TAB(2,7);CHR$(132);"can be toggled from the main menu";
+PRINT TAB(2,8);CHR$(132);"by pressing the";CHR$(135);"SPACE BAR";
+
+PRINT TAB(2,10);CHR$(129);"The";CHR$(133);"Challenge";CHR$(129);"game mode";
+PRINT TAB(2,11);CHR$(129);"has the following differences";
+
+PRINT TAB(2,13);CHR$(130);"The";CHR$(135);"Diamond";CHR$(130);"bonus is not available";
+
+PRINT TAB(2,15);CHR$(131);"The";CHR$(129);"SPECIAL";CHR$(131);"bonus awards shields";
+PRINT TAB(2,16);CHR$(131);"but does not award any score";
+
+PRINT TAB(2,18);CHR$(132);"All game settings are set to";
+PRINT TAB(2,19);CHR$(132);"default and cannot be changed";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
@@ -294,7 +318,6 @@ DEF PROCunexpectedError
 
 CLS
 
-PRINT "An unexpected error has occurred"
 REPORT
 PRINT " at line ";ERL
 PRINT

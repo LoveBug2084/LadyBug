@@ -144,6 +144,7 @@ keyBitDown		= %00000100
 keyBitUp		= %00001000
 keyBitRight		= %00010000
 keyBitEsc		= %00100000
+keyBitMode		= %01000000
 
 
 

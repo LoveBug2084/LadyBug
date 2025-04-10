@@ -594,7 +594,12 @@ masterMos350 = &e374
 
 	sta ladybugEntryEnable			; enable ladybug entry movement animation
 
-	sta bonusDiamondEnable			; enable the possibility of getting a diamond bonus
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; enable the possibility of getting a diamond bonus (regular game) or disable diamond bonus completely (high score challenge)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	lda highScoreChallenge
+	sta bonusDiamondEnable
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; if demo mode then use default number of lives and choose a random level 1 - 24
@@ -978,6 +983,47 @@ masterMos350 = &e374
 	sec					; key pressed so set true status
 	
 	bcs swrKeyboardScanExit			; return with keyboard scan code
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; swrMainMenuProcessMode			; toggle standard / challenge mode and setup game settings
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrMainMenuProcessMode
+
+	jsr playSoundSilence			; terminate any current sound
+
+	lda highScoreChallenge			; toggle STANDARD/CHALLENGE game mode
+	eor #&ff
+	sta highScoreChallenge
+
+	sta bonusDiamondEnable			; update bonus diamond flag to match game mode
+
+	bmi swrMainMenuProcessModeDraw		; if challenge mode
+
+	lda #defaultLadybugLives		; then reset game settings to default
+	sta optionLadybugLives
+	lda #defaultEnemySpeed
+	sta optionEnemySpeed
+	lda #defaultEnemyAttack
+	sta optionEnemyAttack
+
+.swrMainMenuProcessModeDraw
+
+	jsr mainMenuDrawText			; update menu text and settings
+	jsr mainMenuDrawSettings
+
+	jsr swrDrawPlayfieldLowerDiamond	; update lower diamond
+
+	lda #0					; reset cursor to top position "STANDARD/CHALLENGE GAME"
+	sta mainMenuCursor
+
+	lda #sfxTwinkle				; play sound effect
+	jsr playSound
+
+	clc					; return false
+	rts
 
 
 

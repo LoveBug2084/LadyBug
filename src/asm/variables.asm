@@ -38,7 +38,8 @@
 
 .bonusBitsCopy		skip 2			; storage for working on bonus bits
 
-.bonusDiamondEnable	equb &ff		; diamond bonus is enabled if != 0, initialize here for main menu first run illuminated
+.bonusDiamondEnable	equb &ff		; show diamond at first run
+
 .bonusDiamondActive	skip 1			; diamond bonus is active if != 0
 .bonusSpecialActive	skip 1			; special bonus is active if != 0
 .bonusExtraActive	skip 1			; extra bonus is active if != 0
@@ -239,6 +240,8 @@ soundChannels		= 6			; number of concurrent sound effects during game play
 .demoMode		equb 0			; = 0 normal game mode, != 0 demo game mode
 .demoDir		equb 0			; contains chosen direction 0-3
 .demoMapAddr		skip 2			; used to search map for dots and skulls (2 tiles away on next grid position)
+
+.highScoreChallenge	equb &ff			; = 0 high score challenge game, &ff = 0 regular
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero
