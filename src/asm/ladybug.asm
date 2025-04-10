@@ -4732,7 +4732,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr mainMenuDraw			; draw the main menu screen (and reset idle time)
 
-	lda #0					; make sure the "STANDARD GAME"/"CHALLENGE GAME" text is flashing (skull color) by setting shield to 0
+	lda #0					; make sure the "STANDARD/CHALLENGE MODE" text is flashing (skull color) by setting shield to 0
 	sta shield
 
 	sta pauseLadybug			; unpause ladybug so that it will animate
@@ -4968,7 +4968,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .mainMenuProcessMode				; toggle STANDARD/CHALLENGE game, update settings and screen
+; .mainMenuProcessMode				; toggle STANDARD/CHALLENGE mode, update settings and screen
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessMode
@@ -4989,7 +4989,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1 then we need to decrement again
-	beq mainMenuProcessUp			; (skip over blank line between "HIGH SCORES" and "STANDARD/CHALLANGE GAME")
+	beq mainMenuProcessUp			; (skip over blank line between "HIGH SCORES" and "STANDARD/CHALLANGE MODE")
 
 	bit highScoreChallenge			; if high score challenge mode
 	bmi mainMenuProcessUpWrapAround
@@ -5029,7 +5029,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1 then increment again
-	beq mainMenuProcessDown			; (skip over the blank line between "STANDARD/CHALLENGE GAME" and "HIGH SCORES")
+	beq mainMenuProcessDown			; (skip over the blank line between "STANDARD/CHALLENGE MODE" and "HIGH SCORES")
 
 	bit highScoreChallenge			; if high score challenge mode
 	bmi mainMenuProcessDownWrapAround
@@ -5068,7 +5068,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	ldx mainMenuCursor			; get mainMenuCursor position
 
-	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 ("START/CHALLENGE GAME") then return true
+	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 ("START/CHALLENGE MODE") then return true
 	
 	cpx #2					; if mainMenuCursor = 2 ("HIGH SCORES") then display high score table
 	beq mainMenuHighScores
@@ -5084,7 +5084,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 						; x index is offset by 3
-						; first entrys in menu are 0:"START/CHALLENGE GAME", 1:"blank line", 2:"HIGH SCORES"
+						; first entrys in menu are 0:"START/CHALLENGE MODE", 1:"blank line", 2:"HIGH SCORES"
 						; so subtract 3 from table addresses to compensate for the offset
 
 	inc gameSettings - 3, x			; gameSettings[x - 3] += 1
@@ -5446,19 +5446,19 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 10 * chrRow
 	equs colorYellow, "LOVEBUG 2021", &ff
 
-	lda highScoreChallenge			; display "STANDARD GAME" or "CHALLENGE GAME" for high score challenge game
+	lda highScoreChallenge			; display "STANDARD/CHALLENGE MODE" for high score challenge game
 	bne mainMenuDrawTextStandardGame
 
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 12 * chrRow
-	equs colorSkull, "CHALLENGE GAME", &ff
+	equs colorSkull, "CHALLENGE MODE", &ff
 	jmp mainMenuDrawTextHighScores
 
 .mainMenuDrawTextStandardGame
 
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 12 * chrRow
-	equs colorSkull, "STANDARD GAME ", &ff
+	equs colorSkull, "STANDARD MODE ", &ff
 
 .mainMenuDrawTextHighScores
 

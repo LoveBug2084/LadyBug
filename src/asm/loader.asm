@@ -1016,7 +1016,7 @@ masterMos350 = &e374
 
 	jsr swrDrawPlayfieldLowerDiamond	; update lower diamond
 
-	lda #0					; reset cursor to top position "STANDARD/CHALLENGE GAME"
+	lda #0					; reset cursor to top position "STANDARD/CHALLENGE MODE"
 	sta mainMenuCursor
 
 	lda #sfxTwinkle				; play sound effect
