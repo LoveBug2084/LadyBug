@@ -244,11 +244,11 @@ PRINT TAB(2,8);CHR$(130);"The";CHR$(135);"Diamond";CHR$(130);"bonus is not avail
 PRINT TAB(2,10);CHR$(131);"The";CHR$(129);"Special";CHR$(131);"bonus awards";CHR$(129);"shields";
 PRINT TAB(2,11);CHR$(131);"but does not award any";CHR$(135);"points";
 
-PRINT TAB(2,13);CHR$(133);"The 3 default maze maps will be";
+PRINT TAB(2,13);CHR$(133);"The";CHR$(135);"3 default maze maps";CHR$(133);"will be";
 PRINT TAB(2,14);CHR$(133);"used instead of user maze maps";
 
-PRINT TAB(2,16);CHR$(129);"The the default lives and";
-PRINT TAB(2,17);CHR$(129);"difficulty will be used";
+PRINT TAB(2,16);CHR$(129);"The the default";CHR$(131);"lives";CHR$(129);"and";
+PRINT TAB(2,17);CHR$(131);"difficulty";CHR$(129);"will be used";
 
 PRINT TAB(2,19);CHR$(132);"Press";CHR$(131);"G";CHR$(132);"to toggle between";CHR$(129);"Arcade";
 PRINT TAB(2,20);CHR$(132);"and";CHR$(133);"High Score Challenge";CHR$(132);"Modes";
