@@ -14,7 +14,7 @@ S%=&8010
 F%=&130
 M%=&69
 
-IF B% THEN u$="WR":l$="LR" ELSE u$="":l$="L"
+IF B% THEN U$="WR":L$="LR" ELSE U$="":L$="L"
 
 OSCLI("LOAD _Reset " + STR$~(&FF0000 + D%))
 
@@ -60,9 +60,9 @@ IF S$="Y" THEN PRINT " ";CHR$(129);"Resetting";CHR$(130);"controls and settings"
 
 IF H$="Y" THEN PRINT " ";CHR$(129);"Resetting";CHR$(133);"high scores":FOR Z%=&00 TO &6F:Z%?H%=Z%?D%:NEXT Z%
 
-IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting";CHR$(132);"maps":OSCLI("ACCESS _Maps "+u$):Z%=OPENOUT("_Maps"):PRINT#Z%,"_Map1","_Map2","_Map3":CLOSE#Z%:OSCLI("ACCESS _Maps "+l$)
+IF M$="Y" THEN PRINT " ";CHR$(129);"Resetting";CHR$(132);"maps":OSCLI("ACCESS _Maps "+U$):Z%=OPENOUT("_Maps"):PRINT#Z%,"_Map1","_Map2","_Map3":CLOSE#Z%:OSCLI("ACCESS _Maps "+L$)
 
-IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("ACCESS _Config "+u$):OSCLI("SAVE _Config " + STR$~(&FF0000 + H%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Config "+l$):!F%=0
+IF H$="Y" OR S$="Y" THEN V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%:H%?&7D=V%:OSCLI("ACCESS _Config "+U$):OSCLI("SAVE _Config " + STR$~(&FF0000 + H%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Config "+L$):!F%=0
 
 PRINT:PRINT " ";CHR$(131);
 

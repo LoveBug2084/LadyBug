@@ -1,6 +1,6 @@
 HIMEM=&2B00:*/Cls
 
-IF B% THEN u$="WR":l$="LR" ELSE u$="":l$="L"
+IF B% THEN U$="WR":L$="LR" ELSE U$="":L$="L"
 
 ONERRORSOUND1,-15,180,5:COLOUR128:COLOUR3:PRINTTAB(5,28);:REPORT:PROCa:PROCz
 
@@ -159,11 +159,11 @@ ENDPROC
 
 DEFPROCf
 
-OSCLI("ACCESS _Maps "+u$)
+OSCLI("ACCESS _Maps "+U$)
 F%=OPENOUT("_Maps")
 PRINT#F%,f$(0),f$(1),f$(2)
 CLOSE#F%
-OSCLI("ACCESS _Maps "+l$)
+OSCLI("ACCESS _Maps "+L$)
 
 ENDPROC
 

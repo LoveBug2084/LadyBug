@@ -99,13 +99,16 @@
 	skip 1					; validation of cleanResetBank and cleanResetMachine (checksum)
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; storage for keyboard/joystick mode (not preserved after reset but just in a handy place for menu.bas)
+; storage for keyboard/joystick mode and game mode (not preserved after reset but just in a handy place for menu.bas)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .joystickEnable
 
-	skip 1					; control input mode, 0 = no joystick, 1 = analogue joystick, 2 = userport joystick
+	skip 1					; control input mode 0 = no joystick, 1 = analogue joystick, 2 = userport joystick
 						; note: keyboard is always active even when joystick is enabled
+.gameMode
+
+	skip 1					; storage for standard/challenge game mode type bit 7 = 1 high score challenge, = 0 standard game
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1957,8 +1960,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr drawPlayfieldUpper			; display the upper playfield bonus letters and multipliers
 
-
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; display the main screen with player options, wait for start to be pressed or idle timeout
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3707,7 +3708,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 .addScoreSpecial
 
 	bit highScoreChallenge			; if high score challenge mode
-	bpl addScoreExit			; then exit without adding special bonus score
+	bmi addScoreExit			; then exit without adding special bonus score
 
 	sed					; bcd mode
 
@@ -4957,24 +4958,10 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	cmp #keyBitStart			; if start pressed then run start function
 	beq mainMenuProcessStart
 
-	cmp #keyBitMode				; if mode pressed then run mode function
-	beq mainMenuProcessMode
-
 .mainMenuProcessFalse
 
 	clc					; else return false
 	rts
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .mainMenuProcessMode				; toggle STANDARD/CHALLENGE mode, update settings and screen
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.mainMenuProcessMode
-
-	jmp swrMainMenuProcessMode		; this function had to be moved into sideways ram as we ran out of space
-						; see loader.asm
 
 
 
@@ -4992,7 +4979,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	beq mainMenuProcessUp			; (skip over blank line between "HIGH SCORES" and "STANDARD/CHALLANGE MODE")
 
 	bit highScoreChallenge			; if high score challenge mode
-	bmi mainMenuProcessUpWrapAround
+	bpl mainMenuProcessUpWrapAround
 
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
@@ -5032,7 +5019,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	beq mainMenuProcessDown			; (skip over the blank line between "STANDARD/CHALLENGE MODE" and "HIGH SCORES")
 
 	bit highScoreChallenge			; if high score challenge mode
-	bmi mainMenuProcessDownWrapAround
+	bpl mainMenuProcessDownWrapAround
 
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
@@ -5446,19 +5433,9 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 10 * chrRow
 	equs colorYellow, "LOVEBUG 2021", &ff
 
-	lda highScoreChallenge			; display "STANDARD/CHALLENGE MODE" for high score challenge game
-	bne mainMenuDrawTextStandardGame
-
 	jsr drawString
-	equw screenAddr + 2 + 4 * chrColumn + 12 * chrRow
-	equs colorSkull, "CHALLENGE MODE", &ff
-	jmp mainMenuDrawTextHighScores
-
-.mainMenuDrawTextStandardGame
-
-	jsr drawString
-	equw screenAddr + 2 + 4 * chrColumn + 12 * chrRow
-	equs colorSkull, "STANDARD MODE ", &ff
+	equw screenAddr + 2 + 8 + 6 * chrColumn + 12 * chrRow
+	equs colorSkull, "START GAME", &ff
 
 .mainMenuDrawTextHighScores
 
@@ -7858,7 +7835,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equs colorMagenta, "YOU WIN ", colorWhite, &ff
 
 	bit highScoreChallenge			; if high score challenge mode then skip points display and "AND"
-	bpl drawBonusScreenSpecialActiveShields
+	bmi drawBonusScreenSpecialActiveShields
 
 	lda #(bonusSpecialScore and 15) + '0'
 	jsr drawChr

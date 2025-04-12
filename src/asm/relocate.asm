@@ -127,6 +127,20 @@
 	sta cleanResetValidation + progOffset
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; setup game mode
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.bootstrapSetupGameMode
+
+	lda gameMode				; save game mode for relocation
+	sta highScoreChallenge + progOffset
+
+	sta swrGameMode				; save game mode for menu.bas on reboot
+
+	eor #&ff				; save diamond visibility for relocation
+	sta bonusDiamondEnable + progOffset
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; setup joystick stuff
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 

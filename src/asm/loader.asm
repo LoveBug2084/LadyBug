@@ -92,6 +92,16 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; save game mode so that menu.bas can read the last game mode on reboot
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrGameMode
+
+	skip 1					; reserve space for last game mode standard/challenge for menu.bas
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; vegetables, points and sprites used by drawSprite
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -210,7 +220,7 @@ zpAddr 			= 0
 	equw swrCleanResetB			; B		Save feature working
 	equw swrCleanResetBplus			; B+		Save feature working
 	equw swrCleanResetMaster		; Master	Save feature working
-	equw swrCleanResetB			; Master ET	No plans for this
+	equw swrCleanResetB			; Master ET	No plans for this as unable to test :(
 	equw swrCleanResetCompact		; Compact	Save feature working
 	equw swrCleanResetB			; Unknown
 	equw swrCleanResetB			; Unknown
@@ -599,6 +609,7 @@ masterMos350 = &e374
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda highScoreChallenge
+	eor #&ff
 	sta bonusDiamondEnable
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -983,47 +994,6 @@ masterMos350 = &e374
 	sec					; key pressed so set true status
 	
 	bcs swrKeyboardScanExit			; return with keyboard scan code
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; swrMainMenuProcessMode			; toggle standard / challenge mode and setup game settings
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.swrMainMenuProcessMode
-
-	jsr playSoundSilence			; terminate any current sound
-
-	lda highScoreChallenge			; toggle STANDARD/CHALLENGE game mode
-	eor #&ff
-	sta highScoreChallenge
-
-	sta bonusDiamondEnable			; update bonus diamond flag to match game mode
-
-	bmi swrMainMenuProcessModeDraw		; if challenge mode
-
-	lda #defaultLadybugLives		; then reset game settings to default
-	sta optionLadybugLives
-	lda #defaultEnemySpeed
-	sta optionEnemySpeed
-	lda #defaultEnemyAttack
-	sta optionEnemyAttack
-
-.swrMainMenuProcessModeDraw
-
-	jsr mainMenuDrawText			; update menu text and settings
-	jsr mainMenuDrawSettings
-
-	jsr swrDrawPlayfieldLowerDiamond	; update lower diamond
-
-	lda #0					; reset cursor to top position "STANDARD/CHALLENGE MODE"
-	sta mainMenuCursor
-
-	lda #sfxTwinkle				; play sound effect
-	jsr playSound
-
-	clc					; return false
-	rts
 
 
 

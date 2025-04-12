@@ -4,11 +4,10 @@ HIMEM=&7800
 C%=&7B80
 S%=&8010
 F%=&130
-J%=&133
 M%=&69
 
 A%=5:X%=&70:Y%=0:!X%=&0D240072:B%=(USR(&FFDD)AND&FF)=2
-IF B% THEN u$="WR":l$="LR" ELSE u$="":l$="L"
+IF B% THEN U$="WR":L$="LR" ELSE U$="":L$="L"
 
 ON ERROR PROCerror
 
@@ -25,38 +24,44 @@ PROCshrink(2)
 PROCoptions
 PROCexpand(3)
 
-k$=FNwaitKey
+REPEAT
+
+K$=FNwaitKey
+
+IF K$="G" THEN G%=NOT G%:PROCdisplayMode
+
+UNTIL K$<>"G"
 
 PROCshrink(2)
 
-IF k$="I" THEN PROCinstructionsGame
+IF K$="I" THEN PROCinstructionsGame
 
-IF k$="W" THEN PROCinstructionsEditor
+IF K$="W" THEN PROCinstructionsEditor
 
-IF k$="K" THEN ?J%=0
+IF K$="K" THEN F%?3=0
 
-IF k$="J" THEN ?J%=1
+IF K$="J" THEN F%?3=1
 
-IF k$="U" THEN ?J%=2
+IF K$="U" THEN F%?3=2
 
-UNTIL k$="E" OR k$="R" OR k$="K" OR k$="J" OR k$="U"
+UNTIL K$="K" OR K$="J" OR K$="U" OR K$="E" OR K$="R"
 
 VDU 23;1,1,0;0;0;
 
-IF k$="R" THEN CHAIN"Reset"
+IF K$="R" THEN CHAIN"Reset"
 
-Z%=OPENIN("_Maps")
-INPUT#Z%,map1$,map2$,map3$
-CLOSE#Z%
+F%?4=G%
+IF G% THEN Z%=OPENIN("_Reset"):PTR#Z%=&70:C%?&70=BGET#Z%:C%?&71=BGET#Z%:C%?&72=BGET#Z%:CLOSE#Z%:map1$="_Map1":map2$="_Map2":map3$="_Map3"
+IF NOT G% THEN Z%=OPENIN("_Maps"):INPUT#Z%,map1$,map2$,map3$:CLOSE#Z%
 
 A%=FALSE
 Z%=OPENIN(map1$):IF Z%<>0 THEN CLOSE#Z% ELSE map1$="_Map1":A%=TRUE
 Z%=OPENIN(map2$):IF Z%<>0 THEN CLOSE#Z% ELSE map2$="_Map2":A%=TRUE
 Z%=OPENIN(map3$):IF Z%<>0 THEN CLOSE#Z% ELSE map3$="_Map3":A%=TRUE
 
-IF A% THEN OSCLI("ACCESS _Maps "+u$):Z%=OPENOUT("_Maps"):PRINT#Z%,map1$,map2$,map3$:CLOSE#Z%:OSCLI("ACCESS _Maps "+l$)
+IF A% AND NOT G% THEN OSCLI("ACCESS _Maps "+U$):Z%=OPENOUT("_Maps"):PRINT#Z%,map1$,map2$,map3$:CLOSE#Z%:OSCLI("ACCESS _Maps "+L$)
 
-IF k$="E" THEN CHAIN"Editor"
+IF K$="E" THEN CHAIN"Editor"
 
 PROCsplash
 PROCexpand(1)
@@ -138,21 +143,32 @@ PRINT TAB(6,6);CHR$(133);"Programmed by";CHR$(131);"LoveBug";CHR$(133);"2021";
 
 PRINT TAB(15,9);CHR$(135);"Options";
 
-PRINT TAB(6,12);CHR$(129);"K";CHR$(135);"-";CHR$(131);"Play";CHR$(129);"Keyboard";
+PRINT TAB(6,11);CHR$(133);"I";CHR$(135);"-";CHR$(132);"Instructions";
 
-PRINT TAB(6,13);CHR$(130);"J";CHR$(135);"-";CHR$(133);"Play";CHR$(130);"Joystick Analogue";
+PRINT TAB(6,13);CHR$(129);"K";CHR$(135);"-";CHR$(131);"Play";CHR$(129);"Keyboard";
 
-PRINT TAB(6,14);CHR$(132);"U";CHR$(135);"-";CHR$(134);"Play";CHR$(132);"Joystick User Port";
+PRINT TAB(6,14);CHR$(130);"J";CHR$(135);"-";CHR$(133);"Play";CHR$(130);"Joystick Analogue";
 
-PRINT TAB(6,16);CHR$(131);"I";CHR$(135);"-";CHR$(129);"Instructions";
+PRINT TAB(6,15);CHR$(132);"U";CHR$(135);"-";CHR$(134);"Play";CHR$(132);"Joystick User Port";
 
-PRINT TAB(6,18);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Map Editor";
+PRINT TAB(6,17);CHR$(131);"G";CHR$(135);"-";:PROCdisplayMode
 
-PRINT TAB(6,19);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Map Editor Keys";
+PRINT TAB(6,19);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Map Editor";
 
-PRINT TAB(6,21);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset settings";
+PRINT TAB(6,20);CHR$(134);"W";CHR$(135);"-";CHR$(132);"Map Editor Keys";
+
+PRINT TAB(6,22);CHR$(129);"R";CHR$(135);"-";CHR$(131);"Reset settings";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"        Choose an option          ";CHR$(156);
+
+ENDPROC
+
+
+
+DEF PROCdisplayMode
+
+PRINT TAB(10,17);
+IF G% THEN PRINT CHR$(133);"High Score Challenge"; ELSE PRINT CHR$(129);"Standard Game";SPC(7);
 
 ENDPROC
 
@@ -220,20 +236,20 @@ PROCshrink(3)
 PRINT TAB(34,3);CHR$(131);"3";
 PROCeraseScreen(5)
 
-PRINT TAB(2,6);CHR$(131);"Standard";CHR$(132);"or";CHR$(133);"Challenge";CHR$(132);"game modes";
-PRINT TAB(2,7);CHR$(132);"can be toggled from the main menu";
-PRINT TAB(2,8);CHR$(132);"by pressing the";CHR$(135);"SPACE BAR";
+PRINT TAB(2,6);CHR$(131);"";CHR$(132);"";CHR$(133);"";CHR$(132);"";
+PRINT TAB(2,7);CHR$(132);"";
+PRINT TAB(2,8);CHR$(132);"";CHR$(135);"";
 
-PRINT TAB(2,10);CHR$(129);"The";CHR$(133);"Challenge";CHR$(129);"game mode";
-PRINT TAB(2,11);CHR$(129);"has the following differences";
+PRINT TAB(2,10);CHR$(129);"";CHR$(133);"";CHR$(129);"";
+PRINT TAB(2,11);CHR$(129);"";
 
-PRINT TAB(2,13);CHR$(130);"The";CHR$(135);"Diamond";CHR$(130);"bonus is not available";
+PRINT TAB(2,13);CHR$(130);"";CHR$(135);"";CHR$(130);"";
 
-PRINT TAB(2,15);CHR$(131);"The";CHR$(129);"SPECIAL";CHR$(131);"bonus awards shields";
-PRINT TAB(2,16);CHR$(131);"but does not award any score";
+PRINT TAB(2,15);CHR$(131);"";CHR$(129);"";CHR$(131);"";CHR$(129);"";
+PRINT TAB(2,16);CHR$(131);"";CHR$(135);"";
 
-PRINT TAB(2,18);CHR$(132);"All game settings are set to";
-PRINT TAB(2,19);CHR$(132);"default and cannot be changed";
+PRINT TAB(2,18);CHR$(132);"";
+PRINT TAB(2,19);CHR$(132);"";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
@@ -316,7 +332,7 @@ ENDPROC
 
 DEF PROCunexpectedError
 
-CLS
+VDU 6,12
 
 REPORT
 PRINT " at line ";ERL
@@ -341,7 +357,7 @@ Y%=BGET#Z%:X%=BGET#Z%:W%=BGET#Z%:U%=BGET#Z%:Q%=BGET#Z%
 CLOSE#Z%
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-IF F%?2<>V% THEN OSCLI("LOAD _Config " + STR$~(&FF0000 + C%)):ENDPROC
+IF F%?2<>V% THEN OSCLI("LOAD _Config " + STR$~(&FF0000 + C%)):G%=FALSE:ENDPROC
 
 P%=&7B00
 [OPT 0
@@ -353,7 +369,7 @@ LDX #0
 LDA S%, X
 STA C%, X
 INX
-CPX #&7E
+CPX #&7F
 BNE LOOP
 LDA &F4
 STA &FE30
@@ -362,6 +378,7 @@ RTS
 ]
 
 CALL &7B00
+G%=(C%?&7E)<>0
 
 ENDPROC
 
@@ -372,9 +389,11 @@ DEF PROCsaveConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
 IF F%?2<>V% THEN ENDPROC
 
-OSCLI("ACCESS _Config "+u$)
+IF G% THEN Z%=OPENIN("_Config"):PTR#Z%=&70:C%?&70=BGET#Z%:C%?&71=BGET#Z%:C%?&72=BGET#Z%:CLOSE#Z%
+
+OSCLI("ACCESS _Config "+U$)
 OSCLI("SAVE _Config " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0")
-OSCLI("ACCESS _Config "+l$)
+OSCLI("ACCESS _Config "+L$)
 
 PROCeraseLogo
 
@@ -434,20 +453,20 @@ DEF FNwaitKey
 REPEAT
 
 K%=INKEY0
-IF K%>=96 THEN K%=K%-32
-k$=CHR$(K%)
+IF K%>=ASC("£") THEN K%=K%-ASC(" ")
+K$=CHR$(K%)
 
-UNTIL k$="K" OR k$="J" OR k$="U" OR k$="I" OR k$="E" OR k$="W" OR k$="R"
+UNTIL K$="G" OR K$="K" OR K$="J" OR K$="U" OR K$="I" OR K$="E" OR K$="W" OR K$="R"
 
-=k$
+=K$
 
 
 
-DEF FNconfigKey(k$)
+DEF FNconfigKey(K$)
 
-IF k$="<" THEN ="UP"
-IF k$="=" THEN ="DOWN"
-IF k$=">" THEN ="LEFT"
-IF k$="?" THEN ="RIGHT"
+IF K$="<" THEN ="UP"
+IF K$="=" THEN ="DOWN"
+IF K$=">" THEN ="LEFT"
+IF K$="?" THEN ="RIGHT"
 
-=k$
+=K$
