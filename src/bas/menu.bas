@@ -11,7 +11,7 @@ IF B% THEN U$="WR":L$="LR" ELSE U$="":L$="L"
 
 ON ERROR PROCerror
 
-PROCreadConfig
+PROCloadConfig
 
 up$=FNconfigKey(CHR$(C%?&7C))
 down$=FNconfigKey(CHR$(C%?&7B))
@@ -50,9 +50,8 @@ VDU 23;1,1,0;0;0;
 
 IF K$="R" THEN CHAIN"Reset"
 
-F%?4=G%
-IF G% THEN Z%=OPENIN("_Reset"):PTR#Z%=&70:C%?&70=BGET#Z%:C%?&71=BGET#Z%:C%?&72=BGET#Z%:CLOSE#Z%:map1$="_Map1":map2$="_Map2":map3$="_Map3"
-IF NOT G% THEN Z%=OPENIN("_Maps"):INPUT#Z%,map1$,map2$,map3$:CLOSE#Z%
+!F%=0:PROCloadConfig:F%?4=G%
+IF G% THEN map1$="_Map1":map2$="_Map2":map3$="_Map3" ELSE Z%=OPENIN("_Maps"):INPUT#Z%,map1$,map2$,map3$:CLOSE#Z%
 
 A%=FALSE
 Z%=OPENIN(map1$):IF Z%<>0 THEN CLOSE#Z% ELSE map1$="_Map1":A%=TRUE
@@ -352,14 +351,15 @@ ENDPROC
 
 
 
-DEF PROCreadConfig
+DEF PROCloadConfig
 
 Z%=OPENIN("_Bonus")
 Y%=BGET#Z%:X%=BGET#Z%:W%=BGET#Z%:U%=BGET#Z%:Q%=BGET#Z%
 CLOSE#Z%
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-IF F%?2<>V% THEN OSCLI("LOAD _Config " + STR$~(&FF0000 + C%)):G%=FALSE:ENDPROC
+IF F%?2<>V% THEN IF NOT G% THEN OSCLI("LOAD _Config " + STR$~(&FF0000 + C%)):ENDPROC
+IF F%?2<>V% THEN IF G% THEN OSCLI("LOAD _Hsc " + STR$~(&FF0000 + C%)):ENDPROC
 
 P%=&7B00
 [OPT 0
@@ -379,8 +379,7 @@ CLI
 RTS
 ]
 
-CALL &7B00
-G%=(C%?&7E)<>0
+CALL &7B00:G%=(C%?&7E)<>0
 
 ENDPROC
 
@@ -391,11 +390,7 @@ DEF PROCsaveConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
 IF F%?2<>V% THEN ENDPROC
 
-IF G% THEN Z%=OPENIN("_Config"):PTR#Z%=&70:C%?&70=BGET#Z%:C%?&71=BGET#Z%:C%?&72=BGET#Z%:CLOSE#Z%
-
-OSCLI("ACCESS _Config "+U$)
-OSCLI("SAVE _Config " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0")
-OSCLI("ACCESS _Config "+L$)
+IF G% THEN OSCLI("ACCESS _Hsc "+U$):OSCLI("SAVE _Hsc " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Hsc "+L$) ELSE OSCLI("ACCESS _Config "+U$):OSCLI("SAVE _Config " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Config "+L$)
 
 PROCeraseLogo
 
