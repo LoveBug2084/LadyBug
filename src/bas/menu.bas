@@ -168,7 +168,7 @@ ENDPROC
 DEF PROCdisplayMode
 
 PRINT TAB(10,17);
-IF G% THEN PRINT CHR$(133);"High Score Challenge"; ELSE PRINT CHR$(129);"Standard Game";SPC(7);
+IF G% THEN PRINT CHR$(133);"High Score Challenge Mode"; ELSE PRINT CHR$(129);"Arcade Mode";SPC(14);
 
 ENDPROC
 
@@ -236,20 +236,22 @@ PROCshrink(3)
 PRINT TAB(34,3);CHR$(131);"3";
 PROCeraseScreen(5)
 
-PRINT TAB(2,6);CHR$(131);"";CHR$(132);"";CHR$(133);"";CHR$(132);"";
-PRINT TAB(2,7);CHR$(132);"";
-PRINT TAB(2,8);CHR$(132);"";CHR$(135);"";
+PRINT TAB(2,5);CHR$(133);"There are a few differences in the";
+PRINT TAB(2,6);CHR$(133);"Stardot high score challenge mode";
 
-PRINT TAB(2,10);CHR$(129);"";CHR$(133);"";CHR$(129);"";
-PRINT TAB(2,11);CHR$(129);"";
+PRINT TAB(2,8);CHR$(130);"The";CHR$(135);"Diamond";CHR$(130);"bonus is not available";
 
-PRINT TAB(2,13);CHR$(130);"";CHR$(135);"";CHR$(130);"";
+PRINT TAB(2,10);CHR$(131);"The";CHR$(129);"Special";CHR$(131);"bonus awards";CHR$(129);"shields";
+PRINT TAB(2,11);CHR$(131);"but does not award any";CHR$(135);"points";
 
-PRINT TAB(2,15);CHR$(131);"";CHR$(129);"";CHR$(131);"";CHR$(129);"";
-PRINT TAB(2,16);CHR$(131);"";CHR$(135);"";
+PRINT TAB(2,13);CHR$(133);"The 3 default maze maps will be";
+PRINT TAB(2,14);CHR$(133);"used instead of user maze maps";
 
-PRINT TAB(2,18);CHR$(132);"";
-PRINT TAB(2,19);CHR$(132);"";
+PRINT TAB(2,16);CHR$(129);"The the default lives and";
+PRINT TAB(2,17);CHR$(129);"difficulty will be used";
+
+PRINT TAB(2,19);CHR$(132);"Press";CHR$(131);"G";CHR$(132);"to toggle between";CHR$(129);"Arcade";
+PRINT TAB(2,20);CHR$(132);"and";CHR$(133);"High Score Challenge";CHR$(132);"Modes";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 

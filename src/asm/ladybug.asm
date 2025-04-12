@@ -5768,7 +5768,24 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr drawScoreTableBlanking		; draw score with leading zero blanking
 
-	lda #' '				; 1 space after score
+	lda #pixelsBlue				; set draw color to blue
+	sta drawChrColor
+
+	ldy #3					; if bit 7 of 1st character of name is 1 then draw a heart instead of a space
+	lda (highScorePtr), y
+	bpl drawScoreTableArcadeMode
+	
+.drawScoreTableChallengeMode
+
+	lda #chrHeart				; heart for high score challenge mode
+	bpl drawScoreTableSpacer
+
+.drawScoreTableArcadeMode
+
+	lda #' '				; space for arcade mode
+
+.drawScoreTableSpacer
+
 	jsr drawChr
 
 .drawScoreTableName
@@ -6142,6 +6159,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegExit
+
+	ldy #0					; copy bit 7 of highScoreChallenge to bit 7 of 1st character in high score name
+	lda highScoreChallenge
+	and #%10000000
+	ora (highScorePtr), y
+	sta (highScorePtr), y
 
 	jmp playSoundSilence			; kill any sounds playing and return
 
@@ -8498,7 +8521,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 .drawStringText
 
-	jsr drawText				; draw the text until byte with bit 7 set (terminator)
+	jsr drawText				; draw the text until &ff byte string terminator
 	
 	ldy drawStringSaveY			; restore register
 
@@ -8534,7 +8557,10 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda (drawTextAddr), y			; get chr from text string
 
-	bmi drawTextAdjustAddr			; if bit 7 set then end of text (string terminator)
+	cmp #&ff				; if string terminator found
+	beq drawTextAdjustAddr			; then exit
+
+	and #%01111111				; remove bit 7
 	
 	cmp #16					; if chr value is 0-15 then select chr color
 	bcs drawTextChr
