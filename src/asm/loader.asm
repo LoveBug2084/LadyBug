@@ -998,6 +998,64 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; draw challenge mode number of shields on special bonus screen
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDrawBonusScreenSpecialActiveShieldsChallenge
+
+	if (bonusSpecialShield and 15) = 1
+	{
+
+	jsr drawString
+	equw screenAddr + 2 + 8 + 6 * chrColumn + 20 * chrRow
+	equb colorWhite, &ff
+
+	lda #(bonusSpecialShield and 15) + '0'
+	jsr drawChr
+	
+	jsr drawString
+	equw screenAddr + 2 + 8 + 8 * chrColumn + 20 * chrRow
+	equs colorYellow, "SHIELD", &ff
+
+	lda #lo(screenAddr + 8 + 15 * chrColumn + 20 * chrRow)
+	sta drawMapTileAddr
+	lda #hi(screenAddr + 8 + 15 * chrColumn + 20 * chrRow)
+	sta drawMapTileAddr + 1
+
+	lda #mapTileSkull
+	jsr drawMapTile
+
+	}
+	else
+	{	
+
+	jsr drawString
+	equw screenAddr + 2 + 6 * chrColumn + 20 * chrRow
+	equb colorWhite, &ff
+
+	lda #(bonusSpecialShield and 15) + '0'
+	jsr drawChr
+	
+	jsr drawString
+	equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
+	equs colorYellow, "SHIELDS", &ff
+
+	lda #lo(screenAddr + 16 * chrColumn + 20 * chrRow)
+	sta drawMapTileAddr
+	lda #hi(screenAddr + 16 * chrColumn + 20 * chrRow)
+	sta drawMapTileAddr + 1
+
+	lda #mapTileSkull
+	jsr drawMapTile
+
+	}
+	endif
+
+	rts
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of sideways ram code
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 

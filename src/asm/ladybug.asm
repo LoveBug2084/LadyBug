@@ -108,7 +108,7 @@
 						; note: keyboard is always active even when joystick is enabled
 .gameMode
 
-	skip 1					; storage for standard/challenge game mode type bit 7 = 1 high score challenge, = 0 standard game
+	skip 1					; storage for arcade/challenge game mode type bit 7 = 1 high score challenge mode, = 0 arcade mode
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4733,7 +4733,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr mainMenuDraw			; draw the main menu screen (and reset idle time)
 
-	lda #0					; make sure the "STANDARD/CHALLENGE MODE" text is flashing (skull color) by setting shield to 0
+	lda #0					; make sure the "START GAME" text is flashing (skull color) by setting shield to 0
 	sta shield
 
 	sta pauseLadybug			; unpause ladybug so that it will animate
@@ -4976,7 +4976,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1 then we need to decrement again
-	beq mainMenuProcessUp			; (skip over blank line between "HIGH SCORES" and "STANDARD/CHALLANGE MODE")
+	beq mainMenuProcessUp			; (skip over blank line between "HIGH SCORES" and "START GAME"")
 
 	bit highScoreChallenge			; if high score challenge mode
 	bpl mainMenuProcessUpWrapAround
@@ -5016,7 +5016,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda mainMenuCursor			; get mainMenuCursor
 
 	cmp #1					; if mainMenuCursor = 1 then increment again
-	beq mainMenuProcessDown			; (skip over the blank line between "STANDARD/CHALLENGE MODE" and "HIGH SCORES")
+	beq mainMenuProcessDown			; (skip over the blank line between "START GAME" and "HIGH SCORES")
 
 	bit highScoreChallenge			; if high score challenge mode
 	bpl mainMenuProcessDownWrapAround
@@ -7849,16 +7849,18 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusScreenSpecialActive
 
-	jsr drawString				; draw the bonus text
+	jsr drawString				; draw the "CONGRATULATIONS!" text
 	equw screenAddr + 2 + 8 + 3 * chrColumn + 16 * chrRow
 	equs colorRed, "CONGRATULATIONS!", &ff
+
+	bit highScoreChallenge			; if arcade mode
+	bmi drawBonusScreenSpecialActiveChallenge
+
+.drawBonusScreenSpecialActiveArcade
 
 	jsr drawString
 	equw screenAddr + 2 + 8 + 2 * chrColumn + 18 * chrRow
 	equs colorMagenta, "YOU WIN ", colorWhite, &ff
-
-	bit highScoreChallenge			; if high score challenge mode then skip points display and "AND"
-	bmi drawBonusScreenSpecialActiveShields
 
 	lda #(bonusSpecialScore and 15) + '0'
 	jsr drawChr
@@ -7877,7 +7879,23 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs colorYellow, "AND", &ff
 
+	jmp drawBonusScreenSpecialActiveShields
+
+.drawBonusScreenSpecialActiveChallenge
+
+	jsr drawString
+	equw screenAddr + 2 + 8 * chrColumn + 18 * chrRow
+	equs colorMagenta, "YOU WIN ", &ff
+
 .drawBonusScreenSpecialActiveShields
+
+	bit highScoreChallenge			; if challenge mode then draw alternate shield position
+	bpl drawBonusScreenSpecialActiveShieldsArcade
+
+	jsr swrDrawBonusScreenSpecialActiveShieldsChallenge
+	jmp drawBonusScreenSpecialActiveExit
+
+.drawBonusScreenSpecialActiveShieldsArcade
 
 	if (bonusSpecialShield and 15) = 1
 	{
@@ -7926,6 +7944,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	}
 	endif
+
+.drawBonusScreenSpecialActiveExit
 
 	lda #sfxMusicSpecial			; play special bonus music
 	jsr playSound
