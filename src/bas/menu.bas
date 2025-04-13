@@ -38,19 +38,18 @@ IF K$="I" THEN PROCinstructionsGame
 
 IF K$="W" THEN PROCinstructionsEditor
 
-IF K$="K" THEN F%?3=0
-
-IF K$="J" THEN F%?3=1
-
-IF K$="U" THEN F%?3=2
-
 UNTIL K$="K" OR K$="J" OR K$="U" OR K$="E" OR K$="R"
 
 VDU 23;1,1,0;0;0;
 
 IF K$="R" THEN CHAIN"Reset"
 
-!F%=0:PROCloadConfig:F%?4=G%
+!F%=0:PROCloadConfig
+IF K$="K" THEN F%?3=0
+IF K$="J" THEN F%?3=1
+IF K$="U" THEN F%?3=2
+F%?4=G%
+
 IF G% THEN map1$="_Map1":map2$="_Map2":map3$="_Map3" ELSE Z%=OPENIN("_Maps"):INPUT#Z%,map1$,map2$,map3$:CLOSE#Z%
 
 A%=FALSE
