@@ -449,7 +449,7 @@ DEF FNwaitKey
 REPEAT
 
 K%=INKEY0
-IF K%>=ASC("£") THEN K%=K%-ASC(" ")
+IF K%>=ASC("`") THEN K%=K%-ASC(" ")
 K$=CHR$(K%)
 
 UNTIL K$="G" OR K$="K" OR K$="J" OR K$="U" OR K$="I" OR K$="E" OR K$="W" OR K$="R"
