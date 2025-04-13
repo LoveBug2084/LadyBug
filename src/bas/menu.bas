@@ -250,7 +250,7 @@ PRINT TAB(2,16);CHR$(129);"The the default";CHR$(131);"lives";CHR$(129);"and";
 PRINT TAB(2,17);CHR$(131);"difficulty";CHR$(129);"will be used";
 
 PRINT TAB(2,19);CHR$(132);"Press";CHR$(131);"G";CHR$(132);"to toggle between";CHR$(129);"Arcade";
-PRINT TAB(2,20);CHR$(132);"and";CHR$(133);"High Score Challenge";CHR$(132);"Modes";
+PRINT TAB(2,20);CHR$(132);"and";CHR$(133);"High Score Challenge";CHR$(132);"modes";
 
 PRINT TAB(0,24);CHR$(136);CHR$(129);CHR$(157);CHR$(131);"         Press any key            ";CHR$(156);
 
