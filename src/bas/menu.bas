@@ -11,7 +11,7 @@ IF B% THEN U$="WR":L$="LR" ELSE U$="":L$="L"
 
 ON ERROR PROCerror
 
-PROCloadConfig
+G%=G%=TRUE:PROCloadConfig
 
 up$=FNconfigKey(CHR$(C%?&7C))
 down$=FNconfigKey(CHR$(C%?&7B))
