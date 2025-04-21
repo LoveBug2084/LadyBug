@@ -166,7 +166,7 @@ ENDPROC
 DEF PROCdisplayMode
 
 PRINT TAB(10,17);
-IF G% THEN PRINT CHR$(133);"High Score Challenge Mode"; ELSE PRINT CHR$(129);"Arcade Mode";SPC(14);
+IF G% THEN PRINT CHR$(133);"Stardot HSC"; ELSE PRINT CHR$(129);"Arcade     ";
 
 ENDPROC
 
@@ -234,16 +234,16 @@ PROCshrink(3)
 PRINT TAB(34,3);CHR$(131);"3";
 PROCeraseScreen(5)
 
-PRINT TAB(2,5);CHR$(132);"Press";CHR$(131);"G";CHR$(132);"to toggle between";CHR$(129);"Arcade";
-PRINT TAB(2,6);CHR$(132);"and";CHR$(133);"High Score Challenge";CHR$(132);"modes";
+PRINT TAB(2,5);CHR$(132);"The";CHR$(133);"Stardot High Score Challenge";
+PRINT TAB(2.6);CHR$(132);"mode can be toggled by pressing";CHR$(131);"G";
 
-PRINT TAB(2,8);CHR$(129);"The";CHR$(131);"Stardot";CHR$(133);"High Score Challenge";
-PRINT TAB(2,9);CHR$(129);"mode has a few game differences";
+PRINT TAB(2,8);CHR$(129);"In the";CHR$(133);"HSC";CHR$(129);"mode the game will";
+PRINT TAB(2,9);CHR$(129);"have the following alterations";
 
-PRINT TAB(2,11);CHR$(130);"The";CHR$(135);"Diamond";CHR$(130);"bonus is not available";
+PRINT TAB(2,11);CHR$(130);"The";CHR$(135);"Diamond";CHR$(130);"bonus is disabled";
 
 PRINT TAB(2,13);CHR$(131);"The";CHR$(129);"Special";CHR$(131);"bonus awards";CHR$(129);"shields";
-PRINT TAB(2,14);CHR$(131);"but does not award any";CHR$(135);"points";
+PRINT TAB(2,14);CHR$(131);"but does not award";CHR$(135);"points";
 
 PRINT TAB(2,16);CHR$(133);"The";CHR$(135);"3 default maze maps";CHR$(133);"will be";
 PRINT TAB(2,17);CHR$(133);"used instead of the user maze maps";
