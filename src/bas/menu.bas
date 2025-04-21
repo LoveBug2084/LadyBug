@@ -238,17 +238,17 @@ PRINT TAB(2,5);CHR$(132);"The";CHR$(133);"Stardot High Score Challenge";
 PRINT TAB(2.6);CHR$(132);"mode can be toggled by pressing";CHR$(131);"G";
 
 PRINT TAB(2,8);CHR$(129);"In the";CHR$(133);"HSC";CHR$(129);"mode the game will";
-PRINT TAB(2,9);CHR$(129);"have the following alterations";
+PRINT TAB(2,9);CHR$(129);"have the following four changes:";
 
-PRINT TAB(2,11);CHR$(130);"The";CHR$(135);"Diamond";CHR$(130);"bonus is disabled";
+PRINT TAB(2,11);CHR$(130);CHR$(255);" The";CHR$(135);"Diamond";CHR$(130);"bonus is disabled";
 
-PRINT TAB(2,13);CHR$(131);"The";CHR$(129);"Special";CHR$(131);"bonus awards";CHR$(129);"shields";
+PRINT TAB(2,13);CHR$(131);CHR$(255);" The";CHR$(129);"Special";CHR$(131);"bonus awards";CHR$(129);"shields";
 PRINT TAB(2,14);CHR$(131);"but does not award";CHR$(135);"points";
 
-PRINT TAB(2,16);CHR$(133);"The";CHR$(135);"3 default maze maps";CHR$(133);"will be";
+PRINT TAB(2,16);CHR$(133);CHR$(255);" The";CHR$(135);"3 default maze maps";CHR$(133);"will be";
 PRINT TAB(2,17);CHR$(133);"used instead of the user maze maps";
 
-PRINT TAB(2,19);CHR$(129);"The the default";CHR$(131);"lives";CHR$(129);"and";
+PRINT TAB(2,19);CHR$(129);CHR$(255);" The default";CHR$(131);"lives";CHR$(129);"and";
 PRINT TAB(2,20);CHR$(131);"difficulty";CHR$(129);"will be used instead";
 PRINT TAB(2,21);CHR$(129);"of the user settings";
 
