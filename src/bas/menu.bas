@@ -238,7 +238,7 @@ PRINT TAB(2,5);CHR$(132);"The";CHR$(133);"Stardot High Score Challenge";
 PRINT TAB(2.6);CHR$(132);"mode can be toggled by pressing";CHR$(131);"G";
 
 PRINT TAB(2,8);CHR$(129);"In the";CHR$(133);"HSC";CHR$(129);"mode the game will";
-PRINT TAB(2,9);CHR$(129);"have the following four changes:";
+PRINT TAB(2,9);CHR$(129);"have the following four changes";
 
 PRINT TAB(2,11);CHR$(130);CHR$(255);" The";CHR$(135);"Diamond";CHR$(130);"bonus is disabled";
 

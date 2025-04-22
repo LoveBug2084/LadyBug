@@ -1,18 +1,3 @@
-ORG symbol=pageZero value=0000
-ORG No symbol=f000
-ORG No symbol=7b80
-ORG symbol=swramStart value=8000
-ORG No symbol=f100
-ORG symbol=page0100 value=0100
-ORG symbol=page0130 value=0130
-ORG symbol=page0200 value=0200
-ORG symbol=irqVector value=0204
-ORG symbol=pagefx200 value=0258
-ORG No symbol=0287
-ORG symbol=canvasEditor value=f300
-ORG symbol=canvasCls value=f400
-ORG No symbol=f200
-ORG No symbol=0000
 ----------------------------------------------------
 main ram      &0 - &47EF , 18416 bytes
 ----------------------------------------------------
@@ -70,7 +55,6 @@ bootstrap     &4800 - &4957 , 344 bytes
  variables.asm
 ----------------------------------------------------
 
-ORG symbol=pageZero value=0000
 .vsyncCounter
      0000
 .pauseCounter
@@ -363,7 +347,6 @@ ORG symbol=pageZero value=0000
  !boot.asm
 ----------------------------------------------------
 
-ORG No symbol=f000
 .bootasmStart
      F000   2A 42 41 ...
      F006   0D
@@ -435,7 +418,6 @@ ORG No symbol=f000
  config.asm
 ----------------------------------------------------
 
-ORG No symbol=7b80
 .config
      7B80
      7B80   00
@@ -499,7 +481,6 @@ ORG No symbol=7b80
  loader.asm
 ----------------------------------------------------
 
-ORG symbol=swramStart value=8000
 .highRamStart
      8000
 .configData
@@ -1259,7 +1240,6 @@ ORG symbol=swramStart value=8000
  mapnames.asm
 ----------------------------------------------------
 
-ORG No symbol=f100
 .mapFilenames
      F100   00
      F101   05
@@ -1278,7 +1258,6 @@ ORG No symbol=f100
  ladybug.asm
 ----------------------------------------------------
 
-ORG symbol=page0100 value=0100
 .random
      0100   A5 44      LDA &44
      0102   4A         LSR A
@@ -1305,7 +1284,6 @@ ORG symbol=page0100 value=0100
      0129   4C 26 0D   JMP &0D26
 .drawVegetableScoreExit
      012C   60         RTS
-ORG symbol=page0130 value=0130
 .cleanResetBank
      0130
 .cleanResetMachine
@@ -1422,8 +1400,6 @@ ORG symbol=page0130 value=0130
      01E7
 .stack
      01E7
-ORG symbol=page0200 value=0200
-ORG symbol=irqVector value=0204
 .irq1vector
      0204   65 01
 .inputScan
@@ -1467,7 +1443,6 @@ ORG symbol=irqVector value=0204
      0250   60         RTS
 .page0200End
      0251
-ORG symbol=pagefx200 value=0258
 .osFx200
      0258   00
 .chooseLetters
@@ -1501,7 +1476,6 @@ ORG symbol=pagefx200 value=0258
      0285   18
 .pagefx200End
      0286
-ORG No symbol=0287
 .osBreakVector
      0287   4C 35 01   JMP &0135
 .updateEnemyTimer
@@ -9470,7 +9444,6 @@ ORG No symbol=0287
  editor.asm
 ----------------------------------------------------
 
-ORG symbol=canvasEditor value=f300
 .editorStart
      F300
 .editorMapDirty
@@ -9570,7 +9543,6 @@ ORG symbol=canvasEditor value=f300
  cls.asm
 ----------------------------------------------------
 
-ORG symbol=canvasCls value=f400
 .cls
      F400   A0 00      LDY #&00
      F402   98         TYA
@@ -9709,7 +9681,6 @@ ORG symbol=canvasCls value=f400
  bonus.asm
 ----------------------------------------------------
 
-ORG No symbol=f200
 .bonusBin
      F200   02
      F201   02
@@ -9730,7 +9701,6 @@ Saving file 'LadyBug'
 Saving file '_Reset'
 Saving file 'Cls'
 Saving file 'EditorM'
-ORG No symbol=0000
      0000   00 00 00 ... INCBIN "inc/editorTiles.bin"
 Saving file 'EditorT'
 
