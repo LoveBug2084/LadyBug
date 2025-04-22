@@ -28,9 +28,9 @@ REPEAT
 
 K$=FNwaitKey
 
-IF K$="G" THEN G%=NOT G%:PROCdisplayMode
+IF K$="M" THEN G%=NOT G%:PROCdisplayMode
 
-UNTIL K$<>"G"
+UNTIL K$<>"M"
 
 PROCshrink(2)
 
@@ -149,7 +149,7 @@ PRINT TAB(6,14);CHR$(130);"J";CHR$(135);"-";CHR$(133);"Play";CHR$(130);"Joystick
 
 PRINT TAB(6,15);CHR$(132);"U";CHR$(135);"-";CHR$(134);"Play";CHR$(132);"Joystick User Port";
 
-PRINT TAB(6,17);CHR$(131);"G";CHR$(135);"-";:PROCdisplayMode
+PRINT TAB(6,17);CHR$(131);"M";CHR$(135);"- Mode -";:PROCdisplayMode
 
 PRINT TAB(6,19);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Map Editor";
 
@@ -165,7 +165,7 @@ ENDPROC
 
 DEF PROCdisplayMode
 
-PRINT TAB(10,17);
+PRINT TAB(17,17);
 IF G% THEN PRINT CHR$(133);"Stardot HSC"; ELSE PRINT CHR$(129);"Arcade     ";
 
 ENDPROC
@@ -235,7 +235,7 @@ PRINT TAB(34,3);CHR$(131);"3";
 PROCeraseScreen(5)
 
 PRINT TAB(2,5);CHR$(132);"The";CHR$(133);"Stardot High Score Challenge";
-PRINT TAB(2.6);CHR$(132);"mode can be toggled by pressing";CHR$(131);"G";
+PRINT TAB(2.6);CHR$(132);"mode can be toggled by pressing";CHR$(131);"M";
 
 PRINT TAB(2,8);CHR$(129);"In the";CHR$(133);"HSC";CHR$(129);"mode the game will";
 PRINT TAB(2,9);CHR$(129);"have the following four changes";
@@ -453,7 +453,7 @@ K%=INKEY0
 IF K%>=ASC("`") THEN K%=K%-ASC(" ")
 K$=CHR$(K%)
 
-UNTIL K$="G" OR K$="K" OR K$="J" OR K$="U" OR K$="I" OR K$="E" OR K$="W" OR K$="R"
+UNTIL K$="M" OR K$="K" OR K$="J" OR K$="U" OR K$="I" OR K$="E" OR K$="W" OR K$="R"
 
 =K$
 
