@@ -149,7 +149,7 @@ PRINT TAB(6,14);CHR$(130);"J";CHR$(135);"-";CHR$(133);"Play";CHR$(130);"Joystick
 
 PRINT TAB(6,15);CHR$(132);"U";CHR$(135);"-";CHR$(134);"Play";CHR$(132);"Joystick User Port";
 
-PRINT TAB(6,17);CHR$(131);"M";CHR$(135);"- Mode -";:PROCdisplayMode
+PRINT TAB(6,17);CHR$(131);"M";CHR$(135);"- Mode";:PROCdisplayMode
 
 PRINT TAB(6,19);CHR$(133);"E";CHR$(135);"-";CHR$(130);"Map Editor";
 
@@ -165,7 +165,7 @@ ENDPROC
 
 DEF PROCdisplayMode
 
-PRINT TAB(17,17);
+PRINT TAB(15,17);
 IF G% THEN PRINT CHR$(133);"Stardot HSC"; ELSE PRINT CHR$(129);"Arcade     ";
 
 ENDPROC
