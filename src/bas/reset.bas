@@ -7,7 +7,7 @@ PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);SPC(12);"Lady Bug";SPC(14
 
 PRINT TAB(1,4);CHR$(135);"Reset";
 IF G% THEN PRINT CHR$(133);"Stardot HSC"; ELSE PRINT CHR$(129);"Arcade";
-PRINT CHR$(135);"Settings";
+PRINT CHR$(135);"settings";
 
 HIMEM=&7A80
 D%=HIMEM+&80
