@@ -867,19 +867,13 @@ masterMos350 = &e374
 	ldy swrDemoMapDir, x			; set index to 2 tiles from ladybug
 	lda (demoMapAddr), y			; get tile
 
-	cmp #mapTileDot				; check for dot
-	beq swrDemoCheckTileEdibleTrue
+	cmp #mapTileBlank			; if its a blank tile then exit with false
+	beq swrDemoCheckTileEdibleFalse
 
-	cmp #mapTileHeart			; check for heart
-	beq swrDemoCheckTileEdibleTrue
+	cmp #mapTileSkull			; if its a skull tile then exit with false
+	beq swrDemoCheckTileEdibleFalse
 
-	cmp #mapTileS				; check for letters SPECIALXTR
-	bcc swrDemoCheckTileEdibleFalse
-	
-	cmp #mapTileR + 1
-	bcs swrDemoCheckTileEdibleFalse
-
-.swrDemoCheckTileEdibleTrue
+.swrDemoCheckTileEdibleTrue			; its neither a blank or a skull so it must be a dot/heart/letter so exit with true
 
 	lda #0
 	rts					

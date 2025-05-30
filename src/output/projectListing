@@ -28,8 +28,8 @@ screen ram    &47F0 - &7FFF , 14352 bytes
 ----------------------------------------------------
 high ram      &8000 - &AFFF , 12288 bytes
 ----------------------------------------------------
-used          &8000 - &AFE5 , 12262  bytes
-free          &AFE6 - &AFFF , 26 bytes
+used          &8000 - &AFDD , 12254  bytes
+free          &AFDE - &AFFF , 34 bytes
 ----------------------------------------------------
 
 ----------------------------------------------------
@@ -927,130 +927,126 @@ ORG symbol=swramStart value=8000
 .swrDemoCheckTileEdible
      AF0B   BC 5E AE   LDY &AE5E,X
      AF0E   B1 D2      LDA (&D2),Y
-     AF10   C9 01      CMP #&01
-     AF12   F0 0C      BEQ &AF20
-     AF14   C9 2D      CMP #&2D
-     AF16   F0 08      BEQ &AF20
-     AF18   C9 22      CMP #&22
-     AF1A   90 07      BCC &AF23
-     AF1C   C9 2C      CMP #&2C
-     AF1E   B0 03      BCS &AF23
+     AF10   C9 00      CMP #&00
+     AF12   F0 07      BEQ &AF1B
+     AF14   C9 2C      CMP #&2C
+     AF16   F0 03      BEQ &AF1B
 .swrDemoCheckTileEdibleTrue
-     AF20   A9 00      LDA #&00
-     AF22   60         RTS
+     AF18   A9 00      LDA #&00
+     AF1A   60         RTS
 .swrDemoCheckTileEdibleFalse
-     AF23   A9 FF      LDA #&FF
-     AF25   60         RTS
+     AF1B   A9 FF      LDA #&FF
+     AF1D   60         RTS
 .keyScanAscii
-     AF26   30 31 32 ...
-     AF33   3E
-     AF34   3F
-     AF35   51 57 45 ...
-     AF42   3C
-     AF43   3D
-     AF44   41 53 44 ...
-     AF50   5A 58 43 ...
+     AF1E   30 31 32 ...
+     AF2B   3E
+     AF2C   3F
+     AF2D   51 57 45 ...
+     AF3A   3C
+     AF3B   3D
+     AF3C   41 53 44 ...
+     AF48   5A 58 43 ...
 .keyScanCodes
-     AF5A   27
-     AF5B   30
-     AF5C   31
-     AF5D   11
-     AF5E   12
-     AF5F   13
-     AF60   34
-     AF61   24
-     AF62   15
-     AF63   26
-     AF64   17
-     AF65   18
-     AF66   78
-     AF67   19
-     AF68   79
-     AF69   10
-     AF6A   21
-     AF6B   22
-     AF6C   33
-     AF6D   23
-     AF6E   44
-     AF6F   35
-     AF70   25
-     AF71   36
-     AF72   37
-     AF73   47
-     AF74   38
-     AF75   28
-     AF76   39
-     AF77   29
-     AF78   41
-     AF79   51
-     AF7A   32
-     AF7B   43
-     AF7C   53
-     AF7D   54
-     AF7E   45
-     AF7F   46
-     AF80   56
-     AF81   57
-     AF82   48
-     AF83   58
-     AF84   61
-     AF85   42
-     AF86   52
-     AF87   63
-     AF88   64
-     AF89   55
-     AF8A   65
-     AF8B   66
-     AF8C   67
-     AF8D   68
+     AF52   27
+     AF53   30
+     AF54   31
+     AF55   11
+     AF56   12
+     AF57   13
+     AF58   34
+     AF59   24
+     AF5A   15
+     AF5B   26
+     AF5C   17
+     AF5D   18
+     AF5E   78
+     AF5F   19
+     AF60   79
+     AF61   10
+     AF62   21
+     AF63   22
+     AF64   33
+     AF65   23
+     AF66   44
+     AF67   35
+     AF68   25
+     AF69   36
+     AF6A   37
+     AF6B   47
+     AF6C   38
+     AF6D   28
+     AF6E   39
+     AF6F   29
+     AF70   41
+     AF71   51
+     AF72   32
+     AF73   43
+     AF74   53
+     AF75   54
+     AF76   45
+     AF77   46
+     AF78   56
+     AF79   57
+     AF7A   48
+     AF7B   58
+     AF7C   61
+     AF7D   42
+     AF7E   52
+     AF7F   63
+     AF80   64
+     AF81   55
+     AF82   65
+     AF83   66
+     AF84   67
+     AF85   68
 .keyScanCodesEnd
 .swrKeyboardScan
-     AF8E   86 C2      STX &C2
-     AF90   A9 7F      LDA #&7F
-     AF92   8D 43 FE   STA &FE43
-     AF95   A9 03      LDA #&03
-     AF97   8D 40 FE   STA &FE40
-     AF9A   A2 33      LDX #&33
+     AF86   86 C2      STX &C2
+     AF88   A9 7F      LDA #&7F
+     AF8A   8D 43 FE   STA &FE43
+     AF8D   A9 03      LDA #&03
+     AF8F   8D 40 FE   STA &FE40
+     AF92   A2 33      LDX #&33
 .swrKeyboardScanLoop
-     AF9C   BD 5A AF   LDA &AF5A,X
-     AF9F   8D 4F FE   STA &FE4F
-     AFA2   AD 4F FE   LDA &FE4F
-     AFA5   30 12      BMI &AFB9
-     AFA7   CA         DEX
-     AFA8   10 F2      BPL &AF9C
-     AFAA   18         CLC
+     AF94   BD 52 AF   LDA &AF52,X
+     AF97   8D 4F FE   STA &FE4F
+     AF9A   AD 4F FE   LDA &FE4F
+     AF9D   30 12      BMI &AFB1
+     AF9F   CA         DEX
+     AFA0   10 F2      BPL &AF94
+     AFA2   18         CLC
 .swrKeyboardScanExit
-     AFAB   A9 0B      LDA #&0B
-     AFAD   8D 40 FE   STA &FE40
-     AFB0   A9 FF      LDA #&FF
-     AFB2   8D 43 FE   STA &FE43
-     AFB5   8A         TXA
-     AFB6   A6 C2      LDX &C2
-     AFB8   60         RTS
+     AFA3   A9 0B      LDA #&0B
+     AFA5   8D 40 FE   STA &FE40
+     AFA8   A9 FF      LDA #&FF
+     AFAA   8D 43 FE   STA &FE43
+     AFAD   8A         TXA
+     AFAE   A6 C2      LDX &C2
+     AFB0   60         RTS
 .swrKeyboardScanPressed
-     AFB9   38         SEC
-     AFBA   B0 EF      BCS &AFAB
+     AFB1   38         SEC
+     AFB2   B0 EF      BCS &AFA3
 .swrDrawBonusScreenSpecialActiveShieldsChallenge
-     AFBC   20 40 22   JSR &2240
-     AFBF   A2 73
-     AFC1   07
-     AFC2   FF
-     AFC3   A9 36      LDA #&36
-     AFC5   20 89 06   JSR &0689
-     AFC8   20 40 22   JSR &2240
-     AFCB   D2 73
-     AFCD   03
-     AFCE   53 48 49 ...
-     AFD5   FF
-     AFD6   A9 90      LDA #&90
-     AFD8   8D 37 06   STA &0637
-     AFDB   A9 74      LDA #&74
-     AFDD   8D 38 06   STA &0638
-     AFE0   A9 2C      LDA #&2C
-     AFE2   20 15 06   JSR &0615
-     AFE5   60         RTS
+     AFB4   20 40 22   JSR &2240
+     AFB7   A2 73
+     AFB9   07
+     AFBA   FF
+     AFBB   A9 36      LDA #&36
+     AFBD   20 89 06   JSR &0689
+     AFC0   20 40 22   JSR &2240
+     AFC3   D2 73
+     AFC5   03
+     AFC6   53 48 49 ...
+     AFCD   FF
+     AFCE   A9 90      LDA #&90
+     AFD0   8D 37 06   STA &0637
+     AFD3   A9 74      LDA #&74
+     AFD5   8D 38 06   STA &0638
+     AFD8   A9 2C      LDA #&2C
+     AFDA   20 15 06   JSR &0615
+     AFDD   60         RTS
 .swramLastAddr
-     AFE6
+     AFDE
 .loaderMain
      B000
 .loaderMessages
@@ -3802,13 +3798,13 @@ ORG No symbol=0287
      12D9   FF
      12DA   20 AE 13   JSR &13AE
      12DD   A8         TAY
-     12DE   B9 5A AF   LDA &AF5A,Y
+     12DE   B9 52 AF   LDA &AF52,Y
      12E1   8D 88 80   STA &8088
      12E4   20 40 22   JSR &2240
      12E7   7A 74
      12E9   07
      12EA   FF
-     12EB   B9 26 AF   LDA &AF26,Y
+     12EB   B9 1E AF   LDA &AF1E,Y
      12EE   8D 8C 80   STA &808C
      12F1   20 89 06   JSR &0689
      12F4   A9 05      LDA #&05
@@ -3821,7 +3817,7 @@ ORG No symbol=0287
 .mainMenuProcessKeyboardDown
      1304   20 AE 13   JSR &13AE
      1307   A8         TAY
-     1308   B9 5A AF   LDA &AF5A,Y
+     1308   B9 52 AF   LDA &AF52,Y
      130B   CD 88 80   CMP &8088
      130E   F0 F4      BEQ &1304
      1310   8D 87 80   STA &8087
@@ -3829,7 +3825,7 @@ ORG No symbol=0287
      1316   92 74
      1318   07
      1319   FF
-     131A   B9 26 AF   LDA &AF26,Y
+     131A   B9 1E AF   LDA &AF1E,Y
      131D   8D 8B 80   STA &808B
      1320   20 89 06   JSR &0689
      1323   A9 05      LDA #&05
@@ -3842,7 +3838,7 @@ ORG No symbol=0287
 .mainMenuProcessKeyboardLeft
      1333   20 AE 13   JSR &13AE
      1336   A8         TAY
-     1337   B9 5A AF   LDA &AF5A,Y
+     1337   B9 52 AF   LDA &AF52,Y
      133A   CD 88 80   CMP &8088
      133D   F0 F4      BEQ &1333
      133F   CD 87 80   CMP &8087
@@ -3852,7 +3848,7 @@ ORG No symbol=0287
      134A   AA 74
      134C   07
      134D   FF
-     134E   B9 26 AF   LDA &AF26,Y
+     134E   B9 1E AF   LDA &AF1E,Y
      1351   8D 8A 80   STA &808A
      1354   20 89 06   JSR &0689
      1357   A9 05      LDA #&05
@@ -3865,7 +3861,7 @@ ORG No symbol=0287
 .mainMenuProcessKeyboardRight
      1368   20 AE 13   JSR &13AE
      136B   A8         TAY
-     136C   B9 5A AF   LDA &AF5A,Y
+     136C   B9 52 AF   LDA &AF52,Y
      136F   CD 88 80   CMP &8088
      1372   F0 F4      BEQ &1368
      1374   CD 87 80   CMP &8087
@@ -3877,7 +3873,7 @@ ORG No symbol=0287
      1384   C2 74
      1386   07
      1387   FF
-     1388   B9 26 AF   LDA &AF26,Y
+     1388   B9 1E AF   LDA &AF1E,Y
      138B   8D 89 80   STA &8089
      138E   20 89 06   JSR &0689
      1391   A9 05      LDA #&05
@@ -3893,11 +3889,11 @@ ORG No symbol=0287
      13AD   60         RTS
 .mainMenuProcessKeyboardKey
      13AE   20 C9 11   JSR &11C9
-     13B1   20 8E AF   JSR &AF8E
+     13B1   20 86 AF   JSR &AF86
      13B4   B0 F8      BCS &13AE
 .mainMenuProcessKeyboardKeyWaitPress
      13B6   20 C9 11   JSR &11C9
-     13B9   20 8E AF   JSR &AF8E
+     13B9   20 86 AF   JSR &AF86
      13BC   90 F8      BCC &13B6
      13BE   60         RTS
 .mainMenuDrawLogoData
@@ -5410,7 +5406,7 @@ ORG No symbol=0287
 .drawBonusScreenSpecialActiveShields
      1F8C   24 D4      BIT &D4
      1F8E   10 06      BPL &1F96
-     1F90   20 BC AF   JSR &AFBC
+     1F90   20 B4 AF   JSR &AFB4
      1F93   4C BF 1F   JMP &1FBF
 .drawBonusScreenSpecialActiveShieldsArcade
      1F96   20 40 22   JSR &2240
