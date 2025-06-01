@@ -652,7 +652,7 @@ masterMos350 = &e374
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; swrDemo					move ladybug for demo mode
 ;						avoid skulls
-;						turn towards dots
+;						turn towards dots/hearts/letters
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .swrDemoDirBits					; used to simulate key presses, convert demo direction 0-3 to key bit
