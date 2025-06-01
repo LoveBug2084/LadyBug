@@ -1012,8 +1012,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda pauseCounter			; if timed out then return with failed status
 	beq tileMapFindDotFailed
 
-	jsr random				; get random value 0-255 and mask to become 0-28 in steps of 4
-	and #%00011100
+	jsr random				; get random value 0-255 and mask to become 0-30 (even numbers only)
+	and #%00011110
 
 	cmp #21					; if its higher than 20 then try again
 	bcs tileMapFindDotY
@@ -1028,8 +1028,8 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .tileMapFindDotX
 
-	jsr random				; get random value 0-255 and mask it to become 0-28 in steps of 4
-	and #%00011100
+	jsr random				; get random value 0-255 and mask it to become 0-30 (even numbers only)
+	and #%00011110
 
 	cmp #21					; if its higher than 20 then try again
 	bcs tileMapFindDotX

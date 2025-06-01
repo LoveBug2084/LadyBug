@@ -1692,7 +1692,7 @@ ORG No symbol=0287
      03D1   A5 01      LDA &01
      03D3   F0 62      BEQ &0437
      03D5   20 00 01   JSR &0100
-     03D8   29 1C      AND #&1C
+     03D8   29 1E      AND #&1E
      03DA   C9 15      CMP #&15
      03DC   B0 F3      BCS &03D1
      03DE   A8         TAY
@@ -1702,7 +1702,7 @@ ORG No symbol=0287
      03E7   85 5F      STA &5F
 .tileMapFindDotX
      03E9   20 00 01   JSR &0100
-     03EC   29 1C      AND #&1C
+     03EC   29 1E      AND #&1E
      03EE   C9 15      CMP #&15
      03F0   B0 F7      BCS &03E9
      03F2   65 5E      ADC &5E
