@@ -9087,7 +9087,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 .checkForObjectSkull
 
 	lda shield				; if we are vulnerable (skull shield = 0)
-	bne checkForObjectSkullExit
+	bne checkForObjectTileExit
 
 	lda #mapTileBlank			; replace skull with blank tile
 	sta (tileMapAddr), y
@@ -9096,10 +9096,6 @@ animateLadybugInstructions	= 6		; instructions animation index
 	jsr drawMapTile
 
 	jmp ladybugKill				; kill ladybug and exit
-
-.checkForObjectSkullExit
-
-	rts					; return
 
 
 
@@ -9139,7 +9135,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 .checkForObjectScore
 
-	ldx objectMode				; add score value for object cyan = 100, red = 800, yellow = 300
+	ldx objectMode				; add score value for object * multiplier (cyan = 100, red = 800, yellow = 300)
 	lda objectScore, x
 	jsr addScoreMultiply
 
@@ -9148,10 +9144,10 @@ animateLadybugInstructions	= 6		; instructions animation index
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 
 	cpx #objectModeCyan			; if the object was not cyan
-	beq checkForObjectScoreNow
+	beq checkForObjectScoreDisplay
 
 	lda bonusDiamondEnable			; and if the diamond bonus was enabled
-	beq checkForObjectScoreNow
+	beq checkForObjectScoreDisplay
 
 	lda #0					; then disable the diamond bonus
 	sta bonusDiamondEnable
@@ -9162,7 +9158,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; display the object score at the object location
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 
-.checkForObjectScoreNow
+.checkForObjectScoreDisplay
 
 	jsr displayObjectScore			; setup object score display
 
@@ -9173,9 +9169,9 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda #objectTime				; pause ladybug
 	sta pauseLadybug
 
-	cmp pauseEnemy				; only set enemy pause time if its currently less than object time as the enemy might already be paused
-	bcc checkForObjectExit			; as ladybug may have previously collected a vegetable bonus, before this object
-	sta pauseEnemy				; and we dont want to reset the enemy pause to the shorter object pause
+	cmp pauseEnemy				; only set enemy pause time if its currently less than object pause time
+	bcc checkForObjectExit			; to prevent a vegetable pause time being overwriiten with the shorter object pause time
+	sta pauseEnemy
 
 .checkForObjectExit
 
@@ -9245,7 +9241,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; continue down to update letter bit
 
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
-	; update letter bit
+	; update upper letter display
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkForObjectLetterUpdate
