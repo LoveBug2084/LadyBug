@@ -139,9 +139,9 @@ PRINT TAB(6,4);CHR$(129);"Universal 1981 arcade game";
 
 PRINT TAB(6,6);CHR$(133);"Programmed by";CHR$(131);"LoveBug";CHR$(133);"2021";
 
-PRINT TAB(15,9);CHR$(135);"Options";
+PRINT TAB(15,9);CHR$(131);"Options";
 
-PRINT TAB(6,11);CHR$(133);"I";CHR$(135);"-";CHR$(132);"Instructions";
+PRINT TAB(6,11);CHR$(131);"I";CHR$(135);"- Instructions";
 
 PRINT TAB(6,13);CHR$(129);"K";CHR$(135);"-";CHR$(131);"Play";CHR$(129);"Keyboard";
 
@@ -166,7 +166,7 @@ ENDPROC
 DEF PROCdisplayMode
 
 PRINT TAB(15,17);
-IF G% THEN PRINT CHR$(133);"Stardot HSC"; ELSE PRINT CHR$(129);"Arcade     ";
+IF G% THEN PRINT CHR$(131);"Stardot HSC"; ELSE PRINT CHR$(129);"Arcade     ";
 
 ENDPROC
 
@@ -234,10 +234,10 @@ PROCshrink(3)
 PRINT TAB(34,3);CHR$(131);"3";
 PROCeraseScreen(5)
 
-PRINT TAB(2,5);CHR$(132);"The";CHR$(133);"Stardot High Score Challenge";
+PRINT TAB(2,5);CHR$(132);"The";CHR$(131);"Stardot High Score Challenge";
 PRINT TAB(2.6);CHR$(132);"mode can be toggled by pressing";CHR$(131);"M";
 
-PRINT TAB(2,8);CHR$(129);"In the";CHR$(133);"HSC";CHR$(129);"mode the game will";
+PRINT TAB(2,8);CHR$(129);"In the";CHR$(131);"HSC";CHR$(129);"mode the game will";
 PRINT TAB(2,9);CHR$(129);"have the following four changes";
 
 PRINT TAB(2,11);CHR$(130);CHR$(255);" The";CHR$(135);"Diamond";CHR$(130);"bonus is disabled";
