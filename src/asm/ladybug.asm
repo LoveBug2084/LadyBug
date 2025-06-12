@@ -3172,39 +3172,28 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 .drawDemoModeOrName
 
-	lda demoMode				; if demo mode then draw demo mode message
-	beq drawHighScoreName			; else draw high score name
+	lda demoMode				; if demo mode then draw " GAME OVER"
+	beq drawHighScoreName
 
-	jsr drawHighScoreNameErase		; erase high score name from lower panel
-
-	jsr drawString				; and replace with "DEMO"
-	equw screenAddr + 2 + 8 + 9 * chrColumn + 25 * chrRow
-	equs colorMultiplier0, "DEMO", &ff
+	jsr drawString
+	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
+	equs colorMultiplier0, " GAME OVER", &ff
 
 	rts
 
 .drawHighScoreName
 
-	jsr drawString				; set screen position and color to red
+	jsr drawString				; else draw high score name
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equb colorRed, &ff
 	
-	lda #lo(highScoreTable + 3)		; draw the high score name text and return
+	lda #lo(highScoreTable + 3)
 	sta drawTextAddr + 0
 	lda #Hi(highScoreTable + 3)
 	sta drawTextAddr + 1
 	
 	jmp drawText
 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.drawHighScoreNameErase
-
-	jsr drawString				; erase high score name from lower panel
-	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
-	equs "          ", &ff
-
-	rts					; retuen
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5995,11 +5984,9 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #&ff				; else pause game
 	sta pauseGame
 	
-	jsr drawHighScoreNameErase		; erase high score name from lower panel
-
-	jsr drawString				; and replace with "PAUSED"
-	equw screenAddr + 2 + 8 + 8 * chrColumn + 25 * chrRow
-	equs colorMultiplier0, "PAUSED", &ff
+	jsr drawString				; and replace high score name with "  PAUSED  "
+	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
+	equs colorMultiplier0, "  PAUSED  ", &ff
 	
 .checkPauseGameReturnTrue
 
@@ -6994,16 +6981,18 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda enemyTimerZero			; and if timer has hit zero position top center
 	beq enemyReleaseExit
 
-	ldx #spritesTotal - 1			; start with last enemy in list
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; search enemy list to find which enemy is waiting to be released
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	ldx #spritesTotal - 1			; start with last enemy in list
 
 .enemyReleaseLoop
 
 	lda spritesDir, x			; if pending enemy not found
 	and #spriteBlanking + moveStop
 	cmp #moveStop
-	beq enemyReleaseFound
+	beq enemyReleaseDelay
 
 	dex					; then try next enemy
 	bne enemyReleaseLoop			; until all checked
@@ -7011,24 +7000,29 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	; the above branch is a branch always as an enemy will be found before x = 0
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; pending enemy found so calculate frame delay for this enemy to be released
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.enemyReleaseFound
-	
-	txa					; calculate frame for delayed enemy release (0, 4, 8 or 12)
-	and #3
+.enemyReleaseDelay
+
+	stx enemyReleaseFrame			; calculate frame delay release 5,10,15 or 20 frames out of 32
+	txa
 	asl a
 	asl a
+	adc enemyReleaseFrame
 	sta enemyReleaseFrame
-	
-	lda vsyncCounter			; if (vsyncCounter & 15) != enemyReleaseFrame then return (delay the release)
-	and #15
+
+	lda vsyncCounter			; if (vsyncCounter & 31) != enemyReleaseFrame then return (delay the release)
+	and #31
 	cmp enemyReleaseFrame
 	bne enemyReleaseExit
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; now its time to release the enemy so make sure there is a path to exit
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda tileMap + centerBoxUp		; if all exits blocked then dont bother trying to release the enemy
-	and tileMap + centerBoxDown 
+	lda tileMap + centerBoxUp		; if all exits blocked then enemy is trapped in a sealed box
+	and tileMap + centerBoxDown 		; so don't release it
 	and tileMap + centerBoxLeft
 	and tileMap + centerBoxRight
 	bmi enemyReleaseSpawn
