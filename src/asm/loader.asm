@@ -613,7 +613,7 @@ masterMos350 = &e374
 	sta bonusDiamondEnable
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if demo mode then use default number of lives and choose a random level 1 - 24
+	; if demo mode then use default number of lives and choose a random level (50% chance level 1-8 or 50% change level 1-24)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda demoMode				; if demo mode is active then
@@ -622,23 +622,34 @@ masterMos350 = &e374
 	lda #defaultLadybugLives		; override the menu lives and use the default lives for the demo
 	sta lives
 
+.swrGameLevelLoHi
+
+	lda #8					; 50% chance of picking level 1-8
+	sta swrGameLevelChooseMaxValue + 1
+	jsr random
+	bpl swrGameLevelChoose	
+	lda #24					; 50% chance of picking level 1-24
+	sta swrGameLevelChooseMaxValue + 1
+
 .swrGameLevelChoose
 
 	jsr random				; pick random number 0 - 255
 	beq swrGameLevelExit			; if = 0 then exit (no need to advance level)
 
-	cmp #24					; if >= 24 then choose another random number
+.swrGameLevelChooseMaxValue
+
+	cmp #0					; <- max value stored here from 50/50 code above, if chosen number >= this value then choose another
 	bcs swrGameLevelChoose
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; advance the level 1 to 23 times (from chosen random number)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	tay					; set the number of loops (1 to 23) to advance the level
+	tay					; set the number of loops to advance the level
 
 .swrGameLevelAdvance
 
-	jsr levelAdvance			; advance game level by 1
+	jsr levelAdvance			; advance game level
 
 	dey					; and repeat until done
 	bne swrGameLevelAdvance
@@ -737,7 +748,7 @@ masterMos350 = &e374
 .swrDemoRandomPercentage
 
 	jsr random
-	cmp #0.10 * 256				; clear path in front so 10% chance to turn randomly otherwise stay on current direction
+	cmp #0.20 * 256				; clear path in front so 20% chance to turn randomly otherwise stay on current direction
 	bcc swrDemoRandomDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
