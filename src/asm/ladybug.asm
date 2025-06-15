@@ -2061,7 +2061,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #escTime				; reset esc key timer
 	sta escCounter
 
-
+	sta enemySpeedCounter			; reset enemy speed fraction counter
+	sta enemyMoveCounter			; reset enemy move counter used by enemy release delay
 
 ;*****************************************************************************************************************************************************
 ;
@@ -2587,6 +2588,8 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 .moveSpritesPixel	
 
 	stx moveSpritesIndex			; set the starting sprite index
+
+	inc enemyMoveCounter			; increment pixel count used for enemy release delay
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -6992,7 +6995,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda spritesDir, x			; if pending enemy not found
 	and #spriteBlanking + moveStop
 	cmp #moveStop
-	beq enemyReleaseDelay
+	beq enemyReleaseTime
 
 	dex					; then try next enemy
 	bne enemyReleaseLoop			; until all checked
@@ -7000,21 +7003,20 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	; the above branch is a branch always as an enemy will be found before x = 0
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; pending enemy found so calculate frame delay for this enemy to be released
+	; pending enemy found so calculate delay for this enemy to be released
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.enemyReleaseDelay
+.enemyReleaseTime
 
-	stx enemyReleaseFrame			; calculate frame delay release 5,10,15 or 20 frames out of 32
-	txa
+	txa					; enemyReleaseDelay = (enemy & 3) * 4
+	and #3
 	asl a
 	asl a
-	adc enemyReleaseFrame
-	sta enemyReleaseFrame
+	sta enemyReleaseDelay
 
-	lda vsyncCounter			; if (vsyncCounter & 31) != enemyReleaseFrame then return (delay the release)
-	and #31
-	cmp enemyReleaseFrame
+	lda enemyMoveCounter			; if (enemyMoveCounter & 15) != enemyReleaseDelay then return (delay the release)
+	and #15
+	cmp enemyReleaseDelay
 	bne enemyReleaseExit
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
