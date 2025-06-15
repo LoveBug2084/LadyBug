@@ -74,13 +74,14 @@
 .pauseLadybug		skip 1			; number of frames to pause ladybug movement
 .pauseEnemy		skip 1			; number of frames to pause enemy movement
 
-.enemySpeed		skip 1			; enemy speed fraction
-.enemySpeedCounter	skip 1			; enemy speed fraction counter
+.enemySpeed		skip 1			; enemy speed fraction (enemy speed)
+.enemySpeedCounter	skip 1			; enemy speed fraction counter used to calculate when an extra pixel movement is required
+.enemyMoveCounter	skip 1			; incremented every time the enemies are moved a pixel
 
 .enemyAttack		skip 1			; enemy attack value (optionEnemyAttack for regular game or 4 for demo game)
 
 .enemyReleaseEnable	skip 1			; set to &ff when timer hits top left
-.enemyReleaseFrame	skip 1			; frame number to release enemy
+.enemyReleaseDelay	skip 1			; delay enemy release time so that enemies do not ride on each others backs
 
 .enemyReleaseDir				; 4 directions to test in tile map for releasing an enemy
 
