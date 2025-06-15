@@ -4517,7 +4517,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.enemySpeedTable
+.enemySpeedTable				; enemies always move 1 step per frame plus this additional fraction
 
 						; enemy speed option 0
 	equb 0.00 * 256				; 1.00 level 1-6
@@ -4547,12 +4547,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	equb 0.15 * 256				; 1.15 level 1-6
 	equb 0.30 * 256				; 1.30 level 7-11
 	equb 0.45 * 256				; 1.45 level 12-17
-	equb 0.60 * 256				; 1.60 level 18-99
+	equb 0.59 * 256				; 1.59 level 18-99		was 1.60 but this didn't work well with new release code as it took too many roll overs
 	
 						; enemy speed option 5
 	equb 0.20 * 256				; 1.20 level 1-6
 	equb 0.40 * 256				; 1.40 level 7-11
-	equb 0.60 * 256				; 1.60 level 12-17
+	equb 0.59 * 256				; 1.59 level 12-17		was 1.60 but this didn't work well with new release code as it took too many roll overs
 	equb 0.80 * 256				; 1.80 level 18-99
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
