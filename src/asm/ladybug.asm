@@ -1992,8 +1992,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #sfxTwinkle				; play twinkle sound effect for first level
 	jsr playSound
 
-
-
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; start current game level, setup level settings and initialize the tileMap with mazeMap layout
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6051,9 +6049,8 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #4					; draw two random flowers at screen row 4
 	jsr drawFlowers
 
-	jsr drawString				; draw text and entry characters
-	equw screenAddr + 2 + 16 + 4 * chrRow + 3 * chrColumn
-	equs colorRed, "CONGRATULATIONS!", &ff
+	ldy #3					; draw congratulations on row 3
+	jsr drawCongratulations
 
 	jsr drawString
 	equw screenAddr + 2 + 6 * chrRow + 5 * chrColumn
@@ -7845,9 +7842,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusScreenSpecialActive
 
-	jsr drawString				; draw the "CONGRATULATIONS!" text
-	equw screenAddr + 2 + 8 + 3 * chrColumn + 16 * chrRow
-	equs colorRed, "CONGRATULATIONS!", &ff
+	ldy #15					; draw congratulations on row 15
+	jsr drawCongratulations
 
 	bit highScoreChallenge			; if arcade mode
 	bmi drawBonusScreenSpecialActiveChallenge
@@ -7958,9 +7954,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda bonusExtraActive			; if extra bonus active
 	beq drawBonusScreenDiamond
 
-	jsr drawString				; draw the bonus text
-	equw screenAddr + 2 + 16 + 3 * chrColumn + 16 * chrRow
-	equs colorRed, "CONGRATULATIONS!", &ff
+	ldy #15					; draw congratulations on row 15
+	jsr drawCongratulations
 
 	jsr drawString
 	equw screenAddr + 2 + 7 * chrColumn + 18 * chrRow
@@ -8129,6 +8124,31 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 .drawBonusScreenExit
 
 	rts					; return
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; draw congratulations text on specified row
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawCongratulations
+
+	clc					; setup screen row / column to print text
+	lda #lo(3 * chrColumn + 2 + 16)
+	adc screenRowLo, y
+	sta drawCongratulationsText + 0
+	lda #hi(3 * chrColumn + 2 + 16)
+	adc screenRowHi, y
+	sta drawCongratulationsText + 1
+
+	jsr drawString				; draw the congratulations
+
+.drawCongratulationsText
+
+	equw dummy16
+	equs colorRed, "CONGRATULATIONS!", &ff
+
+	rts
 
 
 
