@@ -1717,6 +1717,19 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; .drawMapTileSpace				draw map tile and advance screen address an extra tile to leave a space
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawMapTileSpace
+
+	jsr drawMapTile				; draw the tile
+
+	lda #chrColumn				; leave space
+	jmp drawMapTileAddrAdvance
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; drawObjectTile				draw 8 pixel wide object tile to screen, move to next tile position
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	A			tile img to be drawn
@@ -7621,11 +7634,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawLevelIntroSkullImg				; repeat
 
-	lda #mapTileSkull			; draw the skull
-	jsr drawMapTile
-
-	lda #chrColumn				; leave space between skull
-	jsr drawMapTileAddrAdvance
+	lda #mapTileSkull			; draw the skull and leave a gap
+	jsr drawMapTileSpace
 
 	dex					; until all skulls done
 	bne drawLevelIntroSkullImg
@@ -7645,11 +7655,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawLevelIntroLettersImg			; repeat
 
-	lda levelLetters, x			; draw a letter from the list
-	jsr drawMapTile
-
-	lda #chrColumn				; leave space between letters
-	jsr drawMapTileAddrAdvance
+	lda levelLetters, x			; draw a letter from the list and leave a space
+	jsr drawMapTileSpace
 
 	dex					; until all letters done
 	bpl drawLevelIntroLettersImg
@@ -7669,11 +7676,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawLevelIntroHeartsImg			; repeat
 
-	lda #mapTileHeart			; draw a heart
-	jsr drawMapTile
-
-	lda #chrColumn				; leave space between hearts
-	jsr drawMapTileAddrAdvance
+	lda #mapTileHeart			; draw a heart and leave a space
+	jsr drawMapTileSpace
 
 	dex					; until all hearts done
 	bne drawLevelIntroHeartsImg
@@ -7772,11 +7776,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	
 .drawBonusGraphicsSkulls
 
-	lda #mapTileSkull
-	jsr drawMapTile
-
-	lda #chrColumn
-	jsr drawMapTileAddrAdvance
+	lda #mapTileSkull			; draw a skull and leave a space
+	jsr drawMapTileSpace
 
 	dex
 	bne drawBonusGraphicsSkulls
