@@ -858,7 +858,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      AEB2   F0 3C      BEQ &AEF0
 .swrDemoRandomPercentage
      AEB4   20 00 01   JSR &0100
-     AEB7   C9 33      CMP #&33
+     AEB7   C9 3A      CMP #&3A
      AEB9   90 35      BCC &AEF0
 .swrDemoSetDir
      AEBB   A5 C6      LDA &C6
