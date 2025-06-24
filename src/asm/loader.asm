@@ -748,7 +748,7 @@ masterMos350 = &e374
 .swrDemoRandomPercentage
 
 	jsr random
-	cmp #0.20 * 256				; clear path in front so 20% chance to turn randomly otherwise stay on current direction
+	cmp #0.23 * 256				; no edible items near so use a 23% chance of turning randomly otherwise stay on current direction
 	bcc swrDemoRandomDir
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
