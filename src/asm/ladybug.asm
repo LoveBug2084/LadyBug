@@ -467,7 +467,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ; exit			A			destroyed
 ;			X			destroyed
 ;			Y			destroyed
-;			playerInput		bit 0=start 1=left 2=down 3=up 4=right 5=esc 6=space
+;			playerInput		bit 0=start 1=left 2=down 3=up 4=right 5=esc
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .inputScan
@@ -480,9 +480,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	
 	lda #0					; clear player input flags
 	sta playerInput
-
-	lda #keySpace				; read space key into playerInput bits
-	jsr readKey
 
 	lda #keyEsc				; read esc key into playerInput bits
 	jsr readKey
@@ -5178,16 +5175,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr drawString				; draw text
-	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
-	equs colorSpecial1, "PRESS          ", &ff
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; draw text
-	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs colorMultiplier1, "UP", &ff
-	
+	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
+	equs colorSpecial1, "PRESS ", colorMultiplier1,"UP       ", &ff
+
 	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
 	
 	tay					; get key scan code
