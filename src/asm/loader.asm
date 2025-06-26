@@ -734,7 +734,7 @@ masterMos350 = &e374
 	beq swrDemoRandomDir			; then choose a random direction
 
 	jsr swrDemoCheckTileEdible		; check 2 tiles in front for dot/heart/letters
-	beq swrDemoSetDir			; if tile found then continue going forward
+	bcs swrDemoSetDir			; if tile found then continue going forward
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -753,6 +753,10 @@ masterMos350 = &e374
 	ora swrDemoDirBits, x
 	sta playerInput
 
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.swrDemoExit
+
 	rts					; return
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -768,14 +772,10 @@ masterMos350 = &e374
 	beq swrDemoCheckSideFalse		; then return false
 
 	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
-	bne swrDemoCheckSideFalse		; then return false
+	bcc swrDemoCheckSideFalse		; then return false
 
 	stx demoDir				; tile found so set turn direction
-
-.swrDemoCheckSideTrue
-
-	sec					; return true
-	rts
+	rts					; return true
 
 .swrDemoCheckSideFalse
 
@@ -795,10 +795,10 @@ masterMos350 = &e374
 	beq swrDemoCheckSideFalse		; then return false
 
 	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
-	bne swrDemoCheckSideFalse		; then return false
+	bcc swrDemoCheckSideFalse		; then return false
 
 	stx demoDir				; tile found so set turn direction
-	jmp swrDemoCheckSideTrue
+	rts					; return true
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -854,13 +854,15 @@ masterMos350 = &e374
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; swrDemoCheckTileEdible			check for edible tiles 2 tiles from ladybug at supplied direction
+;						returns carry set if found, clear if not found
+;						also 23% chance of returning carry set if no tile found to add a bit of random walking to the mix
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	X			direction 0-3
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; exit			A			= &00 edible found, = &ff not found
+; exit			A			destroyed
 ;			X			preserved
 ;			Y			preserved
-;			Z			= set (edible found), = cleared (not found)
+;			C			set found, clear not found
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; workspace		none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -878,20 +880,19 @@ masterMos350 = &e374
 
 .swrDemoCheckTileEdibleTrue			; its neither a blank or a skull so it must be a dot/heart/letter so exit with true
 
-	lda #0
+	sec
 	rts					
 
 .swrDemoCheckTileEdibleFalse
 
-	lda #&ff
+	clc
 	rts
 
 .swrDemoCheckTileEdibleRandom
 
 	jsr random
-	cmp #0.23 * 256
-	bcc swrDemoCheckTileEdibleTrue
-	bcs swrDemoCheckTileEdibleFalse
+	cmp #255-(0.23 * 256)
+	rts
 
 
 
