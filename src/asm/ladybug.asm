@@ -5461,12 +5461,8 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
-	equs colorYellow, "CONTROLS", &ff
+	equs colorYellow, "CONTROLS   ", colorWhite, &ff
 	
-	jsr drawString
-	equw screenAddr + 2 + 15 * chrColumn + 20 * chrRow
-	equb colorWhite, &ff
-
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; display the current user defined control keys
 	;---------------------------------------------------------------------------------------------------------------------------------------------
