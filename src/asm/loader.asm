@@ -745,14 +745,6 @@ masterMos350 = &e374
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDemoRandomPercentage
-
-	jsr random
-	cmp #0.23 * 256				; no edible items near so use a 23% chance of turning randomly otherwise stay on current direction
-	bcc swrDemoRandomDir
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 .swrDemoSetDir
 
 	lda playerInput				; remove all inputs except esc and combine with demo direction
@@ -878,8 +870,8 @@ masterMos350 = &e374
 	ldy swrDemoMapDir, x			; set index to 2 tiles from ladybug
 	lda (demoMapAddr), y			; get tile
 
-	cmp #mapTileBlank			; if its a blank tile then exit with false
-	beq swrDemoCheckTileEdibleFalse
+	cmp #mapTileBlank			; if its a blank tile then choose a 23% chance of exiting with true else exit with false
+	beq swrDemoCheckTileEdibleRandom
 
 	cmp #mapTileSkull			; if its a skull tile then exit with false
 	beq swrDemoCheckTileEdibleFalse
@@ -893,6 +885,13 @@ masterMos350 = &e374
 
 	lda #&ff
 	rts
+
+.swrDemoCheckTileEdibleRandom
+
+	jsr random
+	cmp #0.23 * 256
+	bcc swrDemoCheckTileEdibleTrue
+	bcs swrDemoCheckTileEdibleFalse
 
 
 
