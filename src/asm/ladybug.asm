@@ -4555,12 +4555,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	equb 0.15 * 256				; 1.15 level 1-6
 	equb 0.30 * 256				; 1.30 level 7-11
 	equb 0.45 * 256				; 1.45 level 12-17
-	equb 0.59 * 256				; 1.59 level 18-99		was 1.60 but this didn't work well with new release code as it took too many roll overs
+	equb 0.59 * 256				; 1.59 level 18-99		was 1.60 but caused too many roll-overs with new release code
 	
 						; enemy speed option 5
 	equb 0.20 * 256				; 1.20 level 1-6
 	equb 0.40 * 256				; 1.40 level 7-11
-	equb 0.59 * 256				; 1.59 level 12-17		was 1.60 but this didn't work well with new release code as it took too many roll overs
+	equb 0.59 * 256				; 1.59 level 12-17		was 1.60 but caused too many roll-overs with new release code
 	equb 0.80 * 256				; 1.80 level 18-99
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4984,7 +4984,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
 	cmp #6-3
-	bcc mainMenuProcessUp			; then decrement again
+	bcc mainMenuProcessUp			; then decrement again (skip over lives, enemy speed and enemy attack)
 
 .mainMenuProcessUpWrapAround
 
@@ -5024,7 +5024,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
 	cmp #6-3
-	bcc mainMenuProcessDown			; the increment again
+	bcc mainMenuProcessDown			; the increment again  (skip over lives, enemy speed and enemy attack)
 
 .mainMenuProcessDownWrapAround
 
@@ -5055,7 +5055,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	ldx mainMenuCursor			; get mainMenuCursor position
 
-	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 ("START/CHALLENGE MODE") then return true
+	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 ("START GAME") then return true
 	
 	cpx #2					; if mainMenuCursor = 2 ("HIGH SCORES") then display high score table
 	beq mainMenuHighScores
@@ -5071,7 +5071,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 						; x index is offset by 3
-						; first entrys in menu are 0:"START/CHALLENGE MODE", 1:"blank line", 2:"HIGH SCORES"
+						; first entrys in menu are 0:"START GAME", 1:"blank line", 2:"HIGH SCORES"
 						; so subtract 3 from table addresses to compensate for the offset
 
 	inc gameSettings - 3, x			; gameSettings[x - 3] += 1
@@ -5157,7 +5157,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr drawScoreTable			; draw the high scores page and wait for start or esc to be pressed
+	jsr drawScoreTable			; draw the high scores page and wait for start / esc to be pressed or idle timeout
 	
 	jsr mainMenuDraw			; draw the main menu screen (and reset idle time)
 
