@@ -2052,8 +2052,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	lda #0
 
-	sta enemyLadybugKill			; clear enemy index that killed ladybug (for the death animation)
-
 	sta bonusItemActive			; disable center bonus item
 
 	sta vegetableScoreActive		; disable center vegetable score display
@@ -2698,7 +2696,6 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	bcs moveSpritesCheckAlignmentX
 
 	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug
-	stx enemyLadybugKill			; and save the enemy that killed ladybug (for the death animation)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if enemy is exactly aligned with grid
@@ -4310,17 +4307,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	and #2					; then flash ladybug
 	bne ladybugDeathAnimationBlank
 	
+	lda #0
 	sta ladybugDeathAnimationIndex		; initialize death animation index = 0 for 2nd part
 
 	lda spritesDir + 0
 	and #spriteBlanking eor 255
 	sta spritesDir + 0
-
-	ldx enemyLadybugKill			; if enemy killed ladybug
-	beq ladybugDeathAnimationCheckMusic
-
-	lda #spriteBlanking			; then blank enemy
-	sta spritesDir, x
 
 	jmp ladybugDeathAnimationCheckMusic
 	
@@ -4343,58 +4335,18 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 .ladybugDeathAnimationReturnFalse
 
-	clc					; return false (level restart not required)
+	clc					; return false (level restart not yet required)
 	rts
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.ladybugDeathAnimationDrawAngelLower
-
-	lda spritesY + 0
-	cmp #upperLowerThreshold
-	bcs ladybugDeathAnimationCheckMusic
-
-	bcc ladybugDeathAnimationDrawAngelOk
-
 .ladybugDeathAnimationDrawAngel
 
-	lda pauseLadybug			; if ladybug pause timer == flash time
-	cmp #(256 - ladybugDeathFlashTime) - 1
-	bne ladybugDeathAnimationCheckUpperLower
-
-	ldx #spritesTotal - 1			; erase all enemies
-	lda #spriteBlanking
-
-.ladybugDeathAnimationDrawAngelLoop
-
-	sta spritesDir + 0, x
-	dex
-	bne ladybugDeathAnimationDrawAngelLoop
-
-	lda bonusItemActive			; if center bonus item is active
-	beq ladybugDeathAnimationCheckUpperLower
-
-	lda #0					; disable bonus item
-	sta bonusItemActive
-
-	lda #centerBoxX				; erase center box (remove vegetable or diamond)
-	sta drawSpriteX
-	lda #centerBoxY
-	sta drawSpriteY
-	jsr eraseBlock
-
-.ladybugDeathAnimationCheckUpperLower
-
-	lda screenHalf				; get upper / lower flag
-	bne ladybugDeathAnimationDrawAngelLower
-	
-	lda spritesY + 0
+	lda spritesY + 0			; check if we're in the correct screen half to draw sprite
 	cmp #upperLowerThreshold
-	bcc ladybugDeathAnimationCheckMusic
-	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.ladybugDeathAnimationDrawAngelOk
+	ror a					; I very rarely write strange code but this bit is a little strange
+	eor screenHalf
+	bpl ladybugDeathAnimationCheckMusic
 
 	lda spritesX + 0			; copy ladybug xy position for address conversion and angel sprite drawing
 	sta spriteToAddrX
@@ -4555,12 +4507,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	equb 0.15 * 256				; 1.15 level 1-6
 	equb 0.30 * 256				; 1.30 level 7-11
 	equb 0.45 * 256				; 1.45 level 12-17
-	equb 0.59 * 256				; 1.59 level 18-99		was 1.60 but this didn't work well with new release code as it took too many roll overs
+	equb 0.59 * 256				; 1.59 level 18-99		was 1.60 but caused too many roll-overs with new release code
 	
 						; enemy speed option 5
 	equb 0.20 * 256				; 1.20 level 1-6
 	equb 0.40 * 256				; 1.40 level 7-11
-	equb 0.59 * 256				; 1.59 level 12-17		was 1.60 but this didn't work well with new release code as it took too many roll overs
+	equb 0.59 * 256				; 1.59 level 12-17		was 1.60 but caused too many roll-overs with new release code
 	equb 0.80 * 256				; 1.80 level 18-99
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4984,7 +4936,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
 	cmp #6-3
-	bcc mainMenuProcessUp			; then decrement again
+	bcc mainMenuProcessUp			; then decrement again (skip over lives, enemy speed and enemy attack)
 
 .mainMenuProcessUpWrapAround
 
@@ -5024,7 +4976,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
 	cmp #6-3
-	bcc mainMenuProcessDown			; the increment again
+	bcc mainMenuProcessDown			; the increment again  (skip over lives, enemy speed and enemy attack)
 
 .mainMenuProcessDownWrapAround
 
@@ -5055,7 +5007,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	ldx mainMenuCursor			; get mainMenuCursor position
 
-	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 ("START/CHALLENGE MODE") then return true
+	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 ("START GAME") then return true
 	
 	cpx #2					; if mainMenuCursor = 2 ("HIGH SCORES") then display high score table
 	beq mainMenuHighScores
@@ -5071,7 +5023,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 						; x index is offset by 3
-						; first entrys in menu are 0:"START/CHALLENGE MODE", 1:"blank line", 2:"HIGH SCORES"
+						; first entrys in menu are 0:"START GAME", 1:"blank line", 2:"HIGH SCORES"
 						; so subtract 3 from table addresses to compensate for the offset
 
 	inc gameSettings - 3, x			; gameSettings[x - 3] += 1
@@ -5157,7 +5109,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	lda #sfxTurnstile			; play sound effect
 	jsr playSound
 
-	jsr drawScoreTable			; draw the high scores page and wait for start or esc to be pressed
+	jsr drawScoreTable			; draw the high scores page and wait for start / esc to be pressed or idle timeout
 	
 	jsr mainMenuDraw			; draw the main menu screen (and reset idle time)
 
@@ -9322,10 +9274,12 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; ladybugKill					blank ladybug sprite
-;						enable ladybug death animation
+; ladybugKill					erase all enemies
+;						disable center bonus item
 ;						remove the possibility of getting a diamond bonus
 ;						remove diamond from lower playfield
+;						erase center box item
+;						enable ladybug death animation
 ;						reduce lives by 1
 ;						pause ladybug and enemies
 ;						play death music
@@ -9341,17 +9295,30 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 .ladybugKill
 
-	lda #spriteBlanking			; blank ladybug sprite
-	ora spritesDir + 0
-	sta spritesDir + 0
+	ldx #spritesTotal - 1			; erase all enemies
+	lda #spriteBlanking
 
-	lda #&ff				; enable death animation
-	sta ladybugDeathEnable
+.ladybugKillLoop
 
-	lda #0
+	sta spritesDir + 0, x
+	dex
+	bne ladybugKillLoop
+
+	lda #0					; disable bonus item
+	sta bonusItemActive
+
 	sta bonusDiamondEnable			; remove the possibility of getting a diamond bonus
 
 	jsr swrDrawPlayfieldLowerDiamond	; remove diamond from lower playfield
+
+	lda #centerBoxX				; erase center box (remove vegetable or diamond)
+	sta drawSpriteX
+	lda #centerBoxY
+	sta drawSpriteY
+	jsr eraseBlock
+
+	lda #&ff				; enable death animation
+	sta ladybugDeathEnable
 
 	sed					; bcd mode
 
