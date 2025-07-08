@@ -2052,8 +2052,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	lda #0
 
-	sta enemyLadybugKill			; clear enemy index that killed ladybug (for the death animation)
-
 	sta bonusItemActive			; disable center bonus item
 
 	sta vegetableScoreActive		; disable center vegetable score display
@@ -2698,7 +2696,6 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	bcs moveSpritesCheckAlignmentX
 
 	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug
-	stx enemyLadybugKill			; and save the enemy that killed ladybug (for the death animation)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if enemy is exactly aligned with grid
@@ -4310,17 +4307,12 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	and #2					; then flash ladybug
 	bne ladybugDeathAnimationBlank
 	
+	lda #0
 	sta ladybugDeathAnimationIndex		; initialize death animation index = 0 for 2nd part
 
 	lda spritesDir + 0
 	and #spriteBlanking eor 255
 	sta spritesDir + 0
-
-	ldx enemyLadybugKill			; if enemy killed ladybug
-	beq ladybugDeathAnimationCheckMusic
-
-	lda #spriteBlanking			; then blank enemy
-	sta spritesDir, x
 
 	jmp ladybugDeathAnimationCheckMusic
 	
@@ -4343,58 +4335,18 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 .ladybugDeathAnimationReturnFalse
 
-	clc					; return false (level restart not required)
+	clc					; return false (level restart not yet required)
 	rts
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.ladybugDeathAnimationDrawAngelLower
-
-	lda spritesY + 0
-	cmp #upperLowerThreshold
-	bcs ladybugDeathAnimationCheckMusic
-
-	bcc ladybugDeathAnimationDrawAngelOk
-
 .ladybugDeathAnimationDrawAngel
 
-	lda pauseLadybug			; if ladybug pause timer == flash time
-	cmp #(256 - ladybugDeathFlashTime) - 1
-	bne ladybugDeathAnimationCheckUpperLower
-
-	ldx #spritesTotal - 1			; erase all enemies
-	lda #spriteBlanking
-
-.ladybugDeathAnimationDrawAngelLoop
-
-	sta spritesDir + 0, x
-	dex
-	bne ladybugDeathAnimationDrawAngelLoop
-
-	lda bonusItemActive			; if center bonus item is active
-	beq ladybugDeathAnimationCheckUpperLower
-
-	lda #0					; disable bonus item
-	sta bonusItemActive
-
-	lda #centerBoxX				; erase center box (remove vegetable or diamond)
-	sta drawSpriteX
-	lda #centerBoxY
-	sta drawSpriteY
-	jsr eraseBlock
-
-.ladybugDeathAnimationCheckUpperLower
-
-	lda screenHalf				; get upper / lower flag
-	bne ladybugDeathAnimationDrawAngelLower
-	
-	lda spritesY + 0
+	lda spritesY + 0			; check if we're in the correct screen half to draw sprite
 	cmp #upperLowerThreshold
-	bcc ladybugDeathAnimationCheckMusic
-	
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.ladybugDeathAnimationDrawAngelOk
+	ror a					; I very rarely write strange code but this bit is a little strange
+	eor screenHalf
+	bpl ladybugDeathAnimationCheckMusic
 
 	lda spritesX + 0			; copy ladybug xy position for address conversion and angel sprite drawing
 	sta spriteToAddrX
@@ -9322,10 +9274,12 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; ladybugKill					blank ladybug sprite
-;						enable ladybug death animation
+; ladybugKill					erase all enemies
+;						disable center bonus item
 ;						remove the possibility of getting a diamond bonus
 ;						remove diamond from lower playfield
+;						erase center box item
+;						enable ladybug death animation
 ;						reduce lives by 1
 ;						pause ladybug and enemies
 ;						play death music
@@ -9341,17 +9295,30 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 .ladybugKill
 
-	lda #spriteBlanking			; blank ladybug sprite
-	ora spritesDir + 0
-	sta spritesDir + 0
+	ldx #spritesTotal - 1			; erase all enemies
+	lda #spriteBlanking
 
-	lda #&ff				; enable death animation
-	sta ladybugDeathEnable
+.ladybugKillLoop
 
-	lda #0
+	sta spritesDir + 0, x
+	dex
+	bne ladybugKillLoop
+
+	lda #0					; disable bonus item
+	sta bonusItemActive
+
 	sta bonusDiamondEnable			; remove the possibility of getting a diamond bonus
 
 	jsr swrDrawPlayfieldLowerDiamond	; remove diamond from lower playfield
+
+	lda #centerBoxX				; erase center box (remove vegetable or diamond)
+	sta drawSpriteX
+	lda #centerBoxY
+	sta drawSpriteY
+	jsr eraseBlock
+
+	lda #&ff				; enable death animation
+	sta ladybugDeathEnable
 
 	sed					; bcd mode
 
