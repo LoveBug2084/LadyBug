@@ -4307,7 +4307,6 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	and #2					; then flash ladybug
 	bne ladybugDeathAnimationBlank
 	
-	lda #0
 	sta ladybugDeathAnimationIndex		; initialize death animation index = 0 for 2nd part
 
 	lda spritesDir + 0
