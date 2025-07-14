@@ -135,8 +135,6 @@
 
 .moveSpritesPathCounter	skip 1			; counter for number of paths for valid junction
 
-.moveSpritesSaveX	skip 1			; preserve register
-
 .moveSpritesSaveDirection
 			skip 1			; save original sprite direction while calculating new path direction in enemy aim logic
 

@@ -2793,8 +2793,6 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 .moveSpritesRandomOrAttack
 
-	stx moveSpritesSaveX			; preserve enemy index
-
 	txa					; enemy attack tableIndex = (spriteNumber and 3) + enemyAttack
 	and #3
 	clc
@@ -2804,7 +2802,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	jsr random				; compare random number with percentage table enemyRandomChance, x
 	cmp enemyRandomChance, x
 
-	ldx moveSpritesSaveX			; restore enemy index
+	ldx moveSpritesIndex			; get enemy index
 
 	bcs moveSpritesAttack			; if random < random chance table
 
