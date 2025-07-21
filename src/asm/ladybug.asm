@@ -2773,54 +2773,63 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #wallSolid
 	sta moveSpritesAvailablePaths, y
 
-	jmp moveSpritesRandomAvailableDirection
+;	jmp moveSpritesRandomAvailableDirection
 
 .moveSpritesEnemyAiCheckUp
 
-	ldy #moveUp
+	ldy #moveUp				; if up path is available
 	lda moveSpritesAvailablePaths, y
 	bmi moveSpritesEnemyAiCheckDown
 
-	lda spritesY + 0			; does enemy want to go up ?
-	clc
-	adc moveSpritesTargetY, x
-	cmp spritesY, x
+	lda spritesY + 0			; and if ladybugY < enemyY
+
+;	clc
+;	adc moveSpritesTargetY, x
+
+	cmp spritesY, x				; then go up
 	bcc moveSpritesSetEnemyDirection
 
 .moveSpritesEnemyAiCheckDown
 
-	iny
+	ldy #moveDown				; if down path is available
 	lda moveSpritesAvailablePaths, y
 	bmi moveSpritesEnemyAiCheckLeft
 
-	lda spritesY, x				; does enemy want to go down ?
-	sec
-	sbc moveSpritesTargetY, x
-	cmp spritesY + 0
+	lda spritesY, x				; and if enemyY < ladybugY
+
+;	sec
+;	sbc moveSpritesTargetY, x
+
+	cmp spritesY + 0			; then go down
 	bcc moveSpritesSetEnemyDirection
 
 .moveSpritesEnemyAiCheckLeft
 
-	iny
-	lda moveSpritesAvailablePaths, y
-	bmi moveSpritesEnemyAiCheckRight
+	ldy #moveLeft				; if left path is available
 
-	lda spritesX + 0			; does enemy want to go left ?
-	clc
-	adc moveSpritesTargetX, x
-	cmp spritesX, x
+;	lda moveSpritesAvailablePaths, y
+;	bmi moveSpritesEnemyAiCheckRight
+
+	lda spritesX + 0			; and if ladybugX < enemyX
+
+;	clc
+;	adc moveSpritesTargetX, x
+
+	cmp spritesX, x				; then go left
 	bcc moveSpritesSetEnemyDirection
 
 .moveSpritesEnemyAiCheckRight
 
-	iny
+	ldy #moveRight				; if right path is available
 	lda moveSpritesAvailablePaths, y
-	bmi moveSpritesEnemyAiCheckRight
+	bmi moveSpritesRandomAvailableDirection
 
-	lda spritesX, x				; does enemy want to go right ?
-	sec
-	sbc moveSpritesTargetX, x
-	cmp spritesX + 0
+	lda spritesX, x				; and if enemyX < ladybugX
+
+;	sec
+;	sbc moveSpritesTargetX, x
+
+	cmp spritesX + 0			; then go right
 	bcc moveSpritesSetEnemyDirection
 
 .moveSpritesRandomAvailableDirection
@@ -2833,6 +2842,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	lda spritesDir, x			; then get current direction
 	eor #1					; flip direction 180
+	tay
 	lda #0					; and unblock the path
 	sta moveSpritesAvailablePaths, y
 
