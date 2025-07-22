@@ -133,17 +133,12 @@
 
 .tileMapAddr		skip 2			; tileMap address used by various routines
 
-.moveSpritesPathCounter	skip 1			; counter for number of paths for valid junction
-
-.moveSpritesSaveX	skip 1			; preserve register
-
-.moveSpritesSaveDirection
-			skip 1			; save original sprite direction while calculating new path direction in enemy aim logic
+.moveSpritesAvailablePaths
+			skip 4			; 4 path directions available to enemy
 
 .moveSpritesIndex	skip 1			; index of current sprite
 
 .moveSpritesDistanceSave
-
 			skip 1			; temporary store for distance squared
 
 .spritesImg		skip spritesTotal	; sprite image, position and direction for drawing

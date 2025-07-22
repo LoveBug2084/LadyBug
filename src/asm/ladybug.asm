@@ -2522,34 +2522,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ; workspace		moveSpritesIndex	index to current sprite
 ;			moveSpritesPathCounter	count the number of paths from sprite location to check for valid junction
 ;
-;			moveSpritesSaveDirection
-;						temporary storage for sprite direction
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid location to be valid junction
-						; at a valid junction an enemy will either turn to ladybugs direction (attack)
-						; or will choose a random available direction
-						; if the attack direction is not available then a random available direction is chosen
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy ai control table
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.enemyRandomChance
-
-	equb (99.96 * 256) / 100		; percentage chance of enemy turning randomly instead of towards ladybug
-	equb (91.63 * 256) / 100		; enemy attack value on game menu (0-9) is added to the enemy number (0-3)
-	equb (83.30 * 256) / 100		; and used as an index (0-12) into this table to give the enemy its random percentage
-	equb (74.97 * 256) / 100		; lower random percentage = higher attack percentage. example 05.00% random = 95.00% attack
-	equb (66.64 * 256) / 100
-	equb (58.31 * 256) / 100
-	equb (49.98 * 256) / 100
-	equb (41.65 * 256) / 100
-	equb (33.32 * 256) / 100
-	equb (20.00 * 256) / 100
-	equb (15.00 * 256) / 100
-	equb (10.00 * 256) / 100
-	equb (05.00 * 256) / 100
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; x and y delta for the four possible directions
@@ -2655,7 +2628,11 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check for enemy collision with ladybug which is true when
-	; if abs(ladybugx - enemyx) + abs(ladybugy - enemyy) < collisionRange
+	; abs(ladybugx - enemyx) < collisionRange
+	; and
+	; abs(ladybugy - enemyy) < collisionRange
+	; and
+	; abs(ladybugx - enemyx) + abs(ladybugy - enemyy) < collisionRange
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesCollision
@@ -2690,7 +2667,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	cmp #collisionRange			; if y distance < collisionRange
 	bcs moveSpritesCheckAlignmentX
 
-	adc moveSpritesDistanceSave		; add together both x and y distances
+	adc moveSpritesDistanceSave		; add together both x and y distances (carry is clear so no need for clc)
 
 	cmp #collisionRange			; if combined distance is less than collisionRange
 	bcs moveSpritesCheckAlignmentX
@@ -2730,7 +2707,7 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	ldy #24					; if tile under enemy = skull
 	lda (tileMapAddr), y
 	cmp #mapTileSkull
-	bne moveSpritesCheckValidJunction
+	bne moveSpritesEnemyAi
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; enemy hit a skull so remove skull from map, remove skull from screen, kill enemy, spawn new enemy in center box (if its empty)
@@ -2759,89 +2736,107 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	jmp moveSpritesNext			; skip to next sprite
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy ai, check for valid number of paths
+	; enemy ai
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.moveSpritesCheckValidJunction
+.moveSpritesEnemyAi
 
-	lda #moveSpritesJunctionPaths - 1	; set the number of paths for a valid junction
-	sta moveSpritesPathCounter
+	ldx #3					; remove unavailable paths that are blocked by solid walls/turnstiles
 	
-	ldx #3					; check in 4 directions, count how many paths
-	
-.moveSpritesCountPathsLoop			; repeat
+.moveSpritesEnemyAiRemovePaths
 
-	ldy mapDir, x				; read the tileMap
+	ldy mapDir, x
 	lda (tileMapAddr), y
-	bmi moveSpritesCountPathsNext		; if its a path then decrement the path counter
-	dec moveSpritesPathCounter
+	sta moveSpritesAvailablePaths, x
 
-.moveSpritesCountPathsNext
-	
-	dex					; until all 4 directions checked
-	bpl moveSpritesCountPathsLoop
+	dex
+	bpl moveSpritesEnemyAiRemovePaths
 
-	ldx moveSpritesIndex			; get current enemy sprite index
-	ldy spritesDir, x			; get current direction
+	ldx moveSpritesIndex			; get enemy sprite index
 
-	bit moveSpritesPathCounter		; if not a valid junction (not enough paths)
-	bpl moveSpritesFindPath			; then go check current direction is a path
+	lda spritesDir, x			; get current enemy direction
+	eor #1					; flip to 180 direction
+	tay					; and remove that direction from available paths
+	lda #wallSolid
+	sta moveSpritesAvailablePaths, y
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enemy ai, choose attack direction or random direction
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.moveSpritesRandomOrAttack
-
-	stx moveSpritesSaveX			; preserve enemy index
-
-	txa					; enemy attack tableIndex = (spriteNumber and 3) + enemyAttack
-	and #3
+	jsr random				; if (random and 15) + enemyAttack < 9
+	and #15
 	clc
 	adc enemyAttack
-	tax
+	cmp #9
+	bcc moveSpritesRandomAvailableDirection	; then pick a random direction
 
-	jsr random				; compare random number with percentage table enemyRandomChance, x
-	cmp enemyRandomChance, x
+.moveSpritesEnemyAiCheckUp			; else check the 4 directions
 
-	ldx moveSpritesSaveX			; restore enemy index
+	ldy #moveUp				; if up path is available
+	lda moveSpritesAvailablePaths, y
+	bmi moveSpritesEnemyAiCheckDown
 
-	bcs moveSpritesAttack			; if random < random chance table
+	lda spritesY + 0			; and if ladybugY < enemyY
 
-.moveSpritesRandom
+	cmp spritesY, x				; then go up
+	bcc moveSpritesSetEnemyDirection
 
-	jsr random				; then pick a random direction
-	and #&03
+.moveSpritesEnemyAiCheckDown
+
+	ldy #moveDown				; if down path is available
+	lda moveSpritesAvailablePaths, y
+	bmi moveSpritesEnemyAiCheckLeft
+
+	lda spritesY, x				; and if enemyY < ladybugY
+
+	cmp spritesY + 0			; then go down
+	bcc moveSpritesSetEnemyDirection
+
+.moveSpritesEnemyAiCheckLeft
+
+	ldy #moveLeft				; if left path is available
+	lda moveSpritesAvailablePaths, y
+	bmi moveSpritesEnemyAiCheckRight
+
+	lda spritesX + 0			; and if ladybugX < enemyX
+
+	cmp spritesX, x				; then go left
+	bcc moveSpritesSetEnemyDirection
+
+.moveSpritesEnemyAiCheckRight
+
+	ldy #moveRight				; if right path is available
+	lda moveSpritesAvailablePaths, y
+	bmi moveSpritesRandomAvailableDirection
+
+	lda spritesX, x				; and if enemyX < ladybugX
+
+	cmp spritesX + 0			; then go right
+	bcc moveSpritesSetEnemyDirection
+
+.moveSpritesRandomAvailableDirection
+
+	lda moveSpritesAvailablePaths + moveUp	; if all paths are blocked
+	and moveSpritesAvailablePaths + moveDown
+	and moveSpritesAvailablePaths + moveLeft
+	and moveSpritesAvailablePaths + moveRight
+	bpl moveSpritesRandomAvailableDirectionLoop
+
+	lda spritesDir, x			; then get current direction
+	eor #1					; flip direction 180
 	tay
+	lda #0					; and unblock the path
+	sta moveSpritesAvailablePaths, y
 
-	bpl moveSpritesFindPath			; go check if this direction is a path (bpl used as branch always)
-	
-.moveSpritesAttack
+.moveSpritesRandomAvailableDirectionLoop
 
-	jsr random				; else choose attack order either vertical/horizontal or horizontal/vertical
-	bmi moveSpritesAttackReversedOrder
+	jsr random				; choose a random path
+	and #3
 
-	jsr moveSpritesCheckHorizontal		; check horizontal
-	jsr moveSpritesCheckVertical		; check vertical
-	jmp moveSpritesFindPath
-	
-.moveSpritesAttackReversedOrder
+	tay					; if path not available then choose another
+	lda moveSpritesAvailablePaths, y
+	bmi moveSpritesRandomAvailableDirectionLoop
 
-	jsr moveSpritesCheckVertical		; check vertical
-	jsr moveSpritesCheckHorizontal		; check horizontal
+.moveSpritesSetEnemyDirection
 
-.moveSpritesFindPath
-
-	sty moveSpritesSaveDirection		; save the chosen direction
-	
-	lda mapDir, y				; get direction offset for tile map
-
-	tay					; if theres a wall at the chosen direction then choose a random direction instead
-	lda (tileMapAddr), y
-	bmi moveSpritesRandom
-
-	lda moveSpritesSaveDirection		; get the saved chosen direction
-	sta spritesDir, x			; set enemy sprite direction
+	sty spritesDir, x			; set enemy direction to chosen path
 
 .moveSpritesNext
 
@@ -2852,46 +2847,6 @@ moveSpritesJunctionPaths = 3			; must be at least this number of paths at a grid
 	jmp moveSpritesLoop
 
 .moveSpritesExit
-
-	rts					; return
-
-
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if enemy is below ladybug then return with up direction, if above then return down direction else no change in direction
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.moveSpritesCheckVertical
-
-	lda spritesY, x				; if enemyY = ladybugY then return with current direction unchanged
-	cmp spritesY + 0
-	beq moveSpritesCheckVerticalExit
-
-	ldy #moveDown				; else choose down or up
-	bcc moveSpritesCheckVerticalExit
-	ldy #moveUp
-
-.moveSpritesCheckVerticalExit
-
-	rts					; return
-
-
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; if enemy is left of ladybug then return right direction, if right of ladybug then return left direction else no change in direction
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.moveSpritesCheckHorizontal
-
-	lda spritesX, x				; if enemyX = ladybugX then return with current direction
-	cmp spritesX + 0
-	beq moveSpritesCheckHorizontalExit
-
-	ldy #moveRight				; else choose right or left
-	bcc moveSpritesCheckHorizontalExit
-	ldy #moveLeft
-
-.moveSpritesCheckHorizontalExit
 
 	rts					; return
 
