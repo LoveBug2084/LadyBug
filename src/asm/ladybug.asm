@@ -2537,18 +2537,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	equb -1, 1, 0, 0			; Y up down left right
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; x and y offset for enemy ai targetting
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.moveSpritesTargetX
-
-	equb 0, 0, 0, 0
-
-.moveSpritesTargetY
-
-	equb 0, 0, 0, 0
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; move ladybug and enemies 1 pixel
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2684,9 +2672,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	cmp #collisionRange			; if combined distance is less than collisionRange
 	bcs moveSpritesCheckAlignmentX
 
-
-;/// disable collision death
-;	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug
+	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if enemy is exactly aligned with grid
@@ -2767,24 +2753,27 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	bpl moveSpritesEnemyAiRemovePaths
 
 	ldx moveSpritesIndex			; get enemy sprite index
+
 	lda spritesDir, x			; get current enemy direction
 	eor #1					; flip to 180 direction
 	tay					; and remove that direction from available paths
 	lda #wallSolid
 	sta moveSpritesAvailablePaths, y
 
-;	jmp moveSpritesRandomAvailableDirection
+	jsr random				; if (random and 15) + enemyAttack < 9
+	and #15
+	clc
+	adc enemyAttack
+	cmp #9
+	bcc moveSpritesRandomAvailableDirection	; then pick a random direction
 
-.moveSpritesEnemyAiCheckUp
+.moveSpritesEnemyAiCheckUp			; else check the 4 directions
 
 	ldy #moveUp				; if up path is available
 	lda moveSpritesAvailablePaths, y
 	bmi moveSpritesEnemyAiCheckDown
 
 	lda spritesY + 0			; and if ladybugY < enemyY
-
-;	clc
-;	adc moveSpritesTargetY, x
 
 	cmp spritesY, x				; then go up
 	bcc moveSpritesSetEnemyDirection
@@ -2797,23 +2786,16 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	lda spritesY, x				; and if enemyY < ladybugY
 
-;	sec
-;	sbc moveSpritesTargetY, x
-
 	cmp spritesY + 0			; then go down
 	bcc moveSpritesSetEnemyDirection
 
 .moveSpritesEnemyAiCheckLeft
 
 	ldy #moveLeft				; if left path is available
-
-;	lda moveSpritesAvailablePaths, y
-;	bmi moveSpritesEnemyAiCheckRight
+	lda moveSpritesAvailablePaths, y
+	bmi moveSpritesEnemyAiCheckRight
 
 	lda spritesX + 0			; and if ladybugX < enemyX
-
-;	clc
-;	adc moveSpritesTargetX, x
 
 	cmp spritesX, x				; then go left
 	bcc moveSpritesSetEnemyDirection
@@ -2825,9 +2807,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	bmi moveSpritesRandomAvailableDirection
 
 	lda spritesX, x				; and if enemyX < ladybugX
-
-;	sec
-;	sbc moveSpritesTargetX, x
 
 	cmp spritesX + 0			; then go right
 	bcc moveSpritesSetEnemyDirection
