@@ -136,6 +136,8 @@
 .moveSpritesAvailablePaths
 			skip 4			; 4 path directions available to enemy
 
+.moveSpritesTargetPaths	skip 4			; 4 target paths
+
 .moveSpritesIndex	skip 1			; index of current sprite
 
 .moveSpritesDistanceSave

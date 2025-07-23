@@ -2769,47 +2769,60 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .moveSpritesEnemyAiCheckUp			; else check the 4 directions
 
-	ldy #moveUp				; if up path is available
-	lda moveSpritesAvailablePaths, y
-	bmi moveSpritesEnemyAiCheckDown
+	ldy #moveUp
 
-	lda spritesY + 0			; and if ladybugY < enemyY
-
-	cmp spritesY, x				; then go up
-	bcc moveSpritesSetEnemyDirection
-
+	lda spritesY + 0
+	cmp spritesY, x
+	ror a
+	ora moveSpritesAvailablePaths, y
+	sta moveSpritesTargetPaths, y
+	
 .moveSpritesEnemyAiCheckDown
 
-	ldy #moveDown				; if down path is available
-	lda moveSpritesAvailablePaths, y
-	bmi moveSpritesEnemyAiCheckLeft
+	iny
 
-	lda spritesY, x				; and if enemyY < ladybugY
-
-	cmp spritesY + 0			; then go down
-	bcc moveSpritesSetEnemyDirection
+	lda spritesY, x
+	cmp spritesY + 0
+	ror a
+	ora moveSpritesAvailablePaths, y
+	sta moveSpritesTargetPaths, y
 
 .moveSpritesEnemyAiCheckLeft
 
-	ldy #moveLeft				; if left path is available
-	lda moveSpritesAvailablePaths, y
-	bmi moveSpritesEnemyAiCheckRight
+	iny
 
-	lda spritesX + 0			; and if ladybugX < enemyX
-
-	cmp spritesX, x				; then go left
-	bcc moveSpritesSetEnemyDirection
+	lda spritesX + 0
+	cmp spritesX, x
+	ror a
+	ora moveSpritesAvailablePaths, y
+	sta moveSpritesTargetPaths, y
 
 .moveSpritesEnemyAiCheckRight
 
-	ldy #moveRight				; if right path is available
-	lda moveSpritesAvailablePaths, y
-	bmi moveSpritesRandomAvailableDirection
+	iny
 
-	lda spritesX, x				; and if enemyX < ladybugX
+	lda spritesX, x
+	cmp spritesX + 0
+	ror a
+	ora moveSpritesAvailablePaths, y
+	sta moveSpritesTargetPaths, y
 
-	cmp spritesX + 0			; then go right
-	bcc moveSpritesSetEnemyDirection
+	lda moveSpritesTargetPaths + moveUp	; if a target path is not available
+	and moveSpritesTargetPaths + moveDown
+	and moveSpritesTargetPaths + moveLeft
+	and moveSpritesTargetPaths + moveRight
+	bmi moveSpritesRandomAvailableDirection	; then choose a random available path
+
+.moveSpritesChooseTargetPath
+
+	jsr random				; else choose a random available target path
+	and #3
+
+	tay
+	lda moveSpritesTargetPaths, y
+	bpl moveSpritesSetEnemyDirection
+	bmi moveSpritesChooseTargetPath
+
 
 .moveSpritesRandomAvailableDirection
 
@@ -5325,15 +5338,15 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr drawString
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 7 * chrRow
-	equs colorRed, "UNIVERSAL", colorGreen, chrCopyright, colorRed, "1981", &ff
+	equs colorRed, "UNIVERSAL", colorMagenta, chrCopyright, colorRed, "1981", &ff
 
 	jsr drawString
 	equw screenAddr + 2 + 5 * chrColumn + 9 * chrRow
-	equs colorYellow, "LOVEBYTE", colorMagenta, chrCopyright, colorYellow, "2021", &ff
+	equs colorYellow, "LOVEBYTE", colorGreen, chrCopyright, colorYellow, "2021", &ff
 
 	jsr drawString
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 10 * chrRow
-	equs colorWhite, "V"
+	equs colorMagenta, "V"
 	incbin "output/projectBuild"
 	equb &ff
 
