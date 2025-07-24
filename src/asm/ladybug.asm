@@ -5348,6 +5348,8 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 10 * chrRow
 	equs colorMagenta, "V"
 	incbin "output/projectBuild"
+	clear * - 1, *	; remove the 0a terminator byte
+	org * - 1	; at the end of the projectBuild string
 	equb &ff
 
 	jsr drawString
