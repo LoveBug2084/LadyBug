@@ -1096,6 +1096,8 @@ masterMos350 = &e374
 	equb 31,7,11				; position cursor
 	equs 129,"Lady Bug",132,"Build",135
 	incbin "output/projectBuild"
+	clear * - 1, *				; remove the 0a terminator byte
+	org * - 1				; at the end of the projectBuild string
 	equb &ff				; end
 
 .loaderUsingBank
