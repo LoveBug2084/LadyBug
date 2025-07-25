@@ -5342,7 +5342,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr drawString
 	equw screenAddr + 2 + 5 * chrColumn + 9 * chrRow
-	equs colorYellow, "LOVEBYTE", colorGreen, chrCopyright, colorYellow, "2021", &ff
+	equs colorYellow, "LOVEBYTE", colorRed, chrCopyright, colorYellow, "2021", &ff
 
 	jsr drawString
 	equw screenAddr + 2 + 6 * chrColumn + 10 * chrRow
