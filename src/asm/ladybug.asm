@@ -3032,7 +3032,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	equb 0,0,0,0,0,0,40			; special offsets
 	equb 0,0,0,0,64				; extra offsets
-	equb 24,24,0				; *2 *3 *5 offsets (last byte is used but has no effect as no more chrs printed so could be removed)
+	equb 24,24				; *2 *3 offsets only
+						; (*5 offset is read out of bounds from below but no chrs are printed so the incorrect offset doesn't matter)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
