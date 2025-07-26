@@ -4449,39 +4449,39 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 						; enemy speed option 0
 	equb 0.00 * 256				; 1.00 level 1-6
+	equb 0.02 * 256				; 1.02 level 7-11
+	equb 0.04 * 256				; 1.04 level 12-17
+	equb 0.06 * 256				; 1.06 level 18-99
+	
+						; enemy speed option 1
+	equb 0.00 * 256				; 1.00 level 1-6
 	equb 0.05 * 256				; 1.05 level 7-11
 	equb 0.10 * 256				; 1.10 level 12-17
 	equb 0.15 * 256				; 1.15 level 18-99
 	
-						; enemy speed option 1
+						; enemy speed option 2
 	equb 0.00 * 256				; 1.00 level 1-6
 	equb 0.07 * 256				; 1.07 level 7-11
 	equb 0.14 * 256				; 1.14 level 12-17
 	equb 0.21 * 256				; 1.21 level 18-99
 	
-						; enemy speed option 2
+						; enemy speed option 3
 	equb 0.05 * 256				; 1.05 level 1-6
 	equb 0.13 * 256				; 1.13 level 7-11
 	equb 0.21 * 256				; 1.21 level 12-17
 	equb 0.29 * 256				; 1.29 level 18-99
 
-						; enemy speed option 3
+						; enemy speed option 4
 	equb 0.10 * 256				; 1.10 level 1-6
 	equb 0.20 * 256				; 1.20 level 7-11
 	equb 0.30 * 256				; 1.30 level 12-17
 	equb 0.40 * 256				; 1.40 level 18-99
 	
-						; enemy speed option 4
+						; enemy speed option 5
 	equb 0.15 * 256				; 1.15 level 1-6
 	equb 0.30 * 256				; 1.30 level 7-11
 	equb 0.45 * 256				; 1.45 level 12-17
 	equb 0.59 * 256				; 1.59 level 18-99		was 1.60 but caused too many roll-overs with new release code
-	
-						; enemy speed option 5
-	equb 0.20 * 256				; 1.20 level 1-6
-	equb 0.40 * 256				; 1.40 level 7-11
-	equb 0.59 * 256				; 1.59 level 12-17		was 1.60 but caused too many roll-overs with new release code
-	equb 0.80 * 256				; 1.80 level 18-99
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
