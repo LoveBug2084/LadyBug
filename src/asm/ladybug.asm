@@ -2760,11 +2760,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #wallSolid
 	sta moveSpritesAvailablePaths, y
 
-	jsr random				; if (random and 15) + enemyAttack < 9
-	and #15
-	clc
-	adc enemyAttack
-	cmp #9
+	jsr random				; if random < targetTable[enemyAttack]
+	ldy enemyAttack
+	cmp enemyTargetTable, y
 	bcc moveSpritesRandomAvailableDirection	; then pick a random direction
 
 .moveSpritesEnemyAiCheckUp			; else check the 4 directions
@@ -4445,44 +4443,14 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.enemySpeedTable				; enemies always move 1 step per frame plus this additional fraction
+.enemySpeedTable
 
-						; enemy speed option 0
-	equb 0.00 * 256				; 1.00 level 1-6
-	equb 0.02 * 256				; 1.02 level 7-11
-	equb 0.04 * 256				; 1.04 level 12-17
-	equb 0.06 * 256				; 1.06 level 18-99
-	
-						; enemy speed option 1
-	equb 0.00 * 256				; 1.00 level 1-6
-	equb 0.05 * 256				; 1.05 level 7-11
-	equb 0.10 * 256				; 1.10 level 12-17
-	equb 0.15 * 256				; 1.15 level 18-99
-	
-						; enemy speed option 2
-	equb 0.00 * 256				; 1.00 level 1-6
-	equb 0.07 * 256				; 1.07 level 7-11
-	equb 0.14 * 256				; 1.14 level 12-17
-	equb 0.21 * 256				; 1.21 level 18-99
-	
-						; enemy speed option 3
-	equb 0.05 * 256				; 1.05 level 1-6
-	equb 0.13 * 256				; 1.13 level 7-11
-	equb 0.21 * 256				; 1.21 level 12-17
-	equb 0.29 * 256				; 1.29 level 18-99
+	include "asm/speedTable.asm"
 
-						; enemy speed option 4
-	equb 0.10 * 256				; 1.10 level 1-6
-	equb 0.20 * 256				; 1.20 level 7-11
-	equb 0.30 * 256				; 1.30 level 12-17
-	equb 0.40 * 256				; 1.40 level 18-99
-	
-						; enemy speed option 5
-	equb 0.15 * 256				; 1.15 level 1-6
-	equb 0.30 * 256				; 1.30 level 7-11
-	equb 0.45 * 256				; 1.45 level 12-17
-	equb 0.59 * 256				; 1.59 level 18-99		was 1.60 but caused too many roll-overs with new release code
-	
+.enemyTargetTable
+
+	include "asm/targetTable.asm"
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .initLevelSettings
@@ -5369,11 +5337,11 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 16 * chrRow
-	equs colorYellow, "ENEMY SPEED", &ff
+	equs colorYellow, "SPEED", &ff
 	
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 17 * chrRow
-	equs colorGreen, "ENEMY ATTACK", &ff
+	equs colorGreen, "TARGET", &ff
 	
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 18 * chrRow
