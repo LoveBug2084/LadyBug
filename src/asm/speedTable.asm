@@ -22,7 +22,7 @@
 	equb 0.14 * 256				; 1.14 level 12-17
 	equb 0.21 * 256				; 1.21 level 18-99
 	
-						; enemy speed option 3 (insane)
+						; enemy speed option 3 (max)
 	equb 0.05 * 256				; 1.05 level 1-6
 	equb 0.13 * 256				; 1.13 level 7-11
 	equb 0.21 * 256				; 1.21 level 12-17

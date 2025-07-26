@@ -62,9 +62,9 @@
 
 	skip 1					; reserve space for enemy speed
 	
-.optionEnemyAttack
+.optionEnemyTarget
 
-	skip 1					; reserve space for enemy attack
+	skip 1					; reserve space for enemy target
 	
 .optionTimerVolume
 

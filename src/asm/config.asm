@@ -53,17 +53,17 @@
 ; settings					default settings
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-defaultLadybugLives	= 3			; these values are used for a demo game instead of the player configured values
+defaultLadybugLives	= 3			; these values are also used for a demo game instead of the player configured values
 defaultEnemySpeed	= 1
-defaultEnemyAttack	= 4
+defaultEnemyTarget	= 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	equb defaultLadybugLives		; lady bugs (lives)	1-9
-	equb defaultEnemySpeed			; enemy speed		0-5 (0=slower, 1=normal, 2=fast, 3=faster, 4=even faster, 5=extremely fast)
-	equb defaultEnemyAttack			; enemy attack		0-9 (0=more random, 4=normal, 9=more aim)
+	equb defaultEnemySpeed			; enemy speed		0-3 (0=easy, 1=normal, 2=hard, 3=insane
+	equb defaultEnemyTarget			; enemy target		0-3 (0=easy, 1=normal, 2=hard, 3=insane)
 	equb 1					; timer volume		0-3 (0=off, 1=low, 2=medium, 3=high)
-	equb 1					; sound enable		0-2 (0=off, 1=on without demo, 2=on with demo)
+	equb 1					; sound enable		0-2 (0=game and dmo off, 1=game on demo off, 2=game and demo on)
 
 	equb keyX				; right 'X'
 	equb keyZ				; left 'Z'

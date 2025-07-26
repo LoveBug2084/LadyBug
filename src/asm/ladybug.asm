@@ -2760,8 +2760,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #wallSolid
 	sta moveSpritesAvailablePaths, y
 
-	jsr random				; if random < targetTable[enemyAttack]
-	ldy enemyAttack
+	jsr random				; if random < targetTable[enemyTarget]
+	ldy enemyTarget
 	cmp enemyTargetTable, y
 	bcc moveSpritesRandomAvailableDirection	; then pick a random direction
 
@@ -4520,17 +4520,17 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sta enemySpeed
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy attack			use user set attack for regular game or default attack for demo game
+	; set enemy attack			use user set target for regular game or default target for demo game
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx optionEnemyAttack			; for regular game use attack option
+	ldx optionEnemyTarget			; for regular game use attack option
 	lda demoMode
-	beq initLevelSettingsAttack
-	ldx #defaultEnemyAttack
+	beq initLevelSettingsTarget
+	ldx #defaultEnemyTarget
 
-.initLevelSettingsAttack
+.initLevelSettingsTarget
 
-	stx enemyAttack
+	stx enemyTarget
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set enemy timer speed (number of vsync frames per timer tick)
@@ -4604,11 +4604,11 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 .optionsMin
 
-	equb  1,  0,  0,  0,  0			; minimum value for ladybug lives, enemy speed, enemy attack, timer volume, sound
+	equb  1,  0,  0,  0,  0			; minimum value for ladybug lives, enemy speed, enemy target, timer volume, sound
 	
 .optionsMax
 
-	equb  10, 6, 10,  4,  3			; maximum value + 1 for ladybug lives, enemy speed, enemy attack, timer volume, sound
+	equb  10, 4, 4,  4,  3			; maximum value + 1 for ladybug lives, enemy speed, enemy target, timer volume, sound
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4872,7 +4872,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
 	cmp #6-3
-	bcc mainMenuProcessUp			; then decrement again (skip over lives, enemy speed and enemy attack)
+	bcc mainMenuProcessUp			; then decrement again (skip over lives, enemy speed and enemy target)
 
 .mainMenuProcessUpWrapAround
 
@@ -4912,7 +4912,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
 	cmp #6-3
-	bcc mainMenuProcessDown			; the increment again  (skip over lives, enemy speed and enemy attack)
+	bcc mainMenuProcessDown			; the increment again  (skip over lives, enemy speed and enemy target)
 
 .mainMenuProcessDownWrapAround
 
@@ -5002,7 +5002,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 .mainMenuProcessStartEnemySpeed
 
 	cmp #4					; if cursor == 4 (enemySpeed) then
-	bne mainMenuProcessStartEnemyAttack
+	bne mainMenuProcessStartEnemyTarget
 	
 	jsr mainMenuDrawEnemies			; update the 4 enemies on screen with new random enemies
 	
@@ -5011,9 +5011,9 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.mainMenuProcessStartEnemyAttack
+.mainMenuProcessStartEnemyTarget
 
-	cmp #5					; if cursor == 5 (enemyAttack) then
+	cmp #5					; if cursor == 5 (enemyTarget) then
 	bne mainMenuProcessReturnFalse
 	
 	jsr mainMenuDrawEnemies			; update the 4 enemies on screen with new random enemies
@@ -5387,22 +5387,26 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	ora #'0'
 	jsr drawChr
 	
+.mainMenuDrawEnemySpeed
+
 	jsr drawString				; draw enemy speed
-	equw screenAddr + 2 + 18 * chrColumn + 16 * chrRow
+	equw screenAddr + 2 + 15 * chrColumn + 16 * chrRow
 	equb &ff
 	
 	lda optionEnemySpeed
-	ora #'0'
-	jsr drawChr
+	jsr mainMenuDrawEnemySetting
 	
-	jsr drawString				; draw enemy attack
-	equw screenAddr + 2 + 18 * chrColumn + 17 * chrRow
+.mainMenuDrawEnemyTarget
+
+	jsr drawString				; draw enemy Target
+	equw screenAddr + 2 + 15 * chrColumn + 17 * chrRow
 	equb &ff
+
+	lda optionEnemyTarget
+	jsr mainMenuDrawEnemySetting
 	
-	lda optionEnemyAttack
-	ora #'0'
-	jsr drawChr
-	
+.mainMenuDrawTimerVolume
+
 	jsr drawString				; draw timer volume
 	equw screenAddr + 2 + 18 * chrColumn + 18 * chrRow
 	equb &ff
@@ -5411,11 +5415,13 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	ora #'0'
 	jsr drawChr
 
+.mainMeniDrawSound
+
 	lda optionSound				; read sound option
 
-.mainMenuDrawSettingsOff
+.mainMenuDrawSoundOff
 
-	bne mainMenuDrawSettingsDemoOff		; if sound = 0 (off)
+	bne mainMenuDrawSoundDemoOff		; if sound = 0 (off)
 
 	jsr drawString				; draw " OFF"
 	equw screenAddr + 2 + 15 * chrColumn + 19 * chrRow
@@ -5423,10 +5429,10 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jmp playSoundSilence			; mute the sound and return
 
-.mainMenuDrawSettingsDemoOff
+.mainMenuDrawSoundDemoOff
 
 	cmp #1					; if sound = 1 (on)
-	bne mainMenuDrawSettingsDemoOn
+	bne mainMenuDrawSoundDemoOn
 
 	jsr drawString				; draw "  ON" and return
 	equw screenAddr + 2 + 15 * chrColumn + 19 * chrRow
@@ -5434,7 +5440,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	rts
 	
-.mainMenuDrawSettingsDemoOn			; sound = 2 (demo on)
+.mainMenuDrawSoundDemoOn			; sound = 2 (demo on)
 
 	jsr drawString				; draw "DEMO" and return
 	equw screenAddr + 2 + 15 * chrColumn + 19 * chrRow
@@ -5442,6 +5448,63 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	rts
 	
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; .mainMenuDrawEnemySetting			draw "  EASY", "NORMAL", "  HARD", "INSANE"
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.mainMenuDrawEnemySetting
+
+	bne mainMenuDrawEnemySettingNormal	; option 0
+	lda #lo(enemyEasy)			; draw "EASY"
+	sta drawTextAddr + 0
+	lda #hi(enemyEasy)
+	sta drawTextAddr + 1
+	jmp drawText
+
+.mainMenuDrawEnemySettingNormal
+
+	cmp #1
+	bne mainMenuDrawEnemySettingHard	; option 1
+	lda #lo(enemyNormal)			; draw "NORM"
+	sta drawTextAddr + 0
+	lda #hi(enemyNormal)
+	sta drawTextAddr + 1
+	jmp drawText
+
+.mainMenuDrawEnemySettingHard
+
+	cmp #2
+	bne mainMenuDrawEnemySettingMax		; option 2
+	lda #lo(enemyHard)			; draw "HARD"
+	sta drawTextAddr + 0
+	lda #hi(enemyHard)
+	sta drawTextAddr + 1
+	jmp drawText
+
+.mainMenuDrawEnemySettingMax
+
+						; option 3
+	lda #lo(enemyInsane)			; draw "MAX"
+	sta drawTextAddr + 0
+	lda #hi(enemyInsane)
+	sta drawTextAddr + 1
+	jmp drawText
+
+.enemyEasy
+
+	equs "EASY", &ff
+
+.enemyNormal
+
+	equs "NORM", &ff
+
+.enemyHard
+
+	equs "HARD", &ff
+
+.enemyInsane
+
+	equs " MAX", &ff
 
 
 
