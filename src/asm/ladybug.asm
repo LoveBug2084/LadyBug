@@ -4520,10 +4520,10 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	sta enemySpeed
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy attack			use user set target for regular game or default target for demo game
+	; set enemy target setting		use user set target for regular game or default target for demo game
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx optionEnemyTarget			; for regular game use attack option
+	ldx optionEnemyTarget			; for regular game use target option
 	lda demoMode
 	beq initLevelSettingsTarget
 	ldx #defaultEnemyTarget

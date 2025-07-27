@@ -4,7 +4,7 @@
 
 	equb 0.70 * 256				; 70.00% random 30.00% target (easy)
 	equb 0.35 * 256				; 35.00% random 65.00% target (normal)
-	equb 0.25 * 256				; 25,00% random 75.00% target (hard)
+	equb 0.25 * 256				; 25.00% random 75.00% target (hard)
 	equb 0.01 * 256				; 01.00% random 99.00% target (max)
 
 
