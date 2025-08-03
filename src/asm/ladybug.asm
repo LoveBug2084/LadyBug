@@ -9677,7 +9677,14 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda updateLadybugSave			; if saved tile is not a turnstile then return
 	and #wallSolid
 	cmp #wallTurnstile
-	bne updateLadybugExit
+
+; /// jump to advance ladybug 1 step
+;	bne updateLadybugExit
+	beq updateLadybugTurnstileTile
+
+	jmp updateLadybugTurnAdvance
+
+.updateLadybugTurnstileTile
 
 	lda updateLadybugSave			; get tile
 
@@ -9789,13 +9796,38 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; continue down to updateLadybugTurnstileExit
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; play the turnstile sound and exit
+	; play the turnstile sound
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .updateLadybugTurnstileExit
 
 	lda #sfxTurnstile			; play turnstile sound and return
-	jmp playSound
+
+; ///
+;	jmp playSound
+	jsr playSound
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; advance ladybug 1 step (for quicker turns)
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.updateLadybugTurnAdvance
+
+	lda spritesDir + 0			; get ladybug direction
+	and #%11
+	tay
+
+	clc					; update sprite x from direction table
+	lda spritesX + 0
+	adc moveSpritesDirX, y
+	sta spritesX + 0
+
+	clc					; update sprite y from direction table
+	lda spritesY + 0
+	adc moveSpritesDirY, y
+	sta spritesY + 0
+
+	rts
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
