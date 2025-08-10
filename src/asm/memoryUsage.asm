@@ -3,16 +3,16 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
+	print "screen ram    ", ~screenAddr, "- ", ~pageHigh - 1, ", ", pageHigh - screenAddr, "bytes"
+	print "----------------------------------------------------"
+	print
+
+	print "----------------------------------------------------"
 	print "main ram      ", ~pageZero, "- ", ~screenAddr - 1, ", ", screenAddr - pageZero, "bytes"
 	print "----------------------------------------------------"
 	print "used          ", ~pageZero, "- ", ~programEnd - 1, ", ", programEnd - pageZero, "bytes"
 	print "free          ", ~programEnd, "- ", ~screenAddr - 1, ", ", screenAddr - programEnd, "bytes"
 	print "unused        ", pageBreak - pagefx200End + pagefx200 - page0200End + page0100 - pageZeroEnd, "bytes"
-	print "----------------------------------------------------"
-	print
-
-	print "----------------------------------------------------"
-	print "screen ram    ", ~screenAddr, "- ", ~pageHigh - 1, ", ", pageHigh - screenAddr, "bytes"
 	print "----------------------------------------------------"
 	print
 

@@ -1952,22 +1952,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr swrInitScreen			; full screen erase, setup palette colors (see loader.asm)
 	
-	lda #%11110100				; put ula into 16 color mode
-	sta ulaMode
-
-	lda #pause * 0.5			; set pause time to 0.5 seconds
-	sta pauseCounter
-	
-.mainPauseLoop					; repeat
-
-	lda pauseCounter			; until pause time has expired
-	bne mainPauseLoop
-
-	lda #1					; enable display
-	sta crtcAddr
-	lda #screenWidth
-	sta crtcData
-
 	jsr drawPlayfieldUpper			; display the upper playfield bonus letters and multipliers
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
