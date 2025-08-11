@@ -139,7 +139,7 @@ PRINT TAB(6,4);CHR$(129);"Universal 1981 arcade game";
 
 PRINT TAB(6,6);CHR$(131);"LoveByte Software";CHR$(129);"(C)";CHR$(131);"2021";
 
-PRINT TAB(15,9);CHR$(134);"Options";
+PRINT TAB(15,9);CHR$(133);"Options";
 
 PRINT TAB(6,11);CHR$(131);"I";CHR$(135);"- Instructions";
 
