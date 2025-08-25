@@ -7761,6 +7761,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr drawBonusGraphics			; draw the bonus screen graphics
 
+	ldy #15					; draw congratulations on row 15
+	jsr drawCongratulations
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; special bonus text, skulls, play special bonus music
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7770,9 +7773,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jmp drawBonusScreenExtra
 
 .drawBonusScreenSpecialActive
-
-	ldy #15					; draw congratulations on row 15
-	jsr drawCongratulations
 
 	bit highScoreChallenge			; if arcade mode
 	bmi drawBonusScreenSpecialActiveChallenge
@@ -7883,9 +7883,6 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda bonusExtraActive			; if extra bonus active
 	beq drawBonusScreenDiamond
 
-	ldy #15					; draw congratulations on row 15
-	jsr drawCongratulations
-
 	jsr drawString
 	equw screenAddr + 2 + 7 * chrColumn + 18 * chrRow
 	equs colorMagenta, "YOU WIN ", colorWhite, &ff
@@ -7973,17 +7970,13 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	cpx #extraTileDiamond + 16
 	bne drawBonusScreenDiamondGraphicsLoop3
 
-	jsr drawString				; draw the bonus text
-	equw screenAddr + 2 + 8 + 2 * chrColumn + 16 * chrRow
-	equs colorRed, "YOU DISCOVERED THE", &ff
-
 	jsr drawString
-	equw screenAddr + 2 + 8 + 4 * chrColumn + 18 * chrRow
-	equs colorYellow, "DIAMOND GARDEN", &ff
+	equw screenAddr + 2 + 5 * chrColumn + 18 * chrRow
+	equs colorYellow, "DIAMOND BONUS", &ff
 
 	jsr drawString
 	equw screenAddr + 2 + 2 * chrColumn + 20 * chrRow
-	equs colorMagenta, "AND WIN ", colorWhite, &ff
+	equs colorMagenta, "YOU WIN ", colorWhite, &ff
 
 	lda #bonusDiamondScore
 	jsr drawBcd
@@ -9030,6 +9023,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 
 .checkForObjectSkull
+
 
 	lda shield				; if we are vulnerable (skull shield = 0)
 	bne checkForObjectTileExit
