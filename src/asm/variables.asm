@@ -183,7 +183,7 @@
 .redrawSpritesIndexLower			; index to current sprite in list for screen lower half
 			equb 1
 
-.updateObjectTimerSaveX	skip 1			; preserve register
+.objectTimerUpdateSaveX	skip 1			; preserve register
 
 .drawMapTileSaveA	skip 1			; preserve register
 .drawMapTileSaveY	skip 1			; preserve register
@@ -220,18 +220,18 @@ soundChannels		= 6			; number of concurrent sound effects during game play
 .joystickInput		skip 1			; joystick input bits (see constants.asm)
 .joystickAnalogueSave	skip 1			; preserve analogue joystick value
 
-.updateLadybugOldDir	skip 1			; copy of ladybug direction
+.ladybugUpdateOldDir	skip 1			; copy of ladybug direction
 
-.updateLadybugNewDirX	skip 1			; new X direction for ladybug
-.updateLadybugNewDirY	skip 1			; new Y direction for ladybug
+.ladybugUpdateNewDirX	skip 1			; new X direction for ladybug
+.ladybugUpdateNewDirY	skip 1			; new Y direction for ladybug
 
-.updateLadybugGridX	skip 1			; = 0 if ladybug x on exact grid
-.updateLadybugGridY	skip 1			; = 0 if ladybug y on exact grid
+.ladybugUpdateGridX	skip 1			; = 0 if ladybug x on exact grid
+.ladybugUpdateGridY	skip 1			; = 0 if ladybug y on exact grid
 
-.updateLadybugTileX	skip 1			; tile found in front of ladybug horiontally
-.updateLadybugTileY	skip 1			; tile found in front of ladybug vertically
+.ladybugUpdateTileX	skip 1			; tile found in front of ladybug horiontally
+.ladybugUpdateTileY	skip 1			; tile found in front of ladybug vertically
 
-.updateLadybugSave	skip 1			; preserve tile
+.ladybugUpdateSave	skip 1			; preserve tile
 
 .demoMode		equb 0			; = 0 normal game mode, != 0 demo game mode
 .demoDir		equb 0			; contains chosen direction 0-3
