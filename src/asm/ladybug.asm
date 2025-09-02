@@ -361,7 +361,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateObjectTimer				update object timer (25Hz)
+; objectTimerUpdate				update object timer (25Hz)
 ;						handle change object mode and palette color when needed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
@@ -371,7 +371,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;			Y			preserved
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateObjectTimerPalette			; palette colors for letters and hearts
+.objectTimerUpdatePalette			; palette colors for letters and hearts
 
 	equb palObject + palCyan
 	equb palObject + palRed
@@ -379,7 +379,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateObjectTimerDuration			; duration of the colors for letters and hearts
+.objectTimerUpdateDuration			; duration of the colors for letters and hearts
 
 	equb objectModeCyanTime
 	equb objectModeRedTime
@@ -389,37 +389,37 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	; decrement timer and if = 0 then change object mode/object color and reset timer for new mode
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateObjectTimer
+.objectTimerUpdate
 
 	lda vsyncCounter			; if vsync counter and 1 = 0 (25Hz)
 	and #1
-	bne updateObjectTimerExit
+	bne objectTimerUpdateExit
 	
 	dec objectModeTimer			; then objectModeTimer -= 1
-	bne updateObjectTimerExit		; if objectModeTimer = 0
+	bne objectTimerUpdateExit		; if objectModeTimer = 0
 
-	stx updateObjectTimerSaveX		; save register
+	stx objectTimerUpdateSaveX		; save register
 	
 	ldx objectMode				; get current objectMode
 
 	inx					; add 1
 	cpx #objectModeYellow + 1		; if objectMode > objectModeYellow then objectMode = objectModeCyan
-	bne updateObjectTimerColor
+	bne objectTimerUpdateColor
 	ldx #objectModeCyan
 	
-.updateObjectTimerColor
+.objectTimerUpdateColor
 
 	stx objectMode				; update new objectMode
 	
-	lda updateObjectTimerPalette, x		; update new object color palette
+	lda objectTimerUpdatePalette, x		; update new object color palette
 	sta ulaPalette
 	
-	lda updateObjectTimerDuration, x	; set objectModeTimer for new mode duration
+	lda objectTimerUpdateDuration, x	; set objectModeTimer for new mode duration
 	sta objectModeTimer
 
-	ldx updateObjectTimerSaveX		; restore register
+	ldx objectTimerUpdateSaveX		; restore register
 	
-.updateObjectTimerExit
+.objectTimerUpdateExit
 
 	rts					; return
 
@@ -660,7 +660,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateEnemyTimer				update the enemy timer, draw timer tile when needed
+; enemyTimerUpdate				update the enemy timer, draw timer tile when needed
 ;						handle setting of the enemy release and zero crossing flags
 ;						also the enemy release warning sound
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -671,13 +671,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;			Y			destroyed (call to changeTimerTile)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateEnemyTimer
+.enemyTimerUpdate
 
 	lda pauseEnemy				; if enemy movement is paused then return
-	bne updateEnemyTimerExit
+	bne enemyTimerUpdateExit
 
 	dec enemyTimerSpeedCounter		; bump enemy timer speed counter
-	bne updateEnemyTimerExit		; exit if not zero
+	bne enemyTimerUpdateExit		; exit if not zero
 
 	lda enemyTimerSpeed			; reset the enemy timer speed counter
 	sta enemyTimerSpeedCounter
@@ -688,26 +688,26 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	lda enemyTimer				; if enemyTimer >= enemyTimerMax + 1
 	cmp #enemyTimerMax + 1
-	bcc updateEnemyTimerSound
+	bcc enemyTimerUpdateSound
 
 	lda #0					; then reset enemy timer back to 0
 	sta enemyTimer
 
 	lda enemyReleaseEnable			; if enemy release is enabled
-	beq updateEnemyTimerSound
+	beq enemyTimerUpdateSound
 	sta enemyTimerZero			; then set enemyTimerZero flag
 
-.updateEnemyTimerSound
+.enemyTimerUpdateSound
 
 	jsr playSoundTimer			; play timer sound at selected volume
 
 	lda enemyTimer				; if enemyTimer = top left
 	cmp #enemyTimerTopLeft
-	bne updateEnemyTimerExit
+	bne enemyTimerUpdateExit
 	
 	lda enemiesActive			; if all enemies are not yet active
 	cmp #spritesTotal - 1
-	beq updateEnemyTimerExit
+	beq enemyTimerUpdateExit
 
 	lda #sfxEnemyWarning			; then play enemy release warning and set enemy release flag
 	jsr playSound
@@ -715,7 +715,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #&ff
 	sta enemyReleaseEnable
 
-.updateEnemyTimerExit
+.enemyTimerUpdateExit
 
 	rts					; return
 
@@ -1960,7 +1960,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .gameIntroScreen
 
-	jsr updateHighScoreFirstPlace		; copy first place high score from table to lower panel and display it
+	jsr highScoreFirstPlaceUpdate		; copy first place high score from table to lower panel and display it
 
 	jsr mainMenu				; display the main menu screen, handle game setting adjustments and return when start game is selected
 
@@ -2003,7 +2003,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr initPlayfieldMiddle			; copy current maze map to the background tileMap and count number of edible items (dots/hearts/letters)
 
 	ldx #objectModeRed			; red object mode 
-	jsr updateObjectTimerColor
+	jsr objectTimerUpdateColor
 
 	lda levelEdibles			; if there are no edible objects (bad maze design)
 	bne gameLevelContinue
@@ -2087,18 +2087,18 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr drawTurnstile			; draw new turnstile position (if enabled)
 
-	jsr updateSkullColor			; update the skull palette color
+	jsr skullColorUpdate			; update the skull palette color
 
-	jsr updateBonusColor			; update the bonus letters and object points palette colors
+	jsr bonusColorUpdate			; update the bonus letters and object points palette colors
 
 	jsr checkPauseGame			; if game is paused then skip sprite movement and timer stuff
 	bcs gameLoopWaitIntLower
 
-	jsr updateLadybug			; update ladybug direction, handle turnstile and object detection
+	jsr ladybugUpdate			; update ladybug direction, handle turnstile and object detection
 
 	jsr moveSprites				; move all sprites, handle enemy collision with skulls and ladybug
 
-	jsr updateObjectTimer			; update object timer, object mode and palette
+	jsr objectTimerUpdate			; update object timer, object mode and palette
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; gameLoopWaitIntLower			wait for lower interrupt (raster lines 156-311) then process game functions
@@ -2121,7 +2121,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr drawObjectScore			; draw object score (if enabled)
 
-	jsr updateAnimationFrame		; update the sprite animation frame number
+	jsr animationFrameUpdate		; update the sprite animation frame number
 
 	jsr drawScore				; draw a single score digit, move to next score digit ready for next time around
 
@@ -2142,11 +2142,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	jsr updateEnemyTimer			; update the enemy timer and draw the new timer tile when needed
+	jsr enemyTimerUpdate			; update the enemy timer and draw the new timer tile when needed
 
 	jsr enemyRelease			; release an enemy (if enabled)
 
-	jsr updatePauseTimers			; update ladybug and enemy pause timers (also handles erasure of object score and bonus item score)
+	jsr pauseTimersUpdate			; update ladybug and enemy pause timers (also handles erasure of object score and bonus item score)
 
 	jmp gameLoopWaitIntUpper		; loop back to game main loop
 
@@ -2234,7 +2234,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
-	jsr updateBonusColor			; update the bonus letters palette colors
+	jsr bonusColorUpdate			; update the bonus letters palette colors
 
 	lda pauseCounter			; until pause time expires
 	bne gameOverLoop
@@ -2330,7 +2330,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #sfxMusicLetters			; play high score music
 	jsr playSound
 	
-	jsr updateHighScoreFirstPlace		; update lower playfield with first place high score
+	jsr highScoreFirstPlaceUpdate		; update lower playfield with first place high score
 
 	jmp drawScoreTable			; draw the high score page and return
 	
@@ -2445,12 +2445,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta pauseEnemy
 
 	lda soundTimers + 0			; if sound effect not playing on channel 0 (music)
-	bne checkLevelEndFalse
-
-	lda soundTimers + 3			; and if sound effect not playing on channel 3 (object, skull)
-	bne checkLevelEndFalse
-
-	lda soundTimers + 5			; and if sound effect not playing on channel 5 (munch)
+	ora soundTimers + 3			; and if sound effect not playing on channel 3 (object, skull)
+	ora soundTimers + 5			; and if sound effect not playing on channel 5 (munch)
 	bne checkLevelEndFalse
 
 	lda #&ff				; flag level as ended
@@ -2656,7 +2652,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	cmp #collisionRange			; if combined distance is less than collisionRange
 	bcs moveSpritesCheckAlignmentX
 
-	jsr ladybugKill				; then ladybug and enemy have collided so kill ladybug
+	jmp ladybugKill				; then ladybug and enemy have collided so kill ladybug and exit
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if enemy is exactly aligned with grid
@@ -3887,30 +3883,30 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updatePauseTimers				update ladybug and enemy pause timers
+; pauseTimersUpdate				update ladybug and enemy pause timers
 ;                                               unblank ladybug (if required)
 ;						erase object score (if required)
 ;						erase vegetable score (if required)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.updatePauseTimers
+.pauseTimersUpdate
 
 	lda vsyncCounter			; if vsync counter and 1 = 0 (25Hz)
 	and #1
-	bne updatePauseTimersExit
+	bne pauseTimersUpdateExit
 
 	lda pauseLadybug			; if pauseLadybug timer > 0 then decrement
-	beq updatePauseTimersEnemy
+	beq pauseTimersUpdateEnemy
 	dec pauseLadybug
 
-	bne updatePauseTimersEnemy		; if pauseLadybug timer == 0 then
+	bne pauseTimersUpdateEnemy		; if pauseLadybug timer == 0 then
 	
 	lda spritesDir + 0			; unblank ladybug sprite
 	and #spriteBlanking eor &ff
 	sta spritesDir + 0
 
 	lda objectScoreImg			; if there is currently an object score being displayed
-	beq updatePauseTimersVegetableScore
+	beq pauseTimersUpdateVegetableScore
 
 	lda #0					; then disable it
 	sta objectScoreImg
@@ -3925,10 +3921,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updatePauseTimersVegetableScore
+.pauseTimersUpdateVegetableScore
 
 	lda vegetableScoreActive		; if vegetable score was also active then
-	beq updatePauseTimersEnemy
+	beq pauseTimersUpdateEnemy
 	
 	lda #0					; deactive vegetable score display
 	sta vegetableScoreActive
@@ -3951,37 +3947,37 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updatePauseTimersEnemy
+.pauseTimersUpdateEnemy
 
 	lda pauseEnemy				; if pauseEnemy timer > 0 then decrement
-	beq updatePauseTimersExit
+	beq pauseTimersUpdateExit
 	dec pauseEnemy
 	
-.updatePauseTimersExit
+.pauseTimersUpdateExit
 
 	rts					; return
 
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateAnimationFrame				; update the sprite animation frame timer and frame number
+; animationFrameUpdate				; update the sprite animation frame timer and frame number
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateAnimationFrame
+.animationFrameUpdate
 
 	dec spritesImgFrameCounter		; animation timer -= 1
-	bne updateAnimationFrameExit		; if animation timer = 0
+	bne animationFrameUpdateExit		; if animation timer = 0
 	
 	lda #spritesAnimationTime		; then reset animation timer
 	sta spritesImgFrameCounter
 	
 	dec spritesImgFrame			; animation frame -= 1
-	bpl updateAnimationFrameExit		; if animation frame < 0
+	bpl animationFrameUpdateExit		; if animation frame < 0
 
 	lda #3					; then animation frame = 3
 	sta spritesImgFrame
 
-.updateAnimationFrameExit
+.animationFrameUpdateExit
 
 	rts					; return
 
@@ -4191,11 +4187,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr redrawSprites			; draw ladybug and enemy sprites
 
-	jsr updateAnimationFrame		; update the animtion frame number
+	jsr animationFrameUpdate		; update the animtion frame number
 
-	jsr updateSkullColor			; update the skull palette color
+	jsr skullColorUpdate			; update the skull palette color
 
-	jsr updateBonusColor			; update the bonus letters palette colors (also used for lower diamond)
+	jsr bonusColorUpdate			; update the bonus letters palette colors (also used for lower diamond)
 
 	jsr drawScore				; draw score (1 digit per loop)
 
@@ -4782,11 +4778,11 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr redrawSprites			; draw sprites
 
-	jsr updateAnimationFrame		; update the animtion frame number
+	jsr animationFrameUpdate		; update the animtion frame number
 
-	jsr updateSkullColor			; update the skull palette color
+	jsr skullColorUpdate			; update the skull palette color
 
-	jsr updateBonusColor			; update the bonus letters palette colors
+	jsr bonusColorUpdate			; update the bonus letters palette colors
 
 	jsr drawScore				; draw score (1 digit per loop)
 
@@ -5299,7 +5295,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr drawString
 	equw screenAddr + 2 + 6 * chrColumn + 10 * chrRow
-	equs colorGreen
+	equs colorBlue
 	incbin "output/projectBuild"
 	clear * - 1, *				; remove the 0a terminator byte
 	org * - 1				; at the end of the projectBuild string
@@ -5878,9 +5874,9 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr processSound			; process sound effects and music
 
-	jsr updateSkullColor			; update the skull palette color
+	jsr skullColorUpdate			; update the skull palette color
 
-	jsr updateBonusColor			; update the bonus letters palette colors
+	jsr bonusColorUpdate			; update the bonus letters palette colors
 
 	jsr inputScan				; read keyboard input and joystick (if enabled)
 
@@ -6118,13 +6114,13 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	jsr redrawSprites			; draw ladybug
 
-	jsr updateAnimationFrame		; update the animation frame number
+	jsr animationFrameUpdate		; update the animation frame number
 
-	jsr updateEnemyTimer			; update the enemy timer and draw tile when needed
+	jsr enemyTimerUpdate			; update the enemy timer and draw tile when needed
 
-	jsr updateSkullColor			; update the skull palette color
+	jsr skullColorUpdate			; update the skull palette color
 
-	jsr updateBonusColor			; update the bonus letters palette colors
+	jsr bonusColorUpdate			; update the bonus letters palette colors
 
 	jsr inputScan				; read keyboard input and joystick (if enabled)
 
@@ -6849,7 +6845,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateSkullColor				update the skull palette color
+; skullColorUpdate				update the skull palette color
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6857,7 +6853,7 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 ;			X			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateSkullColorTable
+.skullColorUpdateTable
 
 	equb palSkull + palRed
 	equb palSkull + palMagenta
@@ -6878,11 +6874,11 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateSkullColor
+.skullColorUpdate
 
 	ldx #0					; if shield is active use index 0 from color table (red) for skull color
 	lda shield
-	bne updateSkullColorPalette
+	bne skullColorUpdatePalette
 
 	lda vsyncCounter			; else use index = (vsyncCounter / 4) & 15 for the flashing color sequence from table
 	lsr a
@@ -6890,9 +6886,9 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	and #15
 	tax
 
-.updateSkullColorPalette
+.skullColorUpdatePalette
 
-	lda updateSkullColorTable, x		; set skull palette to color from table using index
+	lda skullColorUpdateTable, x		; set skull palette to color from table using index
 	sta ulaPalette
 
 	rts					; return
@@ -7471,7 +7467,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda #palObject + palCyan		; set letters and hearts to cyan
 	sta ulaPalette
 
-	jsr updateSkullColor			; update the skull palette color (make sure skull is show as red when shield is enabled)
+	jsr skullColorUpdate			; update the skull palette color (make sure skull is show as red when shield is enabled)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; draw the level text and number
@@ -7647,9 +7643,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr processSound			; process sound effects and music
 
-	jsr updateSkullColor			; update the skull palette color
+	jsr skullColorUpdate			; update the skull palette color
 
-	jsr updateBonusColor			; update the bonus letters palette colors
+	jsr bonusColorUpdate			; update the bonus letters palette colors
 
 	jsr drawScore				; draw score (1 digit per loop)
 
@@ -8032,9 +8028,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jsr redrawSprites			; draw ladybug
 
-	jsr updateAnimationFrame		; update the animtion frame number
+	jsr animationFrameUpdate		; update the animtion frame number
 
-	jsr updateBonusColor			; update the bonus letters palette colors
+	jsr bonusColorUpdate			; update the bonus letters palette colors
 
 	jsr drawScore				; draw score (1 digit per loop)
 
@@ -8342,7 +8338,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateBonusColor				update the special/extra/multiplier color palette
+; bonusColorUpdate				update the special/extra/multiplier color palette
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8350,17 +8346,17 @@ animateLadybugInstructions	= 6		; instructions animation index
 ;			X			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateBonusColor
+.bonusColorUpdate
 
 	lda vsyncCounter			; if vsyncCounter & 0x08 == 0 then use color set 0 else use color set 1
 	and #%00001000
-	bne updateBonusColorSet1
+	bne bonusColorUpdateSet1
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; color set 0 = red/magenta, yellow/green, cyan/blue
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateBonusColorSet0
+.bonusColorUpdateSet0
 
 	lda #palSpecial0 + palRed		; set special colors to red/magenta
 	sta ulaPalette
@@ -8383,7 +8379,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; color set 1 = magenta/red, green/yellow, blue/cyan
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateBonusColorSet1
+.bonusColorUpdateSet1
 
 	lda #palSpecial0 + palMagenta		; set special colors to magenta/red
 	sta ulaPalette
@@ -9277,13 +9273,13 @@ animateLadybugInstructions	= 6		; instructions animation index
 .ladybugKill
 
 	ldx #spritesTotal - 1			; erase all enemies
-	lda #spriteBlanking
+	lda #spriteBlanking + moveStop
 
-.ladybugKillLoop
+.ladybugKillEnemies
 
 	sta spritesDir + 0, x
 	dex
-	bne ladybugKillLoop
+	bne ladybugKillEnemies
 
 	lda #0					; disable bonus item
 	sta bonusItemActive
@@ -9320,7 +9316,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateLadybug					set direction of ladybug if requested direction is valid
+; ladybugUpdate					set direction of ladybug if requested direction is valid
 ;						handle objects under ladybug
 ;						handle turnstile movement (rewrite background map tile id's only, drawing is handled by mainloop)
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -9335,15 +9331,15 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; return if ladybug is paused or entry animation is enabled
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybug
+.ladybugUpdate
 
 	lda pauseLadybug			; if ladybug movement is paused then return
-	bne updateLadybugReturn
+	bne ladybugUpdateReturn
 
 	lda ladybugEntryEnable			; if ladybug entry movement is enabled then return
-	beq updateLadybugInit
+	beq ladybugUpdateInit
 	
-.updateLadybugReturn
+.ladybugUpdateReturn
 
 	rts
 	
@@ -9351,35 +9347,35 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; initialize everything needed for direction, gridlock and tile tests
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugInit
+.ladybugUpdateInit
 
 	lda spritesDir + 0			; stop ladybug moving
 	ora #moveStop
 	sta spritesDir + 0
 
 	and #moveStop eor &ff			; save current direction and blanking but with movement enabled
-	sta updateLadybugOldDir			; ( used later to slide ladybug when turned early for junction or turnstile )
+	sta ladybugUpdateOldDir			; ( used later to slide ladybug when turned early for junction or turnstile )
 
 	lda #&ff				; clear new x and y directions
-	sta updateLadybugNewDirX
-	sta updateLadybugNewDirY
+	sta ladybugUpdateNewDirX
+	sta ladybugUpdateNewDirY
 
-	sta updateLadybugTileX			; clear found tiles
-	sta updateLadybugTileY
+	sta ladybugUpdateTileX			; clear found tiles
+	sta ladybugUpdateTileY
 
 	lda spritesX + 0			; save ladybug x for map and screen address conversion
 	sta spriteToAddrX
 
 	and #15					; create ladybug grid x flag, on grid = 0, off grid != 0
 	eor #8
-	sta updateLadybugGridX
+	sta ladybugUpdateGridX
 	
 	lda spritesY + 0			; save ladybug y for map and screen address conversion
 	sta spriteToAddrY
 
 	and #15					; create ladybug grid y flag, on grid = 0, off grid != 0
 	eor #8
-	sta updateLadybugGridY
+	sta ladybugUpdateGridY
 	
 	jsr spriteToAddr			; convert ladybug xy to tileMapAddr and drawTileAddr
 
@@ -9389,128 +9385,128 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; check inputs and store selected directions
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugInput
+.ladybugUpdateInput
 
 	jsr swrDemo				; replace player inputs with demo inputs (if enabled)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugInputStart
+.ladybugUpdateInputStart
 
 	lsr playerInput				; discard start/fire input
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugInputLeft
+.ladybugUpdateInputLeft
 
 	lsr playerInput				; get left input
 
-	bcc updateLadybugInputDown		; if left was requested then
+	bcc ladybugUpdateInputDown		; if left was requested then
 
 	ldx #moveLeft				; set direction left
 
-	lda updateLadybugGridY			; if ladybug y is on exact grid (left direction allowed) then
-	bne updateLadybugInputLeftAlign
+	lda ladybugUpdateGridY			; if ladybug y is on exact grid (left direction allowed) then
+	bne ladybugUpdateInputLeftAlign
 
-	stx updateLadybugNewDirX		; set new direction to left
-	beq updateLadybugInputDown		; check for down
+	stx ladybugUpdateNewDirX		; set new direction to left
+	beq ladybugUpdateInputDown		; check for down
 	
-.updateLadybugInputLeftAlign
+.ladybugUpdateInputLeftAlign
 
-	lda updateLadybugOldDir			; else use old direction to align ladybug with grid
-	sta updateLadybugNewDirY
+	lda ladybugUpdateOldDir			; else use old direction to align ladybug with grid
+	sta ladybugUpdateNewDirY
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugInputDown
+.ladybugUpdateInputDown
 
 	lsr playerInput				; get down input
 
-	bcc updateLadybugInputUp		; if down was requested then
+	bcc ladybugUpdateInputUp		; if down was requested then
 
 	ldx #moveDown				; set direction down
 
-	lda updateLadybugGridX			; if ladybug x is on exact grid (down direction allowed) then
-	bne updateLadybugInputDownAlign
+	lda ladybugUpdateGridX			; if ladybug x is on exact grid (down direction allowed) then
+	bne ladybugUpdateInputDownAlign
 
-	stx updateLadybugNewDirY		; set new direction to down
-	beq updateLadybugInputUp		; check for up
+	stx ladybugUpdateNewDirY		; set new direction to down
+	beq ladybugUpdateInputUp		; check for up
 
-.updateLadybugInputDownAlign
+.ladybugUpdateInputDownAlign
 
-	lda updateLadybugOldDir			; else use old direction to align ladybug with grid
-	sta updateLadybugNewDirX
+	lda ladybugUpdateOldDir			; else use old direction to align ladybug with grid
+	sta ladybugUpdateNewDirX
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugInputUp
+.ladybugUpdateInputUp
 
 	lsr playerInput				; get up input
 
-	bcc updateLadybugInputRight		; if up was requested then
+	bcc ladybugUpdateInputRight		; if up was requested then
 
 	ldx #moveUp				; set direction up
 
-	lda updateLadybugGridX			; if ladybug y is on exact grid (up direction allowed) then
-	bne updateLadybugInputUpAlign
+	lda ladybugUpdateGridX			; if ladybug y is on exact grid (up direction allowed) then
+	bne ladybugUpdateInputUpAlign
 
-	stx updateLadybugNewDirY		; set new direction to up
-	beq updateLadybugInputRight		; check for right
+	stx ladybugUpdateNewDirY		; set new direction to up
+	beq ladybugUpdateInputRight		; check for right
 
-.updateLadybugInputUpAlign
+.ladybugUpdateInputUpAlign
 
-	lda updateLadybugOldDir			; else use old direction to align ladybug with grid
-	sta updateLadybugNewDirX
+	lda ladybugUpdateOldDir			; else use old direction to align ladybug with grid
+	sta ladybugUpdateNewDirX
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugInputRight
+.ladybugUpdateInputRight
 
 	lsr playerInput				; get right input
 
-	bcc updateLadybugCheckGrid		; if right was requested
+	bcc ladybugUpdateCheckGrid		; if right was requested
 
 	ldx #moveRight				; set direction right
 
-	lda updateLadybugGridY			; if ladybug y is on exact grid (right direction allowed) then
-	bne updateLadybugInputRightAlign
+	lda ladybugUpdateGridY			; if ladybug y is on exact grid (right direction allowed) then
+	bne ladybugUpdateInputRightAlign
 
-	stx updateLadybugNewDirX		; set new x direction to right
-	beq updateLadybugCheckGrid		; go check for grid alignment
+	stx ladybugUpdateNewDirX		; set new x direction to right
+	beq ladybugUpdateCheckGrid		; go check for grid alignment
 
-.updateLadybugInputRightAlign
+.ladybugUpdateInputRightAlign
 
-	lda updateLadybugOldDir			; else use old direction to align ladybug with grid
-	sta updateLadybugNewDirY
+	lda ladybugUpdateOldDir			; else use old direction to align ladybug with grid
+	sta ladybugUpdateNewDirY
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if ladybug is off or on grid
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugCheckGrid
+.ladybugUpdateCheckGrid
 
-	lda updateLadybugGridX			; check ladybug off or on grid
-	ora updateLadybugGridY
-	beq updateLadybugOnGrid
+	lda ladybugUpdateGridX			; check ladybug off or on grid
+	ora ladybugUpdateGridY
+	beq ladybugUpdateOnGrid
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; off grid check for horizontal
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugOffGridX
+.ladybugUpdateOffGridX
 
-	ldx updateLadybugNewDirX		; if ladybug x direction chosen then set new direction
-	bmi updateLadybugOffGridY
-	bpl updateLadybugNewDirection
+	ldx ladybugUpdateNewDirX		; if ladybug x direction chosen then set new direction
+	bmi ladybugUpdateOffGridY
+	bpl ladybugUpdateNewDirection
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; off grid check for vertical
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugOffGridY
+.ladybugUpdateOffGridY
 
-	ldx updateLadybugNewDirY		; if ladybug y direction chosen then set new direction
-	bmi updateLadybugExit
+	ldx ladybugUpdateNewDirY		; if ladybug y direction chosen then set new direction
+	bmi ladybugUpdateExit
 
 	; continue down to set new direction
 
@@ -9518,7 +9514,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; set ladybug new direction combined with original blanking
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugNewDirection
+.ladybugUpdateNewDirection
 
 	lda spritesDir + 0			; get blanking bit
 	and #spriteBlanking
@@ -9530,7 +9526,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugExit
+.ladybugUpdateExit
 
 	rts					; return
 
@@ -9538,109 +9534,109 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; on grid handle path tiles, turnstiles and direction. if two directions selected then choose the one that isnt the original direction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugOnGrid
+.ladybugUpdateOnGrid
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; on grid check horizontal
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugOnGridX
+.ladybugUpdateOnGridX
 
-	ldx updateLadybugNewDirX		; if ladybug x direction chosen then
-	bmi updateLadybugOnGridY
+	ldx ladybugUpdateNewDirX		; if ladybug x direction chosen then
+	bmi ladybugUpdateOnGridY
 
-	jsr updateLadybugCheckPath		; check tile in front of ladybug
-	sty updateLadybugTileX
+	jsr ladybugUpdateCheckPath		; check tile in front of ladybug
+	sty ladybugUpdateTileX
 
-	bne updateLadybugOnGridY		; if tile was not a path/turnstile then
+	bne ladybugUpdateOnGridY		; if tile was not a path/turnstile then
 	
 	lda #&ff				; remove x tile (cannot turn this direction)
-	sta updateLadybugTileX
+	sta ladybugUpdateTileX
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; on grid check vertical
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugOnGridY
+.ladybugUpdateOnGridY
 
-	ldx updateLadybugNewDirY		; if ladybug y direction chosen then
-	bmi updateLadybugCheckDualTile
+	ldx ladybugUpdateNewDirY		; if ladybug y direction chosen then
+	bmi ladybugUpdateCheckDualTile
 
-	jsr updateLadybugCheckPath		; check tile in front of ladybug
-	sty updateLadybugTileY
+	jsr ladybugUpdateCheckPath		; check tile in front of ladybug
+	sty ladybugUpdateTileY
 
-	bne updateLadybugCheckDualTile		; if tile was not a path/turnstile then
+	bne ladybugUpdateCheckDualTile		; if tile was not a path/turnstile then
 	
 	lda #&ff				; remove y tile (cannot turn this direction)
-	sta updateLadybugTileY
+	sta ladybugUpdateTileY
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; if two directions were pressed at the junction and both tiles are valid then choose direction thats not the current direction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugCheckDualTile
+.ladybugUpdateCheckDualTile
 
-	lda updateLadybugTileX			; if tileX is a valid path then
+	lda ladybugUpdateTileX			; if tileX is a valid path then
 	cmp #&ff
-	beq updateLadybugCheckTileY
+	beq ladybugUpdateCheckTileY
 	
-	lda updateLadybugTileY			; if tileY is a valid path then
+	lda ladybugUpdateTileY			; if tileY is a valid path then
 	cmp #&ff
-	beq updateLadybugCheckTileX
+	beq ladybugUpdateCheckTileX
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugCheckDualTileX
+.ladybugUpdateCheckDualTileX
 
-	lda updateLadybugNewDirX		; remove x direction if its the same as the current direction
-	cmp updateLadybugOldDir
-	bne updateLadybugCheckDualTileY
+	lda ladybugUpdateNewDirX		; remove x direction if its the same as the current direction
+	cmp ladybugUpdateOldDir
+	bne ladybugUpdateCheckDualTileY
 	
 	lda #&ff
-	sta updateLadybugTileX
+	sta ladybugUpdateTileX
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugCheckDualTileY
+.ladybugUpdateCheckDualTileY
 
-	lda updateLadybugNewDirY		; remove y direction if its the same as the current direction
-	cmp updateLadybugOldDir
-	bne updateLadybugCheckTileX
+	lda ladybugUpdateNewDirY		; remove y direction if its the same as the current direction
+	cmp ladybugUpdateOldDir
+	bne ladybugUpdateCheckTileX
 
 	lda #&ff
-	sta updateLadybugTileY
+	sta ladybugUpdateTileY
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if we can use x direction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugCheckTileX
+.ladybugUpdateCheckTileX
 
-	lda updateLadybugTileX			; if x direction tile is a valid path
+	lda ladybugUpdateTileX			; if x direction tile is a valid path
 	cmp #&ff
-	beq updateLadybugCheckTileY
+	beq ladybugUpdateCheckTileY
 
-	sta updateLadybugSave			; save tile
+	sta ladybugUpdateSave			; save tile
 
-	ldx updateLadybugNewDirX		; set x direction
-	jsr updateLadybugNewDirection
+	ldx ladybugUpdateNewDirX		; set x direction
+	jsr ladybugUpdateNewDirection
 	
-	jmp updateLadybugTurnstile		; and check if turnstile push required
+	jmp ladybugUpdateTurnstile		; and check if turnstile push required
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; check if we can use y direction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugCheckTileY
+.ladybugUpdateCheckTileY
 
-	lda updateLadybugTileY			; if y direction tile is a valid path
+	lda ladybugUpdateTileY			; if y direction tile is a valid path
 	cmp #&ff
-	beq updateLadybugExit
+	beq ladybugUpdateExit
 
-	sta updateLadybugSave			; save tile
+	sta ladybugUpdateSave			; save tile
 
-	ldx updateLadybugNewDirY		; set y direction
-	jsr updateLadybugNewDirection
+	ldx ladybugUpdateNewDirY		; set y direction
+	jsr ladybugUpdateNewDirection
 
 	; continue down to check if turnstile push is required
 
@@ -9650,34 +9646,27 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; check if tile is a turnstile and if it is then push it in the required direction
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugTurnstile
+.ladybugUpdateTurnstile
 
-	lda updateLadybugSave			; if saved tile is not a turnstile then return
+	lda ladybugUpdateSave			; if saved tile is not a turnstile then return
 	and #wallSolid
 	cmp #wallTurnstile
+	bne ladybugUpdateExit
 
-; /// jump to advance ladybug 1 step
-;	bne updateLadybugExit
-	beq updateLadybugTurnstileTile
-
-	jmp updateLadybugTurnAdvance
-
-.updateLadybugTurnstileTile
-
-	lda updateLadybugSave			; get tile
+	lda ladybugUpdateSave			; get tile
 
 	ldy #0
 
 	cmp #mapTileTurnstileU + wallTurnstile	; if up tile found then y = 0 (up)
-	beq updateLadybugTurnstilePush
+	beq ladybugUpdateTurnstilePush
 
 	iny
 	cmp #mapTileTurnstileD + wallTurnstile	; if down tile found then y = 1 (down)
-	beq updateLadybugTurnstilePush
+	beq ladybugUpdateTurnstilePush
 
 	iny
 	cmp #mapTileTurnstileL + wallTurnstile	; if left tile found then y = 2 (left)
-	beq updateLadybugTurnstilePush
+	beq ladybugUpdateTurnstilePush
 
 	iny					; remaining tile must be right, y = 3 (right)
 
@@ -9685,24 +9674,24 @@ animateLadybugInstructions	= 6		; instructions animation index
 	; push the turnstile in the required direction (rewrite background tile buffer and setup screen address for drawing (handled in gameloop))
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugTurnstilePush
+.ladybugUpdateTurnstilePush
 
-	sty updateLadybugSave			; save the tileDir
+	sty ladybugUpdateSave			; save the tileDir
 	
 	txa					; index = new ladybug direction * 4 + tileDir
 	and #&03
 	asl a
 	asl a
-	ora updateLadybugSave
+	ora ladybugUpdateSave
 	tay
 
 	lda spritesX + 0			; calculate address for turnstile tileMap alteration (vertical or horizontal)
 	clc
-	adc updateLadybugTurnstileX, y
+	adc ladybugUpdateTurnstileX, y
 	sta spriteToAddrX
 	lda spritesY + 0
 	clc
-	adc updateLadybugTurnstileY, y
+	adc ladybugUpdateTurnstileY, y
 	sta spriteToAddrY
 	jsr spriteToAddr
 
@@ -9713,13 +9702,13 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	txa					; choose horizontal or vertical from ladybug direction
 	and #moveLeft				; up/down = 0/1, left/right = 2/3 so checking for left also check for right !!
-	bne updateLadybugTurnstileHorizontal	
+	bne ladybugUpdateTurnstileHorizontal	
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; vertical turnstile
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugTurnstileVertical
+.ladybugUpdateTurnstileVertical
 
 	lda #mapTileTurnstileU + wallTurnstile	; place vertical turnStile into tileMap
 	ldy #1
@@ -9742,13 +9731,13 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda #0					; set turnstile direction to vertical for drawTurnstile
 	sta drawTurnstileDir
 
-	beq updateLadybugTurnstileExit		; (beq used as branch always)
+	beq ladybugUpdateTurnstileExit		; (beq used as branch always)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; horizontal turnstile
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugTurnstileHorizontal
+.ladybugUpdateTurnstileHorizontal
 
 	lda #mapTileTurnstileL + wallTurnstile	; place horizontal turnstile into tileMap
 	ldy #23
@@ -9771,57 +9760,32 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda #1					; set turnstile direction to horizontal for drawTurnstile
 	sta drawTurnstileDir
 
-	; continue down to updateLadybugTurnstileExit
+	; continue down to ladybugUpdateTurnstileExit
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; play the turnstile sound
+	; play the turnstile sound and exit
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugTurnstileExit
+.ladybugUpdateTurnstileExit
 
 	lda #sfxTurnstile			; play turnstile sound and return
-
-; ///
-;	jmp playSound
-	jsr playSound
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; advance ladybug 1 step (for quicker turns)
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.updateLadybugTurnAdvance
-
-	lda spritesDir + 0			; get ladybug direction
-	and #%11
-	tay
-
-	clc					; update sprite x from direction table
-	lda spritesX + 0
-	adc moveSpritesDirX, y
-	sta spritesX + 0
-
-	clc					; update sprite y from direction table
-	lda spritesY + 0
-	adc moveSpritesDirY, y
-	sta spritesY + 0
-
-	rts
+	jmp playSound
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugTurnstileX
+.ladybugUpdateTurnstileX
 
 	equb 0,0,8,-8,0,0,8,-8,-8,-8,0,0,8,8,0,0
 	
-.updateLadybugTurnstileY
+.ladybugUpdateTurnstileY
 
 	equb 0,0,-8,-8,0,0,8,8,8,-8,0,0,8,-8,0,0
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; updateLadybugCheckPath
+	; ladybugUpdateCheckPath
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateLadybugCheckPath
+.ladybugUpdateCheckPath
 
 	ldy mapDir, x				; get tile in front of ladybug from supplied direction in x
 	lda (tileMapAddr), y
@@ -10036,10 +10000,10 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; updateHighScoreFirstPlace			; copy first place high score from table to high score and display it
+; highScoreFirstPlaceUpdate			; copy first place high score from table to high score and display it
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.updateHighScoreFirstPlace
+.highScoreFirstPlaceUpdate
 
 	lda highScoreTable + 0			; copy 1st place high score table entry to highScore for display
 	sta highScore + 0

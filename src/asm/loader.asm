@@ -718,8 +718,8 @@ masterMos350 = &e374
 
 .swrDemoCheckGrid
 
-	lda updateLadybugGridX			; if ladybug is off grid then use current demo direction and return
-	ora updateLadybugGridY
+	lda ladybugUpdateGridX			; if ladybug is off grid then use current demo direction and return
+	ora ladybugUpdateGridY
 	bne swrDemoSetDir
 	
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -761,7 +761,7 @@ masterMos350 = &e374
 
 	ldx demoDir				; get current demo direction
 
-	jsr updateLadybugCheckPath		; if 1 tile in front of ladybug is a wall
+	jsr ladybugUpdateCheckPath		; if 1 tile in front of ladybug is a wall
 	beq swrDemoRandomDir			; then choose a random direction
 
 	jsr swrDemoCheckTileEdible		; check 2 tiles in front for dot/heart/letters
@@ -799,7 +799,7 @@ masterMos350 = &e374
 	eor #%10				; check side 1 of ladybug
 	tax
 
-	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
+	jsr ladybugUpdateCheckPath		; if 1 tile to the side is a solid wall
 	beq swrDemoCheckSideFalse		; then return false
 
 	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
@@ -822,7 +822,7 @@ masterMos350 = &e374
 	eor #%11				; check side 2 of ladybug
 	tax
 
-	jsr updateLadybugCheckPath		; if 1 tile to the side is a solid wall
+	jsr ladybugUpdateCheckPath		; if 1 tile to the side is a solid wall
 	beq swrDemoCheckSideFalse		; then return false
 
 	jsr swrDemoCheckTileEdible		; check 2 tiles to the side for dot/heart/letters
@@ -852,7 +852,7 @@ masterMos350 = &e374
 	jsr random				; pick a random direction that is not a solid wall
 	and #%11
 	tax
-	jsr updateLadybugCheckPath
+	jsr ladybugUpdateCheckPath
 	beq swrDemoRandomDirLoop
 
 	stx demoDir				; set chosen random direction
