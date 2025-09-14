@@ -142,8 +142,10 @@
 
 .moveSpritesIndex	skip 1			; index of current sprite
 
-.moveSpritesDistanceSave
-			skip 1			; temporary store for distance squared
+.moveSpritesDistanceX
+			skip 1			; storage for abs(enemyX - ladybugX)
+.moveSpritesDistanceY
+			skip 1			; storage for abs(enemyY - ladybugY)
 
 .spritesImg		skip spritesTotal	; sprite image, position and direction for drawing
 .spritesX		skip spritesTotal

@@ -31,6 +31,7 @@ spritesTotal		= 5			; total number of sprites in game, 1 for lady bug and 4 for 
 spritesAnimationTime	= frame * 0.16		; 0.16 seconds time betweeen sprite animation frames
 
 collisionRange		= 6			; range allowed between enemy and ladybug to detect as a hit
+aiRange			= 12			; if enemie is this close to ladybug then choose random direction instead of target to give ladybug a chance to escape
 
 escTime			= frame * 2.00		; hold esc for 2.00 seconds to quit game and return back to menu
 

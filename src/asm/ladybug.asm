@@ -2092,7 +2092,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr drawTurnstile			; draw new turnstile position (if enabled)
 
-	jsr drawTurnstilePin			; redraw the turnstile center pin
+	jsr drawTurnstilePin			; redraw turnstile center pins (fix holes created by enemies sneaking through turnstiles at the very last moment)
 
 	jsr skullColorUpdate			; update the skull palette color
 
@@ -2637,10 +2637,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .moveSpritesCollisionX
 
-	cmp #collisionRange			; if x distance < collisionRange
-	bcs moveSpritesCheckAlignmentX
-
-	sta moveSpritesDistanceSave		; save x distance
+	sta moveSpritesDistanceX		; save x distance
 
 	lda spritesY, x				; calculate abs(enemyY - ladybugY)
 	sec
@@ -2651,10 +2648,16 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .moveSpritesCollisionY
 
+	sta moveSpritesDistanceY		; save Y distance
+
 	cmp #collisionRange			; if y distance < collisionRange
 	bcs moveSpritesCheckAlignmentX
 
-	adc moveSpritesDistanceSave		; add together both x and y distances (carry is clear so no need for clc)
+	lda moveSpritesDistanceX		; if x distance < collisionRange
+	cmp #collisionRange
+	bcs moveSpritesCheckAlignmentX
+
+	adc moveSpritesDistanceY		; add together both x and y distances (carry is clear so no need for clc)
 
 	cmp #collisionRange			; if combined distance is less than collisionRange
 	bcs moveSpritesCheckAlignmentX
@@ -2746,6 +2749,20 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	tay					; and remove that direction from available paths
 	lda #wallSolid
 	sta moveSpritesAvailablePaths, y
+
+	lda moveSpritesDistanceY
+	cmp #aiRange				; if y distance < aiRange
+	bcs moveSpritesEnemyAiTarget
+
+	lda moveSpritesDistanceX		; if x distance < aiRange
+	cmp #aiRange
+	bcs moveSpritesEnemyAiTarget
+
+	adc moveSpritesDistanceY		; if x + y distance < aiRange (carry clear no need for clc)
+	cmp #aiRange
+	bcc moveSpritesRandomAvailableDirection	; then pick a random direction instead of a target direction (give ladybug a chance when enemy is on her tail)
+
+.moveSpritesEnemyAiTarget
 
 	jsr random				; if random < targetTable[enemyTarget]
 	ldy enemyTarget
