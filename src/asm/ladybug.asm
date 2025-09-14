@@ -2054,6 +2054,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta enemySpeedCounter			; reset enemy speed fraction counter
 	sta enemyMoveCounter			; reset enemy move counter used by enemy release delay
 
+;///
+	lda #turnstilePinMin				; initialize the map position for turnstile pin redraw
+	sta drawTurnstilePinX
+	sta drawTurnstilePinY
+
 ;*****************************************************************************************************************************************************
 ;
 ; game main loop
@@ -2086,6 +2091,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr drawObjectScore			; draw object score (if enabled)
 
 	jsr drawTurnstile			; draw new turnstile position (if enabled)
+
+	jsr drawTurnstilePin			; redraw the turnstile center pin
 
 	jsr skullColorUpdate			; update the skull palette color
 
@@ -4237,11 +4244,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-angelMin	= 8 * 1				; angel sprite minimum x/y value (keep within playfield)
-angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
 .ladybugDeathAnimation
 
 	lda ladybugDeathEnable			; if ladybug death animation enabled
@@ -4365,15 +4367,15 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	clc
 	adc ladybugDeathAnimationTable, x	; adjust angel x postion using direction table
 
-	cmp #angelMin				; clip x to stay within the playfield area
+	cmp #spriteMin				; clip x to stay within the playfield area
 	bcs ladybugDeathAnimationLimitXhi
-	lda #angelMin
+	lda #spriteMin
 
 .ladybugDeathAnimationLimitXhi
 
-	cmp #angelMax
+	cmp #spriteMax
 	bcc ladybugDeathAnimationLimitXstore
-	lda #angelMax
+	lda #spriteMax
 
 .ladybugDeathAnimationLimitXstore
 
@@ -4383,9 +4385,9 @@ angelMax	= 8 * 21			; angel sprite maximum x value (keep within playfield)
 	clc
 	adc ladybugDeathAnimationTable + 1, x	; adjust angel y position using direction table
 
-	cmp #angelMin				; clip y to stay within the playfield area
+	cmp #spriteMin				; clip y to stay within the playfield area
 	bcs ladybugDeathAnimationLimitYstore
-	lda #angelMin
+	lda #spriteMin
 
 .ladybugDeathAnimationLimitYstore
 
@@ -9914,6 +9916,71 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #mapTileBlank			; draw blank tile
 	jmp drawMapTile				; and exit
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; drawTurnstilePin				examing map tile and if its a turnstile pin then redraw it
+;						move to next tilemap
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; entry parameters	drawTurnstilePinX	points to current map X (1-21)
+;			drawTurnstilePinY	points to current map Y (1-21)
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; exit			A			destroyed
+;			X			preserved
+;			Y			destroyed
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawTurnstilePin
+
+	lda drawTurnstilePinX			; update X
+	jsr drawTurnstilePinUpdate
+	sta drawTurnstilePinX
+	sta spriteToAddrX
+
+	lda drawTurnstilePinY
+	sta spriteToAddrY
+
+	bcc drawTurnstilePinCheck		; update Y if X wrapped around
+
+	jsr drawTurnstilePinUpdate
+	sta drawTurnstilePinY
+	sta spriteToAddrY
+
+.drawTurnstilePinCheck
+
+	jsr spriteToAddr			; convert XY to background map and screen draw address
+
+	ldy #0
+	lda (tileMapAddr), y			; if tile at current location is a turnstile pin
+
+	cmp #mapTileTurnstileCV + wallSolid
+	beq drawTurnstilePinTile
+	cmp #mapTileTurnstileCH + wallSolid
+	beq drawTurnstilePinTile
+
+.drawTurnstilePinExit
+
+	rts
+
+.drawTurnstilePinTile
+
+	jmp drawMapTile				; draw pin tile
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawTurnstilePinUpdate
+
+	clc
+	adc #16
+	cmp #turnstilePinMax
+	bcc drawTurnstilePinUpdateExit
+
+	lda #turnstilePinMin
+
+.drawTurnstilePinUpdateExit
+
+	rts
 
 
 

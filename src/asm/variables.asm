@@ -125,6 +125,8 @@
 
 .drawTurnstileAddr	skip 2			; drawTurnstile screen address
 .drawTurnstileDir	skip 1			; drawTurnstile direction (vertical or horizontal)
+.drawTurnstilePinX	skip 1			; redraw turnstile center pin current x
+.drawTurnstilePinY	skip 1			; redraw turnstile center pin current y
 
 .spriteToAddrX		skip 1			; spriteToAddr sprite x position
 .spriteToAddrY		skip 1			; spritetoAddr sprite y position

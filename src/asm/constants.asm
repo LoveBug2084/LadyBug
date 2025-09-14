@@ -497,6 +497,13 @@ screenAddr		= &8000 - screenWidth * screenHeight * 8
 screenAddrMode1		= &3000			; start address of mode 1 screen for editor.bas
 screenSizeMode1		= &5000			; size of mode 1 screen
 
+spriteMin	= 8 * 1				; sprite minimum xy value (keep within playfield)
+spriteMax	= 8 * 21			; sprite maximum xy value (keep within playfield)
+
+turnstilePinMin	= 8 * 3				; min/max for turnstile pin redraw
+turnstilePinMax	= 8 * 22
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; screen character sizes
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
