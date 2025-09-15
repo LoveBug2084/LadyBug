@@ -2054,8 +2054,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta enemySpeedCounter			; reset enemy speed fraction counter
 	sta enemyMoveCounter			; reset enemy move counter used by enemy release delay
 
-;///
-	lda #turnstilePinMin				; initialize the map position for turnstile pin redraw
+	lda #turnstilePinMax - 1		; initialize the map position for turnstile pin redraw
 	sta drawTurnstilePinX
 	sta drawTurnstilePinY
 
@@ -9300,8 +9299,10 @@ animateLadybugInstructions	= 6		; instructions animation index
 	dex
 	bne ladybugKillEnemies
 
-	lda #0					; disable bonus item
-	sta bonusItemActive
+	lda #0
+	sta enemyReleaseEnable			; disable enemy release/spawn
+
+	sta bonusItemActive			; disable bonus item
 
 	sta bonusDiamondEnable			; remove the possibility of getting a diamond bonus
 
