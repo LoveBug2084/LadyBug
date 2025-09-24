@@ -4623,6 +4623,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta mainMenuCursor			; set cursor to first menu entry (start game)
 	sta mainMenuCursorOld			; make old cursor same
 
+	lda #animateLadybugMainMenu		; start the animation
+	jsr animateLadybugInitialize
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; update cursor and validation code
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4682,24 +4685,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta demoMode
 
 	bne mainMenuExit
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; mainMenuLadybugAnimation			if ladybug isnt animated then trigger an animation
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.mainMenuLadybugAnimation
-
-	lda animateLadybugActive		; if ladybug animation not active
-	bne mainMenuLadybugAnimationExit
-	
-	lda #animateLadybugMainMenu		; then start the animation
-	jsr animateLadybugInitialize
-
-.mainMenuLadybugAnimationExit
-
-	rts					; return
-
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4773,8 +4758,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
-
-	jsr mainMenuLadybugAnimation		; check and initialise ladybug animation if needed
 
 	jsr animateLadybug			; update ladybug direction and frame counter
 	
@@ -8206,7 +8189,8 @@ ladybugMainMenuY	= 89
 	equb 200, moveUp + moveStop
 	equb 76, moveDown
 	equb 151, moveRight
-	equb 75, moveUp
+	equb 76, moveUp
+	equb 1, moveUp + moveStop
 	equb 0
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
