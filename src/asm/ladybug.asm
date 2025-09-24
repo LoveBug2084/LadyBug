@@ -2090,7 +2090,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr drawObjectScore			; draw object score (if enabled)
 
-	jsr drawTurnstile			; draw new turnstile position (if enabled)
+	jsr drawTurnstile			; (if enabled) draw new turnstile position and move ladybug forward 2 extra steps (faster escape from enemies)
 
 	jsr drawTurnstilePin			; redraw turnstile center pins (fix holes created by enemies sneaking through turnstiles at the very last moment)
 
@@ -2595,30 +2595,14 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 .moveSpritesDirection
 
-	ldy spritesDir, x			; get sprite direction
-
-	clc					; update sprite x from direction table
-	lda spritesX, x
-	adc moveSpritesDirX, y
-	sta spritesX, x
-	sta spriteToAddrX			; save sprite x for tileMapAddr conversion
-
-	clc					; update sprite y from direction table
-	lda spritesY, x
-	adc moveSpritesDirY, y
-	sta spritesY, x
-	sta spriteToAddrY			; save sprite y for tileMapAddr conversion
+	jsr moveSpritesStep			; update sprite 1 step
 
 	cpx #0					; if this is sprite 0 (ladybug) then skip collision checks and move onto next sprite
 	bne moveSpritesCollision
 	jmp moveSpritesNext
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; check for enemy collision with ladybug which is true when
-	; abs(ladybugx - enemyx) < collisionRange
-	; and
-	; abs(ladybugy - enemyy) < collisionRange
-	; and
+	; check for enemy collision with ladybug
 	; abs(ladybugx - enemyx) + abs(ladybugy - enemyy) < collisionRange
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2650,14 +2634,10 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	sta moveSpritesDistanceY		; save Y distance
 
-	cmp #collisionRange			; if y distance < collisionRange
-	bcs moveSpritesCheckAlignmentX
+	clc
+	adc moveSpritesDistanceX		; add X and Y distance
 
-	lda moveSpritesDistanceX		; if x distance < collisionRange
-	cmp #collisionRange
-	bcs moveSpritesCheckAlignmentX
-
-	adc moveSpritesDistanceY		; add together both x and y distances (carry is clear so no need for clc)
+	bcs moveSpritesCheckAlignmentX		; if carry then skip (sum of distance > collisionRange)
 
 	cmp #collisionRange			; if combined distance is less than collisionRange
 	bcs moveSpritesCheckAlignmentX
@@ -2751,16 +2731,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta moveSpritesAvailablePaths, y
 
 	lda moveSpritesDistanceY
-	cmp #aiRange				; if y distance < aiRange
+	clc
+	adc moveSpritesDistanceX		; if Y + X distance < aiRange (enemy is on ladybugs tail)
 	bcs moveSpritesEnemyAiTarget
-
-	lda moveSpritesDistanceX		; if x distance < aiRange
 	cmp #aiRange
-	bcs moveSpritesEnemyAiTarget
-
-	adc moveSpritesDistanceY		; if x + y distance < aiRange (carry clear no need for clc)
-	cmp #aiRange
-	bcc moveSpritesRandomAvailableDirection	; then pick a random direction instead of a target direction (give ladybug a chance when enemy is on her tail)
+	bcc moveSpritesRandomAvailableDirection	; then pick a random direction instead of a target direction
 
 .moveSpritesEnemyAiTarget
 
@@ -2860,6 +2835,26 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	cmp #spritesTotal
 	beq moveSpritesExit
 	jmp moveSpritesLoop
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; moveSpritesStep				move sprite 1 step
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.moveSpritesStep
+
+	ldy spritesDir, x			; get sprite direction
+
+	clc					; update sprite x from direction table
+	lda spritesX, x
+	adc moveSpritesDirX, y
+	sta spritesX, x
+	sta spriteToAddrX			; save sprite x for tileMapAddr conversion
+
+	clc					; update sprite y from direction table
+	lda spritesY, x
+	adc moveSpritesDirY, y
+	sta spritesY, x
+	sta spriteToAddrY			; save sprite y for tileMapAddr conversion
 
 .moveSpritesExit
 
@@ -9818,13 +9813,15 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; drawTurnstile					draw a vertical or horizontal turnstile if required
+; drawTurnstile					move ladybug forward 2 extra steps
+;						draw a vertical or horizontal turnstile if required
+;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	drawTurnstileAddr	screen address for top left corner of 3x3 turnstile block or high byte >= &80 for no draw
 ;			drawTurnstileDir	direction to draw turnstile, 0=vertical
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; exit			A			destroyed
-;			X			preserved
+;			X			destroyed
 ;			Y			destroyed
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -9844,6 +9841,10 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #&ff				; mark as done after this draw is complete
 	sta drawTurnstileAddr + 1
+
+	ldx #0					; advance ladybug forward an extra 2 steps
+	jsr moveSpritesStep
+	jsr moveSpritesStep
 
 	lda drawTurnstileDir			; check direction and draw vertical or horizontal
 	bne drawTurnstileHorizontal
