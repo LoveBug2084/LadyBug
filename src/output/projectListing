@@ -6,8 +6,13 @@ screen ram    &47F0 - &7FFF , 14352 bytes
 main ram      &0 - &47EF , 18416 bytes
 ----------------------------------------------------
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 used          &0 - &47ED , 18414 bytes
 free          &47EE - &47EF , 2 bytes
+=======
+used          &0 - &47EC , 18413 bytes
+free          &47ED - &47EF , 3 bytes
+>>>>>>> Stashed changes
 =======
 used          &0 - &47EC , 18413 bytes
 free          &47ED - &47EF , 3 bytes
@@ -38,8 +43,13 @@ used          &258 - &285 , 46 bytes
 unused        &286 - &286 , 1 bytes
 ----------------------------------------------------
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 used          &287 - &47ED , 17767 bytes
 free          &47EE - &47EF , 2 bytes
+=======
+used          &287 - &47EC , 17766 bytes
+free          &47ED - &47EF , 3 bytes
+>>>>>>> Stashed changes
 =======
 used          &287 - &47EC , 17766 bytes
 free          &47ED - &47EF , 3 bytes
@@ -155,15 +165,21 @@ bootstrap     &4800 - &4957 , 344 bytes
      0034
 .enemyReleaseDir
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0035   BA 3C
      0037   E8 3C
      0039   D0 3C
      003B   D2 3C
 =======
+=======
+>>>>>>> Stashed changes
      0035   B9 3C
      0037   E7 3C
      0039   CF 3C
      003B   D1 3C
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .enemiesActive
      003D
@@ -880,7 +896,11 @@ bootstrap     &4800 - &4957 , 344 bytes
 .swrDemoCheckFront
      AEBA   A6 D9      LDX &D9
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      AEBC   20 61 26   JSR &2661
+=======
+     AEBC   20 58 26   JSR &2658
+>>>>>>> Stashed changes
 =======
      AEBC   20 58 26   JSR &2658
 >>>>>>> Stashed changes
@@ -903,7 +923,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      AED9   49 02      EOR #&02
      AEDB   AA         TAX
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      AEDC   20 61 26   JSR &2661
+=======
+     AEDC   20 58 26   JSR &2658
+>>>>>>> Stashed changes
 =======
      AEDC   20 58 26   JSR &2658
 >>>>>>> Stashed changes
@@ -920,7 +944,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      AEED   49 03      EOR #&03
      AEEF   AA         TAX
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      AEF0   20 61 26   JSR &2661
+=======
+     AEF0   20 58 26   JSR &2658
+>>>>>>> Stashed changes
 =======
      AEF0   20 58 26   JSR &2658
 >>>>>>> Stashed changes
@@ -944,7 +972,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      AF12   29 03      AND #&03
      AF14   AA         TAX
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      AF15   20 61 26   JSR &2661
+=======
+     AF15   20 58 26   JSR &2658
+>>>>>>> Stashed changes
 =======
      AF15   20 58 26   JSR &2658
 >>>>>>> Stashed changes
@@ -1414,11 +1446,19 @@ bootstrap     &4800 - &4957 , 344 bytes
      01AE   24 03      BIT &03
      01B0   30 FC      BMI &01AE
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      01B2   4C C8 27   JMP &27C8
 .waitIntLower
      01B5   24 03      BIT &03
      01B7   10 FC      BPL &01B5
      01B9   4C C8 27   JMP &27C8
+=======
+     01B2   4C C7 27   JMP &27C7
+.waitIntLower
+     01B5   24 03      BIT &03
+     01B7   10 FC      BPL &01B5
+     01B9   4C C7 27   JMP &27C7
+>>>>>>> Stashed changes
 =======
      01B2   4C C7 27   JMP &27C7
 .waitIntLower
@@ -1470,7 +1510,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      0212   85 CD      STA &CD
      0214   A9 70      LDA #&70
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0216   20 AE 27   JSR &27AE
+=======
+     0216   20 AD 27   JSR &27AD
+>>>>>>> Stashed changes
 =======
      0216   20 AD 27   JSR &27AD
 >>>>>>> Stashed changes
@@ -1483,11 +1527,19 @@ bootstrap     &4800 - &4957 , 344 bytes
      0220   CA         DEX
      0221   B9 85 80   LDA &8085,Y
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0224   20 AE 27   JSR &27AE
      0227   CA         DEX
      0228   10 F1      BPL &021B
      022A   A9 49      LDA #&49
      022C   20 AE 27   JSR &27AE
+=======
+     0224   20 AD 27   JSR &27AD
+     0227   CA         DEX
+     0228   10 F1      BPL &021B
+     022A   A9 49      LDA #&49
+     022C   20 AD 27   JSR &27AD
+>>>>>>> Stashed changes
 =======
      0224   20 AD 27   JSR &27AD
      0227   CA         DEX
@@ -1618,9 +1670,15 @@ bootstrap     &4800 - &4957 , 344 bytes
      02E7   DA
 .initPlayfieldMiddleMazeTable
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      02E8   39 45
      02EA   20 46
      02EC   07 47
+=======
+     02E8   38 45
+     02EA   1F 46
+     02EC   06 47
+>>>>>>> Stashed changes
 =======
      02E8   38 45
      02EA   1F 46
@@ -1637,7 +1695,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      02FD   B9 E9 02   LDA &02E9,Y
      0300   8D 26 03   STA &0326
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0303   A9 E1      LDA #&E1
+=======
+     0303   A9 E0      LDA #&E0
+>>>>>>> Stashed changes
 =======
      0303   A9 E0      LDA #&E0
 >>>>>>> Stashed changes
@@ -1702,6 +1764,7 @@ bootstrap     &4800 - &4957 , 344 bytes
 .initTimerTiles
      037D   A9 C2      LDA #&C2
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      037F   8D C9 3B   STA &3BC9
      0382   A9 C6      LDA #&C6
      0384   8D DF 3B   STA &3BDF
@@ -1718,6 +1781,24 @@ bootstrap     &4800 - &4957 , 344 bytes
      039D   CA         DEX
      039E   D0 F3      BNE &0393
      03A0   A9 E0      LDA #&E0
+=======
+     037F   8D C8 3B   STA &3BC8
+     0382   A9 C6      LDA #&C6
+     0384   8D DE 3B   STA &3BDE
+     0387   A9 CC      LDA #&CC
+     0389   8D C2 3D   STA &3DC2
+     038C   A9 D0      LDA #&D0
+     038E   8D D8 3D   STA &3DD8
+     0391   A2 15      LDX #&15
+.initTimerTilesHorizontal
+     0393   A9 C4      LDA #&C4
+     0395   9D C8 3B   STA &3BC8,X
+     0398   A9 CE      LDA #&CE
+     039A   9D C2 3D   STA &3DC2,X
+     039D   CA         DEX
+     039E   D0 F3      BNE &0393
+     03A0   A9 DF      LDA #&DF
+>>>>>>> Stashed changes
 =======
      037F   8D C8 3B   STA &3BC8
      0382   A9 C6      LDA #&C6
@@ -1773,9 +1854,15 @@ bootstrap     &4800 - &4957 , 344 bytes
      03DC   B0 F3      BCS &03D1
      03DE   A8         TAY
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      03DF   B9 DA 3D   LDA &3DDA,Y
      03E2   85 60      STA &60
      03E4   B9 F1 3D   LDA &3DF1,Y
+=======
+     03DF   B9 D9 3D   LDA &3DD9,Y
+     03E2   85 60      STA &60
+     03E4   B9 F0 3D   LDA &3DF0,Y
+>>>>>>> Stashed changes
 =======
      03DF   B9 D9 3D   LDA &3DD9,Y
      03E2   85 60      STA &60
@@ -1972,7 +2059,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      051B   79 F0 04   ADC &04F0,Y
      051E   85 5D      STA &5D
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0520   20 5E 27   JSR &275E
+=======
+     0520   20 5D 27   JSR &275D
+>>>>>>> Stashed changes
 =======
      0520   20 5D 27   JSR &275D
 >>>>>>> Stashed changes
@@ -2079,9 +2170,15 @@ bootstrap     &4800 - &4957 , 344 bytes
      05E4   84 A9      STY &A9
      05E6   A8         TAY
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      05E7   B9 F5 39   LDA &39F5,Y
      05EA   8D 34 06   STA &0634
      05ED   B9 57 3A   LDA &3A57,Y
+=======
+     05E7   B9 F4 39   LDA &39F4,Y
+     05EA   8D 34 06   STA &0634
+     05ED   B9 56 3A   LDA &3A56,Y
+>>>>>>> Stashed changes
 =======
      05E7   B9 F4 39   LDA &39F4,Y
      05EA   8D 34 06   STA &0634
@@ -2098,9 +2195,15 @@ bootstrap     &4800 - &4957 , 344 bytes
 .drawMapTileCalcAddr4pixel
      0600   A8         TAY
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0601   B9 8B 39   LDA &398B,Y
      0604   8D 34 06   STA &0634
      0607   B9 AD 39   LDA &39AD,Y
+=======
+     0601   B9 8A 39   LDA &398A,Y
+     0604   8D 34 06   STA &0634
+     0607   B9 AC 39   LDA &39AC,Y
+>>>>>>> Stashed changes
 =======
      0601   B9 8A 39   LDA &398A,Y
      0604   8D 34 06   STA &0634
@@ -2119,9 +2222,15 @@ bootstrap     &4800 - &4957 , 344 bytes
      061D   B0 3B      BCS &065A
      061F   A8         TAY
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0620   B9 8B 39   LDA &398B,Y
      0623   8D 34 06   STA &0634
      0626   B9 AD 39   LDA &39AD,Y
+=======
+     0620   B9 8A 39   LDA &398A,Y
+     0623   8D 34 06   STA &0634
+     0626   B9 AC 39   LDA &39AC,Y
+>>>>>>> Stashed changes
 =======
      0620   B9 8A 39   LDA &398A,Y
      0623   8D 34 06   STA &0634
@@ -2160,9 +2269,15 @@ bootstrap     &4800 - &4957 , 344 bytes
      065B   E9 22      SBC #&22
      065D   A8         TAY
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      065E   B9 CF 39   LDA &39CF,Y
      0661   8D 34 06   STA &0634
      0664   B9 E2 39   LDA &39E2,Y
+=======
+     065E   B9 CE 39   LDA &39CE,Y
+     0661   8D 34 06   STA &0634
+     0664   B9 E1 39   LDA &39E1,Y
+>>>>>>> Stashed changes
 =======
      065E   B9 CE 39   LDA &39CE,Y
      0661   8D 34 06   STA &0634
@@ -2210,7 +2325,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      06B2   18         CLC
      06B3   AD CB 06   LDA &06CB
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      06B6   69 EB      ADC #&EB
+=======
+     06B6   69 EA      ADC #&EA
+>>>>>>> Stashed changes
 =======
      06B6   69 EA      ADC #&EA
 >>>>>>> Stashed changes
@@ -2265,8 +2384,13 @@ bootstrap     &4800 - &4957 , 344 bytes
      070B   20 82 0A   JSR &0A82
 .gameIntroScreen
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      070E   20 9C 27   JSR &279C
      0711   20 F1 10   JSR &10F1
+=======
+     070E   20 9B 27   JSR &279B
+     0711   20 E6 10   JSR &10E6
+>>>>>>> Stashed changes
 =======
      070E   20 9B 27   JSR &279B
      0711   20 E6 10   JSR &10E6
@@ -2329,6 +2453,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      0792   20 14 01   JSR &0114
      0795   20 3C 02   JSR &023C
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0798   20 6C 26   JSR &266C
      079B   20 19 27   JSR &2719
      079E   20 14 1C   JSR &1C14
@@ -2336,6 +2461,15 @@ bootstrap     &4800 - &4957 , 344 bytes
      07A4   20 4B 17   JSR &174B
      07A7   B0 09      BCS &07B2
      07A9   20 B9 24   JSR &24B9
+=======
+     0798   20 63 26   JSR &2663
+     079B   20 18 27   JSR &2718
+     079E   20 09 1C   JSR &1C09
+     07A1   20 A8 21   JSR &21A8
+     07A4   20 40 17   JSR &1740
+     07A7   B0 09      BCS &07B2
+     07A9   20 B0 24   JSR &24B0
+>>>>>>> Stashed changes
 =======
      0798   20 63 26   JSR &2663
      079B   20 18 27   JSR &2718
@@ -2450,9 +2584,15 @@ bootstrap     &4800 - &4957 , 344 bytes
      0878   20 10 0D   JSR &0D10
      087B   A9 0D      LDA #&0D
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      087D   20 E2 22   JSR &22E2
      0880   20 9C 27   JSR &279C
      0883   4C 46 16   JMP &1646
+=======
+     087D   20 D7 22   JSR &22D7
+     0880   20 9B 27   JSR &279B
+     0883   4C 3B 16   JMP &163B
+>>>>>>> Stashed changes
 =======
      087D   20 D7 22   JSR &22D7
      0880   20 9B 27   JSR &279B
@@ -2608,7 +2748,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      097B   4C 3C 0A   JMP &0A3C
 .moveSpritesGetMapAddr
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0998   20 5E 27   JSR &275E
+=======
+     097E   20 5D 27   JSR &275D
+>>>>>>> Stashed changes
 =======
      097E   20 5D 27   JSR &275D
 >>>>>>> Stashed changes
@@ -2618,6 +2762,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      0985   C9 2C      CMP #&2C
      0987   D0 1D      BNE &09A6
 .moveSpritesKillEnemy
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      09A3   A9 00      LDA #&00
      09A5   91 60      STA (&60),Y
@@ -2632,6 +2777,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      09BA   20 7E 1C   JSR &1C7E
      09BD   4C 5D 0A   JMP &0A5D
 =======
+=======
+>>>>>>> Stashed changes
      0989   A9 00      LDA #&00
      098B   91 60      STA (&60),Y
      098D   20 4B 27   JSR &274B
@@ -2644,6 +2791,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      099E   95 7C      STA &7C,X
      09A0   20 73 1C   JSR &1C73
      09A3   4C 3C 0A   JMP &0A3C
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .moveSpritesEnemyAi
      09A6   A2 03      LDX #&03
@@ -2879,6 +3029,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      0B1B   3C
 .drawPlayfieldLower
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0B27   AD D5 43   LDA &43D5
      0B2A   18         CLC
      0B2B   69 0A      ADC #&0A
@@ -2924,6 +3075,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      0B7F   20 E2 05   JSR &05E2
      0B82   20 CB 04   JSR &04CB
 =======
+=======
+>>>>>>> Stashed changes
      0B1C   AD D4 43   LDA &43D4
      0B1F   18         CLC
      0B20   69 0A      ADC #&0A
@@ -2968,6 +3121,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      0B72   A9 00      LDA #&00
      0B74   20 E2 05   JSR &05E2
      0B77   20 CB 04   JSR &04CB
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawDemoModeOrName
      0B7A   A5 D8      LDA &D8
@@ -3003,6 +3159,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      0BB8   A2 00      LDX #&00
 .drawPlayfieldMiddleLoop0
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0BC5   BD C9 3B   LDA &3BC9,X
      0BC8   20 15 06   JSR &0615
      0BCB   E8         INX
@@ -3030,12 +3187,27 @@ bootstrap     &4800 - &4957 , 344 bytes
      0BC9   E8         INX
      0BCA   D0 F7      BNE &0BC3
 .drawPlayfieldMiddleLoop2
+=======
+     0BBA   BD C8 3B   LDA &3BC8,X
+     0BBD   20 15 06   JSR &0615
+     0BC0   E8         INX
+     0BC1   D0 F7      BNE &0BBA
+.drawPlayfieldMiddleLoop1
+     0BC3   BD C8 3C   LDA &3CC8,X
+     0BC6   20 15 06   JSR &0615
+     0BC9   E8         INX
+     0BCA   D0 F7      BNE &0BC3
+.drawPlayfieldMiddleLoop2
+>>>>>>> Stashed changes
      0BCC   BD C8 3D   LDA &3DC8,X
      0BCF   20 15 06   JSR &0615
      0BD2   E8         INX
      0BD3   E0 11      CPX #&11
      0BD5   D0 F5      BNE &0BCC
      0BD7   60         RTS
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawBonusItemCenter
      0BD8   A5 1C      LDA &1C
@@ -3097,6 +3269,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      0C49   85 56      STA &56
 .drawSpriteGetAddr
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0C56   20 B9 1B   JSR &1BB9
      0C59   A5 97      LDA &97
      0C5B   A8         TAY
@@ -3105,6 +3278,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      0C62   B9 8C 44   LDA &448C,Y
      0C65   8D 7B 0C   STA &0C7B
 =======
+=======
+>>>>>>> Stashed changes
      0C4B   20 AE 1B   JSR &1BAE
      0C4E   A5 97      LDA &97
      0C50   A8         TAY
@@ -3112,6 +3287,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      0C54   8D 6F 0C   STA &0C6F
      0C57   B9 8B 44   LDA &448B,Y
      0C5A   8D 70 0C   STA &0C70
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawSpriteColumn
      0C5D   A5 99      LDA &99
@@ -3257,6 +3435,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      0D30   29 0F      AND #&0F
 .drawChrMini
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0D3D   86 50      STX &50
      0D3F   84 51      STY &51
      0D41   0A         ASL A
@@ -3270,6 +3449,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      0D4E   8D 55 0D   STA &0D55
      0D51   A0 0F      LDY #&0F
 =======
+=======
+>>>>>>> Stashed changes
      0D32   86 50      STX &50
      0D34   84 51      STY &51
      0D36   0A         ASL A
@@ -3282,6 +3463,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      0D41   69 2A      ADC #&2A
      0D43   8D 4A 0D   STA &0D4A
      0D46   A0 0F      LDY #&0F
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawChrMiniLoop
      0D48   B9 00 FF   LDA &FF00,Y
@@ -3361,6 +3545,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      0DC7   20 80 05   JSR &0580
 .pauseTimersUpdateVegetableScore
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0DD5   A5 1E      LDA &1E
      0DD7   F0 20      BEQ &0DF9
      0DD9   A9 00      LDA #&00
@@ -3376,6 +3561,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      0DF3   AD D2 3C   LDA &3CD2
      0DF6   20 15 06   JSR &0615
 =======
+=======
+>>>>>>> Stashed changes
      0DCA   A5 1E      LDA &1E
      0DCC   F0 20      BEQ &0DEE
      0DCE   A9 00      LDA #&00
@@ -3390,6 +3577,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      0DE5   20 15 06   JSR &0615
      0DE8   AD D1 3C   LDA &3CD1
      0DEB   20 15 06   JSR &0615
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .pauseTimersUpdateEnemy
      0DEE   A5 2E      LDA &2E
@@ -3602,6 +3792,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      0FAF   60         RTS
 .ladybugDeathAnimationDrawAngel
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      0FBB   A5 77      LDA &77
      0FBD   C9 55      CMP #&55
      0FBF   6A         ROR A
@@ -3664,6 +3855,23 @@ bootstrap     &4800 - &4957 , 344 bytes
      0FC8   A0 00      LDY #&00
      0FCA   A2 03      LDX #&03
 .ladybugDeathAnimationDrawTiles
+=======
+     0FB0   A5 77      LDA &77
+     0FB2   C9 55      CMP #&55
+     0FB4   6A         ROR A
+     0FB5   45 03      EOR &03
+     0FB7   10 EB      BPL &0FA4
+     0FB9   A5 72      LDA &72
+     0FBB   85 5C      STA &5C
+     0FBD   85 98      STA &98
+     0FBF   A5 77      LDA &77
+     0FC1   85 5D      STA &5D
+     0FC3   85 99      STA &99
+     0FC5   20 5D 27   JSR &275D
+     0FC8   A0 00      LDY #&00
+     0FCA   A2 03      LDX #&03
+.ladybugDeathAnimationDrawTiles
+>>>>>>> Stashed changes
      0FCC   B1 60      LDA (&60),Y
      0FCE   20 15 06   JSR &0615
      0FD1   C8         INY
@@ -3695,6 +3903,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      1005   29 04      AND #&04
      1007   D0 02      BNE &100B
      1009   E6 97      INC &97
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .ladybugDeathAnimationDrawAngelSprite
      100B   20 13 0C   JSR &0C13
@@ -3882,6 +4093,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      112D   60         RTS
 .mainMenuDrawCursor
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1139   A4 C9      LDY &C9
      113B   18         CLC
      113C   B9 B9 3A   LDA &3AB9,Y
@@ -3926,6 +4138,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      119B   85 C9      STA &C9
      119D   60         RTS
 =======
+=======
+>>>>>>> Stashed changes
      112E   A4 C9      LDY &C9
      1130   18         CLC
      1131   B9 B8 3A   LDA &3AB8,Y
@@ -3969,6 +4183,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      118E   A5 C8      LDA &C8
      1190   85 C9      STA &C9
      1192   60         RTS
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .mainMenuFunctions
      1193   20 B5 01   JSR &01B5
@@ -4264,6 +4481,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      13B8   A0 00      LDY #&00
 .mainMenuDrawLogoY
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      13C5   18         CLC
      13C6   A9 60      LDA #&60
      13C8   79 BB 3A   ADC &3ABB,Y
@@ -4273,6 +4491,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      13D3   8D 38 06   STA &0638
      13D6   A2 00      LDX #&00
 =======
+=======
+>>>>>>> Stashed changes
      13BA   18         CLC
      13BB   A9 60      LDA #&60
      13BD   79 BA 3A   ADC &3ABA,Y
@@ -4281,6 +4501,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      13C5   79 D3 3A   ADC &3AD3,Y
      13C8   8D 38 06   STA &0638
      13CB   A2 00      LDX #&00
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .mainMenuDrawLogoX
      13CD   AD 00 FF   LDA &FF00
@@ -4486,6 +4709,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1574   A2 03      LDX #&03
 .mainMenuDrawEnemiesLoop
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1581   BD 6E 15   LDA &156E,X
      1584   95 73      STA &73,X
      1586   BD 72 15   LDA &1572,X
@@ -4552,6 +4776,31 @@ bootstrap     &4800 - &4957 , 344 bytes
      159D   85 43      STA &43
      159F   60         RTS
 .drawFlowers
+=======
+     1576   BD 63 15   LDA &1563,X
+     1579   95 73      STA &73,X
+     157B   BD 67 15   LDA &1567,X
+     157E   95 78      STA &78,X
+     1580   A5 43      LDA &43
+     1582   29 07      AND #&07
+     1584   A8         TAY
+     1585   B9 D5 43   LDA &43D5,Y
+     1588   95 6E      STA &6E,X
+     158A   A5 44      LDA &44
+     158C   29 03      AND #&03
+     158E   09 04      ORA #&04
+     1590   95 7D      STA &7D,X
+     1592   E6 43      INC &43
+     1594   E6 44      INC &44
+     1596   CA         DEX
+     1597   10 DD      BPL &1576
+     1599   68         PLA
+     159A   85 44      STA &44
+     159C   68         PLA
+     159D   85 43      STA &43
+     159F   60         RTS
+.drawFlowers
+>>>>>>> Stashed changes
      15A0   48         PHA
      15A1   A8         TAY
      15A2   B9 B8 3A   LDA &3AB8,Y
@@ -4571,6 +4820,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      15C1   B9 D1 3A   LDA &3AD1,Y
      15C4   69 01      ADC #&01
      15C6   8D 38 06   STA &0638
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawRandomFlower
      15C9   20 00 01   JSR &0100
@@ -5007,6 +5259,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1955   4C 15 1A   JMP &1A15
 .nameRegProcessDelete
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1963   C9 1E      CMP #&1E
      1965   D0 2D      BNE &1994
      1967   A4 C7      LDY &C7
@@ -5075,6 +5328,31 @@ bootstrap     &4800 - &4957 , 344 bytes
      1983   20 D7 22   JSR &22D7
      1986   4C 47 19   JMP &1947
 .nameRegProcessChr
+=======
+     1958   C9 1E      CMP #&1E
+     195A   D0 2D      BNE &1989
+     195C   A4 C7      LDY &C7
+     195E   F0 E7      BEQ &1947
+     1960   88         DEY
+     1961   84 C7      STY &C7
+     1963   A9 20      LDA #&20
+     1965   91 0C      STA (&0C),Y
+     1967   18         CLC
+     1968   B9 EA 3A   LDA &3AEA,Y
+     196B   69 42      ADC #&42
+     196D   8D E8 06   STA &06E8
+     1970   B9 01 3B   LDA &3B01,Y
+     1973   69 60      ADC #&60
+     1975   8D E9 06   STA &06E9
+     1978   A9 30      LDA #&30
+     197A   85 4F      STA &4F
+     197C   A9 2D      LDA #&2D
+     197E   20 91 06   JSR &0691
+     1981   A9 08      LDA #&08
+     1983   20 D7 22   JSR &22D7
+     1986   4C 47 19   JMP &1947
+.nameRegProcessChr
+>>>>>>> Stashed changes
      1989   A4 C7      LDY &C7
      198B   C0 0A      CPY #&0A
      198D   F0 B8      BEQ &1947
@@ -5096,6 +5374,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      19B2   A9 05      LDA #&05
      19B4   20 D7 22   JSR &22D7
      19B7   4C 47 19   JMP &1947
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .nameRegCursorErase
      19BA   A9 0A      LDA #&0A
@@ -5175,6 +5456,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1A6D   4C E2 05   JMP &05E2
 .nameRegCursorAddr
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1A7B   A5 C6      LDA &C6
      1A7D   29 38      AND #&38
      1A7F   4A         LSR A
@@ -5196,6 +5478,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      1AA0   85 C6      STA &C6
      1AA2   60         RTS
 =======
+=======
+>>>>>>> Stashed changes
      1A70   A5 C6      LDA &C6
      1A72   29 38      AND #&38
      1A74   4A         LSR A
@@ -5216,6 +5500,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      1A93   A5 C5      LDA &C5
      1A95   85 C6      STA &C6
      1A97   60         RTS
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .checkBonus
      1A98   A5 0F      LDA &0F
@@ -5325,6 +5612,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1B5A   60         RTS
 .changeTimerTile
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1B66   A5 3E      LDA &3E
      1B68   0A         ASL A
      1B69   A8         TAY
@@ -5370,6 +5658,25 @@ bootstrap     &4800 - &4957 , 344 bytes
      1B79   8D 83 1B   STA &1B83
      1B7C   A9 01      LDA #&01
 .changeTimerTileFlip
+=======
+     1B5B   A5 3E      LDA &3E
+     1B5D   0A         ASL A
+     1B5E   A8         TAY
+     1B5F   BE 18 3B   LDX &3B18,Y
+     1B62   B9 19 3B   LDA &3B19,Y
+     1B65   A8         TAY
+     1B66   18         CLC
+     1B67   8A         TXA
+     1B68   79 D9 3D   ADC &3DD9,Y
+     1B6B   8D 7F 1B   STA &1B7F
+     1B6E   8D 82 1B   STA &1B82
+     1B71   A9 00      LDA #&00
+     1B73   79 F0 3D   ADC &3DF0,Y
+     1B76   8D 80 1B   STA &1B80
+     1B79   8D 83 1B   STA &1B83
+     1B7C   A9 01      LDA #&01
+.changeTimerTileFlip
+>>>>>>> Stashed changes
      1B7E   4D 00 FF   EOR &FF00
      1B81   8D 00 FF   STA &FF00
      1B84   8D 9B 1B   STA &1B9B
@@ -5380,6 +5687,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      1B91   B9 D1 3A   LDA &3AD1,Y
      1B94   7D 01 3B   ADC &3B01,X
      1B97   8D 38 06   STA &0638
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .changeTimerTileDraw
      1B9A   A9 FF      LDA #&FF
@@ -5418,6 +5728,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1BD2   85 97      STA &97
 .spriteToScreenTruncateX
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1BDF   A5 9A      LDA &9A
      1BE1   29 F8      AND #&F8
      1BE3   85 9A      STA &9A
@@ -5440,6 +5751,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      1C01   A6 9E      LDX &9E
      1C03   60         RTS
 =======
+=======
+>>>>>>> Stashed changes
      1BD4   A5 9A      LDA &9A
      1BD6   29 F8      AND #&F8
      1BD8   85 9A      STA &9A
@@ -5461,6 +5774,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      1BF4   A4 9F      LDY &9F
      1BF6   A6 9E      LDX &9E
      1BF8   60         RTS
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .skullColorUpdateTable
      1BF9   E6
@@ -5507,6 +5823,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1C30   D0 F5      BNE &1C27
 .enemyReleaseTime
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1C3D   8A         TXA
      1C3E   29 03      AND #&03
      1C40   0A         ASL A
@@ -5524,6 +5841,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      1C5A   8A         TXA
      1C5B   A8         TAY
 =======
+=======
+>>>>>>> Stashed changes
      1C32   8A         TXA
      1C33   29 03      AND #&03
      1C35   0A         ASL A
@@ -5540,6 +5859,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      1C4D   30 11      BMI &1C60
      1C4F   8A         TXA
      1C50   A8         TAY
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .enemyReleaseChooseDirection
      1C51   20 00 01   JSR &0100
@@ -5588,6 +5910,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1C95   86 42      STX &42
 .enemySpawnRandom
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1CA2   20 00 01   JSR &0100
      1CA5   29 07      AND #&07
      1CA7   A8         TAY
@@ -5595,12 +5918,17 @@ bootstrap     &4800 - &4957 , 344 bytes
      1CA9   B9 D5 43   LDA &43D5,Y
      1CAC   A2 04      LDX #&04
 =======
+=======
+>>>>>>> Stashed changes
      1C97   20 00 01   JSR &0100
      1C9A   29 07      AND #&07
      1C9C   A8         TAY
      1C9D   C8         INY
      1C9E   B9 D4 43   LDA &43D4,Y
      1CA1   A2 04      LDX #&04
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .enemySpawnCheckImage
      1CA3   D5 6D      CMP &6D,X
@@ -5611,8 +5939,13 @@ bootstrap     &4800 - &4957 , 344 bytes
      1CAC   D0 04      BNE &1CB2
 .enemySpawnLevelImage
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1CB9   A8         TAY
      1CBA   B9 D5 43   LDA &43D5,Y
+=======
+     1CAE   A8         TAY
+     1CAF   B9 D4 43   LDA &43D4,Y
+>>>>>>> Stashed changes
 =======
      1CAE   A8         TAY
      1CAF   B9 D4 43   LDA &43D4,Y
@@ -5631,6 +5964,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1CC4   60         RTS
 .ladybugSpawn
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1CD0   A9 00      LDA #&00
      1CD2   85 10      STA &10
      1CD4   AD D5 43   LDA &43D5
@@ -5645,6 +5979,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      1CE7   85 77      STA &77
      1CE9   60         RTS
 =======
+=======
+>>>>>>> Stashed changes
      1CC5   A9 00      LDA #&00
      1CC7   85 10      STA &10
      1CC9   AD D4 43   LDA &43D4
@@ -5658,6 +5994,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      1CDA   A9 88      LDA #&88
      1CDC   85 77      STA &77
      1CDE   60         RTS
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .ladybugSpawnEntry
      1CDF   A9 00      LDA #&00
@@ -5773,6 +6112,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1D98   60         RTS
 .drawLevelIntro
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1DA4   A9 4B      LDA #&4B
      1DA6   85 01      STA &01
      1DA8   20 86 08   JSR &0886
@@ -5821,6 +6161,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      1E0B   8D 38 06   STA &0638
      1E0E   A6 25      LDX &25
 =======
+=======
+>>>>>>> Stashed changes
      1D99   A9 4B      LDA #&4B
      1D9B   85 01      STA &01
      1D9D   20 86 08   JSR &0886
@@ -5868,6 +6210,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      1DFE   A9 60      LDA #&60
      1E00   8D 38 06   STA &0638
      1E03   A6 25      LDX &25
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawLevelIntroSkullAddr
      1E05   38         SEC
@@ -5961,6 +6306,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      1EC0   A2 03      LDX #&03
 .drawBonusGraphicsSkulls
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      1ECD   A9 2C      LDA #&2C
      1ECF   20 52 06   JSR &0652
      1ED2   CA         DEX
@@ -5970,6 +6316,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      1EDA   8D 8C 3C   STA &3C8C
      1EDD   8D 8E 3C   STA &3C8E
 =======
+=======
+>>>>>>> Stashed changes
      1EC2   A9 2C      LDA #&2C
      1EC4   20 52 06   JSR &0652
      1EC7   CA         DEX
@@ -5978,6 +6326,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      1ECC   8D 89 3C   STA &3C89
      1ECF   8D 8B 3C   STA &3C8B
      1ED2   8D 8D 3C   STA &3C8D
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawBonusGraphicsFlowers
      1ED5   A2 00      LDX #&00
@@ -6168,6 +6519,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      2077   60         RTS
 .drawCongratulations
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      2083   18         CLC
      2084   A9 5A      LDA #&5A
      2086   79 B9 3A   ADC &3AB9,Y
@@ -6177,6 +6529,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      2091   8D 98 20   STA &2098
      2094   20 08 22   JSR &2208
 =======
+=======
+>>>>>>> Stashed changes
      2078   18         CLC
      2079   A9 5A      LDA #&5A
      207B   79 B8 3A   ADC &3AB8,Y
@@ -6185,6 +6539,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      2083   79 D1 3A   ADC &3AD1,Y
      2086   8D 8D 20   STA &208D
      2089   20 FD 21   JSR &21FD
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawCongratulationsText
      208C   00 FF
@@ -6378,6 +6735,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      2157   8D
 .animateLadybugInitialize
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      2163   0A         ASL A
      2164   0A         ASL A
      2165   A8         TAY
@@ -6400,6 +6758,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      2188   85 C1      STA &C1
      218A   60         RTS
 =======
+=======
+>>>>>>> Stashed changes
      2158   0A         ASL A
      2159   0A         ASL A
      215A   A8         TAY
@@ -6421,6 +6781,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      217B   A9 FF      LDA #&FF
      217D   85 C1      STA &C1
      217F   60         RTS
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .animateLadybug
      2180   A5 C1      LDA &C1
@@ -6485,6 +6848,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      21EE   A9 00      LDA #&00
 .clearTileMapLoop
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      21FB   9D C9 3B   STA &3BC9,X
      21FE   9D C9 3C   STA &3CC9,X
      2201   9D DA 3C   STA &3CDA,X
@@ -6492,12 +6856,17 @@ bootstrap     &4800 - &4957 , 344 bytes
      2205   D0 F4      BNE &21FB
      2207   60         RTS
 =======
+=======
+>>>>>>> Stashed changes
      21F0   9D C8 3B   STA &3BC8,X
      21F3   9D C8 3C   STA &3CC8,X
      21F6   9D D9 3C   STA &3CD9,X
      21F9   E8         INX
      21FA   D0 F4      BNE &21F0
      21FC   60         RTS
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .drawString
      21FD   84 49      STY &49
@@ -6646,6 +7015,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      22D5   69 01      ADC #&01
 .playSound
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      22E2   85 BE      STA &BE
      22E4   86 BF      STX &BF
      22E6   84 C0      STY &C0
@@ -6665,6 +7035,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      22FF   20 BE 22   JSR &22BE
      2302   4C 31 23   JMP &2331
 =======
+=======
+>>>>>>> Stashed changes
      22D7   85 BE      STA &BE
      22D9   86 BF      STX &BF
      22DB   84 C0      STY &C0
@@ -6683,6 +7055,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      22F2   D0 06      BNE &22FA
      22F4   20 B3 22   JSR &22B3
      22F7   4C 26 23   JMP &2326
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .playSoundLowPriority
      22FA   A5 B6      LDA &B6
@@ -6774,6 +7149,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      238F   4C ED 0C   JMP &0CED
 .checkForObjectTile
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      239D   20 4C 27   JSR &274C
      23A0   A0 18      LDY #&18
      23A2   B1 60      LDA (&60),Y
@@ -6788,6 +7164,8 @@ bootstrap     &4800 - &4957 , 344 bytes
      23B4   C9 2C      CMP #&2C
      23B6   90 6D      BCC &2425
 =======
+=======
+>>>>>>> Stashed changes
      2392   20 4B 27   JSR &274B
      2395   A0 18      LDY #&18
      2397   B1 60      LDA (&60),Y
@@ -6801,6 +7179,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      23A7   90 04      BCC &23AD
      23A9   C9 2C      CMP #&2C
      23AB   90 6D      BCC &241A
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .checkForObjectTileExit
      23AD   60         RTS
@@ -6929,6 +7310,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      2479   A2 04      LDX #&04
      247B   A9 0C      LDA #&0C
 .ladybugKillEnemies
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      2488   95 7C      STA &7C,X
      248A   CA         DEX
@@ -8248,10 +8630,674 @@ bootstrap     &4800 - &4957 , 344 bytes
      39AA   CA
      39AB   E2
 .mapTileAddrHi
+=======
+     247D   95 7C      STA &7C,X
+     247F   CA         DEX
+     2480   D0 FB      BNE &247D
+     2482   A9 00      LDA #&00
+     2484   85 33      STA &33
+     2486   85 1C      STA &1C
+     2488   85 16      STA &16
+     248A   20 FE AD   JSR &ADFE
+     248D   A9 58      LDA #&58
+     248F   85 98      STA &98
+     2491   A9 58      LDA #&58
+     2493   85 99      STA &99
+     2495   20 80 05   JSR &0580
+     2498   A9 FF      LDA #&FF
+     249A   85 10      STA &10
+     249C   F8         SED
+     249D   38         SEC
+     249E   A5 0E      LDA &0E
+     24A0   E9 01      SBC #&01
+     24A2   85 0E      STA &0E
+     24A4   D8         CLD
+     24A5   A9 FF      LDA #&FF
+     24A7   85 2D      STA &2D
+     24A9   85 2E      STA &2E
+     24AB   A9 0B      LDA #&0B
+     24AD   4C D7 22   JMP &22D7
+.ladybugUpdate
+     24B0   A5 2D      LDA &2D
+     24B2   D0 04      BNE &24B8
+     24B4   A5 0F      LDA &0F
+     24B6   F0 01      BEQ &24B9
+.ladybugUpdateReturn
+     24B8   60         RTS
+.ladybugUpdateInit
+     24B9   A5 7C      LDA &7C
+     24BB   09 04      ORA #&04
+     24BD   85 7C      STA &7C
+     24BF   29 FB      AND #&FB
+     24C1   85 D0      STA &D0
+     24C3   A9 FF      LDA #&FF
+     24C5   85 D1      STA &D1
+     24C7   85 D2      STA &D2
+     24C9   85 D5      STA &D5
+     24CB   85 D6      STA &D6
+     24CD   A5 72      LDA &72
+     24CF   85 5C      STA &5C
+     24D1   29 0F      AND #&0F
+     24D3   49 08      EOR #&08
+     24D5   85 D3      STA &D3
+     24D7   A5 77      LDA &77
+     24D9   85 5D      STA &5D
+     24DB   29 0F      AND #&0F
+     24DD   49 08      EOR #&08
+     24DF   85 D4      STA &D4
+     24E1   20 5D 27   JSR &275D
+     24E4   20 4B 23   JSR &234B
+.ladybugUpdateInput
+     24E7   20 88 AE   JSR &AE88
+.ladybugUpdateInputStart
+     24EA   46 CD      LSR &CD
+.ladybugUpdateInputLeft
+     24EC   46 CD      LSR &CD
+     24EE   90 0E      BCC &24FE
+     24F0   A2 02      LDX #&02
+     24F2   A5 D4      LDA &D4
+     24F4   D0 04      BNE &24FA
+     24F6   86 D1      STX &D1
+     24F8   F0 04      BEQ &24FE
+.ladybugUpdateInputLeftAlign
+     24FA   A5 D0      LDA &D0
+     24FC   85 D2      STA &D2
+.ladybugUpdateInputDown
+     24FE   46 CD      LSR &CD
+     2500   90 0E      BCC &2510
+     2502   A2 01      LDX #&01
+     2504   A5 D3      LDA &D3
+     2506   D0 04      BNE &250C
+     2508   86 D2      STX &D2
+     250A   F0 04      BEQ &2510
+.ladybugUpdateInputDownAlign
+     250C   A5 D0      LDA &D0
+     250E   85 D1      STA &D1
+.ladybugUpdateInputUp
+     2510   46 CD      LSR &CD
+     2512   90 0E      BCC &2522
+     2514   A2 00      LDX #&00
+     2516   A5 D3      LDA &D3
+     2518   D0 04      BNE &251E
+     251A   86 D2      STX &D2
+     251C   F0 04      BEQ &2522
+.ladybugUpdateInputUpAlign
+     251E   A5 D0      LDA &D0
+     2520   85 D1      STA &D1
+.ladybugUpdateInputRight
+     2522   46 CD      LSR &CD
+     2524   90 0E      BCC &2534
+     2526   A2 03      LDX #&03
+     2528   A5 D4      LDA &D4
+     252A   D0 04      BNE &2530
+     252C   86 D1      STX &D1
+     252E   F0 04      BEQ &2534
+.ladybugUpdateInputRightAlign
+     2530   A5 D0      LDA &D0
+     2532   85 D2      STA &D2
+.ladybugUpdateCheckGrid
+     2534   A5 D3      LDA &D3
+     2536   05 D4      ORA &D4
+     2538   F0 15      BEQ &254F
+.ladybugUpdateOffGridX
+     253A   A6 D1      LDX &D1
+     253C   30 02      BMI &2540
+     253E   10 04      BPL &2544
+.ladybugUpdateOffGridY
+     2540   A6 D2      LDX &D2
+     2542   30 0A      BMI &254E
+.ladybugUpdateNewDirection
+     2544   A5 7C      LDA &7C
+     2546   29 08      AND #&08
+     2548   86 7C      STX &7C
+     254A   05 7C      ORA &7C
+     254C   85 7C      STA &7C
+.ladybugUpdateExit
+     254E   60         RTS
+.ladybugUpdateOnGrid
+.ladybugUpdateOnGridX
+     254F   A6 D1      LDX &D1
+     2551   30 0B      BMI &255E
+     2553   20 58 26   JSR &2658
+     2556   84 D5      STY &D5
+     2558   D0 04      BNE &255E
+     255A   A9 FF      LDA #&FF
+     255C   85 D5      STA &D5
+.ladybugUpdateOnGridY
+     255E   A6 D2      LDX &D2
+     2560   30 0B      BMI &256D
+     2562   20 58 26   JSR &2658
+     2565   84 D6      STY &D6
+     2567   D0 04      BNE &256D
+     2569   A9 FF      LDA #&FF
+     256B   85 D6      STA &D6
+.ladybugUpdateCheckDualTile
+     256D   A5 D5      LDA &D5
+     256F   C9 FF      CMP #&FF
+     2571   F0 2A      BEQ &259D
+     2573   A5 D6      LDA &D6
+     2575   C9 FF      CMP #&FF
+     2577   F0 14      BEQ &258D
+.ladybugUpdateCheckDualTileX
+     2579   A5 D1      LDA &D1
+     257B   C5 D0      CMP &D0
+     257D   D0 04      BNE &2583
+     257F   A9 FF      LDA #&FF
+     2581   85 D5      STA &D5
+.ladybugUpdateCheckDualTileY
+     2583   A5 D2      LDA &D2
+     2585   C5 D0      CMP &D0
+     2587   D0 04      BNE &258D
+     2589   A9 FF      LDA #&FF
+     258B   85 D6      STA &D6
+.ladybugUpdateCheckTileX
+     258D   A5 D5      LDA &D5
+     258F   C9 FF      CMP #&FF
+     2591   F0 0A      BEQ &259D
+     2593   85 D7      STA &D7
+     2595   A6 D1      LDX &D1
+     2597   20 44 25   JSR &2544
+     259A   4C AA 25   JMP &25AA
+.ladybugUpdateCheckTileY
+     259D   A5 D6      LDA &D6
+     259F   C9 FF      CMP #&FF
+     25A1   F0 AB      BEQ &254E
+     25A3   85 D7      STA &D7
+     25A5   A6 D2      LDX &D2
+     25A7   20 44 25   JSR &2544
+.ladybugUpdateTurnstile
+     25AA   A5 D7      LDA &D7
+     25AC   29 C0      AND #&C0
+     25AE   C9 80      CMP #&80
+     25B0   D0 9C      BNE &254E
+     25B2   A5 D7      LDA &D7
+     25B4   A0 00      LDY #&00
+     25B6   C9 9F      CMP #&9F
+     25B8   F0 0B      BEQ &25C5
+     25BA   C8         INY
+     25BB   C9 9E      CMP #&9E
+     25BD   F0 06      BEQ &25C5
+     25BF   C8         INY
+     25C0   C9 A1      CMP #&A1
+     25C2   F0 01      BEQ &25C5
+     25C4   C8         INY
+.ladybugUpdateTurnstilePush
+     25C5   84 D7      STY &D7
+     25C7   8A         TXA
+     25C8   29 03      AND #&03
+     25CA   0A         ASL A
+     25CB   0A         ASL A
+     25CC   05 D7      ORA &D7
+     25CE   A8         TAY
+     25CF   A5 72      LDA &72
+     25D1   18         CLC
+     25D2   79 38 26   ADC &2638,Y
+     25D5   85 5C      STA &5C
+     25D7   A5 77      LDA &77
+     25D9   18         CLC
+     25DA   79 48 26   ADC &2648,Y
+     25DD   85 5D      STA &5D
+     25DF   20 5D 27   JSR &275D
+     25E2   AD 37 06   LDA &0637
+     25E5   85 57      STA &57
+     25E7   AD 38 06   LDA &0638
+     25EA   85 58      STA &58
+     25EC   8A         TXA
+     25ED   29 02      AND #&02
+     25EF   D0 22      BNE &2613
+.ladybugUpdateTurnstileVertical
+     25F1   A9 9F      LDA #&9F
+     25F3   A0 01      LDY #&01
+     25F5   91 60      STA (&60),Y
+     25F7   A9 DC      LDA #&DC
+     25F9   A0 18      LDY #&18
+     25FB   91 60      STA (&60),Y
+     25FD   A9 9E      LDA #&9E
+     25FF   A0 2F      LDY #&2F
+     2601   91 60      STA (&60),Y
+     2603   A9 00      LDA #&00
+     2605   A0 17      LDY #&17
+     2607   91 60      STA (&60),Y
+     2609   A0 19      LDY #&19
+     260B   91 60      STA (&60),Y
+     260D   A9 00      LDA #&00
+     260F   85 59      STA &59
+     2611   F0 20      BEQ &2633
+.ladybugUpdateTurnstileHorizontal
+     2613   A9 A1      LDA #&A1
+     2615   A0 17      LDY #&17
+     2617   91 60      STA (&60),Y
+     2619   A9 DD      LDA #&DD
+     261B   A0 18      LDY #&18
+     261D   91 60      STA (&60),Y
+     261F   A9 A0      LDA #&A0
+     2621   A0 19      LDY #&19
+     2623   91 60      STA (&60),Y
+     2625   A9 00      LDA #&00
+     2627   A0 01      LDY #&01
+     2629   91 60      STA (&60),Y
+     262B   A0 2F      LDY #&2F
+     262D   91 60      STA (&60),Y
+     262F   A9 01      LDA #&01
+     2631   85 59      STA &59
+.ladybugUpdateTurnstileExit
+     2633   A9 05      LDA #&05
+     2635   4C D7 22   JMP &22D7
+.ladybugUpdateTurnstileX
+     2638   00
+     2639   00
+     263A   08
+     263B   F8
+     263C   00
+     263D   00
+     263E   08
+     263F   F8
+     2640   F8
+     2641   F8
+     2642   00
+     2643   00
+     2644   08
+     2645   08
+     2646   00
+     2647   00
+.ladybugUpdateTurnstileY
+     2648   00
+     2649   00
+     264A   F8
+     264B   F8
+     264C   00
+     264D   00
+     264E   08
+     264F   08
+     2650   08
+     2651   F8
+     2652   00
+     2653   00
+     2654   08
+     2655   F8
+     2656   00
+     2657   00
+.ladybugUpdateCheckPath
+     2658   BC 81 02   LDY &0281,X
+     265B   B1 60      LDA (&60),Y
+     265D   A8         TAY
+     265E   29 C0      AND #&C0
+     2660   49 C0      EOR #&C0
+     2662   60         RTS
+.drawTurnstile
+     2663   A5 58      LDA &58
+     2665   10 01      BPL &2668
+     2667   60         RTS
+.drawTurnstileCheckDir
+     2668   8D 38 06   STA &0638
+     266B   A5 57      LDA &57
+     266D   8D 37 06   STA &0637
+     2670   A9 FF      LDA #&FF
+     2672   85 58      STA &58
+     2674   A2 00      LDX #&00
+     2676   20 47 0A   JSR &0A47
+     2679   20 47 0A   JSR &0A47
+     267C   A5 59      LDA &59
+     267E   D0 4C      BNE &26CC
+.drawTurnstileVertical
+     2680   18         CLC
+     2681   AD 37 06   LDA &0637
+     2684   69 18      ADC #&18
+     2686   8D 37 06   STA &0637
+     2689   AD 38 06   LDA &0638
+     268C   69 00      ADC #&00
+     268E   8D 38 06   STA &0638
+     2691   A9 1F      LDA #&1F
+     2693   20 15 06   JSR &0615
+     2696   18         CLC
+     2697   AD 37 06   LDA &0637
+     269A   69 F8      ADC #&F8
+     269C   8D 37 06   STA &0637
+     269F   AD 38 06   LDA &0638
+     26A2   69 01      ADC #&01
+     26A4   8D 38 06   STA &0638
+     26A7   A9 00      LDA #&00
+     26A9   20 15 06   JSR &0615
+     26AC   A9 1C      LDA #&1C
+     26AE   20 15 06   JSR &0615
+     26B1   A9 00      LDA #&00
+     26B3   20 15 06   JSR &0615
+     26B6   18         CLC
+     26B7   AD 37 06   LDA &0637
+     26BA   69 F8      ADC #&F8
+     26BC   8D 37 06   STA &0637
+     26BF   AD 38 06   LDA &0638
+     26C2   69 01      ADC #&01
+     26C4   8D 38 06   STA &0638
+     26C7   A9 1E      LDA #&1E
+     26C9   4C 15 06   JMP &0615
+.drawTurnstileHorizontal
+     26CC   18         CLC
+     26CD   AD 37 06   LDA &0637
+     26D0   69 18      ADC #&18
+     26D2   8D 37 06   STA &0637
+     26D5   AD 38 06   LDA &0638
+     26D8   69 00      ADC #&00
+     26DA   8D 38 06   STA &0638
+     26DD   A9 00      LDA #&00
+     26DF   20 15 06   JSR &0615
+     26E2   18         CLC
+     26E3   AD 37 06   LDA &0637
+     26E6   69 F8      ADC #&F8
+     26E8   8D 37 06   STA &0637
+     26EB   AD 38 06   LDA &0638
+     26EE   69 01      ADC #&01
+     26F0   8D 38 06   STA &0638
+     26F3   A9 21      LDA #&21
+     26F5   20 15 06   JSR &0615
+     26F8   A9 1D      LDA #&1D
+     26FA   20 15 06   JSR &0615
+     26FD   A9 20      LDA #&20
+     26FF   20 15 06   JSR &0615
+     2702   18         CLC
+     2703   AD 37 06   LDA &0637
+     2706   69 F8      ADC #&F8
+     2708   8D 37 06   STA &0637
+     270B   AD 38 06   LDA &0638
+     270E   69 01      ADC #&01
+     2710   8D 38 06   STA &0638
+     2713   A9 00      LDA #&00
+     2715   4C 15 06   JMP &0615
+.drawTurnstilePin
+     2718   A5 5A      LDA &5A
+     271A   20 41 27   JSR &2741
+     271D   85 5A      STA &5A
+     271F   85 5C      STA &5C
+     2721   A5 5B      LDA &5B
+     2723   85 5D      STA &5D
+     2725   90 07      BCC &272E
+     2727   20 41 27   JSR &2741
+     272A   85 5B      STA &5B
+     272C   85 5D      STA &5D
+.drawTurnstilePinCheck
+     272E   20 5D 27   JSR &275D
+     2731   A0 00      LDY #&00
+     2733   B1 60      LDA (&60),Y
+     2735   C9 DC      CMP #&DC
+     2737   F0 05      BEQ &273E
+     2739   C9 DD      CMP #&DD
+     273B   F0 01      BEQ &273E
+.drawTurnstilePinExit
+     273D   60         RTS
+.drawTurnstilePinTile
+     273E   4C 15 06   JMP &0615
+.drawTurnstilePinUpdate
+     2741   18         CLC
+     2742   69 10      ADC #&10
+     2744   C9 B0      CMP #&B0
+     2746   90 02      BCC &274A
+     2748   A9 18      LDA #&18
+.drawTurnstilePinUpdateExit
+     274A   60         RTS
+.offsetDrawMapTileAddr
+     274B   A9 40      LDA #&40
+     274D   18         CLC
+     274E   6D 37 06   ADC &0637
+     2751   8D 37 06   STA &0637
+     2754   A9 02      LDA #&02
+     2756   6D 38 06   ADC &0638
+     2759   8D 38 06   STA &0638
+     275C   60         RTS
+.spriteToAddr
+     275D   86 5E      STX &5E
+     275F   84 5F      STY &5F
+     2761   A5 5D      LDA &5D
+     2763   18         CLC
+     2764   69 04      ADC #&04
+     2766   4A         LSR A
+     2767   4A         LSR A
+     2768   4A         LSR A
+     2769   A8         TAY
+     276A   88         DEY
+     276B   A5 5C      LDA &5C
+     276D   18         CLC
+     276E   69 04      ADC #&04
+     2770   4A         LSR A
+     2771   4A         LSR A
+     2772   4A         LSR A
+     2773   AA         TAX
+     2774   CA         DEX
+     2775   8A         TXA
+     2776   18         CLC
+     2777   79 D9 3D   ADC &3DD9,Y
+     277A   85 60      STA &60
+     277C   B9 F0 3D   LDA &3DF0,Y
+     277F   69 00      ADC #&00
+     2781   85 61      STA &61
+     2783   18         CLC
+     2784   BD EA 3A   LDA &3AEA,X
+     2787   79 B8 3A   ADC &3AB8,Y
+     278A   8D 37 06   STA &0637
+     278D   BD 01 3B   LDA &3B01,X
+     2790   79 D1 3A   ADC &3AD1,Y
+     2793   8D 38 06   STA &0638
+     2796   A4 5F      LDY &5F
+     2798   A6 5E      LDX &5E
+     279A   60         RTS
+.highScoreFirstPlaceUpdate
+     279B   AD 10 80   LDA &8010
+     279E   85 09      STA &09
+     27A0   AD 11 80   LDA &8011
+     27A3   85 0A      STA &0A
+     27A5   AD 12 80   LDA &8012
+     27A8   85 0B      STA &0B
+     27AA   4C 1C 0B   JMP &0B1C
+.readKey
+     27AD   8D 4F FE   STA &FE4F
+     27B0   AD 4F FE   LDA &FE4F
+     27B3   0A         ASL A
+     27B4   26 CD      ROL &CD
+     27B6   60         RTS
+.joystickBitSet
+     27B7   04
+     27B8   00
+     27B9   00
+     27BA   08
+     27BB   10
+     27BC   00
+     27BD   00
+     27BE   02
+.joystickBitClear
+     27BF   F3
+     27C0   F3
+     27C1   F3
+     27C2   F3
+     27C3   ED
+     27C4   ED
+     27C5   ED
+     27C6   ED
+.joystickAnalogue
+     27C7   AD 33 01   LDA &0133
+     27CA   C9 01      CMP #&01
+     27CC   D0 25      BNE &27F3
+.joystickAnalogueChannelRead
+     27CE   AD 00 FF   LDA &FF00
+     27D1   85 CF      STA &CF
+.joystickAnalogueControlRead
+     27D3   AD 00 FF   LDA &FF00
+     27D6   29 01      AND #&01
+     27D8   49 01      EOR #&01
+.joystickAnalogueControlWrite
+     27DA   8D 00 FF   STA &FF00
+     27DD   4A         LSR A
+     27DE   26 CF      ROL &CF
+     27E0   26 CF      ROL &CF
+     27E2   26 CF      ROL &CF
+     27E4   A5 CF      LDA &CF
+     27E6   29 07      AND #&07
+     27E8   AA         TAX
+     27E9   A5 CE      LDA &CE
+     27EB   3D BF 27   AND &27BF,X
+     27EE   1D B7 27   ORA &27B7,X
+     27F1   85 CE      STA &CE
+.joystickAnalogueExit
+     27F3   60         RTS
+.vegetableCucumber
+     27F4   43 55 43 ...
+     27FC   FF
+.vegetableEggplant
+     27FD   45 47 47 ...
+     2805   FF
+.vegetableCarrot
+     2806   43 41 52 ...
+     280C   FF
+.vegetableRadish
+     280D   52 41 44 ...
+     2813   FF
+.vegetableParsley
+     2814   50 41 52 ...
+     281B   FF
+.vegetableTomato
+     281C   54 4F 4D ...
+     2822   FF
+.vegetablePumpkin
+     2823   50 55 4D ...
+     282A   FF
+.vegetableBambooShoot
+     282B   42 41 4D ...
+     2837   FF
+.vegetableJapaneseRadish
+     2838   4A 41 50 ...
+     2847   FF
+.vegetableMushroom
+     2848   4D 55 53 ...
+     2850   FF
+.vegetablePotato
+     2851   50 4F 54 ...
+     2857   FF
+.vegetableOnion
+     2858   4F 4E 49 ...
+     285D   FF
+.vegetableChineseCabbage
+     285E   43 48 49 ...
+     286D   FF
+.vegetableTurnip
+     286E   54 55 52 ...
+     2874   FF
+.vegetableGreenChilli
+     2875   47 52 45 ...
+     2881   FF
+.vegetableCelery
+     2882   43 45 4C ...
+     2888   FF
+.vegetableSweetPotato
+     2889   53 57 45 ...
+     2895   FF
+.vegetableHorseradish
+     2896   48 4F 52 ...
+     28A1   FF
+.vegetableEnd
+.vegetableAddr
+     28A2   E2 59
+     28A4   F4 27
+     28A6   E2 59
+     28A8   FD 27
+     28AA   FA 59
+     28AC   06 28
+     28AE   FA 59
+     28B0   0D 28
+     28B2   F2 59
+     28B4   14 28
+     28B6   FA 59
+     28B8   1C 28
+     28BA   F2 59
+     28BC   23 28
+     28BE   B2 59
+     28C0   2B 28
+     28C2   92 59
+     28C4   38 28
+     28C6   E2 59
+     28C8   48 28
+     28CA   FA 59
+     28CC   51 28
+     28CE   0A 5A
+     28D0   58 28
+     28D2   92 59
+     28D4   5E 28
+     28D6   FA 59
+     28D8   6E 28
+     28DA   B2 59
+     28DC   75 28
+     28DE   FA 59
+     28E0   82 28
+     28E2   B2 59
+     28E4   89 28
+     28E6   C2 59
+     28E8   96 28
+.fontBin
+     28EA
+     28EA   00 00 00 ... INCBIN "bin/font.bin"
+.fontBinEnd
+     2A2A
+.miniFontBin
+     2A2A
+     2A2A   00 50 51 ... INCBIN "bin/fontBonus.bin"
+.miniFontBinEnd
+     2ACA
+.mapTileBin
+     2ACA
+     2ACA   00 00 00 ... INCBIN "bin/tiles.bin"
+.mapTileBinEnd
+     2DFA
+.objectTileBin
+     2DFA
+     2DFA   00 55 55 ... INCBIN "bin/objects.bin"
+.objectTileBinEnd
+     305A
+.extraTileBin
+     305A
+     305A   00 00 15 ... INCBIN "bin/extra.bin"
+.extraTileBinEnd
+     398A
+.mapTileAddrLo
+     398A   CA
+     398B   E2
+     398C   FA
+     398D   12
+     398E   2A
+     398F   42
+     3990   5A
+     3991   72
+     3992   8A
+     3993   A2
+     3994   BA
+     3995   D2
+     3996   EA
+     3997   02
+     3998   1A
+     3999   32
+     399A   4A
+     399B   62
+     399C   7A
+     399D   92
+     399E   AA
+     399F   C2
+     39A0   DA
+     39A1   F2
+     39A2   0A
+     39A3   22
+     39A4   3A
+     39A5   52
+     39A6   6A
+     39A7   82
+     39A8   9A
+     39A9   B2
+     39AA   CA
+     39AB   E2
+.mapTileAddrHi
+>>>>>>> Stashed changes
      39AC   2A
      39AD   2A
      39AE   2A
      39AF   2B
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
      39B0   2B
      39B1   2B
@@ -8263,7 +9309,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      39B7   2B
      39B8   2B
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      39B9   2B
+=======
+     39B9   2C
+>>>>>>> Stashed changes
 =======
      39B9   2C
 >>>>>>> Stashed changes
@@ -8278,7 +9328,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      39C2   2C
      39C3   2C
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      39C4   2C
+=======
+     39C4   2D
+>>>>>>> Stashed changes
 =======
      39C4   2D
 >>>>>>> Stashed changes
@@ -8291,6 +9345,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      39CB   2D
      39CC   2D
      39CD   2D
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      39CE   2D
 .objectTileAddrLo
@@ -8340,6 +9395,31 @@ bootstrap     &4800 - &4957 , 344 bytes
      39E1   2D
      39E2   2E
 >>>>>>> Stashed changes
+=======
+.objectTileAddrLo
+     39CE   FA
+     39CF   1A
+     39D0   3A
+     39D1   5A
+     39D2   7A
+     39D3   9A
+     39D4   BA
+     39D5   DA
+     39D6   FA
+     39D7   1A
+     39D8   3A
+     39D9   5A
+     39DA   7A
+     39DB   9A
+     39DC   BA
+     39DD   DA
+     39DE   FA
+     39DF   1A
+     39E0   3A
+.objectTileAddrHi
+     39E1   2D
+     39E2   2E
+>>>>>>> Stashed changes
      39E3   2E
      39E4   2E
      39E5   2E
@@ -8348,7 +9428,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      39E8   2E
      39E9   2E
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      39EA   2E
+=======
+     39EA   2F
+>>>>>>> Stashed changes
 =======
      39EA   2F
 >>>>>>> Stashed changes
@@ -8359,6 +9443,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      39EF   2F
      39F0   2F
      39F1   2F
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      39F2   2F
      39F3   30
@@ -8568,6 +9653,111 @@ bootstrap     &4800 - &4957 , 344 bytes
 .extraTileAddrHi
      3A56   30
 >>>>>>> Stashed changes
+=======
+     39F2   30
+     39F3   30
+.extraTileAddrLo
+     39F4   5A
+     39F5   72
+     39F6   8A
+     39F7   A2
+     39F8   BA
+     39F9   D2
+     39FA   EA
+     39FB   02
+     39FC   1A
+     39FD   32
+     39FE   4A
+     39FF   62
+     3A00   7A
+     3A01   92
+     3A02   AA
+     3A03   C2
+     3A04   DA
+     3A05   F2
+     3A06   0A
+     3A07   22
+     3A08   3A
+     3A09   52
+     3A0A   6A
+     3A0B   82
+     3A0C   9A
+     3A0D   B2
+     3A0E   CA
+     3A0F   E2
+     3A10   FA
+     3A11   12
+     3A12   2A
+     3A13   42
+     3A14   5A
+     3A15   72
+     3A16   8A
+     3A17   A2
+     3A18   BA
+     3A19   D2
+     3A1A   EA
+     3A1B   02
+     3A1C   1A
+     3A1D   32
+     3A1E   4A
+     3A1F   62
+     3A20   7A
+     3A21   92
+     3A22   AA
+     3A23   C2
+     3A24   DA
+     3A25   F2
+     3A26   0A
+     3A27   22
+     3A28   3A
+     3A29   52
+     3A2A   6A
+     3A2B   82
+     3A2C   9A
+     3A2D   B2
+     3A2E   CA
+     3A2F   E2
+     3A30   FA
+     3A31   12
+     3A32   2A
+     3A33   42
+     3A34   5A
+     3A35   72
+     3A36   8A
+     3A37   A2
+     3A38   BA
+     3A39   D2
+     3A3A   EA
+     3A3B   02
+     3A3C   1A
+     3A3D   32
+     3A3E   4A
+     3A3F   62
+     3A40   7A
+     3A41   92
+     3A42   AA
+     3A43   C2
+     3A44   DA
+     3A45   F2
+     3A46   0A
+     3A47   22
+     3A48   3A
+     3A49   52
+     3A4A   6A
+     3A4B   82
+     3A4C   9A
+     3A4D   B2
+     3A4E   CA
+     3A4F   E2
+     3A50   FA
+     3A51   12
+     3A52   2A
+     3A53   42
+     3A54   5A
+     3A55   72
+.extraTileAddrHi
+     3A56   30
+>>>>>>> Stashed changes
      3A57   30
      3A58   30
      3A59   30
@@ -8575,7 +9765,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3A5B   30
      3A5C   30
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3A5D   30
+=======
+     3A5D   31
+>>>>>>> Stashed changes
 =======
      3A5D   31
 >>>>>>> Stashed changes
@@ -8590,7 +9784,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3A66   31
      3A67   31
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3A68   31
+=======
+     3A68   32
+>>>>>>> Stashed changes
 =======
      3A68   32
 >>>>>>> Stashed changes
@@ -8605,7 +9803,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3A71   32
      3A72   32
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3A73   32
+=======
+     3A73   33
+>>>>>>> Stashed changes
 =======
      3A73   33
 >>>>>>> Stashed changes
@@ -8619,7 +9821,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3A7B   33
      3A7C   33
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3A7D   33
+=======
+     3A7D   34
+>>>>>>> Stashed changes
 =======
      3A7D   34
 >>>>>>> Stashed changes
@@ -8634,7 +9840,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3A86   34
      3A87   34
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3A88   34
+=======
+     3A88   35
+>>>>>>> Stashed changes
 =======
      3A88   35
 >>>>>>> Stashed changes
@@ -8649,7 +9859,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3A91   35
      3A92   35
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3A93   35
+=======
+     3A93   36
+>>>>>>> Stashed changes
 =======
      3A93   36
 >>>>>>> Stashed changes
@@ -8663,7 +9877,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3A9B   36
      3A9C   36
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3A9D   36
+=======
+     3A9D   37
+>>>>>>> Stashed changes
 =======
      3A9D   37
 >>>>>>> Stashed changes
@@ -8678,7 +9896,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3AA6   37
      3AA7   37
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3AA8   37
+=======
+     3AA8   38
+>>>>>>> Stashed changes
 =======
      3AA8   38
 >>>>>>> Stashed changes
@@ -8693,7 +9915,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3AB1   38
      3AB2   38
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3AB3   38
+=======
+     3AB3   39
+>>>>>>> Stashed changes
 =======
      3AB3   39
 >>>>>>> Stashed changes
@@ -8701,6 +9927,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      3AB5   39
      3AB6   39
      3AB7   39
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      3AB8   39
 .screenRowLo
@@ -8860,6 +10087,86 @@ bootstrap     &4800 - &4957 , 344 bytes
 .screenColumnHi
      3B01   00
 >>>>>>> Stashed changes
+=======
+.screenRowLo
+     3AB8   18
+     3AB9   40
+     3ABA   68
+     3ABB   90
+     3ABC   B8
+     3ABD   E0
+     3ABE   08
+     3ABF   30
+     3AC0   58
+     3AC1   80
+     3AC2   A8
+     3AC3   D0
+     3AC4   F8
+     3AC5   20
+     3AC6   48
+     3AC7   70
+     3AC8   98
+     3AC9   C0
+     3ACA   E8
+     3ACB   10
+     3ACC   38
+     3ACD   60
+     3ACE   88
+     3ACF   B0
+     3AD0   D8
+.screenRowHi
+     3AD1   4A
+     3AD2   4C
+     3AD3   4E
+     3AD4   50
+     3AD5   52
+     3AD6   54
+     3AD7   57
+     3AD8   59
+     3AD9   5B
+     3ADA   5D
+     3ADB   5F
+     3ADC   61
+     3ADD   63
+     3ADE   66
+     3ADF   68
+     3AE0   6A
+     3AE1   6C
+     3AE2   6E
+     3AE3   70
+     3AE4   73
+     3AE5   75
+     3AE6   77
+     3AE7   79
+     3AE8   7B
+     3AE9   7D
+.screenColumnLo
+     3AEA   00
+     3AEB   18
+     3AEC   30
+     3AED   48
+     3AEE   60
+     3AEF   78
+     3AF0   90
+     3AF1   A8
+     3AF2   C0
+     3AF3   D8
+     3AF4   F0
+     3AF5   08
+     3AF6   20
+     3AF7   38
+     3AF8   50
+     3AF9   68
+     3AFA   80
+     3AFB   98
+     3AFC   B0
+     3AFD   C8
+     3AFE   E0
+     3AFF   F8
+     3B00   10
+.screenColumnHi
+     3B01   00
+>>>>>>> Stashed changes
      3B02   00
      3B03   00
      3B04   00
@@ -8871,7 +10178,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3B0A   00
      3B0B   00
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3B0C   00
+=======
+     3B0C   01
+>>>>>>> Stashed changes
 =======
      3B0C   01
 >>>>>>> Stashed changes
@@ -8885,6 +10196,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      3B14   01
      3B15   01
      3B16   01
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      3B17   01
      3B18   02
@@ -9098,6 +10410,10 @@ bootstrap     &4800 - &4957 , 344 bytes
 =======
      3B17   02
 .timerXYTable
+=======
+     3B17   02
+.timerXYTable
+>>>>>>> Stashed changes
      3B18   0B
      3B19   00
      3B1A   0C
@@ -9305,6 +10621,9 @@ bootstrap     &4800 - &4957 , 344 bytes
      3DF1   3B
      3DF2   3B
      3DF3   3C
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
      3DF4   3C
      3DF5   3C
@@ -9317,7 +10636,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      3DFC   3C
      3DFD   3C
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3DFE   3C
+=======
+     3DFE   3D
+>>>>>>> Stashed changes
 =======
      3DFE   3D
 >>>>>>> Stashed changes
@@ -9330,7 +10653,10 @@ bootstrap     &4800 - &4957 , 344 bytes
      3E05   3D
      3E06   3D
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      3E07   3D
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 ----------------------------------------------------
@@ -9338,6 +10664,7 @@ bootstrap     &4800 - &4957 , 344 bytes
 ----------------------------------------------------
 
 .sfxAddrTable
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      3E08   28 3E
      3E0A   3A 3E
@@ -10844,6 +12171,25 @@ bootstrap     &4800 - &4957 , 344 bytes
      3E23   F0 42
      3E25   5E 43
 .sfxDataTwinkle
+=======
+     3E07   27 3E
+     3E09   39 3E
+     3E0B   67 3E
+     3E0D   71 3E
+     3E0F   7B 3E
+     3E11   85 3E
+     3E13   9B 3E
+     3E15   A3 3E
+     3E17   79 3F
+     3E19   CA 3F
+     3E1B   98 40
+     3E1D   02 41
+     3E1F   F0 41
+     3E21   C7 42
+     3E23   F0 42
+     3E25   5E 43
+.sfxDataTwinkle
+>>>>>>> Stashed changes
      3E27   00
      3E28   8B
      3E29   06
@@ -12314,11 +13660,15 @@ bootstrap     &4800 - &4957 , 344 bytes
      43D3   40
 .sfxDataEnd
      43D4
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 
 
 .spriteBaseImg
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      43D5   1F
      43D6   2E
@@ -12694,17 +14044,211 @@ bootstrap     &4800 - &4957 , 344 bytes
      4489   13
      448A   2B
 .spriteImgAddrHi
+=======
+     43D4   1F
+     43D5   2E
+     43D6   3D
+     43D7   4C
+     43D8   5B
+     43D9   6A
+     43DA   79
+     43DB   88
+     43DC   97
+     43DD   A6
+.spriteImgAddrLo
+     43DE   8F
+     43DF   C1
+     43E0   F3
+     43E1   25
+     43E2   57
+     43E3   89
+     43E4   BB
+     43E5   ED
+     43E6   1F
+     43E7   51
+     43E8   83
+     43E9   B5
+     43EA   E7
+     43EB   19
+     43EC   4B
+     43ED   7D
+     43EE   AF
+     43EF   E1
+     43F0   13
+     43F1   45
+     43F2   77
+     43F3   A9
+     43F4   DB
+     43F5   0D
+     43F6   3F
+     43F7   71
+     43F8   A3
+     43F9   D5
+     43FA   07
+     43FB   39
+     43FC   6B
+     43FD   9D
+     43FE   E3
+     43FF   29
+     4400   6F
+     4401   B5
+     4402   FB
+     4403   41
+     4404   87
+     4405   CD
+     4406   13
+     4407   59
+     4408   9F
+     4409   E5
+     440A   2B
+     440B   71
+     440C   B7
+     440D   FD
+     440E   43
+     440F   89
+     4410   CF
+     4411   15
+     4412   5B
+     4413   A1
+     4414   E7
+     4415   2D
+     4416   73
+     4417   B9
+     4418   FF
+     4419   45
+     441A   8B
+     441B   D1
+     441C   17
+     441D   5D
+     441E   A3
+     441F   E9
+     4420   2F
+     4421   75
+     4422   BB
+     4423   01
+     4424   47
+     4425   8D
+     4426   D3
+     4427   19
+     4428   5F
+     4429   A5
+     442A   EB
+     442B   31
+     442C   77
+     442D   BD
+     442E   03
+     442F   49
+     4430   8F
+     4431   D5
+     4432   1B
+     4433   61
+     4434   A7
+     4435   ED
+     4436   33
+     4437   79
+     4438   BF
+     4439   05
+     443A   4B
+     443B   91
+     443C   D7
+     443D   1D
+     443E   63
+     443F   A9
+     4440   EF
+     4441   35
+     4442   7B
+     4443   C1
+     4444   07
+     4445   4D
+     4446   93
+     4447   D9
+     4448   1F
+     4449   65
+     444A   AB
+     444B   F1
+     444C   37
+     444D   7D
+     444E   C3
+     444F   09
+     4450   4F
+     4451   95
+     4452   DB
+     4453   21
+     4454   67
+     4455   AD
+     4456   F3
+     4457   39
+     4458   7F
+     4459   C5
+     445A   0B
+     445B   51
+     445C   97
+     445D   DD
+     445E   23
+     445F   69
+     4460   AF
+     4461   F5
+     4462   3B
+     4463   81
+     4464   C7
+     4465   0D
+     4466   53
+     4467   99
+     4468   DF
+     4469   25
+     446A   6B
+     446B   B1
+     446C   F7
+     446D   3D
+     446E   83
+     446F   C9
+     4470   0F
+     4471   55
+     4472   9B
+     4473   E1
+     4474   27
+     4475   6D
+     4476   B3
+     4477   F9
+     4478   3F
+     4479   85
+     447A   CB
+     447B   11
+     447C   57
+     447D   9D
+     447E   E3
+     447F   29
+     4480   6F
+     4481   B5
+     4482   FB
+     4483   41
+     4484   87
+     4485   CD
+     4486   13
+     4487   59
+     4488   9F
+     4489   13
+     448A   2B
+.spriteImgAddrHi
+>>>>>>> Stashed changes
      448B   80
      448C   80
      448D   80
      448E   81
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
      448F   81
      4490   81
      4491   81
      4492   81
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      4493   81
+=======
+     4493   82
+>>>>>>> Stashed changes
 =======
      4493   82
 >>>>>>> Stashed changes
@@ -12713,7 +14257,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      4496   82
      4497   82
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      4498   82
+=======
+     4498   83
+>>>>>>> Stashed changes
 =======
      4498   83
 >>>>>>> Stashed changes
@@ -12722,7 +14270,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      449B   83
      449C   83
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      449D   83
+=======
+     449D   84
+>>>>>>> Stashed changes
 =======
      449D   84
 >>>>>>> Stashed changes
@@ -12731,7 +14283,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      44A0   84
      44A1   84
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      44A2   84
+=======
+     44A2   85
+>>>>>>> Stashed changes
 =======
      44A2   85
 >>>>>>> Stashed changes
@@ -12740,7 +14296,11 @@ bootstrap     &4800 - &4957 , 344 bytes
      44A5   85
      44A6   85
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      44A7   85
+=======
+     44A7   86
+>>>>>>> Stashed changes
 =======
      44A7   86
 >>>>>>> Stashed changes
@@ -12748,6 +14308,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      44A9   86
      44AA   86
      44AB   86
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      44AC   86
      44AD   87
@@ -13018,15 +14579,153 @@ bootstrap     &4800 - &4957 , 344 bytes
      452D   AA
      452E   AA
      452F   AA
+=======
+     44AC   87
+     44AD   87
+     44AE   87
+     44AF   87
+     44B0   88
+     44B1   88
+     44B2   88
+     44B3   89
+     44B4   89
+     44B5   89
+     44B6   89
+     44B7   8A
+     44B8   8A
+     44B9   8A
+     44BA   8A
+     44BB   8B
+     44BC   8B
+     44BD   8B
+     44BE   8C
+     44BF   8C
+     44C0   8C
+     44C1   8C
+     44C2   8D
+     44C3   8D
+     44C4   8D
+     44C5   8D
+     44C6   8E
+     44C7   8E
+     44C8   8E
+     44C9   8F
+     44CA   8F
+     44CB   8F
+     44CC   8F
+     44CD   90
+     44CE   90
+     44CF   90
+     44D0   91
+     44D1   91
+     44D2   91
+     44D3   91
+     44D4   92
+     44D5   92
+     44D6   92
+     44D7   92
+     44D8   93
+     44D9   93
+     44DA   93
+     44DB   94
+     44DC   94
+     44DD   94
+     44DE   94
+     44DF   95
+     44E0   95
+     44E1   95
+     44E2   95
+     44E3   96
+     44E4   96
+     44E5   96
+     44E6   97
+     44E7   97
+     44E8   97
+     44E9   97
+     44EA   98
+     44EB   98
+     44EC   98
+     44ED   98
+     44EE   99
+     44EF   99
+     44F0   99
+     44F1   9A
+     44F2   9A
+     44F3   9A
+     44F4   9A
+     44F5   9B
+     44F6   9B
+     44F7   9B
+     44F8   9B
+     44F9   9C
+     44FA   9C
+     44FB   9C
+     44FC   9D
+     44FD   9D
+     44FE   9D
+     44FF   9D
+     4500   9E
+     4501   9E
+     4502   9E
+     4503   9E
+     4504   9F
+     4505   9F
+     4506   9F
+     4507   A0
+     4508   A0
+     4509   A0
+     450A   A0
+     450B   A1
+     450C   A1
+     450D   A1
+     450E   A1
+     450F   A2
+     4510   A2
+     4511   A2
+     4512   A3
+     4513   A3
+     4514   A3
+     4515   A3
+     4516   A4
+     4517   A4
+     4518   A4
+     4519   A4
+     451A   A5
+     451B   A5
+     451C   A5
+     451D   A6
+     451E   A6
+     451F   A6
+     4520   A6
+     4521   A7
+     4522   A7
+     4523   A7
+     4524   A7
+     4525   A8
+     4526   A8
+     4527   A8
+     4528   A9
+     4529   A9
+     452A   A9
+     452B   A9
+     452C   AA
+     452D   AA
+     452E   AA
+     452F   AA
+>>>>>>> Stashed changes
      4530   AB
      4531   AB
      4532   AB
      4533   AC
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
      4534   AC
      4535   AC
      4536   AC
      4537   AC
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
      4538   AC
 .mapData
@@ -13038,6 +14737,17 @@ bootstrap     &4800 - &4957 , 344 bytes
      4707
 .programEnd
      47EE
+=======
+.mapData
+.map1
+     4538
+.map2
+     461F
+.map3
+     4706
+.programEnd
+     47ED
+>>>>>>> Stashed changes
 =======
 .mapData
 .map1
@@ -13143,6 +14853,7 @@ bootstrap     &4800 - &4957 , 344 bytes
      48B6   F0 1C      BEQ &48D4
      48B8   A9 C1      LDA #&C1
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      48BA   8D D0 40   STA &40D0
      48BD   A9 FE      LDA #&FE
      48BF   8D D1 40   STA &40D1
@@ -13164,6 +14875,29 @@ bootstrap     &4800 - &4957 , 344 bytes
      48E6   A9 FE      LDA #&FE
      48E8   8D D6 40   STA &40D6
      48EB   8D DD 40   STA &40DD
+=======
+     48BA   8D CF 40   STA &40CF
+     48BD   A9 FE      LDA #&FE
+     48BF   8D D0 40   STA &40D0
+     48C2   A9 C0      LDA #&C0
+     48C4   8D D4 40   STA &40D4
+     48C7   8D DB 40   STA &40DB
+     48CA   A9 FE      LDA #&FE
+     48CC   8D D5 40   STA &40D5
+     48CF   8D DC 40   STA &40DC
+     48D2   D0 1A      BNE &48EE
+.bootstrapJoystickAnalogueMaster
+     48D4   A9 19      LDA #&19
+     48D6   8D CF 40   STA &40CF
+     48D9   A9 FE      LDA #&FE
+     48DB   8D D0 40   STA &40D0
+     48DE   A9 18      LDA #&18
+     48E0   8D D4 40   STA &40D4
+     48E3   8D DB 40   STA &40DB
+     48E6   A9 FE      LDA #&FE
+     48E8   8D D5 40   STA &40D5
+     48EB   8D DC 40   STA &40DC
+>>>>>>> Stashed changes
 =======
      48BA   8D CF 40   STA &40CF
      48BD   A9 FE      LDA #&FE
@@ -13211,11 +14945,19 @@ bootstrap     &4800 - &4957 , 344 bytes
 .relocateProgramMapData
      4916   BD 00 78   LDA &7800,X
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
      4919   9D 39 45   STA &4539,X
      491C   BD 00 79   LDA &7900,X
      491F   9D 20 46   STA &4620,X
      4922   BD 00 7A   LDA &7A00,X
      4925   9D 07 47   STA &4707,X
+=======
+     4919   9D 38 45   STA &4538,X
+     491C   BD 00 79   LDA &7900,X
+     491F   9D 1F 46   STA &461F,X
+     4922   BD 00 7A   LDA &7A00,X
+     4925   9D 06 47   STA &4706,X
+>>>>>>> Stashed changes
 =======
      4919   9D 38 45   STA &4538,X
      491C   BD 00 79   LDA &7900,X
