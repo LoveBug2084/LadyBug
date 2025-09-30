@@ -2184,10 +2184,10 @@ bootstrap     &4800 - &4957 , 344 bytes
      0766   85 CD      STA &CD
      0768   85 D9      STA &D9
      076A   85 2D      STA &2D
-     076C   A9 64      LDA #&64
-     076E   85 04      STA &04
-     0770   85 30      STA &30
-     0772   85 31      STA &31
+     076C   85 30      STA &30
+     076E   85 31      STA &31
+     0770   A9 64      LDA #&64
+     0772   85 04      STA &04
      0774   A9 AF      LDA #&AF
      0776   85 5A      STA &5A
      0778   85 5B      STA &5B

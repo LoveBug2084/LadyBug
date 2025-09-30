@@ -2048,11 +2048,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	sta pauseLadybug			; unpause ladybug
 	
-	lda #escTime				; reset esc key timer
-	sta escCounter
-
 	sta enemySpeedCounter			; reset enemy speed fraction counter
 	sta enemyMoveCounter			; reset enemy move counter used by enemy release delay
+
+	lda #escTime				; reset esc key timer
+	sta escCounter
 
 	lda #turnstilePinMax - 1		; initialize the map position for turnstile pin redraw
 	sta drawTurnstilePinX
