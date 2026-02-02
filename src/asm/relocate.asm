@@ -75,6 +75,7 @@
 
 	lda #magicNumber			; initialize random seed
 	sta randomSeed + 0 + progOffset
+	lda via1T1CounterLo
 	sta randomSeed + 1 + progOffset
 
 	lda #%00000000				; timer 1 timed interupt mode

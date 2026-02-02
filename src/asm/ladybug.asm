@@ -543,6 +543,19 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; .drawMapTileSpace				draw map tile and advance screen address 8 bytes creating a 2 pixel extra space
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.drawMapTileSpace
+
+	jsr drawMapTile				; draw the tile
+
+	lda #chrColumn				; leave space
+	jmp drawMapTileAddrAdvance
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of page0200 functions
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 .page0200End
@@ -1710,19 +1723,6 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	rts					; return
 
 	drawMapTileAddr = drawMapTileWrite + 1
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; .drawMapTileSpace				draw map tile and advance screen address an extra tile to leave a space
-;-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-.drawMapTileSpace
-
-	jsr drawMapTile				; draw the tile
-
-	lda #chrColumn				; leave space
-	jmp drawMapTileAddrAdvance
 
 
 
@@ -5329,11 +5329,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 16 * chrRow
-	equs colorYellow, "SPEED", &ff
+	equs colorYellow, "AI.SPEED", &ff
 	
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 17 * chrRow
-	equs colorGreen, "TARGET", &ff
+	equs colorGreen, "AI.TARGET", &ff
 	
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 18 * chrRow
