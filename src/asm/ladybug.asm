@@ -89,7 +89,7 @@
 .cleanResetBank
 
 	skip 1					; swr bank number for program and data
-	
+
 .cleanResetMachine
 
 	skip 1					; machine type index
@@ -122,10 +122,10 @@
 .cleanReset
 
 	sei					; disable irq interrupts
-	
+
 	lda cleanResetBank			; page in high ram bank
 	sta bankSelect
-	
+
 	ldx cleanResetMachine			; get machine index
 
 	jmp swrCleanReset			; run reset code in high ram to clear memory (see loader.asm) which then jumps into
@@ -151,7 +151,7 @@ continueMaster320	= &8073			; master 3.20 entry point
 	lda #&0f				; page in extra os code at 8000
 	sta bankSelectCopy
 	sta bankSelect
-	
+
 	jmp continueMaster320			; continue with master os reset code
 
 
@@ -176,7 +176,7 @@ continueMaster350	= &fc76			; master 3.50 entry point
 	lda #&0f				; page in bank 15 extra mos code at 8000
 	sta bankSelectCopy
 	sta bankSelect
-	
+
 	jmp continueMaster350			; continue with master mos reset code
 
 
@@ -198,7 +198,7 @@ continueCompact		= &8068			; master compact entry point
 	lda #&0f				; page in bank 15 extra mos code at 8000
 	sta bankSelectCopy
 	sta bankSelect
-	
+
 	jmp continueCompact			; continue with compact mos reset code
 
 
@@ -223,7 +223,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; check which interrupt occurred 
+	; check which interrupt occurred
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .irqInterrupt
@@ -231,7 +231,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda via1Ifr				; if interrupt flag = vsync
 	and #%00000010
 	bne irqVsync				; then go do the upper vsync interrupt
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; interrupt (timer 1)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -276,7 +276,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	and #1					; if vsyncCounter & 1 == 0
 	bne irqVsyncExit
-	
+
 	dec pauseCounter			; then pauseCounter -= 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -284,7 +284,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
  .irqVsyncExit
 
 	lda irqA				; restore A
-	
+
 	rti					; return to main program
 
 
@@ -304,15 +304,15 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 .psgWrite
 
 	sta via1PortA				; place psg data on port a slow bus
-	
+
 	lda #sbPsg + sbLow			; slow bus psg -we low
 	sta via1PortB
-	
+
 	pha					; 5uS delay
 	pla
 	nop
 	nop
-	
+
 	lda #sbPsg + sbHigh			; slow bus psg -we high
 	sta via1PortB
 
@@ -335,7 +335,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	bit screenHalf				; until raster is in upper area lines 0-155
 	bmi waitIntUpper
-	
+
 	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
 
 
@@ -355,7 +355,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	bit screenHalf				; until raster is in lower area lines 156-311
 	bpl waitIntLower
-	
+
 	jmp joystickAnalogue			; read analogue joystick (if enabled) and return
 
 
@@ -394,31 +394,31 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda vsyncCounter			; if vsync counter and 1 = 0 (25Hz)
 	and #1
 	bne objectTimerUpdateExit
-	
+
 	dec objectModeTimer			; then objectModeTimer -= 1
 	bne objectTimerUpdateExit		; if objectModeTimer = 0
 
 	stx objectTimerUpdateSaveX		; save register
-	
+
 	ldx objectMode				; get current objectMode
 
 	inx					; add 1
 	cpx #objectModeYellow + 1		; if objectMode > objectModeYellow then objectMode = objectModeCyan
 	bne objectTimerUpdateColor
 	ldx #objectModeCyan
-	
+
 .objectTimerUpdateColor
 
 	stx objectMode				; update new objectMode
-	
+
 	lda objectTimerUpdatePalette, x		; update new object color palette
 	sta ulaPalette
-	
+
 	lda objectTimerUpdateDuration, x	; set objectModeTimer for new mode duration
 	sta objectModeTimer
 
 	ldx objectTimerUpdateSaveX		; restore register
-	
+
 .objectTimerUpdateExit
 
 	rts					; return
@@ -474,10 +474,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	lda #%01111111				; set port A bit 7 as input (from keyboard output)
 	sta via1PortDdrA
-	
+
 	lda #sbKeyboard + sbLow			; keyboard output -enable low (connect keyboard output to port A bit 7)
 	sta via1PortB
-	
+
 	lda #0					; clear player input flags
 	sta playerInput
 
@@ -485,7 +485,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	jsr readKey
 
 	ldx #3					; read 4 user defined movement keys
-	
+
 .inputScanLoop					; repeat
 
 	inx					; change order from 3 2 1 0 to 0 3 2 1 so that key input order matches joystick order
@@ -497,16 +497,16 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda optionKeys, y			; read user defined key matrix code from optionKeys
 
 	jsr readKey				; read key into playerInput bits
-	
+
 	dex					; until all 4 keys are read in
 	bpl inputScanLoop
-	
+
 	lda #keyReturn				; read start key (return) into playerInput bits
 	jsr readKey
 
 	lda #sbKeyboard + sbHigh		; slow bus keyboard -enable high (disconnect keyboard output)
 	sta via1PortB
-	
+
 	lda #%11111111				; set port A all bits output
 	sta via1PortDdrA
 
@@ -535,7 +535,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	beq drawObjectScoreExit
 
 	jmp drawSprite10x10			; then draw object score image
-	
+
 .drawObjectScoreExit
 
 	rts					; else return
@@ -572,7 +572,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	org pagefx200
 
 .osFx200
-	
+
 	equb 0
 
 
@@ -594,23 +594,23 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr chooseLetterRandom			; pick 1st random letter
 	sta levelLetters + 0			; and store it in 1st
-	
+
 .chooseLetters2nd
 
 	jsr chooseLetterRandom			; pick 2nd random letter
 
 	cmp levelLetters + 0			; if its the same as 1st then try again
 	beq chooseLetters2nd
-		
+
 	sta levelLetters + 1			; else store it in 2nd
-	
+
 .chooseLetters3rd
 
 	jsr chooseLetterRandom			; pick 3rd random letter
-	
+
 	cmp levelLetters + 0			; if its the same as 1st then try again
 	beq chooseLetters3rd
-		
+
 	cmp levelLetters + 1			; if its the same as 2nd then try again
 	beq chooseLetters3rd
 
@@ -717,7 +717,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda enemyTimer				; if enemyTimer = top left
 	cmp #enemyTimerTopLeft
 	bne enemyTimerUpdateExit
-	
+
 	lda enemiesActive			; if all enemies are not yet active
 	cmp #spritesTotal - 1
 	beq enemyTimerUpdateExit
@@ -771,7 +771,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.initPlayfieldMiddleTilesRight			; right side tile translation table (left/right order switched) 
+.initPlayfieldMiddleTilesRight			; right side tile translation table (left/right order switched)
 
 	equb mapTileBlank
 	equb mapTileDot
@@ -813,7 +813,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	sta initPlayfieldMiddleRead + 1
 	lda initPlayfieldMiddleMazeTable + 1, y
 	sta initPlayfieldMiddleRead + 2
-	
+
 	lda #lo(tileMap + 24)			; set start address of tile map to row 1 column 1 (inside the timer tiles)
 	sta initPlayfieldMiddleWriteLeft + 1
 	lda #hi(tileMap + 24)
@@ -849,7 +849,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 .initPlayfieldMiddleWriteLeft
 
 	sta dummy16, y				; store tile in map (address previously setup)
-	
+
 	cmp #mapTileDot				; if its a dot
 	bne initPlayfieldMiddleRight
 
@@ -857,7 +857,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	cpy #10					; if not middle column (we dont want to count the middle column dot twice)
 	beq initPlayfieldMiddleRight
-	
+
 	inc levelEdibles			; then increment levelEdibles again (we count the left side twice to include mirrored right side)
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -883,14 +883,14 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	iny					; until row transferred
 	cpy #11
 	bne initPlayfieldMiddleRead
-	
+
 	tya					; move maze address forward 11 bytes to next row
 	clc
 	adc initPlayfieldMiddleRead + 1
 	sta initPlayfieldMiddleRead + 1
 	bcc initPlayfieldMiddleWriteNextRow
 	inc initPlayfieldMiddleRead + 2
-	
+
 .initPlayfieldMiddleWriteNextRow
 
 	clc					; move map address forward 23 bytes to next row
@@ -899,7 +899,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	sta initPlayfieldMiddleWriteLeft + 1
 	bcc initPlayfieldMiddleRightNext
 	inc initPlayfieldMiddleWriteLeft + 2
-	
+
 .initPlayfieldMiddleRightNext
 
 	dec initPlayfieldMiddleRows		; until all rows done
@@ -933,25 +933,25 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	lda #mapTileTimerTopRight + wallSolid	; store top right timer tile in tileMap
 	sta tileMap + 22
-	
+
 	lda #mapTileTimerBottomLeft + wallSolid	; bottom left timer tile in tileMap
 	sta tileMap + 22 * 23
-	
+
 	lda #mapTileTimerBottomRight + wallSolid; bottom right timer tile in tilemap
 	sta tileMap + 22 * 23 + 22
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #21					; 21 columns
-	
+
 .initTimerTilesHorizontal			; repeat
 
 	lda #mapTileTimerTop + wallSolid	; store top timer tile in top row of tileMap
 	sta tileMap, x
-	
+
 	lda #mapTileTimerBottom + wallSolid	; store bottom timer tile in bottom row of timeMap
 	sta tileMap + 22 * 23, x
-	
+
 	dex					; next column
 	bne initTimerTilesHorizontal		; until all columns 21-1 are done
 
@@ -985,7 +985,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	dex					; until rows 1-21 done
 	bne initTimerTilesVertical
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	lda #0
@@ -1027,13 +1027,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	cmp #21					; if its higher than 20 then try again
 	bcs tileMapFindDotY
-	
+
 	tay					; convert to tileMap row address
 	lda tileMapRowsLo, y
 	sta tileMapAddr
 	lda tileMapRowsHi, y
 	sta tileMapAddr + 1
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .tileMapFindDotX
@@ -1063,13 +1063,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	and #wallSolid
 	eor #wallTurnstile
 	beq tileMapFindDotY
-	
+
 	ldy #47					; if below center tile contains turnstile then pick another location
 	lda (tileMapAddr), y
 	and #wallSolid
 	eor #wallTurnstile
 	beq tileMapFindDotY
-	
+
 	ldy #23					; if left of center tile contains turnstile then pick another location
 	lda (tileMapAddr), y
 	and #wallSolid
@@ -1081,7 +1081,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	and #wallSolid
 	eor #wallTurnstile
 	beq tileMapFindDotY
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	clc					; location found so adjust address to center tile that contained the dot
@@ -1131,10 +1131,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #mapTileHeart			; else replace dot with a heart
 	ldy #0
 	sta (tileMapAddr), y
-	
+
 	dex					; until all hearts placed
 	bne placeTileMapHeartsLoop
-	
+
 .placeTileMapHeartsExit
 
 	rts					; return
@@ -1165,7 +1165,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda levelLetters - 1, x			; replace dot with a letter from the levelLetters table
 	ldy #0					; use levelLetters - 1 address because x index is 3,2,1 not 2,1,0
 	sta (tileMapAddr), y
-	
+
 	dex					; until all letters placed
 	bne placeTileMapLettersLoop
 
@@ -1199,12 +1199,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda #mapTileSkull			; replace dot with a skull
 	ldy #0
 	sta (tileMapAddr), y
-	
+
 	dec levelEdibles			; decrement number of edible objects
 
 	dex					; until all skulls placed
 	bne placeTileMapSkullsLoop
-	
+
 .placeTileMapSkullsExit
 
 	rts					; return
@@ -1227,7 +1227,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 .initSprites
 
-	ldx #spritesTotal - 1			; total number of sprites to initialise
+	ldx #spritesTotal - 1			; total number of sprites to initialize
 
 .initSpritesLoop				; repeat
 
@@ -1238,11 +1238,11 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	sta spritesErased, x
 
 	dex
-	bpl initSpritesLoop			; until all sprites initialised
+	bpl initSpritesLoop			; until all sprites initialized
 
 	lda #0					; no active enemies yet
 	sta enemiesActive
-	
+
 	sta animateLadybugActive		; disable ladybug movement animation
 
 	rts					; return
@@ -1270,7 +1270,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	dec drawScoreIndex			; move to next digit
 	bpl drawScoreDigit			; if index < 0 (all digits drawn)
-	
+
 	lda #5					; then index = 5 (first digit again)
 	sta drawScoreIndex
 	lda #0					; and also enable leading zero blanking
@@ -1293,13 +1293,13 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda drawScoreIndex			; get digit index and divide by two to create byte index in x (2 digits per byte)
 	lsr a					; carry now = 1 (10's digit) or 0 = (units digit)
 	tax
-	
+
 .drawScoreDigitRead
 
 	lda dummy8, x				; get byte from score  (address previously setup)
-	
+
 	bcc drawScoreDigitPrint			; if carry is set shift bits to get the 10's bcd digit
-	
+
 	lsr a
 	lsr a
 	lsr a
@@ -1322,12 +1322,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 .drawScoreNext
 
 	jsr drawExtraTile			; print digit or blank tile
-	
+
 	lda drawMapTileAddr			; save screen address for next digit
 	sta drawScoreAddr
 	lda drawMapTileAddr + 1
 	sta drawScoreAddr + 1
-	
+
 	rts					; return
 
 
@@ -1362,10 +1362,10 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 .drawHighScoreLoop				; repeat
 
 	jsr drawScoreDigit			; print a digit of high score
-	
+
 	dec drawScoreIndex			; move to next digit
 	bpl drawHighScoreLoop			; until all 6 digits done
-	
+
 	lda #0					; draw final 0 digit and return
 	jmp drawExtraTile
 
@@ -1385,7 +1385,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 .eraseSpriteTileX
 
 	equb 7, 7, 14, 0			; x offset for tile behind sprite
-	
+
 .eraseSpriteTileY
 
 	equb 14, 0, 7, 7			; y offset for tile behind sprite
@@ -1396,7 +1396,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	stx eraseSpriteSaveX			; preserve registers
 	sty eraseSpriteSaveY
-	
+
 	lda spritesEraseX, x			; erase 10x14 pixel area at sprite coordinates
 	sta drawSpriteX
 	lda spritesEraseY, x
@@ -1412,12 +1412,12 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	lda spritesEraseDir, x			; get direction it was moving
 	and #3
 	tay
-	
+
 	lda spritesEraseX, x			; calculate the x offset of the tile behind the sprite
 	clc
 	adc eraseSpriteTileX, y
 	sta spriteToAddrX
-	
+
 	lda spritesEraseY, x			; calculate the y offset of the tile behind the sprite
 	clc
 	adc eraseSpriteTileY, y
@@ -1432,16 +1432,16 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	jsr drawMapTile				; then redraw it on screen
 	jmp eraseSpriteCheckLeft
-	
+
 .eraseSpriteAdjustAddress
 
 	lda #chrColumn				; else just advance the screen address without drawing the tile
 	jsr drawMapTileAddrAdvance
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .eraseSpriteCheckLeft
-	
+
 	lda spritesEraseDir, x			; if sprite was moving left
 	and #3
 	cmp #moveLeft
@@ -1467,7 +1467,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .eraseSpriteCheckUp
-	
+
 	lda spritesEraseDir, x			; if sprite was moving up
 	and #3
 	cmp #moveUp
@@ -1523,7 +1523,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	sta eraseBlockWrite + 2
 
 	lda #spriteTileBytes			; store total number of bytes in sprite
-	sta eraseBlockBytes	
+	sta eraseBlockBytes
 
 .eraseBlockColumn
 
@@ -1546,7 +1546,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	inc eraseBlockWrite + 1			; inc screen write address
 	bne eraseBlockNext
 	inc eraseBlockWrite + 2
-	
+
 .eraseBlockNext
 
 	dex					; check if we need to adjust for next row
@@ -1674,7 +1674,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 
 	cmp #objectTileIndex			; if its an object tile then use drawObjectTile instead
 	bcs drawObjectTile
-	
+
 	tay					; convert to mapTile index to address
 	lda mapTileAddrLo, y
 	sta drawMapTileRead + 1
@@ -1691,20 +1691,20 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 .drawMapTileTransfer
 
 	ldy #dummy8				; bytes to transfer (previously setup)
-	
+
 .drawMapTileRead				; repeat
 
 	lda dummy16, y				; read byte from tile (address previously setup)
-	
+
 .drawMapTileWrite
 
 	sta dummy16, y				; write byte to screen (address previously setup)
-	
+
 .drawMapTileContinue
 
 	dey					; until all bytes copied
 	bpl drawMapTileRead
-	
+
 .drawMapTileNext
 
 	clc					; add tile bytes to screen address for next tile
@@ -1714,7 +1714,7 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 	sta drawMapTileWrite + 1
 	bcc drawMapTileExit
 	inc drawMapTileWrite + 2
-	
+
 .drawMapTileExit
 
 	ldy drawMapTileSaveY			; restore registers
@@ -1780,16 +1780,16 @@ rasterTimer		= (312 / 2) * 64	; timer1 interupt raster (312 / 2) * 64uS (half wa
 .drawBcd
 
 	pha					; save value
-	
+
 	lsr a					; draw high nybble bcd digit
 	lsr a
 	lsr a
 	lsr a
 	ora #'0'
 	jsr drawChr
-	
+
 	pla					; get value
-	
+
 	and #%00001111				; draw low nybble bcd digit
 	ora #'0'
 
@@ -1839,7 +1839,7 @@ pixelRight		= &55			; bit mask for right pixel
 	sty drawChrWriteColor + 1
 
 	ldx #0					; zero bit counter
-	
+
 	stx drawChrFontRead + 2			; zero high byte of chr value
 
 	sec					; set character code origin to 0 (ascii 32-95 becomes 0-63)
@@ -1852,7 +1852,7 @@ pixelRight		= &55			; bit mask for right pixel
 	sta drawChrFontRead + 1
 	bcc drawChrFont
 	inc drawChrFontRead + 2
-	
+
 .drawChrFont
 
 	clc					; add font address to chr index
@@ -1864,13 +1864,13 @@ pixelRight		= &55			; bit mask for right pixel
 	sta drawChrFontRead + 2
 
 	ldy #6					; 6 lines per column
-	
+
 .drawChrLoop
 
 	txa					; every 4 bit pairs get a byte from chr table
 	and #3
 	bne drawChrPixelLeft
-	
+
 .drawChrFontRead
 
 	lda dummy16				; read 4 pixel pairs from font and save it (address previously setup)
@@ -1893,7 +1893,7 @@ pixelRight		= &55			; bit mask for right pixel
 	bcc drawChrWriteColor
 	ora #pixelRight
 
-.drawChrWriteColor	
+.drawChrWriteColor
 
 	and #dummy8				; mask pixels with color value previously stored here
 
@@ -1913,17 +1913,17 @@ pixelRight		= &55			; bit mask for right pixel
 
 	dey					; all 6 lines done yet ?
 	bne drawChrLoop
-	
+
 	ldy #6					; reset line counter
 
 	inc drawChrWriteScreen + 1		; move 2 lines down from top of this new column
 	inc drawChrWriteScreen + 1
-	
+
 .drawChrNext
 
 	cpx #(6 * 6) / 2			; are all pixels done yet ? (6 * 6 pixels / 2 (left, right))
 	bcc drawChrLoop				; if not then go back and process more
-	
+
 	ldy drawChrSaveY			; restore registers
 	ldx drawChrSaveX
 
@@ -1951,7 +1951,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	cli					; enable interrupts
 
 	jsr swrInitScreen			; full screen erase, setup palette colors (see loader.asm)
-	
+
 	jsr drawPlayfieldUpper			; display the upper playfield bonus letters and multipliers
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2002,7 +2002,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr initPlayfieldMiddle			; copy current maze map to the background tileMap and count number of edible items (dots/hearts/letters)
 
-	ldx #objectModeRed			; red object mode 
+	ldx #objectModeRed			; red object mode
 	jsr objectTimerUpdateColor
 
 	lda levelEdibles			; if there are no edible objects (bad maze design)
@@ -2026,8 +2026,8 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 .gameLevelContinueDrawMiddle
 
 	jsr initTimerTiles			; fill tileMap edges with timer tiles and initialize timer to starting point center top
-						; and clear enemyReleaseEnable and enemyTimerZero flags 
-	
+						; and clear enemyReleaseEnable and enemyTimerZero flags
+
 	jsr drawPlayfieldMiddle			; draw playfield middle section from tileMap
 
 	jsr enemySpawn				; spawn 1st enemy in center box ready to be active on release timer
@@ -2047,7 +2047,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta demoDir				; set demo direction to up to match the direction of ladybug at the entry position
 
 	sta pauseLadybug			; unpause ladybug
-	
+
 	sta enemySpeedCounter			; reset enemy speed fraction counter
 	sta enemyMoveCounter			; reset enemy move counter used by enemy release delay
 
@@ -2113,13 +2113,13 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 .gameLoopWaitIntLower
 
 	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
-	
+
 	jsr processSound			; process sound effects and music
 
 	jsr drawBonusItemCenter			; draw the vegetable/diamond in the center bug box (if enabled)
 
 	jsr redrawSprites			; erase and redraw sprites (above the center line split lines 0-155)
-	
+
 	jsr ladybugDeathAnimation		; draw ladybug death movement animation (if enabled)
 	bcs gameLevelContinue			; continue current level if ladbug death animation has just completed
 
@@ -2176,15 +2176,15 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda playerInput				; if esc key not pressed
 	cmp #keyBitEsc
 	beq checkEscPressed
-	
+
 	lda #escTime				; then reset escCounter
 	sta escCounter
-	
+
 .checkEscReturnFalse
 
 	clc					; return false
 	rts
-	
+
 .checkEscPressed
 
 	lda demoMode				; if demo mode is enabled then skip waiting for escCounter to timeout
@@ -2192,7 +2192,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	dec escCounter				; else decrement escCounter
 	bne checkEscReturnFalse			; if escCounter != 0 then return false
-	
+
 .checkEscReturnTrue
 
 	jsr playSoundSilence			; esc time has passed so terminate any current sound effects or music
@@ -2230,7 +2230,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr drawString				; draw game over message in red
 	equw screenAddr + 2 + 7 * chrColumn + 12 * chrRow
 	equs colorRed, "GAME OVER", &ff
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; update bonus colors while waiting for the pauseCounter to timeout
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -2267,7 +2267,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta highScorePtr
 	lda #hi(highScoreTable)
 	sta highScorePtr + 1
-	
+
 	ldx #7					; 8 entrys to check (7 to 0)
 
 .checkHighScoreLoop				; repeat
@@ -2284,11 +2284,11 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda (highScorePtr), y
 	sbc score + 2
 	bcc checkHighScoreEntry			; if there was a borrow then score > current score we are checking so do the name registration and return
-	
+
 	lda #14 - 1				; else move to the next score in the table (14 bytes to next highscore but carry is set so use 13 instead)
 	adc highScorePtr			; (cannot cross page boundry so no need to adjust high byte address)
 	sta highScorePtr
-	
+
 	dex					; until end of table
 	bpl checkHighScoreLoop
 
@@ -2311,7 +2311,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	lda hi(highScoreTable) * 256, y		; shift memory
 	sta hi(highScoreTable) * 256 + 14, y
-	
+
 	dey
 	cpy highScorePtr
 	bne checkHighScoreShift
@@ -2335,13 +2335,13 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	lda #sfxMusicLetters			; play high score music
 	jsr playSound
-	
+
 	jsr highScoreFirstPlaceUpdate		; update lower playfield with first place high score
 
 	jmp drawScoreTable			; draw the high score page and return
-	
-	
-	
+
+
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; initMiddle					initialize all sprites as blanked and erased
 ;						clear tilemap
@@ -2360,9 +2360,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr initSprites				; initialize all sprites as blanked and erased
 
 	jsr clearTileMap			; fill tilemap with blank tile
-	
+
 	jsr initTimerTiles			; fill edges with timer tiles
-	
+
 	jmp drawPlayfieldMiddle			; draw the middle playfield and return
 
 
@@ -2376,7 +2376,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 ;						}
 ;						start ladybug entry animation (if not already started)
 ;						if ladybug has reached starting position then disable ladybug entry animation
-;	
+;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; entry parameters	none
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2397,7 +2397,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda spritesY + 0
 	cmp #ladybugEntryY
 	bne ladybugEntryAnimationNext
-	
+
 	lda #sfxMusicEntry			; play the entry music
 	jsr playSound
 
@@ -2407,15 +2407,15 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 .ladybugEntryAnimationNext
 
 	jsr animateLadybug			; do the movement animation
-	
+
 	lda spritesX + 0			; if ladybug at start position
 	cmp #ladybugStartX
 	bne ladybugEntryAnimationExit
-	
+
 	lda spritesY + 0
 	cmp #ladybugStartY
 	bne ladybugEntryAnimationExit
-	
+
 	lda #0					; then disable entry movement animation
 	sta ladybugEntryEnable
 
@@ -2521,7 +2521,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 .moveSpritesDirY
 
 	equb -1, 1, 0, 0			; Y up down left right
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; move ladybug and enemies 1 pixel
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -2530,7 +2530,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	ldx #0					; start at sprite index 0 (ladybug)
 	jsr moveSpritesPixel			; move ladybug and enemies (if they're enabled to move)
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; move enemies an extra pixel if required (enemy speed)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -2541,7 +2541,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta enemySpeedCounter
 	bcs moveSpritesEnemy			; if carry generated (extra move required for enemies)
 	jmp moveSpritesExit
-	
+
 .moveSpritesEnemy
 
 	ldx #1					; then start at sprite index 1 (enemies) and move them again (if they're enabled to move)
@@ -2550,7 +2550,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	; move sprites
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.moveSpritesPixel	
+.moveSpritesPixel
 
 	stx moveSpritesIndex			; set the starting sprite index
 
@@ -2571,7 +2571,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda pauseLadybug
 	beq moveSpritesGetDirection
 	jmp moveSpritesNext
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .moveSpritesIsEnemyEnabled
@@ -2587,7 +2587,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda spritesDir, x			; if sprite is blanked or not moving then skip it and go on to next sprite
 	and #spriteBlanking + moveStop
 	beq moveSpritesDirection
-	
+
 	jmp moveSpritesNext
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -2696,7 +2696,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr playSound
 
 	dec enemiesActive			; reduce number of active enemies
-	
+
 	lda #spriteBlanking			; disable the current enemy
 	sta spritesDir, x
 
@@ -2711,7 +2711,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 .moveSpritesEnemyAi
 
 	ldx #3					; remove unavailable paths that are blocked by solid walls/turnstiles
-	
+
 .moveSpritesEnemyAiRemovePaths
 
 	ldy mapDir, x
@@ -2752,7 +2752,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	ror a
 	ora moveSpritesAvailablePaths, y
 	sta moveSpritesTargetPaths, y
-	
+
 .moveSpritesEnemyAiCheckDown
 
 	iny
@@ -2876,15 +2876,15 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	equw screenAddr + 0			; screen position
 	equb 1					; tile count
 	equb extraTileUpper + 0			; red left
-	
+
 	equw screenAddr + 1 * chrColumn
 	equb 7
 	equb extraTileUpper + 1			; red center
-	
+
 	equw screenAddr + 16 + 7 * chrColumn
 	equb 1
 	equb extraTileUpper + 2			; red right
-	
+
 	equw screenAddr + 16 + 8 * chrColumn
 	equb 1
 	equb extraTileUpper + 3			; yellow left
@@ -2892,7 +2892,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	equw screenAddr + 16 + 9 * chrColumn
 	equb 5
 	equb extraTileUpper + 4			; yellow center
-	
+
 	equw screenAddr + 8 + 14 * chrColumn
 	equb 1
 	equb extraTileUpper + 5			; yellow right
@@ -2900,7 +2900,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	equw screenAddr + 8 + 15 * chrColumn
 	equb 1
 	equb extraTileUpper + 6			; cyan left
-	
+
 	equw screenAddr + 8 + 16 * chrColumn
 	equb 6
 	equb extraTileUpper + 7			; cyan center
@@ -2916,7 +2916,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 .drawPlayfieldUpper
 
 	ldy #0					; draw the red, yellow, cyan boxes
-	
+
 .drawPlayfieldUpperGetData			; repeat
 
 	lda drawPlayfieldUpperBoxData + 0, y	; get screen address
@@ -2925,16 +2925,16 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	sta drawMapTileAddr + 1
 
 	ldx drawPlayfieldUpperBoxData + 2, y	; get tile count
-	
+
 	lda drawPlayfieldUpperBoxData + 3, y	; get tile
 
 .drawPlayfieldUpperLoop				; repeat
 
 	jsr drawExtraTile			; draw the tile
-	
+
 	dex					; until tilecount done
 	bne drawPlayfieldUpperLoop
-	
+
 	iny					; move to next entry in list
 	iny
 	iny
@@ -2948,7 +2948,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	equs colorCyan, chrMultiplierX, ' ', chrMultiplierX, ' ', chrMultiplierX, &ff
 
 	; contine to drawPlayfieldUpperBonus
-	
+
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2970,7 +2970,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	jsr drawString				; setup screen address to the bonus first letter position 'S'
 	equw screenAddr + 2 + 16
 	equb &ff
-	
+
 	lda bonusBits + 0			; copy bonus bits (shifting everything left one bit to drop the unused bit 15)
 	asl a
 	sta bonusBitsCopy + 0
@@ -2993,14 +2993,14 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	lda upperBonusText, x			; get chr from table and print it
 	jsr drawChr
-	
+
 	lda upperBonusOffset, x			; add address offset from table to screen position
 	clc
 	adc drawChrAddr
 	sta drawChrAddr
 	bcc drawPlayfieldUpperTextShiftBits
 	inc drawChrAddr + 1
-	
+
 .drawPlayfieldUpperTextShiftBits
 
 	asl bonusBitsCopy + 0			; shift to next bonus bit
@@ -3021,7 +3021,7 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	equs "SPECIAL"
 	equs "EXTRA"
 	equs chrMultiplier2, chrMultiplier3, chrMultiplier5
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .upperBonusOffset
@@ -3115,7 +3115,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	jsr drawString				; set screen position and draw "1P" in yellow
 	equw screenAddr + 2 + 16 + 13 * chrColumn + 24 * chrRow
 	equs colorYellow, "1P", &ff
-	
+
 						; set screen position to last digit of score and draw a "0" tile
 	lda #lo(screenAddr + 22 * chrColumn + 24 * chrRow)
 	sta drawMapTileAddr
@@ -3159,12 +3159,12 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	jsr drawString				; else draw high score name
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equb colorRed, &ff
-	
+
 	lda #lo(highScoreTable + 3)
 	sta drawTextAddr + 0
 	lda #Hi(highScoreTable + 3)
 	sta drawTextAddr + 1
-	
+
 	jmp drawText
 
 
@@ -3210,40 +3210,40 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 1 * chrRow)
 	sta drawMapTileAddr + 1
-	
+
 	ldx #0					; initialize index
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawPlayfieldMiddleLoop0
 
 	lda tileMap, x				; draw 1st &100 of &211 map tiles
 	jsr drawMapTile
-	
+
 	inx
 	bne drawPlayfieldMiddleLoop0
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawPlayfieldMiddleLoop1			; draw 2nd &100 of &211 map tiles
 
 	lda tileMap + &100, x
 	jsr drawMapTile
-	
+
 	inx
 	bne drawPlayfieldMiddleLoop1
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawPlayfieldMiddleLoop2
 
 	lda tileMap + &200, x			; draw last &11 of &211 map tiles
 	jsr drawMapTile
-	
+
 	inx
 	cpx #&11
 	bne drawPlayfieldMiddleLoop2
-	
+
 	rts					; return
 
 
@@ -3281,7 +3281,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	lda level				; if level >= bonusDiamondLevel
 	cmp #bonusDiamondLevel
 	bcc drawBonusItemVegetable
-	
+
 	lda #centerDiamond			; then draw a diamond and return
 	bne drawSprite10x10			; (bne used as branch always)
 
@@ -3312,7 +3312,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	lda #sprite10x10Height			; set height for the 10x10 pixel sprite
 	sta drawSpriteColumnVtest + 1
 	sta drawSpriteColumnTileHeight + 1
-	
+
 	lda #opcodeINX				; drawing normal so use INX instruction
 	sta drawSpriteNextLineInstruction
 
@@ -3415,7 +3415,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	lda drawSpriteY				; set y index to lowest 3 bits of y position
 	and #7
 	tay
-	
+
 	lda drawSpriteScreenAddr		; setup screen address for writing
 	sta drawSpriteWrite + 1
 	lda drawSpriteScreenAddr + 1
@@ -3437,7 +3437,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	lda dummy16, x				; read byte from sprite (address previously setup)
 
-.drawSpriteWrite	
+.drawSpriteWrite
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; screen destination address value of following intruction is setup by previous code
@@ -3448,11 +3448,11 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 .drawSpriteNextLine
 
 	iny					; move to next line down on screen
-	
+
 	tya
 	and #7					; check if row adjustment needed
 	bne drawSpriteCount
-	
+
 	clc					; adjust screen address for next row
 	lda drawSpriteWrite + 1
 	adc #lo(chrRow)
@@ -3460,7 +3460,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	lda drawSpriteWrite + 2
 	adc #hi(chrRow)
 	sta drawSpriteWrite + 2
-	
+
 	ldy #0					; zero y index for start of next row
 
 .drawSpriteCount
@@ -3484,7 +3484,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	cpx #dummy8
 	bne drawSpriteRead			; if still processing column then continue reading and writing sprite data
-	
+
 	clc					; adjust sprite address for next column
 	lda drawSpriteRead + 1
 
@@ -3537,20 +3537,20 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	sta addScoreMultiplySaveA		; preserve score
 	stx addScoreMultiplySaveX		; preserve X register
-	
+
 	ldx scoreMultiplier			; get scoreMultiplier index
 
 	lda addScoreMultiplyTable, x		; get multiplier loop count from table
 	tax
-	
+
 .addScoreMultiplyLoop				; repeat
 
 	lda addScoreMultiplySaveA		; add score to player score
 	jsr addScore
-	
+
 	dex					; until loop count done
 	bne addScoreMultiplyLoop
-	
+
 	ldx addScoreMultiplySaveX		; restore register
 
 	rts					; return
@@ -3591,7 +3591,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	sta score + 2
 
 	bcc addScoreExit			; if no score overflow ( > 999999 ) then return
-	
+
 	lda #&99				; else set score to 999999
 	sta score
 	sta score + 1
@@ -3623,13 +3623,13 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	asl a
 	asl a
 	jsr addScore				; and add to score
-	
+
 	lda vegetableScore			; shift vegetable hundreds to thousands
 	lsr a
 	lsr a
 	lsr a
 	lsr a
-	
+
 	sed					; bcd mode
 
 	clc					; and add to score
@@ -3694,7 +3694,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	ldx #0					; validationCode = 0
 	stx validationCode
-	
+
 .generateValidationLoop				; repeat
 
 	lda configData, x			; validationCode += configData[x] eor #magicNumber
@@ -3702,11 +3702,11 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	clc
 	adc validationCode
 	sta validationCode
-	
+
 	inx
 	cpx #validationCode - configData
 	bne generateValidationLoop		; until end of configData
-	
+
 	rts					; return
 
 
@@ -3728,15 +3728,15 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 .drawBcdMini
 
 	pha					; save value
-	
+
 	lsr a					; draw high nybble
 	lsr a
 	lsr a
 	lsr a
 	jsr drawChrMini
-	
+
 	pla					; get value
-	
+
 	and #%00001111				; draw low nybble
 
 	; continue on into drawChrMini for the low nybble
@@ -3774,18 +3774,18 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 	sta drawChrMiniLoop + 2
 
 	ldy #miniFontBytes - 1			; number of bytes to transfer
-	
+
 .drawChrMiniLoop				; repeat
 
 	lda dummy16, y				; get byte from minifont (address previously setup)
-	
+
 .drawChrMiniWrite
 
 	sta dummy16, y				; store it on screen (address previously setup)
-	
+
 	dey
 	bpl drawChrMiniLoop			; until all bytes transferred
-	
+
 	lda #miniFontBytes			; move to next chr position
 	clc
 	adc drawChrMiniWrite + 1
@@ -3797,7 +3797,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 	ldy drawChrSaveY			; restore registers
 	ldx drawChrSaveX
-	
+
 	rts					; return
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3827,7 +3827,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta drawMapTileAddr
 	bcc drawMapTileAddrAdvanceExit
 	inc drawMapTileAddr + 1
-	
+
 .drawMapTileAddrAdvanceExit
 
 	rts					; return
@@ -3861,15 +3861,15 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	adc #&01				; add &01 to level (carry already clear from previous cmp result)
 	sta level
-	
-.levelAdvanceVegetableScore	
+
+.levelAdvanceVegetableScore
 
 	lda vegetableScore			; if vegetableScore < &9500
 	cmp #&95
 	bcs levelAdvanceVegetableImage
 	adc #&05				; then add &0500 to vegetableScore
 	sta vegetableScore
-	
+
 .levelAdvanceVegetableImage
 
 	cld					; binary mode
@@ -3890,7 +3890,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda mazeMap				; if mazeMap >= 6
 	cmp #6
 	bcc levelAdvanceExit
-	
+
 	lda #0					; then mazeMap = 0
 	sta mazeMap
 
@@ -3918,7 +3918,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	dec pauseLadybug
 
 	bne pauseTimersUpdateEnemy		; if pauseLadybug timer == 0 then
-	
+
 	lda spritesDir + 0			; unblank ladybug sprite
 	and #spriteBlanking eor &ff
 	sta spritesDir + 0
@@ -3943,23 +3943,23 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda vegetableScoreActive		; if vegetable score was also active then
 	beq pauseTimersUpdateEnemy
-	
+
 	lda #0					; deactive vegetable score display
 	sta vegetableScoreActive
-	
+
 						; position to 1 tile left of center box
 
 	lda #lo(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
 	sta drawMapTileAddr
 	lda #hi(screenAddr + vegetableScoreX * chrColumn + vegetableScoreY * chrRow)
 	sta drawMapTileAddr + 1
-	
+
 	lda tileMap + centerBoxLeft		; redraw the 3 tiles that were over written by vegetable bonus score
 	jsr drawMapTile
-	
+
 	lda tileMap + centerBoxCenter
 	jsr drawMapTile
-	
+
 	lda tileMap + centerBoxRight
 	jsr drawMapTile
 
@@ -3970,7 +3970,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda pauseEnemy				; if pauseEnemy timer > 0 then decrement
 	beq pauseTimersUpdateExit
 	dec pauseEnemy
-	
+
 .pauseTimersUpdateExit
 
 	rts					; return
@@ -3985,10 +3985,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	dec spritesImgFrameCounter		; animation timer -= 1
 	bne animationFrameUpdateExit		; if animation timer = 0
-	
+
 	lda #spritesAnimationTime		; then reset animation timer
 	sta spritesImgFrameCounter
-	
+
 	dec spritesImgFrame			; animation frame -= 1
 	bpl animationFrameUpdateExit		; if animation frame < 0
 
@@ -4038,7 +4038,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw "instructions" in red
 	equw screenAddr + 2 + 8 + 5 * chrColumn + 4 * chrRow
 	equs colorRed, "INSTRUCTIONS", &ff
-	
+
 						; position ready for the 3 cyan hearts objects
 
 	lda #lo(screenAddr + 8 + 2 * chrColumn + 7 * chrRow)
@@ -4084,7 +4084,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda #column				; advance 1 column
 	jsr drawMapTileAddrAdvance
-	
+
 	inx					; move to next entry in table
 
 	cpx #instructionsLettersEnd - instructionsLetters
@@ -4113,7 +4113,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw "> START GAME <" in flashing red/magenta, skull color, flashing red/magenta
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
 	equs colorSpecial0, chrRight, colorSkull, " START GAME ", colorSpecial0, chrLeft, &ff
-	
+
 	lda #sfxObject				; play object sound effect
 	jsr playSound
 
@@ -4132,7 +4132,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr instructionsFunctions		; update colors and get input bits (keyboard/joystick)
 
 	bne instructionsRelease			; until no input bits are active (nothing pressed)
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait keyboard/joystick pressed
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4151,7 +4151,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	cmp #keyBitEsc				; if esc key was pressed then return with false status (return to menu)
 	beq instructionsReturnFalse
-	
+
 	bne instructionsRelease			; else loop back and wait for release again
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4190,7 +4190,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr instructionsLadybugAnimation	; do the ladybug walking animation
 
 	jsr animateLadybug			; update ladybug direction and frame counter
-	
+
 	jsr redrawSprites			; draw ladybug and enemy sprites
 
 	jsr moveSprites				; move ladybug sprite
@@ -4230,7 +4230,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda animateLadybugActive		; if ladybug animation not active
 	bne instructionsLadybugAnimationExit
-	
+
 	lda #animateLadybugInstructions		; then start the animation
 	jsr animateLadybugInitialize
 
@@ -4266,7 +4266,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	and #2					; then flash ladybug
 	bne ladybugDeathAnimationBlank
-	
+
 	sta ladybugDeathAnimationIndex		; initialize death animation index = 0 for 2nd part
 
 	lda spritesDir + 0
@@ -4274,7 +4274,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta spritesDir + 0
 
 	jmp ladybugDeathAnimationCheckMusic
-	
+
 .ladybugDeathAnimationBlank
 
 	lda spritesDir + 0
@@ -4285,7 +4285,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda soundTimers + 0			; if music not playing
 	bne ladybugDeathAnimationReturnFalse
-	
+
 	lda #&ff				; enable level entry animation
 	sta ladybugEntryEnable
 
@@ -4315,7 +4315,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta drawSpriteY
 
 	jsr spriteToAddr			; convert xy to tile map address and screen tile address
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldy #0					; redraw 3x3 tiles around ladybug
@@ -4343,7 +4343,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #hi(chrRow - 3 * chrColumn)
 	adc drawMapTileAddr + 1
 	sta drawMapTileAddr + 1
-	
+
 	dex
 	bne ladybugDeathAnimationDrawTiles
 
@@ -4359,7 +4359,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda pauseLadybug			; animate angel wings
 	and #4
 	bne ladybugDeathAnimationDrawAngelSprite
-	
+
 	inc drawSpriteImg
 
 .ladybugDeathAnimationDrawAngelSprite
@@ -4407,7 +4407,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda vsyncCounter			; after 8 vsync frames have counted
 	and #7
 	bne ladybugDeathAnimationDrawAngelExit
-	
+
 	inx					; index now points to next pair of directions
 	inx
 
@@ -4415,7 +4415,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bne ladybugDeathAnimationFrame
 
 	ldx #0					; then set it back to start
-	
+
 .ladybugDeathAnimationFrame
 
 	stx ladybugDeathAnimationIndex		; save updated index for next time around
@@ -4457,11 +4457,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldx #&02				; 2 skulls
 	cmp #&01 + 1				; level 1
 	bcc initLevelSettingsSkulls
-	
+
 	inx					; 3 skulls
 	cmp #&04 + 1				; level 2-4
 	bcc initLevelSettingsSkulls
-	
+
 	inx					; 4 skulls
 	cmp #&09 + 1				; level 5-9
 	bcc initLevelSettingsSkulls
@@ -4469,7 +4469,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	inx					; 5 skulls
 	cmp #&17 + 1				; level 10-17
 	bcc initLevelSettingsSkulls
-	
+
 	inx					; 6 skulls
 						; level 18-99
 
@@ -4534,18 +4534,18 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldx #enemyTimerSlow			; if level 1 use slow timer speed
 	cmp #&01 + 1
 	bcc initLevelSettingsTimer
-	
+
 	ldx #enemyTimerMedium			; if level 2 to 4 use medium timer speed
 	cmp #&04 + 1
 	bcc initLevelSettingsTimer
-	
+
 	ldx #enemyTimerFast			; if level >= 5 use fast timer speed
 
 .initLevelSettingsTimer
 
 	stx enemyTimerSpeed			; set enemy timer speed
 	stx enemyTimerSpeedCounter
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; zero timer position, clear timer zero, enemy release, diamond/special/extra active, level ended, game paused flags
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4598,7 +4598,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .optionsMin
 
 	equb  1,  0,  0,  0,  0			; minimum value for ladybug lives, enemy speed, enemy target, timer volume, sound
-	
+
 .optionsMax
 
 	equb  10, 4, 4,  4,  3			; maximum value + 1 for ladybug lives, enemy speed, enemy target, timer volume, sound
@@ -4644,7 +4644,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
 	bne mainMenuWaitRelease			; until no player input
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process functions and wait key press
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4691,7 +4691,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda animateLadybugActive		; if ladybug animation not active
 	bne mainMenuLadybugAnimationExit
-	
+
 	lda #animateLadybugMainMenu		; then start the animation
 	jsr animateLadybugInitialize
 
@@ -4707,7 +4707,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawCursor
 
 	ldy mainMenuCursorOld			; get old cursor position
-	
+
 	clc					; erase old cursor
 	lda screenRowLo, y
 	adc #lo(2 + 3 * chrColumn + 11 * chrRow)
@@ -4772,10 +4772,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
-	jsr mainMenuLadybugAnimation		; check and initialise ladybug animation if needed
+	jsr mainMenuLadybugAnimation		; check and initialize ladybug animation if needed
 
 	jsr animateLadybug			; update ladybug direction and frame counter
-	
+
 	jsr redrawSprites			; draw sprites
 
 	jsr moveSprites				; move sprites
@@ -4805,7 +4805,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda mainMenuCursor			; if the cursor is on the timer volume selection
 	cmp #6
 	bne mainMenuFunctionsExit
-	
+
 	lda vsyncCounter			; and if vsyncCounter & 7 == 0
 	and #7
 	bne mainMenuFunctionsExit
@@ -4831,10 +4831,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	cmp #keyBitUp				; if up pressed then run up function
 	beq mainMenuProcessUp
-	
+
 	cmp #keyBitDown				; if down pressed then run down function
 	beq mainMenuProcessDown
-	
+
 	cmp #keyBitStart			; if start pressed then run start function
 	beq mainMenuProcessStart
 
@@ -4872,7 +4872,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bpl mainMenuProcessUpExit
 
 	lda #8					; then mainMenuCursor = 8 (wrap around)
-	
+
 .mainMenuProcessUpExit
 
 	sta mainMenuCursor			; update cursor value
@@ -4912,13 +4912,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	cmp #9					; if mainMenuCursor >= 9
 	bcc mainMenuProcessDownExit
-	
+
 	lda #0					; then mainMenuCursor == 0 (wrap around)
 
 .mainMenuProcessDownExit
 
 	sta mainMenuCursor			; update cursor
-	
+
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
@@ -4936,7 +4936,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldx mainMenuCursor			; get mainMenuCursor position
 
 	beq mainMenuProcessReturnTrue		; if mainMenuCursor = 0 ("START GAME") then return true
-	
+
 	cpx #2					; if mainMenuCursor = 2 ("HIGH SCORES") then display high score table
 	beq mainMenuHighScores
 
@@ -4959,7 +4959,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda gameSettings - 3, x			; if gameSettings[x - 3] >= optionsMax[x - 3] (maximum value + 1)
 	cmp optionsMax - 3, x
 	bcc mainMenuProcessStartExit
-	
+
 	lda optionsMin - 3, x			; then gameSettings[x - 3] = optionsMin[x - 3] (minimum value)
 	sta gameSettings - 3, x
 
@@ -4973,7 +4973,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	lda mainMenuCursor			; get cursor
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessStartLadybugLives
@@ -4995,9 +4995,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	cmp #4					; if cursor == 4 (enemySpeed) then
 	bne mainMenuProcessStartEnemyTarget
-	
+
 	jsr mainMenuDrawEnemies			; update the 4 enemies on screen with new random enemies
-	
+
 	clc					; return false
 	rts
 
@@ -5007,16 +5007,16 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	cmp #5					; if cursor == 5 (enemyTarget) then
 	bne mainMenuProcessReturnFalse
-	
+
 	jsr mainMenuDrawEnemies			; update the 4 enemies on screen with new random enemies
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessReturnFalse
 
 	clc					; return false
 	rts
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .mainMenuProcessReturnTrue
@@ -5038,7 +5038,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jsr drawScoreTable			; draw the high scores page and wait for start / esc to be pressed or idle timeout
-	
+
 	jsr mainMenuDraw			; draw the main menu screen (and reset idle time)
 
 	clc					; return false
@@ -5062,7 +5062,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs colorSpecial1, "PRESS ", colorMultiplier1,"UP       ", &ff
 
 	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
-	
+
 	tay					; get key scan code
 	lda keyScanCodes, y
 
@@ -5086,11 +5086,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw text
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs colorMultiplier1, "DOWN", &ff
-	
+
 .mainMenuProcessKeyboardDown
 
 	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
-	
+
 	tay					; get key scan code
 	lda keyScanCodes, y
 
@@ -5117,11 +5117,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw text
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs colorMultiplier1, "LEFT", &ff
-	
+
 .mainMenuProcessKeyboardLeft
 
 	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
-	
+
 	tay					; get key scan code
 	lda keyScanCodes, y
 
@@ -5150,11 +5150,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw text
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs colorMultiplier1, "RIGHT", &ff
-	
+
 .mainMenuProcessKeyboardRight
 
 	jsr mainMenuProcessKeyboardKey		; process graphics and sound functions and return with get key index
-	
+
 	tay					; get key scan code
 	lda keyScanCodes, y
 
@@ -5204,7 +5204,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr swrKeyboardScan			; wait for key release
 	bcs mainMenuProcessKeyboardKey
-	
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; colors, animation, wait for key press and return with key index in A
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5241,8 +5241,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #hi(mainMenuDrawLogoData)
 	sta mainMenuDrawLogoX + 2
 
-	ldy #0					; initialise row counter
-	
+	ldy #0					; initialize row counter
+
 .mainMenuDrawLogoY				; repeat
 
 	clc					; calculate screen address for row
@@ -5253,14 +5253,14 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc screenRowHi + 2, y
 	sta drawMapTileAddr + 1
 
-	ldx #0					; initialise column counter
-	
+	ldx #0					; initialize column counter
+
 .mainMenuDrawLogoX				; repeat
 
 	lda dummy16				; get byte from logo tile data (address previously setup)
 
 	bpl mainMenuDrawLogoTile		; if tile = -1
-	
+
 	lda #extraTileBlank			; then draw a blank tile
 	bne mainMenuDrawLogoTileNow
 
@@ -5272,7 +5272,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuDrawLogoTileNow
 
 	jsr drawExtraTile
-	
+
 	inc mainMenuDrawLogoX + 1		; inc logo tile address
 	bne mainMenuDrawLogoNext
 	inc mainMenuDrawLogoX + 2
@@ -5282,7 +5282,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	inx					; until current row is complete
 	cpx #15
 	bne mainMenuDrawLogoX
-	
+
 	iny					; until all rows are completed
 	cpy #3
 	bne mainMenuDrawLogoY
@@ -5326,15 +5326,15 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 15 * chrRow
 	equs colorGreen, "LADY BUGS", &ff
-	
+
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 16 * chrRow
 	equs colorYellow, "AI.SPEED", &ff
-	
+
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 17 * chrRow
-	equs colorGreen, "AI.TARGET", &ff
-	
+	equs colorGreen, "AI.SKILL", &ff
+
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 18 * chrRow
 	equs colorYellow, "TIMER VOLUME", &ff
@@ -5342,22 +5342,22 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 19 * chrRow
 	equs colorGreen, "SOUND", &ff
-	
+
 	jsr drawString
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs colorYellow, "CONTROLS   ", colorWhite, &ff
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; display the current user defined control keys
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #3					; start with up key
-	
+
 .mainMenuDrawTextKeys				; repeat
 
 	lda optionKeysAscii, x			; get ascii version of key and display it
 	jsr drawChr
-	
+
 	dex					; until all 4 printed
 	bpl mainMenuDrawTextKeys
 
@@ -5374,20 +5374,20 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw ladybug lives
 	equw screenAddr + 2 + 18 * chrColumn + 15 * chrRow
 	equb colorWhite, &ff
-	
+
 	lda optionLadybugLives
 	ora #'0'
 	jsr drawChr
-	
+
 .mainMenuDrawEnemySpeed
 
 	jsr drawString				; draw enemy speed
 	equw screenAddr + 2 + 15 * chrColumn + 16 * chrRow
 	equb &ff
-	
+
 	lda optionEnemySpeed
 	jsr mainMenuDrawEnemySetting
-	
+
 .mainMenuDrawEnemyTarget
 
 	jsr drawString				; draw enemy Target
@@ -5396,13 +5396,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda optionEnemyTarget
 	jsr mainMenuDrawEnemySetting
-	
+
 .mainMenuDrawTimerVolume
 
 	jsr drawString				; draw timer volume
 	equw screenAddr + 2 + 18 * chrColumn + 18 * chrRow
 	equb &ff
-	
+
 	lda optionTimerVolume
 	ora #'0'
 	jsr drawChr
@@ -5431,7 +5431,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs "  ON", &ff
 
 	rts
-	
+
 .mainMenuDrawSoundDemoOn			; sound = 2 (demo on)
 
 	jsr drawString				; draw "DEMO" and return
@@ -5439,7 +5439,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equs "DEMO", &ff
 
 	rts
-	
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; .mainMenuDrawEnemySetting			draw "  EASY", "NORMAL", "  HARD", "INSANE"
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -5524,32 +5524,31 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	pha					; and this would break the random number generator
 
 	ldx #3					; 4 enemies to draw
-	
+
 .mainMenuDrawEnemiesLoop			; repeat
 
 	lda mainMenuEnemiesX, x			; set X and Y position for enemy from table
 	sta spritesX + 1, x
 	lda mainMenuEnemiesY, x
 	sta spritesY + 1, x
-	
+
 	lda randomSeed + 0			; set enemy sprite image
 	and #7
 	tay
 	lda spriteBaseImg + 1, y
 	sta spritesImg + 1, x
-	
+
 	lda randomSeed + 1			; set sprite direction (not moving)
 	and #3
 	ora #moveStop
 	sta spritesDir + 1, x
 
 	inc randomSeed + 0			; increment sprite image for next sprite
-
 	inc randomSeed + 1			; increment direction for next sprite
 
 	dex					; until all enemies placed
 	bpl mainMenuDrawEnemiesLoop
-	
+
 	pla					; restore the original random seed
 	sta randomSeed + 1
 	pla
@@ -5622,7 +5621,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda drawRandomFlowerTile + 2, y		; draw bottom left
 	jsr drawExtraTile
-	
+
 	lda drawRandomFlowerTile + 3, y		; draw bottom right
 	jsr drawExtraTile
 
@@ -5689,7 +5688,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw 3 red hearts, "BEST PLAYERS" in skull color, 3 red hearts
 	equw screenAddr + 2 + 8 + 1 * chrColumn + 3 * chrRow
 	equs colorRed, chrHeart,chrHeart,chrHeart, colorSkull, " BEST PLAYERS ", colorRed, chrHeart,chrHeart,chrHeart, &ff
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	jsr drawString				; position cursor for start of high score table
@@ -5702,7 +5701,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sta highScorePtr
 	lda #hi(highScoreTable)
 	sta highScorePtr + 1
-	
+
 .drawScoreTableLoop				; repeat
 
 	jsr drawScoreTableBlanking		; draw score with leading zero blanking
@@ -5713,7 +5712,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldy #3					; if bit 7 of 1st character of name is 1 then draw a heart instead of a space
 	lda (highScorePtr), y
 	bpl drawScoreTableArcadeMode
-	
+
 .drawScoreTableChallengeMode
 
 	lda #chrHeart				; heart for high score challenge mode
@@ -5755,7 +5754,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	clc
 	adc #14
 	sta highScorePtr
-	
+
 	dex					; until all 8 entrys processed
 	bne drawScoreTableLoop
 
@@ -5764,7 +5763,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString				; draw "> MENU <"
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 21 * chrRow
 	equs colorSpecial0, chrRight, colorSkull, " MENU ", colorSpecial0, chrLeft, &ff
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; do functions and wait for key release
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -5777,7 +5776,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawScoreTableFunctions		; update colors and scan keyboard
 
 	bne drawScoreTableRelease		; if key pressed then wait for key release
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; do functions and wait for start/esc pressed
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -5800,7 +5799,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .drawScoreTableExit
 
 	jsr playSoundSilence			; kill any sounds playing
-	
+
 	lda #sfxTurnstile			; play sound effect and return
 	jmp playSound
 
@@ -5834,10 +5833,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	pla
 	and #%00001111
 	jsr drawScoreTableBlankingDigit
-	
+
 	dey					; until all pairs displayed
 	bpl drawScoreTableBlankingPrint
-	
+
 	lda #'0'				; draw final 0 digit
 	jsr drawChr
 
@@ -5858,7 +5857,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bne drawScoreTableBlankingDigitNotZero	; if digit is a zero and if leading zero blanking is enabled
 	bit drawScoreTableZero
 	bmi drawScoreTableBlankingDigitNotZero
-	
+
 	lda #' '				; then draw a space and return
 	jmp drawChr
 
@@ -5928,16 +5927,16 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	clc					; then return false
 	rts
-	
+
 .checkPauseGameActivate
 
 	lda #&ff				; else pause game
 	sta pauseGame
-	
+
 	jsr drawString				; and replace high score name with "  PAUSED  "
 	equw screenAddr + 2 + 16 + 5 * chrColumn + 25 * chrRow
 	equs colorMultiplier0, "  PAUSED  ", &ff
-	
+
 .checkPauseGameReturnTrue
 
 	sec					; return true
@@ -5956,10 +5955,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda playerInput				; and if any of up down left right are pressed
 	and #keyBitUp + keyBitDown + keyBitLeft + keyBitRight
 	beq checkPauseGameReturnTrue
-	
+
 	lda #0					; disable game pause
 	sta pauseGame
-	
+
 	jsr drawDemoModeOrName			; redraw the demo mode or high score name text to replace the paused text
 
 	clc					; return false
@@ -6016,7 +6015,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr drawString
 	equw screenAddr + 2 + 14 * chrRow + 4 * chrColumn
 	equs colorGreen, "A B C D E F G H", &ff
-	
+
 	jsr drawString
 	equw screenAddr + 2 + 16 * chrRow + 4 * chrColumn
 	equs "I J K L M N O P", &ff
@@ -6046,7 +6045,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	ldy #9					; fill the high score name with 10 spaces
 	lda #' '
-	
+
 .nameRegClear
 
 	sta (highScorePtr), y
@@ -6075,7 +6074,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	bcs nameRegExit				; if enemy timer timed out then return
 
 	bne nameRegWaitRelease			; if key is pressed then loop back and wait for release
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; do functions, wait for key press and process key press
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -6115,7 +6114,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr waitIntLower			; wait for timer1 interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
-	
+
 	jsr moveSprites				; move ladybug
 
 	jsr redrawSprites			; draw ladybug
@@ -6200,7 +6199,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lsr playerInput				; if left pressed
 	bcc nameRegProcessDown
-	
+
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
@@ -6218,7 +6217,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lsr playerInput				; if down pressed
 	bcc nameRegProcessUp
-	
+
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
@@ -6237,7 +6236,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lsr playerInput				; if up pressed
 	bcc nameRegProcessRight
-	
+
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
@@ -6255,7 +6254,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lsr playerInput				; if right pressed
 	bcc nameRegProcessCursor
-	
+
 	lda #sfxMunch				; play sound effect
 	jsr playSound
 
@@ -6293,7 +6292,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	cmp #30					; if cursor box = 30 (delete)
 	bne nameRegProcessChr
-	
+
 	ldy nameRegCursorText			; if text cursor != 0 (first character position in name)
 	beq nameRegProcessCursor
 
@@ -6320,7 +6319,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	jsr playSound
 
 	jmp nameRegProcessCursor
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .nameRegProcessChr
@@ -6328,7 +6327,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldy nameRegCursorText			; if text cursor != 10 (10 characters max in name)
 	cpy #10
 	beq nameRegProcessCursor
-	
+
 	ldx nameRegCursor			; get selected character
 	lda nameRegText, x
 
@@ -6376,10 +6375,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda drawMapTileAddr + 1
 	adc #hi(chrRow - 3 * chrColumn)
 	sta drawMapTileAddr + 1
-	
+
 	lda #extraTileBlank
 	jsr drawExtraTile
-	
+
 	clc
 	lda drawMapTileAddr
 	adc #lo(chrColumn)
@@ -6387,10 +6386,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda drawMapTileAddr + 1
 	adc #hi(chrColumn)
 	sta drawMapTileAddr + 1
-	
+
 	lda #extraTileBlank
 	jsr drawExtraTile
-	
+
 	clc
 	lda drawMapTileAddr
 	adc #lo(chrRow - 3 * chrColumn)
@@ -6398,7 +6397,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda drawMapTileAddr + 1
 	adc #hi(chrRow - 3 * chrColumn)
 	sta drawMapTileAddr + 1
-	
+
 	lda #extraTileBlank
 	jsr drawExtraTile
 	lda #extraTileBlank
@@ -6428,10 +6427,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda drawMapTileAddr + 1
 	adc #hi(chrRow - 3 * chrColumn)
 	sta drawMapTileAddr + 1
-	
+
 	lda #registrationVL
 	jsr drawExtraTile
-	
+
 	clc
 	lda drawMapTileAddr
 	adc #lo(chrColumn)
@@ -6439,10 +6438,10 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda drawMapTileAddr + 1
 	adc #hi(chrColumn)
 	sta drawMapTileAddr + 1
-	
+
 	lda #registrationVR
 	jsr drawExtraTile
-	
+
 	clc
 	lda drawMapTileAddr
 	adc #lo(chrRow - 3 * chrColumn)
@@ -6450,7 +6449,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda drawMapTileAddr + 1
 	adc #hi(chrRow - 3 * chrColumn)
 	sta drawMapTileAddr + 1
-	
+
 	lda #registrationBL
 	jsr drawExtraTile
 	lda #registrationBH
@@ -6517,7 +6516,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda bonusSpecialActive			; if special bonus not active
 	bne checkBonusSpecialActive
-	
+
 	lda bonusBits + 1			; check if all special letters are active
 	and #bonusBitsSpecial
 	bne checkBonusExtra
@@ -6554,7 +6553,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda bonusBits + 0			; check if all extra letters are active
 	and #bonusBitsExtra
 	bne checkBonusExit
-	
+
 	lda #letterBonusTime			; pause ladybug and enemies
 	sta pauseLadybug
 	sta pauseEnemy
@@ -6610,7 +6609,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda #0					; disable the possibiliy of getting a diamond after this
 	sta bonusDiamondEnable
-	
+
 	lda #sfxTwinkle				; play the twinkle sound
 	jsr playSound
 
@@ -6643,11 +6642,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #&99				; then shield = 99
 
 .checkBonusSpecialShieldUpdate
-	
+
 	sta shield				; update shield value
 
 	cld					; binary mode
-	
+
 	lda #bonusBitsSpecial			; clear the special letters
 	ora bonusBits + 1
 	sta bonusBits + 1
@@ -6719,11 +6718,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	asl a
 
 	tay					; get tileMap x and y position
-	
+
 	ldx timerXYTable + 0, y
 	lda timerXYTable + 1, y
 	tay
-	
+
 	clc					; convert x and y to tileMap Address
 	txa
 	adc tileMapRowsLo, y
@@ -6733,7 +6732,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	adc tileMapRowsHi, y
 	sta changeTimerTileFlip + 2
 	sta changeTimerTileFlip + 5
-	
+
 	lda #%00000001				; invert bit 0 of tile id in tileMap timer position (switches tile green<->blue)
 
 .changeTimerTileFlip
@@ -6750,7 +6749,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda screenRowHi, y
 	adc screenColumnHi, x
 	sta drawMapTileAddr + 1
-	
+
 .changeTimerTileDraw
 
 	lda #dummy8				; (tile number previously setup)
@@ -6838,7 +6837,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lsr a					; divide by 8 to get row index
 	lsr a
 	lsr a
-	
+
 	tay					; get screen row address from table and add to previously calculated X offset
 	clc
 	lda drawSpriteScreenAddr
@@ -6848,7 +6847,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda drawSpriteScreenAddr + 1
 	adc screenRowHi, y
 	sta drawSpriteScreenAddr + 1		; drawSpriteScreenAddr = screen address for the nearest row
-	
+
 	ldy spriteToScreenSaveY			; restore registers
 	ldx spriteToScreenSaveX
 
@@ -6987,7 +6986,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda (enemyReleaseDir, x)		; if chosen direction is blocked then choose another
 	bmi enemyReleaseChooseDirection
 
-	txa					; convert the chosen direction index (0,2,4,6) to a direction (0,1,2,3) 
+	txa					; convert the chosen direction index (0,2,4,6) to a direction (0,1,2,3)
 	lsr a
 
 	sta spritesDir, y			; set enemy to chosen direction so it can be released from the center box
@@ -7003,14 +7002,14 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda enemiesActive			; if maximum number of enemys not yet released then spawn another enemy into the center box
 	cmp #spritesTotal - 1
 	bne enemySpawn
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemyReleaseBonusItem
 
 	lda #&ff				; else activate center bonus item (vegetable/diamond)
 	sta bonusItemActive
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .enemyReleaseExit
@@ -7055,7 +7054,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda spritesDir, x			; get enemy blanking
 	and #spriteBlanking
 
-	bne enemySpawnType			; if enemy is not visible then its available to be spawned into center box 
+	bne enemySpawnType			; if enemy is not visible then its available to be spawned into center box
 
 	dex					; else check next
 	bne enemySpawnCheckAvailable		; until all checked (bne used as branch always, enemy will be found before x = 0)
@@ -7087,9 +7086,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	iny
 
 	lda spriteBaseImg, y			; get enemy image id for chosen type
-	
+
 	ldx #spritesTotal - 1			; check all enemy sprites make sure that random enemy isnt already in list
-	
+
 .enemySpawnCheckImage				; repeat
 
 	cmp spritesImg, x			; if chosen enemy type image id is found in list
@@ -7117,7 +7116,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .enemySpawnImage
 
 	sta spritesImg, x			; set enemy image to chosen enemy type
-	
+
 	lda #centerBoxX				; set enemy location to center box
 	sta spritesX, x
 	lda #centerBoxY
@@ -7207,13 +7206,13 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #spritesTotal - 1			; set length of sprites list to parse (start with enemies)
 	sta redrawSpritesCount
-	
+
 	lda #spritesPerFrame			; maximum number of sprites to process within 1 frame before using frame skip
 	sta redrawSpritesMax
-	
+
 	lda screenHalf				; check for upper/lower half
 	bmi redrawSpritesUpper
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set threshold and index for lower half
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7229,13 +7228,13 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta redrawSpritesUpdateIndex + 1
 
 	bne redrawSpritesLadybug		; (bne used as branch always)
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set threshold and index for upper half
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .redrawSpritesUpper
-	
+
 	lda #opcodeBCS				; BCS instruction for upper threshold test
 	sta redrawSpritesEraseThreshold
 	sta redrawSpritesDrawThreshold
@@ -7254,7 +7253,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	beq redrawSpritesEraseLoop
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; process enemy sprites (auto frame skip active) 
+	; process enemy sprites (auto frame skip active)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .redrawSpritesErase
@@ -7284,7 +7283,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda spritesErased, x			; and if sprite needs to be erased
 	bne redrawSpritesDraw
-	
+
 .redrawSpritesEraseSprite
 
 	jsr eraseSprite				; erase sprite and redraw background tile at tail end of sprite
@@ -7303,7 +7302,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	bne redrawSpritesNext
 
 	lda spritesY, x				; compare sprite y coordinate with upper/lower threshold
-	cmp #upperLowerThreshold		
+	cmp #upperLowerThreshold
 
 .redrawSpritesDrawThreshold
 
@@ -7316,7 +7315,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	bne redrawSpritesNext			; if sprite is within the current half
 						; (bne instruction replaced by bcc or bcs from above code)
-	
+
 	lda spritesErased, x			; if theres still a pending erase caused by the sprite crossing upper/lower boundary
 	beq redrawSpritesEraseSprite		; then we must ignore boundary and do an emergency erase otherwise part of
 						; the sprite will be left on screen just below the upper/lower boundary crossing
@@ -7324,7 +7323,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda spritesX, x				; store sprite x for drawing (now) and erasing
 	sta drawSpriteX
 	sta spritesEraseX, x
-	
+
 	lda spritesY, x				; store sprite y for drawing (now) and erasing
 	sta drawSpriteY
 	sta spritesEraseY, x
@@ -7354,7 +7353,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 .redrawSpritesDirection
 
 	lda spritesDir, x			; get sprite direction
-	
+
 	sta spritesEraseDir, x			; save direction for later erasure
 
 						; use just the direction bits only
@@ -7377,7 +7376,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	cmp #moveLeft				; if direction = left
 	bne redrawSpritesDirectionRight
-	
+
 	clc					; then add 3 to sprite img to point to left facing sprites
 	lda drawSpriteImg
 	adc #3
@@ -7444,11 +7443,11 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	lda redrawSpritesMax			; if max sprites drawn then return saving current index so that the remaining sprites
 	beq redrawSpritesUpdateIndex		; will be processed next frame (frameskip)
 
-.redrawSpritesCheckDone	
+.redrawSpritesCheckDone
 
 	dec redrawSpritesCount			; until all sprites processed
 	bne redrawSpritesEraseLoop
-	
+
 .redrawSpritesUpdateIndex
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7456,7 +7455,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	stx dummy8				; save current sprite index for continuation next frame
-	
+
 	rts					; return
 
 
@@ -7488,10 +7487,10 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawString				; draw level text
 	equw screenAddr + 2 + 8 + 7 * chrColumn + 4 * chrRow
 	equs colorGreen, "LEVEL ", colorMagenta, &ff
-	
+
 	lda level				; draw 2 digit level number
 	jsr drawBcd
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; draw the vegetable image and value
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7546,7 +7545,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 12 * chrColumn + 11 * chrRow)
 	sta drawMapTileAddr + 1
-	
+
 	ldx levelSkulls				; get number of skulls
 
 .drawLevelIntroSkullAddr			; repeat
@@ -7586,7 +7585,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 9 * chrColumn + 14 * chrRow)
 	sta drawMapTileAddr + 1
-	
+
 	ldx #2					; start at last letter
 
 .drawLevelIntroLettersImg			; repeat
@@ -7607,7 +7606,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 9 * chrColumn + 17 * chrRow)
 	sta drawMapTileAddr + 1
-	
+
 	ldx #3					; 3 hearts to draw
 
 .drawLevelIntroHeartsImg			; repeat
@@ -7628,7 +7627,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawString				; draw "SHIELD " in red and number of shields in white
 	equw screenAddr + 2 + 7 * chrColumn + 20 * chrRow
 	equs colorRed, "SHIELD ", colorWhite, &ff
-	
+
 	lda shield
 	jsr drawBcd
 
@@ -7643,7 +7642,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawString				; else draw "GOOD LUCK" in red
 	equw screenAddr + 2 + 7 * chrColumn + 20 * chrRow
 	equs colorRed, "GOOD LUCK", &ff
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; process sound and colors until level intro time expires
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7709,7 +7708,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawMapTileAddr + 1
 
 	ldx #3
-	
+
 .drawBonusGraphicsSkulls
 
 	lda #mapTileSkull			; draw a skull and leave a space
@@ -7730,7 +7729,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 .drawBonusGraphicsFlowers
 
 	ldx #0					; index into flower positions
-		
+
 .drawBonusGraphicsLoop				; repeat
 
 	lda drawBonusGraphicsList, x		; get low byte address from table
@@ -7835,7 +7834,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #(bonusSpecialShield and 15) + '0'
 	jsr drawChr
-	
+
 	jsr drawString
 	equw screenAddr + 2 + 8 + 10 * chrColumn + 20 * chrRow
 	equs colorYellow, "SHIELD", &ff
@@ -7850,7 +7849,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	}
 	else
-	{	
+	{
 
 	jsr drawString
 	equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
@@ -7858,7 +7857,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	lda #(bonusSpecialShield and 15) + '0'
 	jsr drawChr
-	
+
 	jsr drawString
 	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
 	equs colorYellow, "SHIELDS", &ff
@@ -7899,7 +7898,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 
 	if (bonusExtraLives and 15) = 1
-	{	
+	{
 
 	jsr drawString
 	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
@@ -7938,9 +7937,9 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 8 * chrRow + 8 * chrColumn + 8)
 	sta drawMapTileAddr + 1
-	
+
 	ldx #extraTileDiamond
-	
+
 .drawBonusScreenDiamondGraphicsLoop1
 
 	txa
@@ -7954,7 +7953,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 9 * chrRow + 8 * chrColumn + 8)
 	sta drawMapTileAddr + 1
-	
+
 .drawBonusScreenDiamondGraphicsLoop2
 
 	txa
@@ -7968,7 +7967,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	sta drawMapTileAddr
 	lda #hi(screenAddr + 10 * chrRow + 9 * chrColumn + 8)
 	sta drawMapTileAddr + 1
-	
+
 .drawBonusScreenDiamondGraphicsLoop3
 
 	txa
@@ -8025,7 +8024,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr waitIntUpper			; wait for vsync interrupt and read analogue joystick (if enabled)
 
 	jsr animateLadybug			; update ladybug direction and frame counter
-	
+
 	jsr redrawSprites			; draw ladybug
 
 	jsr moveSprites				; move ladybug
@@ -8238,19 +8237,19 @@ animateLadybugInstructions	= 6		; instructions animation index
 	equw animateLadybugEntryTable
 	equb ladybugEntryX
 	equb ladybugEntryY
-	
+
 	equw animateLadybugBonusSpecialTable
 	equb ladybugBonusX
 	equb ladybugBonusY
-	
+
 	equw animateLadybugBonusExtraTable
 	equb ladybugBonusX
 	equb ladybugBonusY
-	
+
 	equw animateLadybugBonusDiamondTable
 	equb ladybugBonusX
 	equb ladybugBonusY
-	
+
 	equw animateLadybugNameRegTable
 	equb ladybugHighScoreX
 	equb ladybugHighScoreY
@@ -8274,14 +8273,14 @@ animateLadybugInstructions	= 6		; instructions animation index
 	asl a					; create index into table
 	asl a
 	tay
-	
+
 	lda animateLadybugInitTable, y		; setup start address for animation
 	sta animateLadybugAddr
 	iny
 	lda animateLadybugInitTable, y
 	sta animateLadybugAddr + 1
 	iny
-	
+
 	lda animateLadybugInitTable, y		; set initial position of ladybug
 	sta spritesX + 0
 	iny
@@ -8290,7 +8289,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda spriteBaseImg			; set image for ladybug
 	sta spritesImg + 0
-	
+
 	lda #0					; initialize counter
 	sta animateLadybugCounter
 
@@ -8317,13 +8316,13 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda (animateLadybugAddr), y
 
 	beq animateLadybugEnd			; if byte = 0 then end the animation
-	
+
 	sta animateLadybugCounter		; else store byte into animation counter
-	
+
 	ldy #1
 	lda (animateLadybugAddr), y		; get next byte and store in ladybug direction
 	sta spritesDir + 0
-	
+
 	clc					; advance to next table entry
 	lda animateLadybugAddr
 	adc #2
@@ -8334,13 +8333,13 @@ animateLadybugInstructions	= 6		; instructions animation index
 .animateLadybugExit
 
 	rts					; return
-	
+
 .animateLadybugNextFrame
 
 	dec animateLadybugCounter		; bump counter
-	
+
 	rts					; return
-	
+
 .animateLadybugEnd
 
 	sta animateLadybugActive		; disable animation
@@ -8363,7 +8362,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda vsyncCounter			; if vsyncCounter & 0x08 == 0 then use color set 0 else use color set 1
 	and #%00001000
 	bne bonusColorUpdateSet1
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; color set 0 = red/magenta, yellow/green, cyan/blue
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8384,7 +8383,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	sta ulaPalette
 	lda #palMultiplier1 + palBlue
 	sta ulaPalette
-	
+
 	rts					; return
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -8402,14 +8401,14 @@ animateLadybugInstructions	= 6		; instructions animation index
 	sta ulaPalette
 	lda #palExtra1 + palYellow
 	sta ulaPalette
-	
+
 	lda #palMultiplier0 + palBlue		; set multiplier colors to blue/cyan
 	sta ulaPalette
 	lda #palMultiplier1 + palCyan
 	sta ulaPalette
-	
+
 	rts					; return
-	
+
 
 
 
@@ -8428,7 +8427,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 .clearTileMap
 
 	ldx #0					; start with index = 0
-	
+
 	lda #mapTileBlank			; use blank tile
 
 .clearTileMapLoop
@@ -8439,7 +8438,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	inx					; bump index and loop back until fill completed
 	bne clearTileMapLoop
-	
+
 	rts					; return
 
 
@@ -8477,7 +8476,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	iny
 	lda (drawTextAddr), y
 	sta drawChrAddr + 1
-	
+
 	tya					; point drawTextAddr to the text
 	sec
 	adc drawTextAddr
@@ -8488,14 +8487,14 @@ animateLadybugInstructions	= 6		; instructions animation index
 .drawStringText
 
 	jsr drawText				; draw the text until &ff byte string terminator
-	
+
 	ldy drawStringSaveY			; restore register
 
 	lda drawTextAddr + 1			; push string terminator address (return address - 1 as the 6502 adds 1 to the popped address)
 	pha
 	lda drawTextAddr
 	pha
-	
+
 	rts					; return terminator address + 1 to continue
 
 
@@ -8527,7 +8526,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	beq drawTextAdjustAddr			; then exit
 
 	and #%01111111				; remove bit 7
-	
+
 	cmp #16					; if chr value is 0-15 then select chr color
 	bcs drawTextChr
 
@@ -8562,7 +8561,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	ldy drawTextSaveY			; restore register
 
 	rts					; return
-	
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; pixel mask values for chr colors
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -8615,7 +8614,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	sbc #1
 	sta soundTimers, y
 	bne processSoundNext			; if timer != 0 then skip it
-	
+
 .processSoundGetData
 
 	lda (soundAddrPtr, x)			; get byte from sound table
@@ -8631,7 +8630,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	beq processSoundWritePsg
 
 	lda demoMode				; sound mode = 1 (demo off) if demo mode then skip write to psg
-	bne processSoundNextByte	
+	bne processSoundNextByte
 
 .processSoundWritePsg
 
@@ -8693,20 +8692,20 @@ animateLadybugInstructions	= 6		; instructions animation index
 	sta soundTimers + 5
 
 	lda #&9f				; start with psg first channel zero volume (silence)
-	
+
 .playSoundSilenceLoop				; repeat
 
 	pha					; save current channel
-	
+
 	jsr psgWrite				; silence channel
-	
+
 	pla					; get current channel
-	
+
 	clc					; bump value to next channel
 	adc #&20
-	
+
 	bmi playSoundSilenceLoop		; until all channels done
-	
+
 	rts					; return
 
 
@@ -8730,7 +8729,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	bne playSoundTimerVolume
 
 	rts					; then return
-	
+
 .playSoundTimerVolume
 
 	clc					; else add optionTimerVolume to #sfxTimerLow - 1 to select the required volume Low/Medium/High
@@ -8769,7 +8768,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	asl a					; make table offset
 	tay
-	
+
 	lda sfxAddrTable, y			; get sound effect data address from table
 	sta playSoundAddr
 	lda sfxAddrTable + 1, y
@@ -8779,7 +8778,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda (playSoundAddr), y
 
 	tay					; y = effect type
-	
+
 	asl a					; x = effect type index
 	tax
 
@@ -8789,7 +8788,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	cpy #0					; if type = 0 (music)
 	bne playSoundLowPriority
-	
+
 	jsr playSoundSilence			; kill any current sounds
 
 	jmp playSoundNow			; play the music
@@ -8824,7 +8823,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	cmp #sfxTimerLow			; if sfxTimerLow then skip it
 	beq playSoundExit
-	
+
 	cmp #sfxTimerMedium			; if sfxTimerMedium then skip it
 	beq playSoundExit
 
@@ -8838,10 +8837,10 @@ animateLadybugInstructions	= 6		; instructions animation index
 .playSoundCheckObjectSkull
 
 	lda playSoundSaveA			; get sound number
-	
+
 	cmp #sfxObject				; if sfxObject then shut down types 1 and 4 (sfxTimer, sfxTurnstile)
 	beq playSoundDisable14
-	
+
 	cmp #sfxSkull				; if sfxSkull then shut down types 1 and 4 (sfxTimer, sfxTurnstile)
 	beq playSoundDisable14
 
@@ -8905,7 +8904,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	equb %11111011, %11111101, %11111110	; x2 x3 x5
 
-.objectScore 
+.objectScore
 
 	equb &10, &80, &30			; object multiplier score cyan 100, red 800, yellow 300
 
@@ -8926,10 +8925,10 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda spritesY + 0
 	cmp #centerBoxY
 	bne checkForObjectTile
-	
+
 	lda #0					; disable the bonus item
 	sta bonusItemActive
-	
+
 	lda bonusDiamondEnable			; if diamond is enabled then
 	beq checkForObjectVegetableScore
 
@@ -8939,7 +8938,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #&ff				; enable diamond bonus
 	sta bonusDiamondActive
-	
+
 	lda #letterBonusTime			; pause ladybug and enemies
 	sta pauseLadybug
 	sta pauseEnemy
@@ -8978,7 +8977,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
 	; check for object tiles (dots, hearts, letters, skulls)
 	;-------------------------------------------------------------------------------------------------------------------------------------------------
-	
+
 .checkForObjectTile				; we got here so ladybug is not in the center box so we
 
 	jsr offsetDrawMapTileAddr		; adjust drawMapTileAddress to be location underneath ladybug center
@@ -8988,7 +8987,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	cmp #mapTileDot				; if tile = dot then use dot function
 	beq checkForObjectDot
-	
+
 	cmp #mapTileSkull			; if tile = skull then use skull function
 	beq checkForObjectSkull
 
@@ -8997,7 +8996,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	cmp #mapTileS				; if tile >= mapTileS and < mapTileR + 1 (letter tiles S P E C I A L X T R)
 	bcc checkForObjectTileExit
-	
+
 	cmp #mapTileR + 1
 	bcc checkForObjectLetter		; then use letter function
 
@@ -9015,7 +9014,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #mapTileBlank			; replace dot with blank tile (no need to erase dot from screen as ladybug erase will do that)
 	sta (tileMapAddr), y
-	
+
 	dec levelEdibles			; dec edibles
 
 	lda #sfxMunch				; play munch sound
@@ -9038,7 +9037,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #mapTileBlank			; replace skull with blank tile
 	sta (tileMapAddr), y
-	
+
 	lda #mapTileBlankObj			; erase skull from screen
 	jsr drawMapTile
 
@@ -9165,7 +9164,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	cpx #objectModeRed			; if objectMode = objectModeRed
 	bne checkForObjectLetterYellow
-	
+
 	tax					; get red letter bit value and highlight it
 	lda objectLetterBitsRed, x
 	and bonusBits + 1
@@ -9352,11 +9351,11 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda ladybugEntryEnable			; if ladybug entry movement is enabled then return
 	beq ladybugUpdateInit
-	
+
 .ladybugUpdateReturn
 
 	rts
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; initialize everything needed for direction, gridlock and tile tests
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9383,14 +9382,14 @@ animateLadybugInstructions	= 6		; instructions animation index
 	and #15					; create ladybug grid x flag, on grid = 0, off grid != 0
 	eor #8
 	sta ladybugUpdateGridX
-	
+
 	lda spritesY + 0			; save ladybug y for map and screen address conversion
 	sta spriteToAddrY
 
 	and #15					; create ladybug grid y flag, on grid = 0, off grid != 0
 	eor #8
 	sta ladybugUpdateGridY
-	
+
 	jsr spriteToAddr			; convert ladybug xy to tileMapAddr and drawTileAddr
 
 	jsr checkForObject			; check for object under ladybug (dot/heart/letter/skull) and do required action (multiplier/highlight/points/death)
@@ -9424,7 +9423,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	stx ladybugUpdateNewDirX		; set new direction to left
 	beq ladybugUpdateInputDown		; check for down
-	
+
 .ladybugUpdateInputLeftAlign
 
 	lda ladybugUpdateOldDir			; else use old direction to align ladybug with grid
@@ -9471,7 +9470,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda ladybugUpdateOldDir			; else use old direction to align ladybug with grid
 	sta ladybugUpdateNewDirX
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .ladybugUpdateInputRight
@@ -9502,7 +9501,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda ladybugUpdateGridX			; check ladybug off or on grid
 	ora ladybugUpdateGridY
 	beq ladybugUpdateOnGrid
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; off grid check for horizontal
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9532,7 +9531,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda spritesDir + 0			; get blanking bit
 	and #spriteBlanking
-	
+
 	stx spritesDir + 0			; save new direction
 
 	ora spritesDir + 0			; and combine with blanking bit
@@ -9563,7 +9562,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	sty ladybugUpdateTileX
 
 	bne ladybugUpdateOnGridY		; if tile was not a path/turnstile then
-	
+
 	lda #&ff				; remove x tile (cannot turn this direction)
 	sta ladybugUpdateTileX
 
@@ -9580,7 +9579,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	sty ladybugUpdateTileY
 
 	bne ladybugUpdateCheckDualTile		; if tile was not a path/turnstile then
-	
+
 	lda #&ff				; remove y tile (cannot turn this direction)
 	sta ladybugUpdateTileY
 
@@ -9593,11 +9592,11 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda ladybugUpdateTileX			; if tileX is a valid path then
 	cmp #&ff
 	beq ladybugUpdateCheckTileY
-	
+
 	lda ladybugUpdateTileY			; if tileY is a valid path then
 	cmp #&ff
 	beq ladybugUpdateCheckTileX
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .ladybugUpdateCheckDualTileX
@@ -9605,7 +9604,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda ladybugUpdateNewDirX		; remove x direction if its the same as the current direction
 	cmp ladybugUpdateOldDir
 	bne ladybugUpdateCheckDualTileY
-	
+
 	lda #&ff
 	sta ladybugUpdateTileX
 
@@ -9634,7 +9633,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	ldx ladybugUpdateNewDirX		; set x direction
 	jsr ladybugUpdateNewDirection
-	
+
 	jmp ladybugUpdateTurnstile		; and check if turnstile push required
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9691,7 +9690,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 .ladybugUpdateTurnstilePush
 
 	sty ladybugUpdateSave			; save the tileDir
-	
+
 	txa					; index = new ladybug direction * 4 + tileDir
 	and #&03
 	asl a
@@ -9716,8 +9715,8 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	txa					; choose horizontal or vertical from ladybug direction
 	and #moveLeft				; up/down = 0/1, left/right = 2/3 so checking for left also check for right !!
-	bne ladybugUpdateTurnstileHorizontal	
-	
+	bne ladybugUpdateTurnstileHorizontal
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; vertical turnstile
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -9790,7 +9789,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 .ladybugUpdateTurnstileX
 
 	equb 0,0,8,-8,0,0,8,-8,-8,-8,0,0,8,8,0,0
-	
+
 .ladybugUpdateTurnstileY
 
 	equb 0,0,-8,-8,0,0,8,8,8,-8,0,0,8,-8,0,0
@@ -9830,7 +9829,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	lda drawTurnstileAddr + 1		; if draw required
 	bpl drawTurnstileCheckDir
 	rts
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawTurnstileCheckDir
@@ -9863,7 +9862,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #mapTileTurnstileU			; draw up tile
 	jsr drawMapTile
-	
+
 	clc					; tile offset 0,1
 	lda drawMapTileAddr
 	adc #lo(chrRow - 2 * chrColumn)
@@ -9874,13 +9873,13 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #mapTileBlank			; draw blank tile
 	jsr drawMapTile
-	
+
 	lda #mapTileTurnstileCV			; draw center vertical tile
 	jsr drawMapTile
-	
+
 	lda #mapTileBlank			; draw blank tile
 	jsr drawMapTile
-	
+
 	clc					; tile offset 1,2
 	lda drawMapTileAddr
 	adc #lo(chrRow - 2 * chrColumn)
@@ -9891,7 +9890,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #mapTileTurnstileD			; draw down tile
 	jmp drawMapTile				; and exit
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .drawTurnstileHorizontal
@@ -9906,7 +9905,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #mapTileBlank			; draw blank
 	jsr drawMapTile
-	
+
 	clc					; tile offset 0,1
 	lda drawMapTileAddr
 	adc #lo(chrRow - 2 * chrColumn)
@@ -9917,13 +9916,13 @@ animateLadybugInstructions	= 6		; instructions animation index
 
 	lda #mapTileTurnstileL			; draw left tile
 	jsr drawMapTile
-	
+
 	lda #mapTileTurnstileCH			; draw center horizontal tile
 	jsr drawMapTile
-	
+
 	lda #mapTileTurnstileR			; draw right tile
 	jsr drawMapTile
-	
+
 	clc					; tile offset 1,2
 	lda drawMapTileAddr
 	adc #lo(chrRow - 2 * chrColumn)
@@ -10061,7 +10060,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 	tax
 	dex
 	txa
-	
+
 	clc					; convert raw grid coordinates to background buffer (tileMap) address
 	adc tileMapRowsLo, y
 	sta tileMapAddr
@@ -10078,7 +10077,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 	sta drawMapTileAddr + 1
 
 	ldy spriteToAddrSaveY			; restore registers
-	ldx spriteToAddrSaveX				
+	ldx spriteToAddrSaveX
 
 	rts					; return
 
@@ -10121,7 +10120,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 	asl a					; shift bit 7 into carry
 	rol playerInput				; and shift carry into playerInput bits
-	
+
 	rts					; return
 
 
@@ -10179,7 +10178,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 	lda dummy16				; read value from adc and save (addr setup by relocate.asm)
 	sta joystickAnalogueSave
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .joystickAnalogueControlRead
@@ -10373,7 +10372,7 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 
 .miniFontBin
 	skip 0					; show this address in listing
-	
+
 	incbin "bin/fontBonus.bin"		; 4x8 pixels (4 bits per pixel)
 
 .miniFontBinEnd
@@ -10518,14 +10517,14 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 	equb 22
 	equb y
 	next
-	
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	for x,21,0,-1
 	equb x
 	equb 22
 	next
-	
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	for y,21,0,-1
@@ -10662,5 +10661,3 @@ spriteToAddrOffset	= 4			; correction factor for center of tile
 	print
 	print
 	print
-
-

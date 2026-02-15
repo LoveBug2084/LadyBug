@@ -6,7 +6,7 @@ PRINT TAB(0,0);CHR$(141);CHR$(129);CHR$(157);CHR$(131);SPC(12);"Lady Bug";SPC(14
 PRINT TAB(0,1);CHR$(141);CHR$(129);CHR$(157);CHR$(131);SPC(12);"Lady Bug";SPC(14);CHR$(156)
 
 PRINT TAB(1,4);CHR$(135);"Reset";
-IF G% THEN PRINT CHR$(131);"Stardot HSC"; ELSE PRINT CHR$(129);"Arcade";
+IF G% THEN PRINT CHR$(131);"Stardot Challenge"; ELSE PRINT CHR$(129);"Arcade";
 PRINT CHR$(135);"settings";
 
 HIMEM=&7A80
@@ -18,7 +18,7 @@ M%=&69
 
 IF B% THEN U$="WR":L$="LR" ELSE U$="":L$="L"
 
-IF G% THEN file$="_Hsc " ELSE file$="_Config "
+IF G% THEN file$="_Stardo " ELSE file$="_Arcade "
 
 OSCLI("LOAD _Reset " + STR$~(&FF0000 + D%))
 

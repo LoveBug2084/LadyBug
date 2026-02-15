@@ -608,6 +608,7 @@ irqA			= &00fc			; bbc os irq1 interrupt stores accumilator here
 irqVector		= &0204			; bbc os irq1 interrupt vector
 fx200			= &0258			; bbc os reads the *fx 200 value from here
 breakVector		= &0287			; bbc os jumps here on break key reset
+osTime			= &0296			; bbc os lsb of TIME
 resetVector		= &fffc			; bbc os reset vector
 bankSelectCopy		= &00f4			; bbc os stores current sideways bank copy here
 bankSelect		= &fe30			; bank select register for acorn/other

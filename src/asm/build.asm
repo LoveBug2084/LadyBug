@@ -37,8 +37,8 @@
 
 	save		"_Bonus", bonusBin, bonusBinEnd, &ffffff, 0
 
-	save		"_Config", config, configEnd, &ffffff, 0
-	save		"_Hsc", config, configEnd, &ffffff, 0
+	save		"_Arcade", config, configEnd, &ffffff, 0
+	save		"_Stardo", config, configEnd, &ffffff, 0
 
 	save		"_Maps", mapFilenames, mapFilenamesEnd, &ffffff, 0
 

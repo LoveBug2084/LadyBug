@@ -166,7 +166,7 @@ ENDPROC
 DEF PROCdisplayMode
 
 PRINT TAB(15,17);
-IF G% THEN PRINT CHR$(131);"Stardot HSC"; ELSE PRINT CHR$(129);"Arcade     ";
+IF G% THEN PRINT CHR$(131);"Stardot Challenge"; ELSE PRINT CHR$(129);"Arcade           ";
 
 ENDPROC
 
@@ -358,8 +358,8 @@ Y%=BGET#Z%:X%=BGET#Z%:W%=BGET#Z%:U%=BGET#Z%:Q%=BGET#Z%
 CLOSE#Z%
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
-IF F%?2<>V% THEN IF NOT G% THEN OSCLI("LOAD _Config " + STR$~(&FF0000 + C%)):ENDPROC
-IF F%?2<>V% THEN IF G% THEN OSCLI("LOAD _Hsc " + STR$~(&FF0000 + C%)):ENDPROC
+IF F%?2<>V% THEN IF NOT G% THEN OSCLI("LOAD _Arcade " + STR$~(&FF0000 + C%)):ENDPROC
+IF F%?2<>V% THEN IF G% THEN OSCLI("LOAD _Stardo " + STR$~(&FF0000 + C%)):ENDPROC
 
 P%=&7B00
 [OPT 0
@@ -390,7 +390,7 @@ DEF PROCsaveConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
 IF F%?2<>V% THEN ENDPROC
 
-IF G% THEN OSCLI("ACCESS _Hsc "+U$):OSCLI("SAVE _Hsc " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Hsc "+L$) ELSE OSCLI("ACCESS _Config "+U$):OSCLI("SAVE _Config " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Config "+L$)
+IF G% THEN OSCLI("ACCESS _Stardo "+U$):OSCLI("SAVE _Stardo " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Stardo "+L$) ELSE OSCLI("ACCESS _Arcade "+U$):OSCLI("SAVE _Arcade " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Arcade "+L$)
 
 PROCeraseLogo
 

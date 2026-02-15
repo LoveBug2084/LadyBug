@@ -1,5 +1,5 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; relocate - initialise hardware and relocate main game to runtime address
+; relocate - initialize hardware and relocate main game to runtime address
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	print "----------------------------------------------------"
@@ -70,12 +70,14 @@
 
 	sei					; disable cpu irq interrupts
 
-	ldx #&ff				; initialise stack
+	ldx #&ff				; initialize stack
 	txs
 
-	lda #magicNumber			; initialize random seed
+.initSeed
+	lda via1T1CounterLo			; initialize prng seed
+	beq initSeed
 	sta randomSeed + 0 + progOffset
-	lda via1T1CounterLo
+	lda osTime
 	sta randomSeed + 1 + progOffset
 
 	lda #%00000000				; timer 1 timed interupt mode
@@ -87,7 +89,7 @@
 
 	sta via1Ifr				; clear all interrupt flags
 	sta via2Ifr
-	
+
 	lda #%11000010				; enable vsync and timer 1 interrupts
 	sta via1Ier
 
@@ -118,7 +120,7 @@
 
 	eor #magicNumber			; calculate validation
 	sta cleanResetValidation + progOffset
-	
+
 	lda machineType				; save machine type index for clean reset code
 	sta cleanResetMachine + progOffset
 
@@ -174,12 +176,12 @@
 	lda machineType				; choose master or b/b+ adc addresses
 	cmp #6
 	beq bootstrapJoystickAnalogueMaster
-	
+
 	lda #lo(adcHighB)			; setup b/b+ adc addresses
 	sta joystickAnalogueChannelRead + 1 + progOffset
 	lda #hi(adcHighB)
 	sta joystickAnalogueChannelRead + 2 + progOffset
-	
+
 	lda #lo(adcControlB)
 	sta joystickAnalogueControlRead + 1 + progOffset
 	sta joystickAnalogueControlWrite + 1 + progOffset
@@ -195,7 +197,7 @@
 	sta joystickAnalogueChannelRead + 1 + progOffset
 	lda #hi(adcHighM)
 	sta joystickAnalogueChannelRead + 2 + progOffset
-	
+
 	lda #lo(adcControlM)
 	sta joystickAnalogueControlRead + 1 + progOffset
 	sta joystickAnalogueControlWrite + 1 + progOffset
@@ -210,7 +212,7 @@
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .bootstrapRelocate
-	
+
 	ldx #hi(bootstrap - progReloc)		; number of 256 byte pages to relocate
 	ldy #0
 
@@ -227,7 +229,7 @@
 
 	dex					; and repeat relocate until all pages copied
 	bne relocateProgram
-	
+
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; copy config
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -252,7 +254,7 @@
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 	ldx #0					; copy maze data into ram
-	
+
 .relocateProgramMapData
 
 	lda map1Load, x
@@ -299,7 +301,7 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .bootstrapCrtcData
-	
+
 	equb 127				; r0  horizontal total
 	equb 0					; r1  horizontal displayed (set to 0 here to blank the display, set to actual width later in the game code)
 	equb 92					; r2  horizontal position
@@ -325,4 +327,3 @@
 	print
 	print
 	print
-
