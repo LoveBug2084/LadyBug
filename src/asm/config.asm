@@ -11,7 +11,7 @@
 ; default highscore table and settings
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	org pageConfig				
+	org pageConfig
 
 .config
 	skip 0					; show this address in listing
@@ -59,11 +59,11 @@ defaultEnemyTarget	= 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	equb defaultLadybugLives		; lady bugs (lives)	1-9
-	equb defaultEnemySpeed			; enemy speed		0-3 (0=easy, 1=normal, 2=hard, 3=insane
-	equb defaultEnemyTarget			; enemy target		0-3 (0=easy, 1=normal, 2=hard, 3=insane)
+	equb defaultLadybugLives		; lady bug lives	1-9
+	equb defaultEnemySpeed			; enemy speed		0-3 (0=easy, 1=normal, 2=hard, 3=max)
+	equb defaultEnemyTarget			; enemy target (skill)	0-3 (0=easy, 1=normal, 2=hard, 3=max)
 	equb 1					; timer volume		0-3 (0=off, 1=low, 2=medium, 3=high)
-	equb 1					; sound enable		0-2 (0=game and dmo off, 1=game on demo off, 2=game and demo on)
+	equb 1					; sound enable		0-2 (0=off, 1=game sound on, 2=game and demo sound on)
 
 	equb keyX				; right 'X'
 	equb keyZ				; left 'Z'
@@ -78,10 +78,10 @@ defaultEnemyTarget	= 1
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-.configEnd	
+.configEnd
 	skip 0					; show this address in listing
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-	
+
 	print
 	print
 	print

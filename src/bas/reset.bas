@@ -18,7 +18,7 @@ M%=&69
 
 IF B% THEN U$="WR":L$="LR" ELSE U$="":L$="L"
 
-IF G% THEN file$="_Stardo " ELSE file$="_Arcade "
+IF G% THEN file$="_Stardt " ELSE file$="_Arcade "
 
 OSCLI("LOAD _Reset " + STR$~(&FF0000 + D%))
 
@@ -40,7 +40,7 @@ CLI
 RTS
 ]
 
-V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF 
+V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF
 IF F%?2 = V% THEN CALL HIMEM ELSE OSCLI("LOAD " + file$ + STR$~(&FF0000 + H%))
 
 V%=0:FOR Z%=&00 TO &7C:V%=(V%+(Z%?H% EOR M%)) AND &FF:NEXT Z%
@@ -81,4 +81,3 @@ VDU 23;1,0,0;0;0;
 *EXEC !Boot
 
 END
-
