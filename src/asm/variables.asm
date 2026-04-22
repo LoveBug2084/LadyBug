@@ -84,7 +84,7 @@
 .enemyReleaseDir				; 4 directions to test in tile map for releasing an enemy
 
 			equw tileMap + centerBoxUp
-			equw tileMap + centerBoxDown 
+			equw tileMap + centerBoxDown
 			equw tileMap + centerBoxLeft
 			equw tileMap + centerBoxRight
 
@@ -96,7 +96,7 @@
 
 .enemySpawnSaveX	skip 1			; preserve register
 
-.randomSeed		skip 2			; random number generator seed
+.randomSeed		equw 0			; random number generator seed = 0 at start
 
 .addScoreMultiplySaveA	skip 1			; preserve register
 .addScoreMultiplySaveX	skip 1			; preserve register

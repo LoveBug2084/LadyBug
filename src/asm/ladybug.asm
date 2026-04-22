@@ -30,19 +30,12 @@
 
 .random
 
-	lda randomSeed + 1			; get hi 8 bits of seed
-	lsr a					; shift it right to put bit 0 of hi into carry
-	lda randomSeed				; get lo 8 bits of seed
-	ror a					; rotate it right putting carry (bit 0 of hi) into bit 7 and bit 0 into carry
-	eor randomSeed + 1			; eor with hi 8 bits
-	sta randomSeed + 1			; store in hi 8 bits
-	ror a					; rotate it right putting carry (bit 0 of lo) into bit 7 and bit 0 into carry (unused)
-	eor randomSeed				; eor with lo 8 bits
-	sta randomSeed				; store in lo 8 bits
-	eor randomSeed + 1			; eor with hi 8 bits
-	sta randomSeed + 1			; store in hi 8 bits
-
-	rts					; return with random number in A
+	lda randomSeed + 1
+	asl a
+	rol randomSeed
+	sbc randomSeed
+	sta randomSeed + 1
+	rts
 
 
 
@@ -2636,9 +2629,9 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	clc
 	adc moveSpritesDistanceX		; add X and Y distance
 
-	bcs moveSpritesCheckAlignmentX		; if carry then skip (sum of distance > collisionRange)
+	bcs moveSpritesCheckAlignmentX		; if carry then skip (sum of distance > aiCollisionRange)
 
-	cmp #collisionRange			; if combined distance is less than collisionRange
+	cmp #aiCollisionRange			; if combined distance is less than aiCollisionRange
 	bcs moveSpritesCheckAlignmentX
 
 	jmp ladybugKill				; then ladybug and enemy have collided so kill ladybug and exit
@@ -2731,10 +2724,12 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	lda moveSpritesDistanceY
 	clc
-	adc moveSpritesDistanceX		; if Y + X distance < aiRange (enemy is on ladybugs tail)
+	adc moveSpritesDistanceX		; if Y + X distance < aiRandomRange (enemy is on ladybugs tail)
 	bcs moveSpritesEnemyAiTarget
-	cmp #aiRange
+	cmp #aiRandomRange
 	bcc moveSpritesRandomAvailableDirection	; then pick a random direction instead of a target direction
+						; this gives the player a better chance to escape otherwise
+						; the enemy will be stuck on lady's tail like a magnet and thats really unfair
 
 .moveSpritesEnemyAiTarget
 

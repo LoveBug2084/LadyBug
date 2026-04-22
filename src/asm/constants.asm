@@ -30,8 +30,9 @@ spritesTotal		= 5			; total number of sprites in game, 1 for lady bug and 4 for 
 
 spritesAnimationTime	= frame * 0.16		; 0.16 seconds time betweeen sprite animation frames
 
-collisionRange		= 6			; range allowed between enemy and ladybug to detect as a hit
-aiRange			= 12			; if enemie is this close to ladybug then choose random direction instead of target to give ladybug a chance to escape
+aiCollisionRange	= 6			; if enemy is this close to ladybug then thats a hit and ladybug must die
+aiRandomRange		= 12			; if enemy is this close to ladybug then choose random direction instead of target
+						; this will give the player a chance to escape when an enemie is on ladybugs tail
 
 escTime			= frame * 2.00		; hold esc for 2.00 seconds to quit game and return back to menu
 
@@ -119,11 +120,9 @@ centerBoxCenter		= 11 * 23 + 11		; map coordinate for box center
 
 adcControlB		= &fec0			; model b/b+ udp 7002 control register
 adcHighB		= &fec1			; model b/b+ udp 7002 high byte of analogue data
-adcLowB			= &fec2			; model b/b+ udp 7002 low byte of analogue data
 
 adcControlM		= &fe18			; master 128 udp 7002 control register
 adcHighM		= &fe19			; master 128 udp 7002 high byte of analogue data
-adcLowM			= &fe1a			; master 128 udp 7002 low byte of analogue data
 
 joystickFireAnalogue	= %00010000		; analogue joystick fire bit mask
 
@@ -145,7 +144,6 @@ keyBitDown		= %00000100
 keyBitUp		= %00001000
 keyBitRight		= %00010000
 keyBitEsc		= %00100000
-keyBitMode		= %01000000
 
 
 
@@ -442,31 +440,31 @@ spriteAngel1		= 170			; angel1 170-171
 
 mapTileWidth		= 6
 mapTileHeight		= 8
-mapTileBytes		= mapTileHeight * mapTileWidth / 2 
+mapTileBytes		= mapTileHeight * mapTileWidth / 2
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 diamondTileWidth	= 8
 diamondTileHeight	= 6
-diamondTileBytes	= diamondTileHeight * diamondTileWidth / 2 
+diamondTileBytes	= diamondTileHeight * diamondTileWidth / 2
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 spriteTileWidth		= 10
 spriteTileHeight	= 14
-spriteTileBytes		= spriteTileHeight * spriteTileWidth / 2 
+spriteTileBytes		= spriteTileHeight * spriteTileWidth / 2
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 objectTileWidth		= 8
 objectTileHeight	= 8
-objectTileBytes		= objectTileHeight * objectTileWidth / 2 
+objectTileBytes		= objectTileHeight * objectTileWidth / 2
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 sprite10x10Width	= 10
 sprite10x10Height	= 10
-sprite10x10Bytes	= sprite10x10Height * sprite10x10Width / 2 
+sprite10x10Bytes	= sprite10x10Height * sprite10x10Width / 2
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -608,7 +606,6 @@ irqA			= &00fc			; bbc os irq1 interrupt stores accumilator here
 irqVector		= &0204			; bbc os irq1 interrupt vector
 fx200			= &0258			; bbc os reads the *fx 200 value from here
 breakVector		= &0287			; bbc os jumps here on break key reset
-osTime			= &0296			; bbc os lsb of TIME
 resetVector		= &fffc			; bbc os reset vector
 bankSelectCopy		= &00f4			; bbc os stores current sideways bank copy here
 bankSelect		= &fe30			; bank select register for acorn/other
@@ -618,7 +615,6 @@ bankSelectWatford	= &ff30			; bank select register (&ff30 - &ff3f) for write ope
 acccon			= &fe34			; access control register
 osbyte			= &fff4			; os function
 oscli			= &fff7			; os function
-osfile			= &ffdd			; os function
 oswrch			= &ffee			; os function
 
 
@@ -671,17 +667,10 @@ canvasCls		= &f400			; temporary canvas address for cls code used in editor.bas
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 via1PortB		= &fe40			; via port B data
-via1PortDdrB		= &fe42			; via port B io control
-
 via1PortDdrA		= &fe43			; via Port A io control
 
 via1T1CounterLo		= &fe44			; via timer 1 counter low
 via1T1CounterHi		= &fe45			; via timer 1 counter high
-via1T1LatchLo		= &fe46			; via timer 1 latch low
-via1T1LatchHi		= &fe47			; via timer 1 latch high
-
-via1T2CounterLo		= &fe48			; via timer 2 counter low
-via1T2CounterHi		= &fe49			; via timer 2 counter high
 
 via1Acr			= &fe4b			; via auxiliary control register
 
@@ -740,4 +729,3 @@ quote			= '"'			; ascii code for quotation
 	print
 	print
 	print
-

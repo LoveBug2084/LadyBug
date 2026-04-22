@@ -73,13 +73,6 @@
 	ldx #&ff				; initialize stack
 	txs
 
-.initSeed
-	lda via1T1CounterLo			; initialize prng seed
-	beq initSeed
-	sta randomSeed + 0 + progOffset
-	lda osTime
-	sta randomSeed + 1 + progOffset
-
 	lda #%00000000				; timer 1 timed interupt mode
 	sta via1Acr
 

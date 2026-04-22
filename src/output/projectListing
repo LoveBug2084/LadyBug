@@ -39,7 +39,7 @@ free          &47EA - &47EF , 6 bytes
 ----------------------------------------------------
 destroyed on run
 ----------------------------------------------------
-bootstrap     &4800 - &495D , 350 bytes
+bootstrap     &4800 - &494F , 336 bytes
 ----------------------------------------------------
 
 
@@ -161,7 +161,7 @@ bootstrap     &4800 - &495D , 350 bytes
 .enemySpawnSaveX
      0042
 .randomSeed
-     0043
+     0043   00 00
 .addScoreMultiplySaveA
      0045
 .addScoreMultiplySaveX
@@ -1278,30 +1278,24 @@ bootstrap     &4800 - &495D , 350 bytes
 
 .random
      0100   A5 44      LDA &44
-     0102   4A         LSR A
-     0103   A5 43      LDA &43
-     0105   6A         ROR A
-     0106   45 44      EOR &44
-     0108   85 44      STA &44
-     010A   6A         ROR A
-     010B   45 43      EOR &43
-     010D   85 43      STA &43
-     010F   45 44      EOR &44
-     0111   85 44      STA &44
-     0113   60         RTS
+     0102   0A         ASL A
+     0103   26 43      ROL &43
+     0105   E5 43      SBC &43
+     0107   85 44      STA &44
+     0109   60         RTS
 .drawVegetableScore
-     0114   A5 1E      LDA &1E
-     0116   F0 14      BEQ &012C
-     0118   A9 C0      LDA #&C0
-     011A   8D 44 0D   STA &0D44
-     011D   A9 62      LDA #&62
-     011F   8D 45 0D   STA &0D45
-     0122   A5 1D      LDA &1D
-     0124   20 1F 0D   JSR &0D1F
-     0127   A9 00      LDA #&00
-     0129   4C 1F 0D   JMP &0D1F
+     010A   A5 1E      LDA &1E
+     010C   F0 14      BEQ &0122
+     010E   A9 C0      LDA #&C0
+     0110   8D 44 0D   STA &0D44
+     0113   A9 62      LDA #&62
+     0115   8D 45 0D   STA &0D45
+     0118   A5 1D      LDA &1D
+     011A   20 1F 0D   JSR &0D1F
+     011D   A9 00      LDA #&00
+     011F   4C 1F 0D   JMP &0D1F
 .drawVegetableScoreExit
-     012C   60         RTS
+     0122   60         RTS
 .cleanResetBank
      0130
 .cleanResetMachine
@@ -2201,7 +2195,7 @@ bootstrap     &4800 - &495D , 350 bytes
      0782   20 E1 1C   JSR &1CE1
      0785   20 7D 0F   JSR &0F7D
      0788   B0 B3      BCS &073D
-     078A   20 14 01   JSR &0114
+     078A   20 0A 01   JSR &010A
      078D   20 3C 02   JSR &023C
      0790   20 60 26   JSR &2660
      0793   20 15 27   JSR &2715
@@ -2219,7 +2213,7 @@ bootstrap     &4800 - &495D , 350 bytes
      07B3   20 E1 1C   JSR &1CE1
      07B6   20 7D 0F   JSR &0F7D
      07B9   B0 82      BCS &073D
-     07BB   20 14 01   JSR &0114
+     07BB   20 0A 01   JSR &010A
      07BE   20 3C 02   JSR &023C
      07C1   20 ED 0D   JSR &0DED
      07C4   20 82 04   JSR &0482
@@ -9343,155 +9337,149 @@ bootstrap     &4800 - &495D , 350 bytes
      4819   8D 00 FE   STA &FE00
      481C   A9 01      LDA #&01
      481E   8D 01 FE   STA &FE01
-     4821   20 36 62   JSR &6236
+     4821   20 28 62   JSR &6228
      4824   A2 0D      LDX #&0D
 .bootstrapCrtc
      4826   8E 00 FE   STX &FE00
-     4829   BD 50 62   LDA &6250,X
+     4829   BD 42 62   LDA &6242,X
      482C   8D 01 FE   STA &FE01
      482F   CA         DEX
      4830   10 F4      BPL &4826
-     4832   20 36 62   JSR &6236
+     4832   20 28 62   JSR &6228
      4835   78         SEI
      4836   A2 FF      LDX #&FF
      4838   9A         TXS
-.initSeed
-     4839   AD 44 FE   LDA &FE44
-     483C   F0 FB      BEQ &4839
-     483E   8D 43 19   STA &1943
-     4841   AD 96 02   LDA &0296
-     4844   8D 44 19   STA &1944
-     4847   A9 00      LDA #&00
-     4849   8D 4B FE   STA &FE4B
-     484C   A9 7F      LDA #&7F
+     4839   A9 00      LDA #&00
+     483B   8D 4B FE   STA &FE4B
+     483E   A9 7F      LDA #&7F
+     4840   8D 4E FE   STA &FE4E
+     4843   8D 6E FE   STA &FE6E
+     4846   8D 4D FE   STA &FE4D
+     4849   8D 6D FE   STA &FE6D
+     484C   A9 C2      LDA #&C2
      484E   8D 4E FE   STA &FE4E
-     4851   8D 6E FE   STA &FE6E
-     4854   8D 4D FE   STA &FE4D
-     4857   8D 6D FE   STA &FE6D
-     485A   A9 C2      LDA #&C2
-     485C   8D 4E FE   STA &FE4E
-     485F   A9 0B      LDA #&0B
-     4861   8D 40 FE   STA &FE40
-     4864   A9 FF      LDA #&FF
-     4866   8D 43 FE   STA &FE43
-     4869   AD FE 7F   LDA &7FFE
-     486C   8D 30 1A   STA &1A30
-     486F   8D 30 FE   STA &FE30
-     4872   30 07      BMI &487B
-     4874   8D 32 FE   STA &FE32
-     4877   AA         TAX
-     4878   9D 30 FF   STA &FF30,X
+     4851   A9 0B      LDA #&0B
+     4853   8D 40 FE   STA &FE40
+     4856   A9 FF      LDA #&FF
+     4858   8D 43 FE   STA &FE43
+     485B   AD FE 7F   LDA &7FFE
+     485E   8D 30 1A   STA &1A30
+     4861   8D 30 FE   STA &FE30
+     4864   30 07      BMI &486D
+     4866   8D 32 FE   STA &FE32
+     4869   AA         TAX
+     486A   9D 30 FF   STA &FF30,X
 .bootstrapResetValidation
-     487B   49 69      EOR #&69
-     487D   8D 32 1A   STA &1A32
-     4880   AD FD 7F   LDA &7FFD
-     4883   8D 31 1A   STA &1A31
-     4886   49 69      EOR #&69
-     4888   18         CLC
-     4889   6D 32 1A   ADC &1A32
-     488C   8D 32 1A   STA &1A32
+     486D   49 69      EOR #&69
+     486F   8D 32 1A   STA &1A32
+     4872   AD FD 7F   LDA &7FFD
+     4875   8D 31 1A   STA &1A31
+     4878   49 69      EOR #&69
+     487A   18         CLC
+     487B   6D 32 1A   ADC &1A32
+     487E   8D 32 1A   STA &1A32
 .bootstrapSetupGameMode
-     488F   AD 34 01   LDA &0134
-     4892   8D DC 19   STA &19DC
-     4895   8D 8E 80   STA &808E
-     4898   49 FF      EOR #&FF
-     489A   8D 16 19   STA &1916
-     489D   AD 33 01   LDA &0133
-     48A0   8D 33 1A   STA &1A33
-     48A3   F0 4F      BEQ &48F4
-     48A5   AD 33 01   LDA &0133
-     48A8   C9 01      CMP #&01
-     48AA   F0 0B      BEQ &48B7
+     4881   AD 34 01   LDA &0134
+     4884   8D DC 19   STA &19DC
+     4887   8D 8E 80   STA &808E
+     488A   49 FF      EOR #&FF
+     488C   8D 16 19   STA &1916
+     488F   AD 33 01   LDA &0133
+     4892   8D 33 1A   STA &1A33
+     4895   F0 4F      BEQ &48E6
+     4897   AD 33 01   LDA &0133
+     489A   C9 01      CMP #&01
+     489C   F0 0B      BEQ &48A9
 .bootstrapJoystickDigital
-     48AC   AD 62 FE   LDA &FE62
-     48AF   29 E0      AND #&E0
-     48B1   8D 62 FE   STA &FE62
-     48B4   4C F4 61   JMP &61F4
+     489E   AD 62 FE   LDA &FE62
+     48A1   29 E0      AND #&E0
+     48A3   8D 62 FE   STA &FE62
+     48A6   4C E6 61   JMP &61E6
 .bootstrapJoystickAnalogue
-     48B7   AD FD 7F   LDA &7FFD
-     48BA   C9 06      CMP #&06
-     48BC   F0 1C      BEQ &48DA
-     48BE   A9 C1      LDA #&C1
-     48C0   8D CC 40   STA &40CC
-     48C3   A9 FE      LDA #&FE
-     48C5   8D CD 40   STA &40CD
-     48C8   A9 C0      LDA #&C0
-     48CA   8D D1 40   STA &40D1
-     48CD   8D D8 40   STA &40D8
-     48D0   A9 FE      LDA #&FE
-     48D2   8D D2 40   STA &40D2
-     48D5   8D D9 40   STA &40D9
-     48D8   D0 1A      BNE &48F4
+     48A9   AD FD 7F   LDA &7FFD
+     48AC   C9 06      CMP #&06
+     48AE   F0 1C      BEQ &48CC
+     48B0   A9 C1      LDA #&C1
+     48B2   8D CC 40   STA &40CC
+     48B5   A9 FE      LDA #&FE
+     48B7   8D CD 40   STA &40CD
+     48BA   A9 C0      LDA #&C0
+     48BC   8D D1 40   STA &40D1
+     48BF   8D D8 40   STA &40D8
+     48C2   A9 FE      LDA #&FE
+     48C4   8D D2 40   STA &40D2
+     48C7   8D D9 40   STA &40D9
+     48CA   D0 1A      BNE &48E6
 .bootstrapJoystickAnalogueMaster
-     48DA   A9 19      LDA #&19
-     48DC   8D CC 40   STA &40CC
-     48DF   A9 FE      LDA #&FE
-     48E1   8D CD 40   STA &40CD
-     48E4   A9 18      LDA #&18
-     48E6   8D D1 40   STA &40D1
-     48E9   8D D8 40   STA &40D8
-     48EC   A9 FE      LDA #&FE
-     48EE   8D D2 40   STA &40D2
-     48F1   8D D9 40   STA &40D9
+     48CC   A9 19      LDA #&19
+     48CE   8D CC 40   STA &40CC
+     48D1   A9 FE      LDA #&FE
+     48D3   8D CD 40   STA &40CD
+     48D6   A9 18      LDA #&18
+     48D8   8D D1 40   STA &40D1
+     48DB   8D D8 40   STA &40D8
+     48DE   A9 FE      LDA #&FE
+     48E0   8D D2 40   STA &40D2
+     48E3   8D D9 40   STA &40D9
 .bootstrapRelocate
-     48F4   A2 48      LDX #&48
-     48F6   A0 00      LDY #&00
+     48E6   A2 48      LDX #&48
+     48E8   A0 00      LDY #&00
 .relocateProgram
-     48F8   B9 00 19   LDA &1900,Y
-     48FB   99 00 00   STA &0000,Y
-     48FE   C8         INY
-     48FF   D0 F7      BNE &48F8
-     4901   EE FA 61   INC &61FA
-     4904   EE FD 61   INC &61FD
-     4907   CA         DEX
-     4908   D0 EE      BNE &48F8
+     48EA   B9 00 19   LDA &1900,Y
+     48ED   99 00 00   STA &0000,Y
+     48F0   C8         INY
+     48F1   D0 F7      BNE &48EA
+     48F3   EE EC 61   INC &61EC
+     48F6   EE EF 61   INC &61EF
+     48F9   CA         DEX
+     48FA   D0 EE      BNE &48EA
 .relocateProgramConfig
-     490A   BD 80 7B   LDA &7B80,X
-     490D   9D 10 80   STA &8010,X
-     4910   E8         INX
-     4911   E0 7E      CPX #&7E
-     4913   D0 F5      BNE &490A
-     4915   AD 80 80   LDA &8080
-     4918   85 0E      STA &0E
-     491A   A2 00      LDX #&00
+     48FC   BD 80 7B   LDA &7B80,X
+     48FF   9D 10 80   STA &8010,X
+     4902   E8         INX
+     4903   E0 7E      CPX #&7E
+     4905   D0 F5      BNE &48FC
+     4907   AD 80 80   LDA &8080
+     490A   85 0E      STA &0E
+     490C   A2 00      LDX #&00
 .relocateProgramMapData
-     491C   BD 00 78   LDA &7800,X
-     491F   9D 35 45   STA &4535,X
-     4922   BD 00 79   LDA &7900,X
-     4925   9D 1C 46   STA &461C,X
-     4928   BD 00 7A   LDA &7A00,X
-     492B   9D 03 47   STA &4703,X
-     492E   E8         INX
-     492F   E0 E7      CPX #&E7
-     4931   D0 E9      BNE &491C
-     4933   4C FF 06   JMP &06FF
+     490E   BD 00 78   LDA &7800,X
+     4911   9D 35 45   STA &4535,X
+     4914   BD 00 79   LDA &7900,X
+     4917   9D 1C 46   STA &461C,X
+     491A   BD 00 7A   LDA &7A00,X
+     491D   9D 03 47   STA &4703,X
+     4920   E8         INX
+     4921   E0 E7      CPX #&E7
+     4923   D0 E9      BNE &490E
+     4925   4C FF 06   JMP &06FF
 .bootstrapVsync
-     4936   A9 13      LDA #&13
-     4938   20 F4 FF   JSR &FFF4
-     493B   20 F4 FF   JSR &FFF4
-     493E   20 F4 FF   JSR &FFF4
-     4941   20 F4 FF   JSR &FFF4
-     4944   20 F4 FF   JSR &FFF4
-     4947   20 F4 FF   JSR &FFF4
-     494A   20 F4 FF   JSR &FFF4
-     494D   4C F4 FF   JMP &FFF4
+     4928   A9 13      LDA #&13
+     492A   20 F4 FF   JSR &FFF4
+     492D   20 F4 FF   JSR &FFF4
+     4930   20 F4 FF   JSR &FFF4
+     4933   20 F4 FF   JSR &FFF4
+     4936   20 F4 FF   JSR &FFF4
+     4939   20 F4 FF   JSR &FFF4
+     493C   20 F4 FF   JSR &FFF4
+     493F   4C F4 FF   JMP &FFF4
 .bootstrapCrtcData
-     4950   7F
-     4951   00
-     4952   5C
-     4953   28
-     4954   26
-     4955   00
-     4956   1A
-     4957   20
-     4958   00
-     4959   07
-     495A   20
-     495B   08
-     495C   08
-     495D   FE
+     4942   7F
+     4943   00
+     4944   5C
+     4945   28
+     4946   26
+     4947   00
+     4948   1A
+     4949   20
+     494A   00
+     494B   07
+     494C   20
+     494D   08
+     494E   08
+     494F   FE
 .bootstrapEnd
-     495E
+     4950
 
 
 
