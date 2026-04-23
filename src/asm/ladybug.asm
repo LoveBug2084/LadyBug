@@ -8608,6 +8608,7 @@ animateLadybugInstructions	= 6		; instructions animation index
 	sec					; timer = timer - 1
 	sbc #1
 	sta soundTimers, y
+
 	bne processSoundNext			; if timer != 0 then skip it
 
 .processSoundGetData
