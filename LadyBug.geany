@@ -19,7 +19,7 @@ indent_mode=2
 
 [project]
 name=src
-base_path=/home/lovebug/projects/beeb/LadyBug/src
+base_path=/projects/beeb/LadyBug/src
 description=
 file_patterns=
 
@@ -52,7 +52,7 @@ FILE_NAME_19=0;ASM;0;EUTF-8;1;1;1;%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Fasm%2Fbui
 FILE_NAME_20=0;ASM;0;EUTF-8;1;1;1;%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Fasm%2FmemoryUsage.asm;0;8
 
 [VTE]
-last_dir=/home/lovebug
+last_dir=/
 
 [build-menu]
 ASMFT_00_LB=_Compile
