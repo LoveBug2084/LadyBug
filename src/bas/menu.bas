@@ -166,7 +166,7 @@ ENDPROC
 DEF PROCdisplayMode
 
 PRINT TAB(15,17);
-IF G% THEN PRINT CHR$(131);"Stardot Challenge"; ELSE PRINT CHR$(129);"Arcade           ";
+IF G% THEN PRINT CHR$(131);"Stardot"; ELSE PRINT CHR$(129);"Arcade ";
 
 ENDPROC
 
@@ -234,11 +234,11 @@ PROCshrink(3)
 PRINT TAB(34,3);CHR$(131);"3";
 PROCeraseScreen(5)
 
-PRINT TAB(2,5);CHR$(132);"The";CHR$(131);"Stardot High Score Challenge";
-PRINT TAB(2.6);CHR$(132);"mode can be toggled by pressing";CHR$(131);"M";
+PRINT TAB(2,5);CHR$(132);"Press";CHR$(131);"M";CHR$(132);"in this menu to toggle";
+PRINT TAB(2.6);CHR$(129);"Arcade";CHR$(132);"or";CHR$(131);"Stardot";CHR$(132);"game modes";
 
-PRINT TAB(2,8);CHR$(129);"In the";CHR$(131);"HSC";CHR$(129);"mode the game will";
-PRINT TAB(2,9);CHR$(129);"have the following four changes";
+PRINT TAB(2,8);CHR$(132);"In";CHR$(131);"Stardot";CHR$(132);"mode the game will";
+PRINT TAB(2,9);CHR$(132);"have the following four changes";
 
 PRINT TAB(2,11);CHR$(130);CHR$(255);" The";CHR$(135);"Diamond";CHR$(130);"bonus is disabled";
 

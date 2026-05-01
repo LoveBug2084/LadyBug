@@ -17,6 +17,21 @@
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
+; moved here to make some space in main code
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+.ladybugDeathAnimationTable
+
+	equb -2,  0				; floating angel x, y delta
+	equb -2, -1
+	equb  0, -1
+	equb  2,  0
+	equb  2, -1
+	equb  0, -1
+
+
+
+;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; random					generate an 8 bit random number
 ;						random sequence length = 65535
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1957,7 +1972,17 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 
 	jsr mainMenu				; display the main menu screen, handle game setting adjustments and return when start game is selected
 
+	lda demoMode				; if not demo mode then setup game
+	beq gameNew
 
+	lda demoScoreTable			; flip the demo / score table flag
+	eor #&ff
+	sta demoScoreTable
+
+	beq gameNew				; if not score table mode then setup demo game
+
+	jsr drawScoreTable			; else draw high score table#
+	jmp gameIntroScreen			; and return back to intro screen
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; setup a new game, Level 1 for regular game or random level for demo mode
@@ -4112,7 +4137,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #sfxObject				; play object sound effect
 	jsr playSound
 
-	lda #idleTime				; reset the idle timeout
+	lda #idleTimeDemo			; reset the idle timeout
 	sta idleCounter
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4239,14 +4264,15 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 ; ladybugDeathAnimation
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.ladybugDeathAnimationTable
+; this has been moved to page 0100 just after .random to make a little space
+;.ladybugDeathAnimationTable
 
-	equb -2,  0				; floating angel x, y delta
-	equb -2, -1
-	equb  0, -1
-	equb  2,  0
-	equb  2, -1
-	equb  0, -1
+;	equb -2,  0				; floating angel x, y delta
+;	equb -2, -1
+;	equb  0, -1
+;	equb  2,  0
+;	equb  2, -1
+;	equb  0, -1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4634,7 +4660,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuWaitRelease				; repeat
 
 	lda idleCounter				; if idle counter timed out then return and start a demo game
-	beq mainMenuIdleTimeout
+	beq mainMenuidleTimeout
 
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
@@ -4647,13 +4673,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuWaitPress				; repeat
 
 	lda idleCounter				; if idle counter timed out then return and start a demo game
-	beq mainMenuIdleTimeout
+	beq mainMenuidleTimeout
 
 	jsr mainMenuFunctions			; update animation, sprites, sound and scan keyboard
 
 	beq mainMenuWaitPress			; until player input
 
-	lda #idleTime				; reset the idle timeout
+	lda #idleTimeDemo				; reset the idle timeout
 	sta idleCounter
 
 	jsr mainMenuProcess			; process the key/joystick pressed option
@@ -4670,7 +4696,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.mainMenuIdleTimeout
+.mainMenuidleTimeout
 
 	lda #&ff				; enable demo mode and return to start demo game
 	sta demoMode
@@ -5181,7 +5207,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
 	equs colorYellow, "CONTROLS   ", &ff
 
-	lda #idleTime				; reset the idle timeout
+	lda #idleTimeDemo			; reset the idle timeout
 	sta idleCounter
 
 	clc					; return
@@ -5651,7 +5677,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .mainMenuDraw
 
-	lda #idleTime				; reset the idle timeout
+	lda #idleTimeDemo			; reset the idle timeout
 	sta idleCounter
 
 	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
@@ -5675,7 +5701,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .drawScoreTable
 
-	lda #idleTime				; reset the idle timeout
+	lda #idleTimeScoreTable			; reset the idle timeout
 	sta idleCounter
 
 	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased

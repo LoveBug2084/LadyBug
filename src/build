@@ -15,7 +15,7 @@ echo "$(date +%y.%j.%H%M)">output/projectBuild
 # setup pre-build stuff required by the project
 #-----------------------------------------------
 
-./buildPre
+if ! ./buildPre; then exit 1; fi
 
 
 
@@ -25,9 +25,7 @@ echo "$(date +%y.%j.%H%M)">output/projectBuild
 
 echo "Building project"
 echo
-if beebasm -title "$(<projectName)" -v -i asm/build.asm -do "$(<projectName).ssd" -opt 3 -dd -labels output/projectLabels>output/projectListing
-then
-echo
+if ! beebasm -title "$(<projectName)" -v -i asm/build.asm -do "$(<projectName).ssd" -opt 3 -dd -labels output/projectLabels>output/projectListing; then exit 1; fi
 
 
 
@@ -35,9 +33,7 @@ echo
 # setup post-build stuff required by the project
 #------------------------------------------------
 
-if ./buildPost
-then
-echo
+if ! ./buildPost; then exit 1; fi
 
 
 
@@ -69,12 +65,4 @@ echo "$(<projectName)" - Build "$(<output/projectBuild)"
 ./run
 
 
-
-#-----
-# end
-#-----
-
-fi
-fi
-echo
 

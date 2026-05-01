@@ -238,6 +238,7 @@ soundChannels		= 6			; number of concurrent sound effects during game play
 .ladybugUpdateSave	skip 1			; preserve tile
 
 .demoMode		equb 0			; = 0 normal game mode, != 0 demo game mode
+.demoScoreTable		equb 0			; if demoMode !=0 then if demoScoreTable = 0 then start a demo, != 0 show score table
 .demoDir		equb 0			; contains chosen direction 0-3
 .demoMapAddr		skip 2			; used to search map for dots and skulls (2 tiles away on next grid position)
 
