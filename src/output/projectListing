@@ -430,41 +430,42 @@ bootstrap     &4800 - &494F , 336 bytes
      7B81   45
      7B82   00
      7B83   55 4E 49 ...
+     7B8C   2A
      7B8D   FF
      7B8E   00
      7B8F   40
      7B90   00
-     7B91   4C 41 44 ...
+     7B91   41 53 54 ...
      7B9B   FF
      7B9C   00
      7B9D   35
      7B9E   00
-     7B9F   53 54 41 ...
+     7B9F   43 45 4E ...
      7BA9   FF
      7BAA   00
      7BAB   30
      7BAC   00
-     7BAD   4C 41 44 ...
+     7BAD   47 41 4C ...
      7BB7   FF
      7BB8   00
      7BB9   25
      7BBA   00
-     7BBB   53 54 41 ...
+     7BBB   44 45 46 ...
      7BC5   FF
      7BC6   00
      7BC7   20
      7BC8   00
-     7BC9   4C 41 44 ...
+     7BC9   52 4F 42 ...
      7BD3   FF
      7BD4   00
      7BD5   15
      7BD6   00
-     7BD7   53 54 41 ...
+     7BD7   53 43 52 ...
      7BE1   FF
      7BE2   00
      7BE3   10
      7BE4   00
-     7BE5   4C 41 44 ...
+     7BE5   47 41 55 ...
      7BEF   FF
      7BF0   03
      7BF1   01

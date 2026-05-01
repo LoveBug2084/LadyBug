@@ -23,29 +23,28 @@
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 	equb &00,&45,&00			; 45000
-	equs "UNIVERSAL*",&FF
+	equs "UNIVERSAL",chrHeart,&FF
 
 	equb &00,&40,&00			; 40000
-	equs "LADYBUG   ",&FF
+	equs "ASTEROIDS ",&FF
 
 	equb &00,&35,&00			; 35000
-	equs "STARDOT   ",&FF
+	equs "CENTIPEDE ",&FF
 
 	equb &00,&30,&00			; 30000
-	equs "LADYBUG   ",&FF
+	equs "GALAXIAN  ",&FF
 
 	equb &00,&25,&00			; 25000
-	equs "STARDOT   ",&FF
+	equs "DEFENDER  ",&FF
 
 	equb &00,&20,&00			; 20000
-	equs "LADYBUG   ",&FF
+	equs "ROBOTRON  ",&FF
 
 	equb &00,&15,&00			; 15000
-	equs "STARDOT   ",&FF
+	equs "SCRAMBLE  ",&FF
 
 	equb &00,&10,&00			; 10000
-	equs "LADYBUG   ",&FF
-
+	equs "GAUNTLET  ",&FF
 
 
 
