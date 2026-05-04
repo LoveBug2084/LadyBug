@@ -626,6 +626,8 @@ masterMos350 = &e374
 
 	sta mazeMap				; start with mazeMap 0
 
+	sta demoScoreTable			; make sure that after a game (player or demo) that the main menu idle first shows score table
+
 	lda optionLadybugLives			; initialize player lives
 	sta lives
 

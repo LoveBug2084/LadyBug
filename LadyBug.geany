@@ -28,10 +28,10 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=7
+current_page=2
 FILE_NAME_0=0;None;0;EUTF-8;1;1;1;%2Fmedia%2Fstorage%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Foutput%2FprojectListing;0;8
 FILE_NAME_1=74413;ASM;0;EUTF-8;1;1;1;%2Fmedia%2Fstorage%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Fasm%2Fladybug.asm;0;8
-FILE_NAME_2=0;ASM;0;EUTF-8;1;1;1;%2Fmedia%2Fstorage%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Fasm%2Floader.asm;0;8
+FILE_NAME_2=21421;ASM;0;EUTF-8;1;1;1;%2Fmedia%2Fstorage%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Fasm%2Floader.asm;0;8
 FILE_NAME_3=0;FreeBasic;0;EUTF-8;1;1;1;%2Fmedia%2Fstorage%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Fbas%2Fmenu.bas;0;8
 FILE_NAME_4=0;ASM;0;EUTF-8;1;1;1;%2Fmedia%2Fstorage%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Fasm%2Fbonus.asm;0;8
 FILE_NAME_5=10186;ASM;0;EUTF-8;1;1;1;%2Fmedia%2Fstorage%2Fprojects%2Fbeeb%2FLadyBug%2Fsrc%2Fasm%2Fvariables.asm;0;8
