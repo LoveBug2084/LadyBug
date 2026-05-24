@@ -74,8 +74,10 @@ enemyTimerSlow		= 8			; slow enemy timer	= 8 vsyncs per tick
 enemyTimerMedium	= 5			; medium enemy timer	= 5 vsyncs per tick
 enemyTimerFast		= 3			; fast enemy timer	= 3 vsyncs per tick
 
-idleTimeDemo		= (22 * frame) / 8	; demo starts after 22 seconds of inactivity
-idleTimeScoreTable	= (10 * frame) / 8	; high score table stays on screen for 10 seconds of inactivity
+idleTimeScoreTable	= ((10 * frame) / 8)	; high score table stays on screen for 10 seconds of inactivity
+
+idleTimeDemo		= ((22 * frame) / 8)+1	; demo starts after 22 seconds of inactivity
+						; note: added + 1 to alter timing because originally the first 2 demos where on level 5 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ascii character reassignment for special game characters

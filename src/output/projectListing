@@ -3259,7 +3259,7 @@ bootstrap     &4800 - &494F , 336 bytes
      0F17   FF
      0F18   A9 08      LDA #&08
      0F1A   20 DA 22   JSR &22DA
-     0F1D   A9 89      LDA #&89
+     0F1D   A9 8A      LDA #&8A
      0F1F   85 02      STA &02
 .instructionsRelease
      0F21   A5 02      LDA &02
@@ -3551,7 +3551,7 @@ bootstrap     &4800 - &494F , 336 bytes
      1109   F0 11      BEQ &111C
      110B   20 91 11   JSR &1191
      110E   F0 F7      BEQ &1107
-     1110   A9 89      LDA #&89
+     1110   A9 8A      LDA #&8A
      1112   85 02      STA &02
      1114   20 CF 11   JSR &11CF
      1117   90 DF      BCC &10F8
@@ -3839,7 +3839,7 @@ bootstrap     &4800 - &494F , 336 bytes
      135B   03
      135C   43 4F 4E ...
      1367   FF
-     1368   A9 89      LDA #&89
+     1368   A9 8A      LDA #&8A
      136A   85 02      STA &02
      136C   18         CLC
      136D   60         RTS
@@ -4206,7 +4206,7 @@ bootstrap     &4800 - &494F , 336 bytes
      1624   58
      1625   59
 .mainMenuDraw
-     1626   A9 89      LDA #&89
+     1626   A9 8A      LDA #&8A
      1628   85 02      STA &02
      162A   20 90 08   JSR &0890
      162D   20 AC 13   JSR &13AC
