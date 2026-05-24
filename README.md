@@ -43,5 +43,5 @@ _**Note: The video and screenshots are from various builds during development, c
 
 
 #
-**How to build (linux)**\
+**How to build (linux)** requires beebasm\
 open terminal in the src directory and type **./build**
