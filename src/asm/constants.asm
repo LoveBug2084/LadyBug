@@ -76,8 +76,8 @@ enemyTimerFast		= 3			; fast enemy timer	= 3 vsyncs per tick
 
 idleTimeScoreTable	= ((10 * frame) / 8)	; high score table stays on screen for 10 seconds of inactivity
 
-idleTimeDemo		= ((22 * frame) / 8)+1	; demo starts after 22 seconds of inactivity
-						; note: added + 1 to alter timing because originally the first 2 demos where on level 5 
+idleTimeDemo		= ((22 * frame) / 8) + 1; demo starts after 22 seconds of inactivity
+						; note: added +1 frame to alter timing because originally the first 2 demos where on level 5 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; ascii character reassignment for special game characters
@@ -93,6 +93,7 @@ chrMultiplier2		= '''			; top box multiplier 2
 chrMultiplier3		= '('			; top box multiplier 3
 chrMultiplier5		= ')'			; top box multiplier 5
 chrHeart		= '*'			; heart
+end			= &ff			; string terminator
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; object positions

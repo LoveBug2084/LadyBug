@@ -1131,25 +1131,25 @@ masterMos350 = &e374
 	incbin "output/projectBuild"
 	clear * - 1, *				; remove the 0a terminator byte
 	org * - 1				; at the end of the projectBuild string
-	equb &ff				; end
+	equb end				; end
 
 .loaderUsingBank
 
 	equb 31,7,13				; position cursor
 	equs 132,"Using sideways ram bank",135
-	equb &ff				; end
+	equb end				; end
 
 .loaderUsingWorkspace
 
 	equb 31,9,13				; position cursor
 	equs 132, "Using",135,"B+",132,"workspace ram"
-	equb &ff				; end
+	equb end				; end
 
 .loaderRamFailed
 
 	equb 31,7,13				; position cursor
 	equs 136,132,"Sideways ram unavailable"
-	equb &ff				; end
+	equb end				; end
 
 
 

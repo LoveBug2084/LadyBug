@@ -4375,6 +4375,8 @@ bootstrap     &4800 - &494F , 336 bytes
      1762   62 7E
      1764   08
      1765   20 20 50 ...
+     176D   2A
+     176E   20 
      176F   FF
 .checkPauseGameReturnTrue
      1770   38         SEC
