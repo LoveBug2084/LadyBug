@@ -116,7 +116,7 @@
 						; note: keyboard is always active even when joystick is enabled
 .gameMode
 
-	skip 1					; storage for arcade/challenge game mode type bit 7 = 1 high score challenge mode, = 0 arcade mode
+	skip 1					; storage for arcade/stardot game mode type bit(7) = 1 stardot mode, = 0 arcade mode
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3689,7 +3689,7 @@ bonusBitsMultiplier	= %00000111		; bit mask for x2x3x5 multiplier bits on bonusB
 
 .addScoreSpecial
 
-	bit highScoreChallenge			; if high score challenge mode
+	bit stardotMode				; if stardot game mode
 	bmi addScoreExit			; then exit without adding special bonus score
 
 	sed					; bcd mode
@@ -4879,7 +4879,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #1					; if mainMenuCursor = 1 then we need to decrement again
 	beq mainMenuProcessUp			; (skip over blank line between "HIGH SCORES" and "START GAME"")
 
-	bit highScoreChallenge			; if high score challenge mode
+	bit stardotMode				; if stardot game mode
 	bpl mainMenuProcessUpWrapAround
 
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
@@ -4919,7 +4919,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	cmp #1					; if mainMenuCursor = 1 then increment again
 	beq mainMenuProcessDown			; (skip over the blank line between "START GAME" and "HIGH SCORES")
 
-	bit highScoreChallenge			; if high score challenge mode
+	bit stardotMode				; if stardot game mode
 	bpl mainMenuProcessDownWrapAround
 
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
@@ -5730,13 +5730,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #pixelsBlue				; set draw color to blue
 	sta drawChrColor
 
-	ldy #3					; if bit 7 of 1st character of name is 1 then draw a heart instead of a space
+	ldy #3					; if bit 7 of 1st character of name is 1 then draw a blue heart instead of a space
 	lda (highScorePtr), y
 	bpl drawScoreTableArcadeMode
 
-.drawScoreTableChallengeMode
+.drawScoreTableStardotMode
 
-	lda #chrHeart				; heart for high score challenge mode
+	lda #chrHeart				; heart for stardot mode
 	bpl drawScoreTableSpacer
 
 .drawScoreTableArcadeMode
@@ -6116,8 +6116,8 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .nameRegExit
 
-	ldy #0					; copy bit 7 of highScoreChallenge to bit 7 of 1st character in high score name
-	lda highScoreChallenge
+	ldy #0					; copy bit 7 of stardotMode to bit 7 of 1st character in high score name
+	lda stardotMode				; so that the blue heart is displayed before the name in the stardot mode
 	and #%10000000
 	ora (highScorePtr), y
 	sta (highScorePtr), y
@@ -7377,64 +7377,22 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	sta spritesEraseDir, x			; save direction for later erasure
 
-						; use just the direction bits only
+						; keep just the direction bits
 	and #moveUp or moveDown or moveLeft or moveRight
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; direction = up so draw sprite normal
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.redrawSpritesDirectionUp
-
-	cmp #moveUp				; if direction = up
-	beq redrawSpritesNormal			; then go draw the sprite
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; direction = left so offset img by 3 and draw sprite normal
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.redrawSpritesDirectionLeft
-
-	cmp #moveLeft				; if direction = left
-	bne redrawSpritesDirectionRight
-
-	clc					; then add 3 to sprite img to point to left facing sprites
-	lda drawSpriteImg
-	adc #3
-	sta drawSpriteImg
-	bne redrawSpritesNormal
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; direction = right so offset img by 9 and draw sprite normal
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.redrawSpritesDirectionRight
-
-	cmp #moveRight				; if direction = right
-	bne redrawSpritesDirectionDown
-
-	clc					; then add 9 to sprite img to point to right facing sprites
-	lda drawSpriteImg
-	adc #9
-	sta drawSpriteImg
-	bne redrawSpritesNormal
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; direction = down so draw sprite flipped
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-.redrawSpritesDirectionDown
-
-	jsr drawSpriteFlipped			; if direction = down then draw sprite vertically flipped
-
+	tay
+	
+	lda redrawSpritesImgDir, y		; get img offset for direction
+	
+	bpl redrawSpritesDirOffset		; if negative
+	
+	jsr drawSpriteFlipped			; then draw vertically flipped sprite
 	jmp redrawSpritesDrawn
 
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; direction = up/left/right so draw sprite normal (not flipped)
-	;---------------------------------------------------------------------------------------------------------------------------------------------
+.redrawSpritesDirOffset
 
-.redrawSpritesNormal
-
+	clc					; else add img offset to drawSpriteImg
+	adc drawSpriteImg
+	sta drawSpriteImg
 	jsr drawSprite				; draw the sprite
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
@@ -7802,8 +7760,8 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusScreenSpecialActive
 
-	bit highScoreChallenge			; if arcade mode
-	bmi drawBonusScreenSpecialActiveChallenge
+	bit stardotMode				; if arcade game mode
+	bmi drawBonusScreenSpecialActiveStardot
 
 .drawBonusScreenSpecialActiveArcade
 
@@ -7830,7 +7788,7 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 	jmp drawBonusScreenSpecialActiveShields
 
-.drawBonusScreenSpecialActiveChallenge
+.drawBonusScreenSpecialActiveStardot
 
 	jsr drawString
 	equw screenAddr + 2 + 8 * chrColumn + 18 * chrRow
@@ -7838,60 +7796,56 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 
 .drawBonusScreenSpecialActiveShields
 
-	bit highScoreChallenge			; if challenge mode then draw alternate shield position
+	bit stardotMode				; if stardot game mode then draw alternate shield position
 	bpl drawBonusScreenSpecialActiveShieldsArcade
 
-	jsr swrDrawBonusScreenSpecialActiveShieldsChallenge
+	jsr swrDrawBonusScreenSpecialActiveShieldsStardot
 	jmp drawBonusScreenSpecialActiveExit
 
 .drawBonusScreenSpecialActiveShieldsArcade
 
 	if (bonusSpecialShield and 15) = 1
-	{
 
-	jsr drawString
-	equw screenAddr + 2 + 8 + 8 * chrColumn + 20 * chrRow
-	equb colorWhite, end
+		jsr drawString
+		equw screenAddr + 2 + 8 + 8 * chrColumn + 20 * chrRow
+		equb colorWhite, end
 
-	lda #(bonusSpecialShield and 15) + '0'
-	jsr drawChr
+		lda #(bonusSpecialShield and 15) + '0'
+		jsr drawChr
 
-	jsr drawString
-	equw screenAddr + 2 + 8 + 10 * chrColumn + 20 * chrRow
-	equs colorYellow, "SHIELD", end
+		jsr drawString
+		equw screenAddr + 2 + 8 + 10 * chrColumn + 20 * chrRow
+		equs colorYellow, "SHIELD", end
 
-	lda #lo(screenAddr + 8 + 17 * chrColumn + 20 * chrRow)
-	sta drawMapTileAddr
-	lda #hi(screenAddr + 8 + 17 * chrColumn + 20 * chrRow)
-	sta drawMapTileAddr + 1
+		lda #lo(screenAddr + 8 + 17 * chrColumn + 20 * chrRow)
+		sta drawMapTileAddr
+		lda #hi(screenAddr + 8 + 17 * chrColumn + 20 * chrRow)
+		sta drawMapTileAddr + 1
 
-	lda #mapTileSkull
-	jsr drawMapTile
+		lda #mapTileSkull
+		jsr drawMapTile
 
-	}
 	else
-	{
 
-	jsr drawString
-	equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
-	equb colorWhite, end
+		jsr drawString
+		equw screenAddr + 2 + 8 * chrColumn + 20 * chrRow
+		equb colorWhite, end
 
-	lda #(bonusSpecialShield and 15) + '0'
-	jsr drawChr
+		lda #(bonusSpecialShield and 15) + '0'
+		jsr drawChr
 
-	jsr drawString
-	equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
-	equs colorYellow, "SHIELDS", end
+		jsr drawString
+		equw screenAddr + 2 + 10 * chrColumn + 20 * chrRow
+		equs colorYellow, "SHIELDS", end
 
-	lda #lo(screenAddr + 18 * chrColumn + 20 * chrRow)
-	sta drawMapTileAddr
-	lda #hi(screenAddr + 18 * chrColumn + 20 * chrRow)
-	sta drawMapTileAddr + 1
+		lda #lo(screenAddr + 18 * chrColumn + 20 * chrRow)
+		sta drawMapTileAddr
+		lda #hi(screenAddr + 18 * chrColumn + 20 * chrRow)
+		sta drawMapTileAddr + 1
 
-	lda #mapTileSkull
-	jsr drawMapTile
+		lda #mapTileSkull
+		jsr drawMapTile
 
-	}
 	endif
 
 .drawBonusScreenSpecialActiveExit
@@ -7919,21 +7873,17 @@ spritesPerFrame		= 3			; maximum number of sprites in each half of the screen th
 	jsr drawChr
 
 	if (bonusExtraLives and 15) = 1
-	{
 
-	jsr drawString
-	equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
-	equs colorYellow, "EXTRA LADY BUG", end
+		jsr drawString
+		equw screenAddr + 2 + 8 + 4 * chrColumn + 20 * chrRow
+		equs colorYellow, "EXTRA LADY BUG", end
 
-	}
 	else
-	{
 
-	jsr drawString
-	equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
-	equs colorYellow, "EXTRA LADY BUGS", end
+		jsr drawString
+		equw screenAddr + 2 + 4 * chrColumn + 20 * chrRow
+		equs colorYellow, "EXTRA LADY BUGS", end
 
-	}
 	endif
 
 	lda #sfxMusicExtra			; play extra bonus music

@@ -97,7 +97,7 @@
 
 .swrGameMode
 
-	skip 1					; reserve space for last game mode standard/challenge for menu.bas
+	skip 1					; reserve space for last game mode stardot/arcade for menu.bas
 
 
 
@@ -638,10 +638,10 @@ masterMos350 = &e374
 	sta ladybugEntryEnable			; enable ladybug entry movement animation
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; enable the possibility of getting a diamond bonus (regular game) or disable diamond bonus completely (high score challenge)
+	; enable the possibility of getting a diamond bonus (arcade mode) or disable diamond bonus completely (stardot mode)
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	lda highScoreChallenge
+	lda stardotMode
 	eor #&ff
 	sta bonusDiamondEnable
 
@@ -1036,10 +1036,10 @@ masterMos350 = &e374
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
-; draw challenge mode number of shields on special bonus screen
+; draw stardot mode number of shields on special bonus screen
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-.swrDrawBonusScreenSpecialActiveShieldsChallenge
+.swrDrawBonusScreenSpecialActiveShieldsStardot
 
 	if (bonusSpecialShield and 15) = 1
 	{

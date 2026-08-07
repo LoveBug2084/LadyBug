@@ -187,6 +187,11 @@
 .redrawSpritesIndexLower			; index to current sprite in list for screen lower half
 			equb 1
 
+.redrawSpritesImgDir	equb 0			; up	image offset
+			equb 255		; down	special marker for draw vflipped
+			equb 3			; left	image offset
+			equb 9			; right	image offset
+
 .objectTimerUpdateSaveX	skip 1			; preserve register
 
 .drawMapTileSaveA	skip 1			; preserve register
@@ -242,7 +247,7 @@ soundChannels		= 6			; number of concurrent sound effects during game play
 .demoDir		equb 0			; contains chosen direction 0-3
 .demoMapAddr		skip 2			; used to search map for dots and skulls (2 tiles away on next grid position)
 
-.highScoreChallenge	skip 1			; bit 7 = 1 high score challenge game, = 0 standard game
+.stardotMode		skip 1			; bit(7) = 1 stardot mode, = 0 arcade mode
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; end of pageZero

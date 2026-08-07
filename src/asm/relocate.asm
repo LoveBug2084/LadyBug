@@ -129,7 +129,7 @@
 .bootstrapSetupGameMode
 
 	lda gameMode				; save game mode for relocation
-	sta highScoreChallenge + progOffset
+	sta stardotMode + progOffset
 
 	sta swrGameMode				; save game mode for menu.bas on reboot
 
