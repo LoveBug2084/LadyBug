@@ -5821,7 +5821,14 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr playSoundSilence			; kill any sounds playing
 
-	lda #sfxTurnstile			; play sound effect and return
+	lda idleCounter				; if idle counter timed out then return silently
+	bne drawScoreTableExitSound
+
+	rts
+
+.drawScoreTableExitSound
+
+	lda #sfxTurnstile			; else play sound effect and return
 	jmp playSound
 
 
