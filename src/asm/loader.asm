@@ -652,7 +652,7 @@ masterMos350 = &e374
 	lda demoMode				; if demo mode is active then
 	beq swrGameLevelExit
 
-	lda #defaultLadybugLives		; override the menu lives and use the default lives for the demo
+	lda #defaultLives			; override the menu lives and use the default lives for the demo
 	sta lives
 
 .swrGameLevelLoHi

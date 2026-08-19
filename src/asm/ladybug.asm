@@ -4499,13 +4499,21 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	stx levelSkulls				; set the number of skulls
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy speed			use user set speed option for regular game or default speed for demo
+	; set enemy target setting		use user set target for regular game or default target for demo game
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx optionEnemySpeed			; x = user selected speed for regular game
+	ldx optionEnemyTarget			; for regular game use target option
 	lda demoMode
-	beq initLevelSettingsSpeed
-	ldx #defaultEnemySpeed			; x = default speed for demo game
+	beq initLevelSettingsTarget
+	ldx #defaultTargetSpeed
+
+.initLevelSettingsTarget
+
+	stx enemyTarget
+
+	;---------------------------------------------------------------------------------------------------------------------------------------------
+	; set enemy speed			use user set speed option for regular game or default speed for demo
+	;---------------------------------------------------------------------------------------------------------------------------------------------
 
 .initLevelSettingsSpeed
 
@@ -4532,19 +4540,6 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda enemySpeedTable, x			; set the enemy speed from the enemySpeedTable, x
 	sta enemySpeed
-
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy target setting		use user set target for regular game or default target for demo game
-	;---------------------------------------------------------------------------------------------------------------------------------------------
-
-	ldx optionEnemyTarget			; for regular game use target option
-	lda demoMode
-	beq initLevelSettingsTarget
-	ldx #defaultEnemyTarget
-
-.initLevelSettingsTarget
-
-	stx enemyTarget
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set enemy timer speed (number of vsync frames per timer tick)
@@ -5703,6 +5698,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	lda #idleTimeScoreTable			; reset the idle timeout
 	sta idleCounter
+
+	lda #&ff				; make sure the next idle from the main menu is a demo game
+	sta demoScoreTable
 
 	jsr initMiddle				; initialize and draw empty playfield with timer, initialize all sprites as blanked and erased
 
