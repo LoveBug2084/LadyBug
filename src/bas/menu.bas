@@ -453,7 +453,7 @@ K%=INKEY0
 IF K%>=ASC("`") THEN K%=K%-ASC(" ")
 K$=CHR$(K%)
 
-UNTIL K$="M" OR K$="K" OR K$="J" OR K$="U" OR K$="I" OR K$="E" OR K$="W" OR K$="R"
+UNTIL INSTR("MKJUIEWR",K$)
 
 =K$
 
