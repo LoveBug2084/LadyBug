@@ -76,7 +76,7 @@
 .enemySpeedCounter	skip 1			; enemy speed fraction counter used to calculate when an extra pixel movement is required
 .enemyMoveCounter	skip 1			; incremented every time the enemies are moved a pixel
 
-.enemyTarget		skip 1			; enemy target value (optionEnemyTarget for regular game or defaultEnemyTarget for demo game)
+.enemySkill		skip 1			; enemy skill value (optionEnemySkill for regular game or defaultDifficulty for demo game)
 
 .enemyReleaseEnable	skip 1			; set to &ff when timer hits top left
 .enemyReleaseDelay	skip 1			; delay enemy release time so that enemies do not ride on each others backs

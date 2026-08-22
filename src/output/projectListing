@@ -137,7 +137,7 @@ bootstrap     &4800 - &494F , 336 bytes
      0030
 .enemyMoveCounter
      0031
-.enemyTarget
+.enemySkill
      0032
 .enemyReleaseEnable
      0033
@@ -522,7 +522,7 @@ bootstrap     &4800 - &494F , 336 bytes
      8080
 .optionEnemySpeed
      8081
-.optionEnemyTarget
+.optionEnemySkill
      8082
 .optionTimerVolume
      8083
@@ -3444,7 +3444,7 @@ bootstrap     &4800 - &494F , 336 bytes
      1056   21
      1057   35
      1058   4A
-.enemyTargetTable
+.enemySkillTable
      1059   B3
      105A   59
      105B   40
@@ -3470,7 +3470,7 @@ bootstrap     &4800 - &494F , 336 bytes
      107A   A5 DC      LDA &DC
      107C   F0 02      BEQ &1080
      107E   A2 01      LDX #&01
-.initLevelSettingsTarget
+.initLevelSettingsSkill
      1080   86 32      STX &32
 .initLevelSettingsSpeed
      1082   8A         TXA
@@ -3725,7 +3725,7 @@ bootstrap     &4800 - &494F , 336 bytes
      1255   20 65 15   JSR &1565
      1258   18         CLC
      1259   60         RTS
-.mainMenuProcessStartEnemyTarget
+.mainMenuProcessStartEnemySkill
      125A   C9 05      CMP #&05
      125C   D0 03      BNE &1261
      125E   20 65 15   JSR &1565
@@ -4022,7 +4022,7 @@ bootstrap     &4800 - &494F , 336 bytes
      14C6   FF
      14C7   AD 81 80   LDA &8081
      14CA   20 13 15   JSR &1513
-.mainMenuDrawEnemyTarget
+.mainMenuDrawEnemySkill
      14CD   20 ED 21   JSR &21ED
      14D0   02 6E
      14D2   FF

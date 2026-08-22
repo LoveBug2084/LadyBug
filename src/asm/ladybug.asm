@@ -2752,15 +2752,15 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	adc moveSpritesDistanceX		; if Y + X distance < aiRandomRange (enemy is on ladybugs tail)
 	bcs moveSpritesEnemyAiTarget
 	cmp #aiRandomRange
-	bcc moveSpritesRandomAvailableDirection	; then pick a random direction instead of a target direction
+	bcc moveSpritesRandomAvailableDirection	; then pick a random direction instead of a targetting ladybug
 						; this gives the player a better chance to escape otherwise
-						; the enemy will be stuck on lady's tail like a magnet and thats really unfair
+						; the enemy will be stuck on lady's tail like a magnet which is unfair
 
 .moveSpritesEnemyAiTarget
 
-	jsr random				; if random < targetTable[enemyTarget]
-	ldy enemyTarget
-	cmp enemyTargetTable, y
+	jsr random				; if random < enemySkillTable[enemySkill]
+	ldy enemySkill
+	cmp enemySkillTable, y
 	bcc moveSpritesRandomAvailableDirection	; then pick a random direction
 
 .moveSpritesEnemyAiCheckUp			; else check the 4 directions
@@ -4459,11 +4459,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 .enemySpeedTable
 
-	include "asm/speedTable.asm"
+	include "asm/enemySpeedTable.asm"
 
-.enemyTargetTable
+.enemySkillTable
 
-	include "asm/targetTable.asm"
+	include "asm/enemySkillTable.asm"
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4499,17 +4499,17 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	stx levelSkulls				; set the number of skulls
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
-	; set enemy target setting		use user set target for regular game or default target for demo game
+	; set enemy skill setting		use user set skill for regular game or default difficulty for demo game
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-	ldx optionEnemyTarget			; for regular game use target option
+	ldx optionEnemySkill			; for regular game use skill option
 	lda demoMode
-	beq initLevelSettingsTarget
-	ldx #defaultTargetSpeed
+	beq initLevelSettingsSkill
+	ldx #defaultDifficulty
 
-.initLevelSettingsTarget
+.initLevelSettingsSkill
 
-	stx enemyTarget
+	stx enemySkill
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set enemy speed			use user set speed option for regular game or default speed for demo
@@ -4606,18 +4606,15 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 ; mainMenu
-;
-;						this is a huge mess and needs rewriting much smaller
-;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 .optionsMin
 
-	equb  1,  0,  0,  0,  0			; minimum value for ladybug lives, enemy speed, enemy target, timer volume, sound
+	equb  1,  0,  0,  0,  0			; minimum value for ladybug lives, enemy speed, enemy skill, timer volume, sound
 
 .optionsMax
 
-	equb  10, 4, 4,  4,  3			; maximum value + 1 for ladybug lives, enemy speed, enemy target, timer volume, sound
+	equb  10, 4, 4,  4,  3			; maximum value (+ 1) for ladybug lives, enemy speed, enemy skill, timer volume, sound
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -4880,7 +4877,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
 	cmp #6-3
-	bcc mainMenuProcessUp			; then decrement again (skip over lives, enemy speed and enemy target)
+	bcc mainMenuProcessUp			; then decrement again (skip over lives, enemy speed and enemy skill)
 
 .mainMenuProcessUpWrapAround
 
@@ -4920,7 +4917,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	sec					; if mainMenuCursor >=3 and mainMenuCursor <=5
 	sbc #3
 	cmp #6-3
-	bcc mainMenuProcessDown			; the increment again  (skip over lives, enemy speed and enemy target)
+	bcc mainMenuProcessDown			; the increment again  (skip over lives, enemy speed and enemy skill)
 
 .mainMenuProcessDownWrapAround
 
@@ -5010,7 +5007,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 .mainMenuProcessStartEnemySpeed
 
 	cmp #4					; if cursor == 4 (enemySpeed) then
-	bne mainMenuProcessStartEnemyTarget
+	bne mainMenuProcessStartEnemySkill
 
 	jsr mainMenuDrawEnemies			; update the 4 enemies on screen with new random enemies
 
@@ -5019,9 +5016,9 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 
-.mainMenuProcessStartEnemyTarget
+.mainMenuProcessStartEnemySkill
 
-	cmp #5					; if cursor == 5 (enemyTarget) then
+	cmp #5					; if cursor == 5 (enemySkill) then
 	bne mainMenuProcessReturnFalse
 
 	jsr mainMenuDrawEnemies			; update the 4 enemies on screen with new random enemies
@@ -5404,13 +5401,13 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda optionEnemySpeed
 	jsr mainMenuDrawEnemySetting
 
-.mainMenuDrawEnemyTarget
+.mainMenuDrawEnemySkill
 
-	jsr drawString				; draw enemy Target
+	jsr drawString				; draw enemy Skill
 	equw screenAddr + 2 + 15 * chrColumn + 17 * chrRow
 	equb end
 
-	lda optionEnemyTarget
+	lda optionEnemySkill
 	jsr mainMenuDrawEnemySetting
 
 .mainMenuDrawTimerVolume
@@ -5728,7 +5725,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	lda #pixelsBlue				; set draw color to blue
 	sta drawChrColor
 
-	ldy #3					; if bit 7 of 1st character of name is 1 then draw a blue heart instead of a space
+	ldy #3					; if bit 7 of 1st character of name is 1 then draw a heart instead of a space
 	lda (highScorePtr), y
 	bpl drawScoreTableArcadeMode
 
