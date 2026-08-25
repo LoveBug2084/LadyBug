@@ -4505,7 +4505,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	ldx optionEnemySkill			; for regular game use skill option
 	lda demoMode
 	beq initLevelSettingsSkill
-	ldx #defaultDifficulty
+	ldx #defaultDifficulty			; for demo game use default difficulty
 
 .initLevelSettingsSkill
 
@@ -4514,6 +4514,11 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 	;---------------------------------------------------------------------------------------------------------------------------------------------
 	; set enemy speed			use user set speed option for regular game or default speed for demo
 	;---------------------------------------------------------------------------------------------------------------------------------------------
+
+	ldx optionEnemySpeed			; for regular game use speed option
+	lda demoMode
+	beq initLevelSettingsSpeed
+	ldx #defaultDifficulty			; for demo game use default difficulty
 
 .initLevelSettingsSpeed
 
