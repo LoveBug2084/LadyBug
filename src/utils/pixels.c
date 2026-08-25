@@ -8,6 +8,44 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+// palette lookup table: palette[index] = {R, G, B}
+unsigned char palette[16][3] = {
+	// Standard 8 colors (0-7)
+	{0,     0,     0},     // 0: black
+	{255,   0,     0},     // 1: red
+	{0,   255,     0},     // 2: green
+	{255, 255,     0},     // 3: yellow
+	{0,     0,   255},     // 4: blue
+	{255,   0,   255},     // 5: magenta
+	{0,   255,   255},     // 6: cyan
+	{255, 255,   255},     // 7: white
+
+	// Extra colors (8-15)
+	{128, 255, 255},       // 8: multiplier0
+	{128, 128, 255},       // 9: multiplier1
+	{255, 128, 128},       // 10: special0
+	{255, 128, 255},       // 11: special1
+	{255, 255, 128},       // 12: extra0
+	{128, 255, 128},       // 13: extra1
+	{128, 128, 128},       // 14: skull
+	{ 96,  96,  96},       // 15: objects
+};
+
+// convert RGB to palette index (0-15), exit on unknown color
+int rgb_to_palette(unsigned char r, unsigned char g, unsigned char b)
+{
+	for (int i = 0; i < 16; i++) {
+		if (r == palette[i][0] && g == palette[i][1] && b == palette[i][2]) {
+			return i;
+		}
+	}
+	fprintf(stderr, "\n**** issue **** unknown RGB color: %d %d %d\n", r, g, b);
+	exit(EXIT_FAILURE);
+}
+
 //--------------
 // main program
 //--------------
@@ -17,81 +55,81 @@ int main(int argc, char *argv[])
 
 	// print instructions
 	int arguments = argc;
-	if(arguments < 5)
+	if (arguments < 3)
 	{
 		printf("----------------------------------------------------------\n");
 		printf(" pixels by LoveBug\n");
 		printf("----------------------------------------------------------\n\n");
-		printf("Usage: pixels rawInputName imageWidth imageHeight binOutputName\n\n");
+		printf("Usage: pixels pngInputName binOutputName\n\n");
 		exit(EXIT_FAILURE);
 	}
 
 	// check for duplicate file names
-	if(strcmp(argv[1], argv[4]) == 0)
+	if (strcmp(argv[1], argv[2]) == 0)
 	{
 		fprintf(stderr, "\n**** issue **** duplicate file names\n");
 		exit(EXIT_FAILURE);
 	}
 
-	// get arguments
-	char *rawInputName	= argv[1];
-	long imageWidth			= strtol(argv[2], NULL, 10);
-	long imageHeight		= strtol(argv[3], NULL, 10);
-	char *binOutputName	= argv[4];
+	// get filenames
+	char *pngInputName = argv[1];
+	char *binOutputName = argv[2];
 
-	// open rawInputName in binary mode
-	FILE *rawInputFile = fopen(rawInputName, "rb");
-	if(rawInputFile == NULL)
-	{
-		fprintf(stderr, "\n**** issue **** error opening %s\n", rawInputName);
+	// load PNG (force 3 channels = RGB)
+	int width, height, channels;
+	unsigned char *pngData = stbi_load(pngInputName, &width, &height, &channels, 3);
+	if (!pngData) {
+		fprintf(stderr, "\n**** issue **** PNG load failed: %s\n", stbi_failure_reason());
+		exit(EXIT_FAILURE);
+	}
+	if (channels != 3) {
+		fprintf(stderr, "\n**** issue **** expected RGB, got %d channels\n", channels);
+		stbi_image_free(pngData);
 		exit(EXIT_FAILURE);
 	}
 
-	// get file size
-	fseek(rawInputFile, 0L, SEEK_END);
-	int rawInputSize = ftell(rawInputFile);
-	rewind(rawInputFile);
-
-	// create buffer for raw tile data
+	// populate rawBuffer with palette indices
+	int rawInputSize = width * height;
 	unsigned int rawBuffer[rawInputSize];
-
-	// read raw tile data into buffer
-	for(int i = 0; i < rawInputSize; i++)
-	{
-		unsigned int dataByte = fgetc(rawInputFile);
-		rawBuffer[i] = dataByte;
+	for (int i = 0; i < rawInputSize; i++) {
+		unsigned char r = pngData[i * 3 + 0];
+		unsigned char g = pngData[i * 3 + 1];
+		unsigned char b = pngData[i * 3 + 2];
+		rawBuffer[i] = rgb_to_palette(r, g, b);
 	}
+	stbi_image_free(pngData);
 
-	// close rawInput file
-	fclose(rawInputFile);
-
-	// get number of images in raw data
-	int rawImages = rawInputSize / (imageWidth * imageHeight);
+	// For compatibility, assume single image (rawImages = 1)
+	// The original format had multiple images stacked vertically in strips
+	// With PNG, each file is one image
+	int rawImages = 1;
+	int imageWidth = width;
+	int imageHeight = height;
 
 	// display info
-	printf("%d images %s -> ", rawImages, rawInputName);
+	printf("%d images %s -> ", rawImages, pngInputName);
 
 	// open binOutputName for writing
 	FILE *binOutputFile = fopen(binOutputName, "wb");
-	if(binOutputFile == NULL)
+	if (binOutputFile == NULL)
 	{
 		fprintf(stderr, "\n**** issue **** error creating %s\n", binOutputName);
 		exit(EXIT_FAILURE);
 	}
 
 	// process images
-	for(int images = 0; images < rawImages; images++)
+	for (int images = 0; images < rawImages; images++)
 	{
 
 		// get pairs of pixels
-		for(int x = 0; x < imageWidth / 2; x++)
+		for (int x = 0; x < imageWidth / 2; x++)
 		{
 
 		// calculate horizontal offset in raw data
 		int horizontal = (images * imageWidth) + (x * 2);
 
 			// get lines of pixels
-			for(int y = 0; y < imageHeight; y++)
+			for (int y = 0; y < imageHeight; y++)
 			{
 
 				// calculate vertical offset in raw data
@@ -102,23 +140,23 @@ int main(int argc, char *argv[])
 				unsigned int pixel;
 
 				pixel = rawBuffer[vertical + horizontal];
-				if((pixel & 0x01) != 0)
+				if ((pixel & 0x01) != 0)
 					dataByte |= 0x02;
-				if((pixel & 0x02) != 0)
+				if ((pixel & 0x02) != 0)
 					dataByte |= 0x08;
-				if((pixel & 0x04) != 0)
+				if ((pixel & 0x04) != 0)
 					dataByte |= 0x20;
-				if((pixel & 0x08) != 0)
+				if ((pixel & 0x08) != 0)
 					dataByte |= 0x80;
 
 				pixel = rawBuffer[vertical + horizontal + 1];
-				if((pixel & 0x01) != 0)
+				if ((pixel & 0x01) != 0)
 					dataByte |= 0x01;
-				if((pixel & 0x02) != 0)
+				if ((pixel & 0x02) != 0)
 					dataByte |= 0x04;
-				if((pixel & 0x04) != 0)
+				if ((pixel & 0x04) != 0)
 					dataByte |= 0x10;
-				if((pixel & 0x08) != 0)
+				if ((pixel & 0x08) != 0)
 					dataByte |= 0x40;
 
 				fputc(dataByte, binOutputFile);

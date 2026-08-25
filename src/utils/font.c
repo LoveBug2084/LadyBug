@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 //--------------
 // main program
 //--------------
@@ -22,7 +25,7 @@ int main(int argc, char *argv[])
 		printf("----------------------------------------------------------\n");
 		printf(" font by LoveBug\n");
 		printf("----------------------------------------------------------\n\n");
-		printf("Usage: font rawInputName binOutputName\n\n");
+		printf("Usage: font pngInputName binOutputName\n\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -41,31 +44,39 @@ int main(int argc, char *argv[])
 	rawInputName = argv[1];
 	fontOutputName = argv[2];
 
-	// open rawInputName in binary mode
-	FILE *rawInputFile = fopen(rawInputName, "rb");
-	if(rawInputFile == NULL)
-	{
-		fprintf(stderr, "\n**** issue **** error opening %s\n", rawInputName);
+	// load PNG (force 3 channels = RGB)
+	int width, height, channels;
+	unsigned char *pngData = stbi_load(rawInputName, &width, &height, &channels, 3);
+	if (!pngData) {
+		fprintf(stderr, "\n**** issue **** PNG load failed: %s\n", stbi_failure_reason());
 		exit(EXIT_FAILURE);
 	}
 
-	// get file size
-	fseek(rawInputFile, 0L, SEEK_END);
-	int rawInputSize = ftell(rawInputFile);
-	rewind(rawInputFile);
-
-	// create buffer for raw font data
-	unsigned int rawBuffer[rawInputSize];
-
-	// read raw font data into buffer
-	for(int i = 0; i < rawInputSize; i++)
-	{
-		unsigned int dataByte = fgetc(rawInputFile);
-		rawBuffer[i] = dataByte;
+	// validate dimensions
+	if (width != 384 || height != 6) {
+		fprintf(stderr, "\n**** issue **** expected 384x6, got %dx%d\n", width, height);
+		stbi_image_free(pngData);
+		exit(EXIT_FAILURE);
 	}
 
-	// close rawInput file
-	fclose(rawInputFile);
+	// validate channels
+	if (channels != 3) {
+		fprintf(stderr, "\n**** issue **** expected 3 (RGB) channels, got %d\n", channels);
+		stbi_image_free(pngData);
+		exit(EXIT_FAILURE);
+	}
+
+	// populate rawBuffer: luminance < 32640 = black (0), else = white (1)
+	int rawInputSize = width * height;
+	unsigned int rawBuffer[rawInputSize];
+	for (int i = 0; i < rawInputSize; i++) {
+		unsigned char r = pngData[i * 3 + 0];
+		unsigned char g = pngData[i * 3 + 1];
+		unsigned char b = pngData[i * 3 + 2];
+		int y = 77 * r + 150 * g + 29 * b;
+		rawBuffer[i] = (y < 32640) ? 0 : 1;
+	}
+	stbi_image_free(pngData);
 
 	// get number of characters in raw font
 	int rawCharacters = rawInputSize / 36;

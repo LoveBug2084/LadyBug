@@ -42,9 +42,9 @@
 
 	save		"_Maps", mapFilenames, mapFilenamesEnd, &ffffff, 0
 
-	putfile		"inc/map1.bin", "_Map1", 0, &ffffff
-	putfile		"inc/map2.bin", "_Map2", 0, &ffffff
-	putfile		"inc/map3.bin", "_Map3", 0, &ffffff
+	putfile		"maps/map1.bin", "_Map1", 0, &ffffff
+	putfile		"maps/map2.bin", "_Map2", 0, &ffffff
+	putfile		"maps/map3.bin", "_Map3", 0, &ffffff
 
 	save		"Loader", swramStart, loaderEnd, &ff0000 + loaderStartReloc, &ff0000 + loaderPage
 
@@ -67,7 +67,7 @@
 	org 0					; clear 20K of space for the bbc mode 1 image file
 	clear 0, (20 * 1024) - 1
 
-	incbin		"inc/editorTiles.bin"	; load the image file
+	incbin		"img/editorTiles.bin"	; load the image file
 
 						; save the 19 tiles of 12x8 pixels @ 4 pixels per byte (mode 1)
 	save		"EditorT", 0, 19 * 12 * 8 / 4, &ffffff, 0

@@ -7,11 +7,11 @@ echo
 #-----------------------
 
 echo "Building font"
-gcc -o utils/font utils/font.c
+gcc -o utils/font utils/font.c -lm
 echo
 
 echo "Building pixels"
-gcc -o utils/pixels utils/pixels.c
+gcc -o utils/pixels utils/pixels.c -lm
 echo
 
 echo "Building locker"
@@ -26,24 +26,24 @@ echo
 
 echo "Converting images"
 echo
-utils/font		img/font.raw				bin/font.bin
-utils/pixels		img/fontBonus.raw	4	8	bin/fontBonus.bin
-utils/pixels		img/points.raw		10	10	bin/points.bin
-utils/pixels		img/vegetables.raw	10	10	bin/vegetables.bin
-utils/pixels		img/objects.raw		8	8	bin/objects.bin
-utils/pixels		img/tiles.raw		6	8	bin/tiles.bin
-utils/pixels		img/extra.raw		6	8	bin/extra.bin
-utils/pixels		img/ladybug.raw		10	14	bin/ladybug.bin
-utils/pixels		img/enemy1.raw		10	14	bin/enemy1.bin
-utils/pixels		img/enemy2.raw		10	14	bin/enemy2.bin
-utils/pixels		img/enemy3.raw		10	14	bin/enemy3.bin
-utils/pixels		img/enemy4.raw		10	14	bin/enemy4.bin
-utils/pixels		img/enemy5.raw		10	14	bin/enemy5.bin
-utils/pixels		img/enemy6.raw		10	14	bin/enemy6.bin
-utils/pixels		img/enemy7.raw		10	14	bin/enemy7.bin
-utils/pixels		img/enemy8.raw		10	14	bin/enemy8.bin
-utils/pixels		img/angel0.raw		10	14	bin/angel0.bin
-utils/pixels		img/angel1.raw		10	14	bin/angel1.bin
-utils/pixels		img/diamond.raw		8	6	bin/diamond.bin
+utils/font		img/font.png				img/font.bin
+utils/pixels		img/fontBonus.png				img/fontBonus.bin
+utils/pixels		img/points.png				img/points.bin
+utils/pixels		img/vegetables.png				img/vegetables.bin
+utils/pixels		img/objects.png				img/objects.bin
+utils/pixels		img/tiles.png				img/tiles.bin
+utils/pixels		img/extra.png				img/extra.bin
+utils/pixels		img/ladybug.png				img/ladybug.bin
+utils/pixels		img/enemy1.png				img/enemy1.bin
+utils/pixels		img/enemy2.png				img/enemy2.bin
+utils/pixels		img/enemy3.png				img/enemy3.bin
+utils/pixels		img/enemy4.png				img/enemy4.bin
+utils/pixels		img/enemy5.png				img/enemy5.bin
+utils/pixels		img/enemy6.png				img/enemy6.bin
+utils/pixels		img/enemy7.png				img/enemy7.bin
+utils/pixels		img/enemy8.png				img/enemy8.bin
+utils/pixels		img/angel0.png				img/angel0.bin
+utils/pixels		img/angel1.png				img/angel1.bin
+utils/pixels		img/diamond.png				img/diamond.bin
 echo
 

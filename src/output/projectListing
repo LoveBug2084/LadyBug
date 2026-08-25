@@ -544,54 +544,54 @@ bootstrap     &4800 - &494F , 336 bytes
      808F
 .vegetablesBin
      808F
-     808F   00 00 00 ... INCBIN "bin/vegetables.bin"
+     808F   00 00 00 ... INCBIN "img/vegetables.bin"
 .vegetablesBinEnd
      8445
 .pointsBin
      8445
-     8445   00 00 00 ... INCBIN "bin/points.bin"
+     8445   00 00 00 ... INCBIN "img/points.bin"
 .pointsBinEnd
      869D
 .sprite10x10BinEnd
      869D
 .ladybugBin
      869D
-     869D   00 00 00 ... INCBIN "bin/ladybug.bin"
+     869D   00 00 00 ... INCBIN "img/ladybug.bin"
 .enemy1Bin
      8AB7
-     8AB7   00 11 11 ... INCBIN "bin/enemy1.bin"
+     8AB7   00 11 11 ... INCBIN "img/enemy1.bin"
 .enemy2Bin
      8ED1
-     8ED1   15 3F 3F ... INCBIN "bin/enemy2.bin"
+     8ED1   15 3F 3F ... INCBIN "img/enemy2.bin"
 .enemy3Bin
      92EB
-     92EB   00 00 00 ... INCBIN "bin/enemy3.bin"
+     92EB   00 00 00 ... INCBIN "img/enemy3.bin"
 .enemy4Bin
      9705
-     9705   00 00 00 ... INCBIN "bin/enemy4.bin"
+     9705   00 00 00 ... INCBIN "img/enemy4.bin"
 .enemy5Bin
      9B1F
-     9B1F   00 00 00 ... INCBIN "bin/enemy5.bin"
+     9B1F   00 00 00 ... INCBIN "img/enemy5.bin"
 .enemy6Bin
      9F39
-     9F39   01 00 00 ... INCBIN "bin/enemy6.bin"
+     9F39   01 00 00 ... INCBIN "img/enemy6.bin"
 .enemy7Bin
      A353
-     A353   00 00 00 ... INCBIN "bin/enemy7.bin"
+     A353   00 00 00 ... INCBIN "img/enemy7.bin"
 .enemy8Bin
      A76D
-     A76D   00 00 00 ... INCBIN "bin/enemy8.bin"
+     A76D   00 00 00 ... INCBIN "img/enemy8.bin"
 .angel0Bin
      AB87
-     AB87   00 00 00 ... INCBIN "bin/angel0.bin"
+     AB87   00 00 00 ... INCBIN "img/angel0.bin"
 .diamondBin
      AC13
-     AC13   00 44 45 ... INCBIN "bin/diamond.bin"
+     AC13   00 44 45 ... INCBIN "img/diamond.bin"
 .diamondFiller
      AC43
 .angel1Bin
      AC59
-     AC59   00 00 00 ... INCBIN "bin/angel1.bin"
+     AC59   00 00 00 ... INCBIN "img/angel1.bin"
 .spriteBinEnd
      ACE5
 .swrCleanResetJmp
@@ -6795,27 +6795,27 @@ bootstrap     &4800 - &494F , 336 bytes
      28D8   86 28
 .fontBin
      28DA
-     28DA   00 00 00 ... INCBIN "bin/font.bin"
+     28DA   00 00 00 ... INCBIN "img/font.bin"
 .fontBinEnd
      2A1A
 .miniFontBin
      2A1A
-     2A1A   00 50 51 ... INCBIN "bin/fontBonus.bin"
+     2A1A   00 50 51 ... INCBIN "img/fontBonus.bin"
 .miniFontBinEnd
      2ABA
 .mapTileBin
      2ABA
-     2ABA   00 00 00 ... INCBIN "bin/tiles.bin"
+     2ABA   00 00 00 ... INCBIN "img/tiles.bin"
 .mapTileBinEnd
      2DEA
 .objectTileBin
      2DEA
-     2DEA   00 55 55 ... INCBIN "bin/objects.bin"
+     2DEA   00 55 55 ... INCBIN "img/objects.bin"
 .objectTileBinEnd
      304A
 .extraTileBin
      304A
-     304A   00 00 15 ... INCBIN "bin/extra.bin"
+     304A   00 00 15 ... INCBIN "img/extra.bin"
 .extraTileBinEnd
      397A
 .mapTileAddrLo
@@ -9750,7 +9750,7 @@ Saving file 'LadyBug'
 Saving file '_Reset'
 Saving file 'Cls'
 Saving file 'EditorM'
-     0000   00 00 00 ... INCBIN "inc/editorTiles.bin"
+     0000   00 00 00 ... INCBIN "img/editorTiles.bin"
 Saving file 'EditorT'
 
 
