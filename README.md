@@ -39,7 +39,7 @@ And to everyone at the stardot forums for their kind words, help and support dur
 #
 _**Note: The video and screenshots are from various builds during development, current build may differ slightly**_
 #
-[![ladybug-youtube](src/img/readme-youtube.png)](https://www.youtube.com/watch?v=ziSzReRbM00) ![ladybug-splash](src/img/readme-splash.png) ![ladybug-main-menu](src/img/readme-main-menu.png) ![ladybug-best-players](src/img/readme-best-players.png) ![ladybug-instructions](src/img/readme-instructions.png) ![ladybug-level-intro](src/img/readme-level-intro.png) ![ladybug-game-play](src/img/readme-level-01-1.png) ![ladybug-level-01](src/img/readme-level-01-2.png) ![ladybug-level-diamond](src/img/readme-level-diamond.png) ![ladybug-bonus-diamond](src/img/readme-bonus-diamond.png) ![ladybug-bonus-extra](src/img/readme-bonus-extra.png) ![ladybug-bonus-special](src/img/readme-bonus-special.png) ![ladybug-high-score](src/img/readme-high-score.png)
+[![ladybug-youtube](readme-youtube.png)](https://www.youtube.com/watch?v=ziSzReRbM00) ![ladybug-splash](readme-splash.png) ![ladybug-main-menu](readme-main-menu.png) ![ladybug-best-players](readme-best-players.png) ![ladybug-instructions](readme-instructions.png) ![ladybug-level-intro](readme-level-intro.png) ![ladybug-game-play](readme-level-01-1.png) ![ladybug-level-01](readme-level-01-2.png) ![ladybug-level-diamond](readme-level-diamond.png) ![ladybug-bonus-diamond](readme-bonus-diamond.png) ![ladybug-bonus-extra](readme-bonus-extra.png) ![ladybug-bonus-special](readme-bonus-special.png) ![ladybug-high-score](readme-high-score.png)
 
 
 #
