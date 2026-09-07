@@ -39,7 +39,7 @@ And to everyone at the stardot forums for their kind words, help and support dur
 #
 _**Note: The video and screenshots are from various builds during development, current build may differ slightly**_
 #
-[![ladybug-youtube](readme-youtube.png)](https://www.youtube.com/watch?v=ziSzReRbM00) ![ladybug-splash](readme-splash.png) ![ladybug-main-menu](readme-main-menu.png) ![ladybug-best-players](readme-best-players.png) ![ladybug-instructions](readme-instructions.png) ![ladybug-level-intro](readme-level-intro.png) ![ladybug-game-play](readme-level-01-1.png) ![ladybug-level-01](readme-level-01-2.png) ![ladybug-level-diamond](readme-level-diamond.png) ![ladybug-bonus-diamond](readme-bonus-diamond.png) ![ladybug-bonus-extra](readme-bonus-extra.png) ![ladybug-bonus-special](readme-bonus-special.png) ![ladybug-high-score](readme-high-score.png)
+[![youtube](img/youtube.png)](https://www.youtube.com/watch?v=ziSzReRbM00) ![splash](img/splash.png) ![main-menu](img/main-menu.png) ![best-players](img/best-players.png) ![instructions](img/instructions.png) ![level-intro](img/level-intro.png) ![game-play](img/level-01-1.png) ![level-01](img/level-01-2.png) ![level-diamond](img/level-diamond.png) ![bonus-diamond](img/bonus-diamond.png) ![bonus-extra](img/bonus-extra.png) ![bonus-special](img/bonus-special.png) ![high-score](img/high-score.png)
 
 
 #
