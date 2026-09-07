@@ -9,6 +9,15 @@ A map editor is now included with the game allowing the player to create/edit/sa
 \
 A demo mode has been added and starts if the game is left idle on the main menu for 22 seconds\
 The main menu sound option now has 3 settings OFF, ON (Game sounds only), DEMO (Game and Demo sounds).
+\
+
+Two game modes are available from the boot menu "Arcade" and "Stardot"\
+\
+Stardot mode was created for the stardot high score challenge and differs from the arcade mode\
+
+1) Only the default game settings and game maps are available\
+2) The 1,000,000 point diamond bonus is disabled\
+3) The special bonus awards 6 shield rounds but does not award the 200,000 bonus points\
 
 #
 **Tested on the following computer models using emulators**\
