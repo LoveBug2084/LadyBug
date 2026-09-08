@@ -4486,7 +4486,7 @@ bootstrap     &4800 - &494F , 336 bytes
      1883   A9 04      LDA #&04
      1885   20 56 21   JSR &2156
      1888   20 5D 19   JSR &195D
-     188B   A9 0D      LDA #&0D
+     188B   A9 0C      LDA #&0C
      188D   20 D5 22   JSR &22D5
 .nameRegWaitRelease
      1890   20 B0 18   JSR &18B0

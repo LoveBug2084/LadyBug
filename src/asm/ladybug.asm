@@ -6091,7 +6091,7 @@ drawChrMiniAddr = drawChrMiniWrite + 1
 
 	jsr nameRegCursorUpdate			; display the initial cursor position
 
-	lda #sfxMusicLetters			; play high score music
+	lda #sfxMusicVegetable			; play high score music
 	jsr playSound
 
 	;---------------------------------------------------------------------------------------------------------------------------------------------
