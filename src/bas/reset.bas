@@ -18,7 +18,7 @@ M%=&69
 
 IF B% THEN U$="WR":L$="LR" ELSE U$="":L$="L"
 
-IF G% THEN file$="_Stardt " ELSE file$="_Arcade "
+IF G% THEN file$="Stardot " ELSE file$="Arcade "
 
 OSCLI("LOAD _Reset " + STR$~(&FF0000 + D%))
 

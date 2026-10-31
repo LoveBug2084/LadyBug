@@ -21,15 +21,15 @@ echo
 
 
 #--------------------------------
-# convert raw image files to bin
+# convert png image files to bin
 #--------------------------------
 
 echo "Converting images"
 echo
 tools/font		img/font.png				img/font.bin
-tools/pixels		img/fontBonus.png				img/fontBonus.bin
+tools/pixels		img/fontBonus.png			img/fontBonus.bin
 tools/pixels		img/points.png				img/points.bin
-tools/pixels		img/vegetables.png				img/vegetables.bin
+tools/pixels		img/vegetables.png			img/vegetables.bin
 tools/pixels		img/objects.png				img/objects.bin
 tools/pixels		img/tiles.png				img/tiles.bin
 tools/pixels		img/extra.png				img/extra.bin

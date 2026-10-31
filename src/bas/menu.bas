@@ -358,8 +358,8 @@ Y%=BGET#Z%:X%=BGET#Z%:W%=BGET#Z%:U%=BGET#Z%:Q%=BGET#Z%
 CLOSE#Z%
 
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF
-IF F%?2<>V% THEN IF NOT G% THEN OSCLI("LOAD _Arcade " + STR$~(&FF0000 + C%)):ENDPROC
-IF F%?2<>V% THEN IF G% THEN OSCLI("LOAD _Stardt " + STR$~(&FF0000 + C%)):ENDPROC
+IF F%?2<>V% THEN IF NOT G% THEN OSCLI("LOAD Arcade " + STR$~(&FF0000 + C%)):ENDPROC
+IF F%?2<>V% THEN IF G% THEN OSCLI("LOAD Stardot " + STR$~(&FF0000 + C%)):ENDPROC
 
 P%=&7B00
 [OPT 0
@@ -390,7 +390,7 @@ DEF PROCsaveConfig
 V%=((F%?0 EOR M%) + (F%?1 EOR M%)) AND &FF
 IF F%?2<>V% THEN ENDPROC
 
-IF G% THEN OSCLI("ACCESS _Stardt "+U$):OSCLI("SAVE _Stardt " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Stardt "+L$) ELSE OSCLI("ACCESS _Arcade "+U$):OSCLI("SAVE _Arcade " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS _Arcade "+L$)
+IF G% THEN OSCLI("ACCESS Stardot "+U$):OSCLI("SAVE Stardot " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS Stardot "+L$) ELSE OSCLI("ACCESS Arcade "+U$):OSCLI("SAVE Arcade " + STR$~(&FF0000 + C%) + " +7E FFFFFF 0"):OSCLI("ACCESS Arcade "+L$)
 
 PROCeraseLogo
 

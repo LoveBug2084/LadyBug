@@ -2072,10 +2072,6 @@ drawChrAddr = drawChrWriteScreen + 1		; screen address to write chr
 	lda #escTime				; reset esc key timer
 	sta escCounter
 
-	lda #turnstilePinMax - 1		; initialize the map position for turnstile pin redraw
-	sta drawTurnstilePinX
-	sta drawTurnstilePinY
-
 ;*****************************************************************************************************************************************************
 ;
 ; game main loop
