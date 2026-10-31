@@ -1,6 +1,6 @@
 //---------------------------------------------------------
 // font by lovebug
-// converts a font in raw format to format used by ladybug
+// converts png font to bbc formatted bin
 //---------------------------------------------------------
 
 // required

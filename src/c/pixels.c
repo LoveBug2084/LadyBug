@@ -1,6 +1,6 @@
 //---------------------------------------------------------
 // pixels by lovebug
-// converts images in raw format to ladybug format
+// converts png images to bbc formatted bin
 //---------------------------------------------------------
 
 // required
