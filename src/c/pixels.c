@@ -55,25 +55,28 @@ int main(int argc, char *argv[])
 
 	// print instructions
 	int arguments = argc;
-	if (arguments < 3)
+	if (arguments < 4)
 	{
 		printf("----------------------------------------------------------\n");
 		printf(" pixels by LoveBug\n");
 		printf("----------------------------------------------------------\n\n");
-		printf("Usage: pixels pngInputName binOutputName\n\n");
+		printf("Usage: pixels imageWidth pngInputName binOutputName\n\n");
 		exit(EXIT_FAILURE);
 	}
 
+	// get the width of the individual images in the input png
+	int inputWidth = atoi(argv[1]);
+
 	// check for duplicate file names
-	if (strcmp(argv[1], argv[2]) == 0)
+	if (strcmp(argv[2], argv[3]) == 0)
 	{
 		fprintf(stderr, "\n**** issue **** duplicate file names\n");
 		exit(EXIT_FAILURE);
 	}
 
 	// get filenames
-	char *pngInputName = argv[1];
-	char *binOutputName = argv[2];
+	char *pngInputName = argv[2];
+	char *binOutputName = argv[3];
 
 	// load PNG (force 3 channels = RGB)
 	int width, height, channels;
@@ -99,11 +102,9 @@ int main(int argc, char *argv[])
 	}
 	stbi_image_free(pngData);
 
-	// For compatibility, assume single image (rawImages = 1)
-	// The original format had multiple images stacked vertically in strips
-	// With PNG, each file is one image
-	int rawImages = 1;
-	int imageWidth = width;
+	// Calculate number of images
+	int rawImages = width / inputWidth;
+	int imageWidth = inputWidth;
 	int imageHeight = height;
 
 	// display info

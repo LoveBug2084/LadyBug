@@ -26,24 +26,23 @@ echo
 
 echo "Converting images"
 echo
-tools/font		img/font.png				img/font.bin
-tools/pixels		img/fontBonus.png			img/fontBonus.bin
-tools/pixels		img/points.png				img/points.bin
-tools/pixels		img/vegetables.png			img/vegetables.bin
-tools/pixels		img/objects.png				img/objects.bin
-tools/pixels		img/tiles.png				img/tiles.bin
-tools/pixels		img/extra.png				img/extra.bin
-tools/pixels		img/ladybug.png				img/ladybug.bin
-tools/pixels		img/enemy1.png				img/enemy1.bin
-tools/pixels		img/enemy2.png				img/enemy2.bin
-tools/pixels		img/enemy3.png				img/enemy3.bin
-tools/pixels		img/enemy4.png				img/enemy4.bin
-tools/pixels		img/enemy5.png				img/enemy5.bin
-tools/pixels		img/enemy6.png				img/enemy6.bin
-tools/pixels		img/enemy7.png				img/enemy7.bin
-tools/pixels		img/enemy8.png				img/enemy8.bin
-tools/pixels		img/angel0.png				img/angel0.bin
-tools/pixels		img/angel1.png				img/angel1.bin
-tools/pixels		img/diamond.png				img/diamond.bin
+tools/font			img/font.png				img/font.bin
+tools/pixels		4	img/fontBonus.png			img/fontBonus.bin
+tools/pixels		10	img/points.png				img/points.bin
+tools/pixels		10	img/vegetables.png			img/vegetables.bin
+tools/pixels		8	img/objects.png				img/objects.bin
+tools/pixels		6	img/tiles.png				img/tiles.bin
+tools/pixels		6	img/extra.png				img/extra.bin
+tools/pixels		10	img/ladybug.png				img/ladybug.bin
+tools/pixels		10	img/enemy1.png				img/enemy1.bin
+tools/pixels		10	img/enemy2.png				img/enemy2.bin
+tools/pixels		10	img/enemy3.png				img/enemy3.bin
+tools/pixels		10	img/enemy4.png				img/enemy4.bin
+tools/pixels		10	img/enemy5.png				img/enemy5.bin
+tools/pixels		10	img/enemy6.png				img/enemy6.bin
+tools/pixels		10	img/enemy7.png				img/enemy7.bin
+tools/pixels		10	img/enemy8.png				img/enemy8.bin
+tools/pixels		10	img/angel0.png				img/angel0.bin
+tools/pixels		10	img/angel1.png				img/angel1.bin
+tools/pixels		8	img/diamond.png				img/diamond.bin
 echo
-
